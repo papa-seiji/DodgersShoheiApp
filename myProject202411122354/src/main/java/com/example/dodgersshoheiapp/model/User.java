@@ -1,26 +1,41 @@
 package com.example.dodgersshoheiapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 主キー
 
-    private String username;
-    private String password;
-    private String role = "USER";
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false, unique = true)
+    private String username; // ユーザー名
 
-    // Getters and setters for all fields
+    @Column(nullable = false)
+    private String password; // パスワード
+
+    @Column(nullable = true)
+    private String role = "USER"; // ロール (デフォルト: USER)
+
+    @Column(name = "created_at", nullable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt; // 作成日時
+
+    @Column(nullable = true)
+    private String icon; // アイコンのパス
+
+    // コンストラクタ
+    public User() {
+    }
+
+    // Getter and Setter
     public Long getId() {
         return id;
     }
@@ -59,5 +74,39 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    // UserDetailsインターフェースの実装
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList(); // 権限リスト（今回は空）
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // アカウントが有効期限切れではない
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // アカウントがロックされていない
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // 資格情報が有効期限切れではない
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // ユーザーが有効
     }
 }
