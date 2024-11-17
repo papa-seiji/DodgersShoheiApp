@@ -7,8 +7,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -26,11 +30,21 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/home", true) // ログイン成功後の遷移先
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // ログアウトURL
-                        .logoutSuccessUrl("/auth/login") // ログアウト成功後の遷移先
-                        .invalidateHttpSession(true)); // セッションを無効化
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessHandler(logoutSuccessHandler()) // カスタムログアウト成功ハンドラーを設定
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
 
         return http.build();
+    }
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+            // ログアウト成功後にリダイレクトしてログアウトメッセージを送信
+            response.sendRedirect("/auth/login?logout=true");
+        };
     }
 
     @Bean
