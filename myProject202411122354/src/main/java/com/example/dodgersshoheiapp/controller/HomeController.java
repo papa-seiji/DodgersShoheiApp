@@ -22,7 +22,7 @@ public class HomeController {
     public String handleComment(@RequestParam(required = false) String content, Model model) {
         if (content != null && !content.isEmpty()) {
             // ログイン中のユーザー名を仮に "testUser" とする（後で認証情報を使う）
-            String username = "testUser";
+            String username = "testUser"; // この部分は後で認証情報に置き換え可能
             commentService.saveComment(content, username);
         }
 

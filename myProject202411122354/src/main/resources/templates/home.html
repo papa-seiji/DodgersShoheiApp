@@ -5,12 +5,18 @@
 </head>
 <body>
     <h1>Comments</h1>
+    <!-- コメント投稿フォーム -->
     <form action="/home" method="get">
         <textarea name="content" placeholder="Add a comment"></textarea>
         <button type="submit">Post</button>
     </form>
+
+    <!-- コメントリストの表示 -->
     <ul>
         <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
     </ul>
+
+    <!-- ログアウトリンク -->
+    <a href="/auth/logout">Logout</a>
 </body>
 </html>
