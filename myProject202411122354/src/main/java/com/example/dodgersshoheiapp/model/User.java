@@ -1,6 +1,9 @@
 package com.example.dodgersshoheiapp.model;
 
 import jakarta.persistence.*;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +13,7 @@ import java.util.Collections;
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class) // 必須: JPA の監査リスナー
 public class User implements UserDetails {
 
     @Id
@@ -25,8 +29,9 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String role = "USER"; // ロール (デフォルト: USER)
 
-    @Column(name = "created_at", nullable = true, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt; // 作成日時
+    @CreatedDate
+    @Column(updatable = false, nullable = false) // 必須: NULL値を防止
+    private LocalDateTime createdAt;
 
     @Column(nullable = true)
     private String icon; // アイコンのパス
