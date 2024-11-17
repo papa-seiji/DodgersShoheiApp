@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Welcome Home</h1>
-    <p>You are successfully logged in!</p>
-    <a href="/logout">Logout</a>
+    <h1>Comments</h1>
+    <form action="/home" method="get">
+        <textarea name="content" placeholder="Add a comment"></textarea>
+        <button type="submit">Post</button>
+    </form>
+    <ul>
+        <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
+    </ul>
 </body>
 </html>
