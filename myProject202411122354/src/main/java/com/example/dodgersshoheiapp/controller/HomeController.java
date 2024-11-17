@@ -1,7 +1,7 @@
 package com.example.dodgersshoheiapp.controller;
 
 import com.example.dodgersshoheiapp.service.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,19 +11,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HomeController {
 
     private final CommentService commentService;
+    private final SimpMessagingTemplate messagingTemplate; // WebSocket送信用
 
-    // コンストラクタで `CommentService` を注入
-    @Autowired
-    public HomeController(CommentService commentService) {
+    // コンストラクタで `CommentService` と `SimpMessagingTemplate` を注入
+    public HomeController(CommentService commentService, SimpMessagingTemplate messagingTemplate) {
         this.commentService = commentService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @GetMapping("/home")
     public String handleComment(@RequestParam(required = false) String content, Model model) {
         if (content != null && !content.isEmpty()) {
             // ログイン中のユーザー名を仮に "testUser" とする（後で認証情報を使う）
-            String username = "testUser"; // この部分は後で認証情報に置き換え可能
+            String username = "testUser"; // 認証情報に基づいたユーザー名を取得予定
             commentService.saveComment(content, username);
+
+            // WebSocketを介してリアルタイムで新しいコメントを送信
+            messagingTemplate.convertAndSend("/topic/comments", content);
         }
 
         // コメントリストをモデルに追加
