@@ -2,6 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Home</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script>
+        let stompClient = null;
+
+        // WebSocket接続を開始
+        function connect() {
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function () {
+                console.log('Connected to WebSocket');
+                // サーバーからのメッセージを購読
+                stompClient.subscribe('/topic/comments', function (message) {
+                    showComment(message.body);
+                });
+            });
+        }
+
+        // 新しいコメントをリストに追加
+        function showComment(comment) {
+            const commentList = document.getElementById('commentList');
+            const li = document.createElement('li');
+            li.textContent = comment;
+            commentList.appendChild(li);
+        }
+
+        // ページロード時にWebSocket接続を開始
+        window.onload = function () {
+            connect();
+        };
+    </script>
 </head>
 <body>
     <h1>Comments</h1>
@@ -12,7 +44,7 @@
     </form>
 
     <!-- コメントリストの表示 -->
-    <ul>
+    <ul id="commentList">
         <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
     </ul>
 
