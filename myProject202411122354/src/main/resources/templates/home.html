@@ -16,10 +16,16 @@
             stompClient.connect({}, () => {
                 console.log("WebSocket connected");
 
-                // カウンターの購読
-                stompClient.subscribe('/topic/counter', (message) => {
+                // MainCounter購読
+                stompClient.subscribe('/topic/MainCounter', (message) => {
                     const counter = JSON.parse(message.body);
-                    document.getElementById('counter-value').textContent = counter.value;
+                    document.getElementById('main-counter-value').textContent = counter.value;
+                });
+
+                // SecondaryCounter購読
+                stompClient.subscribe('/topic/SecondaryCounter', (message) => {
+                    const counter = JSON.parse(message.body);
+                    document.getElementById('secondary-counter-value').textContent = counter.value;
                 });
 
                 // コメントの購読
@@ -29,55 +35,55 @@
                 });
 
                 // 初期値を取得
-                fetchCounterValue();
+                fetchCounterValue("MainCounter", "main-counter-value");
+                fetchCounterValue("SecondaryCounter", "secondary-counter-value");
             });
         }
 
-        // サーバーから現在のカウンター値を取得して表示
-        function fetchCounterValue() {
-            fetch('/counter', { redirect: 'follow' })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('counter-value').textContent = data.value;
-                })
-                .catch(error => console.error('Error fetching counter:', error));
-        }
-
-        // カウンターの更新
-        function updateCounter(increment) {
-            fetch('/counter/update?increment=' + increment, {
-                method: 'POST'
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update counter: ' + response.status);
-                }
-                return response.json();
-            })
-            .catch(error => console.error('Error updating counter:', error));
-        }
-
-        // コメントを投稿
-        function postComment(content) {
-            fetch('/comments/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ content: content }),
-            })
+        // サーバーから現在のカウンター値を取得
+        function fetchCounterValue(counterName, elementId) {
+            fetch(`/counter/${counterName}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to post comment');
+                        throw new Error(`Failed to fetch ${counterName} value`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Comment added:', data);
+                    document.getElementById(elementId).textContent = data.value;
                 })
-                .catch(error => console.error('Error posting comment:', error));
+                .catch(error => console.error(`Error fetching ${counterName} value:`, error));
         }
-        
+
+        // カウンターの更新
+        function updateCounter(counterName, increment) {
+            fetch(`/counter/update?counterName=${counterName}&increment=${increment}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => console.log('Counter updated:', data))
+            .catch(error => console.error(`Error updating ${counterName} counter:`, error));
+        }
+                        
+        // コメントを投稿
+        function postComment(content) {
+            fetch('/comments/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: content }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to post comment');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Comment added:', data);
+            })
+            .catch(error => console.error('Error posting comment:', error));
+        }
+
         // コメントリストに追加
         function addCommentToList(content) {
             const commentList = document.getElementById('commentList');
@@ -90,14 +96,20 @@
         document.addEventListener('DOMContentLoaded', () => {
             connect();
 
-            // カウンターの増加ボタン
-            document.getElementById('increment-button').addEventListener('click', () => {
-                updateCounter(1);
+            // MainCounterのボタンイベント
+            document.getElementById('main-increment-button').addEventListener('click', () => {
+                updateCounter("MainCounter", 1);
+            });
+            document.getElementById('main-decrement-button').addEventListener('click', () => {
+                updateCounter("MainCounter", -1);
             });
 
-            // カウンターの減少ボタン
-            document.getElementById('decrement-button').addEventListener('click', () => {
-                updateCounter(-1);
+            // SecondaryCounterのボタンイベント
+            document.getElementById('secondary-increment-button').addEventListener('click', () => {
+                updateCounter("SecondaryCounter", 1);
+            });
+            document.getElementById('secondary-decrement-button').addEventListener('click', () => {
+                updateCounter("SecondaryCounter", -1);
             });
 
             // コメントフォームの送信処理
@@ -113,21 +125,26 @@
     </script>
 </head>
 <body>
-    <h1>Counter: <span id="counter-value">0</span></h1>
-    <!-- ボタンを常に表示 -->
-    <div id="admin-controls">
-        <button id="increment-button">Increase</button>
-        <button id="decrement-button">Decrease</button>
+    <!-- Main Counter -->
+    <h1>Main Counter: <span id="main-counter-value">0</span></h1>
+    <div>
+        <button id="main-increment-button">Increase</button>
+        <button id="main-decrement-button">Decrease</button>
     </div>
 
+    <!-- Secondary Counter -->
+    <h1>Secondary Counter: <span id="secondary-counter-value">0</span></h1>
+    <div>
+        <button id="secondary-increment-button">Increase</button>
+        <button id="secondary-decrement-button">Decrease</button>
+    </div>
+
+    <!-- コメント機能 -->
     <h1>Comments</h1>
-    <!-- コメント投稿フォーム -->
     <form id="commentForm">
         <textarea id="commentContent" placeholder="Add a comment"></textarea>
         <button type="submit">Post</button>
     </form>
-
-    <!-- コメントリストの表示 -->
     <ul id="commentList">
         <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
     </ul>
