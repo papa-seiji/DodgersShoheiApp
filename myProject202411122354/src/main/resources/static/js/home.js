@@ -1,71 +1,36 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const commentList = document.getElementById("commentList");
-    const counterDisplay = document.getElementById("counter-value");
-    const incrementButton = document.getElementById("increment-button");
-    const decrementButton = document.getElementById("decrement-button");
-    const commentForm = document.getElementById("commentForm");
-    const commentContent = document.getElementById("commentContent");
+    const counters = {
+        MainCounter: document.getElementById("main-counter-value"),
+        SecondaryCounter: document.getElementById("secondary-counter-value"),
+    };
 
-    let stompClient = null;
-
-    function connectWebSocket() {
-        const socket = new SockJS("/ws");
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, () => {
-            console.log("WebSocket connected");
-
-            // コメント購読
-            stompClient.subscribe("/topic/comments", (message) => {
-                const comment = JSON.parse(message.body);
-                addComment(comment.content);
-            });
-
-            // カウンター購読
-            stompClient.subscribe("/topic/counter", (message) => {
-                const counterData = JSON.parse(message.body);
-                updateCounterDisplay(counterData.value);
-            });
+    function fetchCounterValues() {
+        Object.keys(counters).forEach(counterName => {
+            fetch(`/counter/${counterName}`)
+                .then(response => response.json())
+                .then(data => {
+                    counters[counterName].textContent = data.value;
+                })
+                .catch(error => console.error(`Error fetching ${counterName}:`, error));
         });
     }
 
-    function addComment(content) {
-        const li = document.createElement("li");
-        li.textContent = content;
-        commentList.appendChild(li);
-    }
-
-    function updateCounterDisplay(value) {
-        counterDisplay.textContent = value;
-    }
-
-    function fetchCounterValue() {
-        fetch("/counter")
+    function updateCounter(counterName, increment) {
+        fetch(`/counter/${counterName}/update?increment=${increment}`, { method: "POST" })
             .then(response => response.json())
-            .then(data => updateCounterDisplay(data.value))
-            .catch(error => console.error("Error fetching counter value:", error));
+            .then(data => {
+                counters[counterName].textContent = data.value;
+            })
+            .catch(error => console.error(`Error updating ${counterName}:`, error));
     }
 
-    function updateCounter(increment) {
-        fetch(`/counter/update?increment=${increment}`, { method: "POST" })
-            .catch(error => console.error("Error updating counter:", error));
-    }
+    // Event Listeners
+    document.getElementById("main-increment-button").addEventListener("click", () => updateCounter("MainCounter", 1));
+    document.getElementById("main-decrement-button").addEventListener("click", () => updateCounter("MainCounter", -1));
 
-    incrementButton.addEventListener("click", () => updateCounter(1));
-    decrementButton.addEventListener("click", () => updateCounter(-1));
+    document.getElementById("secondary-increment-button").addEventListener("click", () => updateCounter("SecondaryCounter", 1));
+    document.getElementById("secondary-decrement-button").addEventListener("click", () => updateCounter("SecondaryCounter", -1));
 
-    commentForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const content = commentContent.value;
-        fetch("/comments/add", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content }),
-        })
-            .then(response => response.json())
-            .catch(error => console.error("Error adding comment:", error));
-    });
-
-    connectWebSocket();
-    fetchCounterValue();
+    // Initialize counters
+    fetchCounterValues();
 });

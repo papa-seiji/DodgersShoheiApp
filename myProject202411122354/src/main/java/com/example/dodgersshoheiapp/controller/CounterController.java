@@ -3,6 +3,7 @@ package com.example.dodgersshoheiapp.controller;
 import com.example.dodgersshoheiapp.model.Counter;
 import com.example.dodgersshoheiapp.service.CounterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +17,28 @@ public class CounterController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @GetMapping
-    public Counter getCounter() {
-        return counterService.getCounter();
+    // Counter情報取得
+    @GetMapping("/{counterName}")
+    public ResponseEntity<Counter> getCounter(@PathVariable String counterName) {
+        Counter counter = counterService.getCounterByName(counterName);
+        return counter != null ? ResponseEntity.ok(counter) : ResponseEntity.notFound().build();
     }
 
+    // Counter値更新
     @PostMapping("/update")
-    public Counter updateCounter(@RequestParam int increment) {
-        Counter updatedCounter = counterService.updateCounterValue(increment);
-        messagingTemplate.convertAndSend("/topic/counter", updatedCounter); // カウンターの更新を通知
-        return updatedCounter;
+    public ResponseEntity<?> updateCounter(@RequestParam String counterName, @RequestParam int increment) {
+        try {
+            Counter updatedCounter = counterService.updateCounterValue(counterName, increment);
+
+            // WebSocketで通知
+            messagingTemplate.convertAndSend("/topic/" + counterName, updatedCounter);
+
+            return ResponseEntity.ok(updatedCounter);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 }
