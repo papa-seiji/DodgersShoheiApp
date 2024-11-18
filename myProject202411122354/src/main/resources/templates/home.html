@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <title>Home</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
@@ -11,31 +12,50 @@
         function connect() {
             const socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
-
-            stompClient.connect({}, function () {
-                console.log('Connected to WebSocket');
-                // サーバーからのメッセージを購読
-                stompClient.subscribe('/topic/comments', function (message) {
-                    showComment(message.body);
+            stompClient.connect({}, () => {
+                stompClient.subscribe('/topic/counter', (message) => {
+                    const counter = JSON.parse(message.body);
+                    document.getElementById('counter-value').textContent = counter.value;
                 });
+
+                // 初期値を取得
+                fetch('/counter', { redirect: 'follow' })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('counter-value').textContent = data.value;
+                    })
+                    .catch(error => console.error('Error fetching counter:', error));
             });
         }
 
-        // 新しいコメントをリストに追加
-        function showComment(comment) {
-            const commentList = document.getElementById('commentList');
-            const li = document.createElement('li');
-            li.textContent = comment;
-            commentList.appendChild(li);
+        function updateCounter(increment) {
+            fetch('/counter/update?increment=' + increment, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update counter: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Updated Counter Value:', data.value);
+            })
+            .catch(error => console.error('Error updating counter:', error));
         }
 
-        // ページロード時にWebSocket接続を開始
-        window.onload = function () {
-            connect();
-        };
+        // ページロード時に接続
+        connect();
     </script>
 </head>
 <body>
+    <h1>Counter: <span id="counter-value">0</span></h1>
+    <!-- ボタンを常に表示 -->
+    <div id="admin-controls">
+        <button id="increment-button" onclick="updateCounter(1)">Increase</button>
+        <button id="decrement-button" onclick="updateCounter(-1)">Decrease</button>
+    </div>
+
     <h1>Comments</h1>
     <!-- コメント投稿フォーム -->
     <form action="/home" method="get">
