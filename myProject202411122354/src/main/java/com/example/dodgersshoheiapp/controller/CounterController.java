@@ -16,17 +16,15 @@ public class CounterController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    // 現在のカウンター値を取得
     @GetMapping
     public Counter getCounter() {
         return counterService.getCounter();
     }
 
-    // カウンター値を更新
     @PostMapping("/update")
     public Counter updateCounter(@RequestParam int increment) {
         Counter updatedCounter = counterService.updateCounterValue(increment);
-        messagingTemplate.convertAndSend("/topic/counter", updatedCounter); // WebSocketで通知
+        messagingTemplate.convertAndSend("/topic/counter", updatedCounter); // カウンターの更新を通知
         return updatedCounter;
     }
 }
