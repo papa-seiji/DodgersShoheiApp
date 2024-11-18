@@ -12,12 +12,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+        config.enableSimpleBroker("/topic"); // トピックのプレフィックス
+        config.setApplicationDestinationPrefixes("/app"); // アプリケーション用プレフィックス
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws") // WebSocketエンドポイント
+                .setAllowedOriginPatterns("*") // CORS設定
+                .withSockJS(); // SockJSフォールバック
     }
 }
