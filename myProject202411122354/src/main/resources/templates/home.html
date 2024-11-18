@@ -12,22 +12,38 @@
         function connect() {
             const socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
+
             stompClient.connect({}, () => {
+                console.log("WebSocket connected");
+
+                // カウンターの購読
                 stompClient.subscribe('/topic/counter', (message) => {
                     const counter = JSON.parse(message.body);
                     document.getElementById('counter-value').textContent = counter.value;
                 });
 
+                // コメントの購読
+                stompClient.subscribe('/topic/comments', (message) => {
+                    const comment = JSON.parse(message.body);
+                    addCommentToList(comment.content);
+                });
+
                 // 初期値を取得
-                fetch('/counter', { redirect: 'follow' })
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('counter-value').textContent = data.value;
-                    })
-                    .catch(error => console.error('Error fetching counter:', error));
+                fetchCounterValue();
             });
         }
 
+        // サーバーから現在のカウンター値を取得して表示
+        function fetchCounterValue() {
+            fetch('/counter', { redirect: 'follow' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('counter-value').textContent = data.value;
+                })
+                .catch(error => console.error('Error fetching counter:', error));
+        }
+
+        // カウンターの更新
         function updateCounter(increment) {
             fetch('/counter/update?increment=' + increment, {
                 method: 'POST'
@@ -38,28 +54,76 @@
                 }
                 return response.json();
             })
-            .then(data => {
-                console.log('Updated Counter Value:', data.value);
-            })
             .catch(error => console.error('Error updating counter:', error));
         }
 
+        // コメントを投稿
+        function postComment(content) {
+            fetch('/comments/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: content }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to post comment');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Comment added:', data);
+                })
+                .catch(error => console.error('Error posting comment:', error));
+        }
+        
+        // コメントリストに追加
+        function addCommentToList(content) {
+            const commentList = document.getElementById('commentList');
+            const li = document.createElement('li');
+            li.textContent = content;
+            commentList.appendChild(li);
+        }
+
         // ページロード時に接続
-        connect();
+        document.addEventListener('DOMContentLoaded', () => {
+            connect();
+
+            // カウンターの増加ボタン
+            document.getElementById('increment-button').addEventListener('click', () => {
+                updateCounter(1);
+            });
+
+            // カウンターの減少ボタン
+            document.getElementById('decrement-button').addEventListener('click', () => {
+                updateCounter(-1);
+            });
+
+            // コメントフォームの送信処理
+            document.getElementById('commentForm').addEventListener('submit', (event) => {
+                event.preventDefault();
+                const commentContent = document.getElementById('commentContent').value;
+                if (commentContent) {
+                    postComment(commentContent);
+                    document.getElementById('commentContent').value = '';
+                }
+            });
+        });
     </script>
 </head>
 <body>
     <h1>Counter: <span id="counter-value">0</span></h1>
     <!-- ボタンを常に表示 -->
     <div id="admin-controls">
-        <button id="increment-button" onclick="updateCounter(1)">Increase</button>
-        <button id="decrement-button" onclick="updateCounter(-1)">Decrease</button>
+        <button id="increment-button">Increase</button>
+        <button id="decrement-button">Decrease</button>
     </div>
 
     <h1>Comments</h1>
     <!-- コメント投稿フォーム -->
-    <form action="/home" method="get">
-        <textarea name="content" placeholder="Add a comment"></textarea>
+    <form id="commentForm">
+        <textarea id="commentContent" placeholder="Add a comment"></textarea>
         <button type="submit">Post</button>
     </form>
 

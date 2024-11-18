@@ -1,7 +1,6 @@
 package com.example.dodgersshoheiapp.model;
 
 import jakarta.persistence.*;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,11 +25,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password; // パスワード
 
-    @Column(nullable = true)
+    @Column(nullable = false, length = 20) // ロールカラムのNULLを禁止し、文字列長制限
     private String role = "USER"; // ロール (デフォルト: USER)
 
     @CreatedDate
-    @Column(updatable = false, nullable = false) // 必須: NULL値を防止
+    @Column(updatable = false, nullable = false) // NULL値を防止し、更新を禁止
     private LocalDateTime createdAt;
 
     @Column(nullable = true)
