@@ -11,19 +11,16 @@ public class Counter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String counterName;
+
+    @Column(nullable = false)
     private int value;
 
-    @Column(name = "updated_at")
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @PreUpdate
-    @PrePersist
-    public void updateTimestamp() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // GetterとSetter
+    // Getters and Setters
     public Long getId() {
         return id;
     }
