@@ -1,8 +1,15 @@
 package com.example.dodgersshoheiapp.controller;
 
 import com.example.dodgersshoheiapp.service.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -29,27 +36,51 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String signup(@RequestParam String username, @RequestParam String password, Model model) {
-        System.out.println("signup endpoint called with username: " + username); // デバッグログ
+        System.out.println("DEBUG: signup endpoint called with username: " + username); // デバッグログ
 
         // ユーザー登録処理
         userService.saveUser(username, password);
 
         // 登録成功メッセージを追加
         model.addAttribute("message", "User registered successfully!");
+        System.out.println("DEBUG: User successfully registered - username: " + username); // デバッグログ
         return "signup-success"; // src/main/resources/templates/signup-success.html をレンダリング
+    }
+
+    @GetMapping("/role")
+    public ResponseEntity<Map<String, String>> getUserRole(Authentication authentication) {
+        System.out.println("DEBUG: /auth/role endpoint accessed"); // デバッグログ
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            System.out.println("DEBUG: Unauthorized access to /auth/role"); // デバッグログ
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_USER");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("role", role);
+
+        System.out.println("DEBUG: User role fetched - role: " + role); // デバッグログ
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        System.out.println("login endpoint called with username: " + username); // デバッグログ
+        System.out.println("DEBUG: login endpoint called with username: " + username); // デバッグログ
 
-        // ログイン処理を呼び出す（詳細は省略）
+        // ログイン処理を呼び出す
         boolean success = userService.authenticate(username, password);
 
         if (success) {
+            System.out.println("DEBUG: Login successful for username: " + username); // デバッグログ
             return ResponseEntity.ok("Login successful");
         } else {
+            System.out.println("DEBUG: Login failed for username: " + username); // デバッグログ
             return ResponseEntity.status(401).body("Invalid username or password");
         }
     }
