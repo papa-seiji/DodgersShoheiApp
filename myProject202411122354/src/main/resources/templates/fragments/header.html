@@ -1,23 +1,31 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head th:fragment="head (title)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title th:text="${title}">Default Title</title>
 </head>
 <body>
-<header class="apple-header">
-    <div class="header-container">
-        <div class="logo">
-            <a href="/">2025_Dodgers</a>
+    <!-- ヘッダーセクション -->
+    <header>
+        <!-- 背景スライドショー -->
+        <div class="slideshow">
+            <img src="/images/m_1540402463_4738_1.jpg" alt="背景画像1">
+            <img src="/images/ecnjbt2nbk2casmczthu.jpg" alt="背景画像2">
+            <img src="/images/get-a-closer-look-at.jpg" alt="背景画像3">
         </div>
-        <nav class="nav-links">
-            <a href="/home">Home</a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-        </nav>
-    </div>
-</header>
+        <!-- ヘッダー内容 -->
+        <div class="header-container">
+            <div class="logo">
+                <a href="/"></a>
+            </div>
+            <nav class="nav-links">
+                <a href="/home">Home</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+            </nav>
+        </div>
+    </header>
 </body>
 </html>
