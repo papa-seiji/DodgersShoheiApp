@@ -1,12 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <!-- fragments/headerでhead部分を読み込み -->
+    <th:block th:replace="fragments/header :: head ('Home Page')"></th:block>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script src="/js/role-check.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- fragments/headerでヘッダー部分を読み込み -->
+    <th:block th:replace="fragments/header :: header"></th:block>
 
+    <div id="counters-container" style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0;">
+        <!-- Main Counter -->
+        <div id="main-counter" style="text-align: center;">
+            <h1>HomeRun: <span id="main-counter-value">0</span></h1>
+            <div id="main-counter-controls" style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
+                <button id="main-increment-button">UP</button>
+                <button id="main-decrement-button">DW</button>
+            </div>
+        </div>
+    
+        <!-- Secondary Counter -->
+        <div id="secondary-counter" style="text-align: center;">
+            <h1>PitchingWin: <span id="secondary-counter-value">0</span></h1>
+            <div id="secondary-counter-controls" style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
+                <button id="secondary-increment-button">UP</button>
+                <button id="secondary-decrement-button">DW</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- コメント機能 -->
+    <h1>TUBUYAKI</h1>
+    <form id="commentForm">
+        <textarea id="commentContent" placeholder="Add a comment"></textarea>
+        <button type="submit">Post</button>
+    </form>
+    <ul id="commentList">
+        <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
+    </ul>
+
+    <!-- ログアウトリンク -->
+    <a href="/auth/logout">Logout</a>
 
     <script>
         let stompClient = null;
@@ -126,34 +163,5 @@
             });
         });
     </script>
-</head>
-<body>
-
-<!-- Main Counter -->
-<h1>Main Counter: <span id="main-counter-value">0</span></h1>
-<div id="main-counter-controls" style="display: none;">
-    <button id="main-increment-button">Increase</button>
-    <button id="main-decrement-button">Decrease</button>
-</div>
-
-<!-- Secondary Counter -->
-<h1>Secondary Counter: <span id="secondary-counter-value">0</span></h1>
-<div id="secondary-counter-controls" style="display: none;">
-    <button id="secondary-increment-button">Increase</button>
-    <button id="secondary-decrement-button">Decrease</button>
-</div>
-
-<!-- コメント機能 -->
-<h1>Comments</h1>
-<form id="commentForm">
-    <textarea id="commentContent" placeholder="Add a comment"></textarea>
-    <button type="submit">Post</button>
-</form>
-<ul id="commentList">
-    <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
-</ul>
-
-<!-- ログアウトリンク -->
-<a href="/auth/logout">Logout</a>
 </body>
 </html>
