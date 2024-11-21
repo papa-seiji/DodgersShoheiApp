@@ -1,25 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- fragments/headerを利用し、ページタイトルを指定 -->
+    <th:block th:replace="fragments/header :: head ('Login Page')"></th:block>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Login</h1>
+    <!-- fragments/headerを利用してヘッダーを表示 -->
+    <th:block th:replace="fragments/header :: header"></th:block>
+
+    <main>
+        <h1>Login</h1>
+        
         <!-- メッセージ表示 -->
         <p th:if="${message}" th:text="${message}"></p>
         
-    <form action="/auth/login" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <form action="/auth/login" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+        </form>
         
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        
-        <button type="submit">Login</button>
-    </form>
-    <a href="/auth/signup">Don't have an account? Sign up here</a>
+        <a href="/auth/signup">Don't have an account? Sign up here</a>
+    </main>
 </body>
 </html>
