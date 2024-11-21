@@ -56,7 +56,7 @@ form button {
     cursor: pointer; /* マウスオーバー時にカーソルを変更 */
     font-size: 1rem; /* フォントサイズ */
     font-weight: 600; /* フォントを太字に */
-    width: 100%; /* ボタンをフォームの幅に合わせる */
+    width: 94%; /* ボタンをフォームの幅に合わせる */
 }
 
 form button:hover {
@@ -140,4 +140,68 @@ a:hover {
     .nav-links a {
         font-size: 0.9rem; /* リンクのフォントサイズを縮小 */
     }
+}
+
+
+
+/* ===== ヘッダーのスタイル ===== */
+header {
+    position: relative; /* 背景画像や内容を重ねられるようにrelativeを設定 */
+    width: 100%; /* ヘッダーをページ全体の幅に対応 */
+    height: 300px; /* ヘッダーの高さを300pxに固定 */
+    overflow: hidden; /* 背景画像の一部がはみ出さないように隠す */
+}
+
+/* ===== 背景画像コンテナ ===== */
+header .slideshow {
+    position: absolute; /* 親要素（ヘッダー）の位置を基準に配置 */
+    width: 100%; /* コンテナ全体を横幅いっぱいに広げる */
+    height: 100%; /* ヘッダー全体を覆う高さに設定 */
+}
+
+/* ===== 背景画像の設定 ===== */
+header .slideshow img {
+    position: absolute; /* 画像をコンテナ内で配置 */
+    width: 100%; /* 画像を横幅いっぱいに拡大縮小 */
+    height: 100%; /* 縦幅もコンテナ全体にフィット */
+    object-fit: cover; /* 画像をトリミングしてコンテナ全体を覆うように調整 */
+    opacity: 0; /* 初期状態では非表示（透明）に設定 */
+    animation: fadeInOut 18s infinite; /* フェードイン・アウトアニメーションを18秒サイクルで繰り返す */
+}
+
+/* ===== 画像ごとのタイミング設定 ===== */
+/* 各画像が滑らかに切り替わるようにタイミングを設定 */
+header .slideshow img:nth-child(1) {
+    animation-delay: 0s; /* 最初の画像はすぐに表示を開始 */
+}
+header .slideshow img:nth-child(2) {
+    animation-delay: 6s; /* 2枚目の画像は6秒後に表示を開始 */
+}
+header .slideshow img:nth-child(3) {
+    animation-delay: 12s; /* 3枚目の画像は12秒後に表示を開始 */
+}
+
+/* ===== フェードイン・アウトアニメーション ===== */
+@keyframes fadeInOut {
+    0% { 
+        opacity: 0; /* 完全に透明 */
+    }
+    10% { 
+        opacity: 0.5; /* ゆっくり透明度を上げ始める */
+    }
+    20%, 30% { 
+        opacity: 1; /* 徐々に完全に表示 */
+    }
+    40% { 
+        opacity: 0.7; /* 徐々に薄くなる */
+    }
+    50%, 100% { 
+        opacity: 0; /* 完全に透明 */
+    }
+}
+
+/* ===== アクセシビリティ対応 ===== */
+/* スクリーンリーダーなどの補助技術に不要な画像情報を隠すための設定 */
+header .slideshow img[aria-hidden="true"] {
+    visibility: hidden; /* aria-hidden属性がtrueの画像は完全に非表示 */
 }
