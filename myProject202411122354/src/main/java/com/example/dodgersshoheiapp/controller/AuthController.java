@@ -36,15 +36,26 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String signup(@RequestParam String username, @RequestParam String password, Model model) {
-        System.out.println("DEBUG: signup endpoint called with username: " + username); // デバッグログ
+        System.out.println("DEBUG: signup endpoint called with username: " + username);
 
-        // ユーザー登録処理
-        userService.saveUser(username, password);
+        try {
+            // ユーザー名の重複チェック
+            if (userService.isUsernameTaken(username)) {
+                model.addAttribute("message", "Username is already taken. Please choose a different one.");
+                return "signup"; // 登録ページに戻る
+            }
 
-        // 登録成功メッセージを追加
-        model.addAttribute("message", "User registered successfully!");
-        System.out.println("DEBUG: User successfully registered - username: " + username); // デバッグログ
-        return "signup-success"; // src/main/resources/templates/signup-success.html をレンダリング
+            // ユーザー登録処理
+            userService.saveUser(username, password);
+
+            model.addAttribute("message", "User registered successfully!");
+            System.out.println("DEBUG: User successfully registered - username: " + username);
+            return "signup-success";
+        } catch (Exception e) {
+            model.addAttribute("message", "An unexpected error occurred. Please try again.");
+            e.printStackTrace();
+            return "signup";
+        }
     }
 
     @GetMapping("/role")
