@@ -15,6 +15,11 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // ユーザー名が既に存在するかをチェック
+    public boolean isUsernameTaken(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
     public void saveUser(String username, String rawPassword) {
         User user = new User();
         user.setUsername(username);
