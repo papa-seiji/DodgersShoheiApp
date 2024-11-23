@@ -1,140 +1,96 @@
-.comments-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin: 20px;
-    gap: 20px;
-}
-
-
-
-#comment-title-container {
-    position: sticky; /* スクロール時に固定 */
-    top: 0; /* ページの最上部に固定 */
-    background-color: #f9f9f9; /* 背景色でスクロール時の透明感を防ぐ */
-    padding: 10px 20px; /* パディングを追加 */
-    z-index: 10; /* コンテンツの上に表示するための優先度 */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 下に影を追加 */
-}
-
-
-#comment-list-container {
-    flex: 2;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    /* スクロール対応 */
-    max-height: 400px; /* コンテナの最大高さ */
-    overflow-y: auto; /* 垂直方向にスクロール可能 */
-    overflow-x: hidden; /* 水平方向のオーバーフローを隠す */
-}
-
-#comment-list-container ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-#comment-list-container li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    word-wrap: break-word; /* 長い単語を改行 */
-}
-
-#comment-list-container li:last-child {
-    border-bottom: none;
-}
-
-
-.comment-item {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.comment-username {
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.comment-timestamp {
-    font-size: 0.9em;
-    color: #777;
-}
-
-.comment-content {
-    margin-top: 5px;
-}
-
-
-
-
-#comment-form-container {
-    flex: 1;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f4f4f4;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* ===== コメントリストのスタイル ===== */
+.unique-comments-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-#comment-form-container textarea {
+    align-items: center;
     width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: none;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-#comment-form-container button {
-    align-self: flex-end;
-    padding: 10px 20px;
+#unique-comment-list-container {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow-y: auto;
+    max-height: 400px; /* スクロール制限 */
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 10px;
+}
+
+#unique-comment-list li {
+    list-style: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.unique-comment-username {
+    font-weight: bold;
+    color: #333;
+}
+
+.unique-comment-timestamp {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.unique-comment-content {
+    margin: 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ===== コメントフォームのスタイル ===== */
+#unique-comment-form-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#unique-commentContent {
+    flex-grow: 1;
+    resize: none;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 1rem;
+}
+
+#unique-commentContent:focus {
+    outline: none;
+    border-color: #aaa;
+}
+
+#unique-submitComment {
+    height: 40px;
+    padding: 0 20px;
+    background-color: #007BFF;
+    color: white;
     border: none;
     border-radius: 4px;
-    background-color: #007bff;
-    color: white;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 1rem;
 }
 
-#comment-form-container button:hover {
+#unique-submitComment:hover {
     background-color: #0056b3;
 }
 
-
-
-
-/* ======== レスポンシブ対応 ======== */
-/* 最大幅768px以下（タブレット）でのレスポンシブ設定 */
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0 10px; /* 画面幅が狭くなったときに余白を調整 */
-    }
-
-    .nav-links {
-        flex-wrap: nowrap; /* リンクが縦並びにならないように指定 */
-        justify-content: flex-end; /* リンクを右寄せに配置 */
-    }
-}
-
-/* 最大幅430px以下（スマートフォン）でのレスポンシブ設定 */
-@media (max-width: 430px) {
-    .navbar {
-        height: 50px; /* ナビゲーションバーの高さを調整 */
-        padding: 0 5px;
-    }
-
-    .nav-links a {
-        font-size: 0.8rem; /* フォントサイズを少し小さく調整 */
-        padding: 5px; /* クリックしやすい領域を調整 */
-    }
+#unique-submitComment:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
