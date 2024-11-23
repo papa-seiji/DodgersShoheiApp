@@ -9,27 +9,24 @@
 <body>
     <th:block th:replace="~{fragments/header :: header}"></th:block>
 
-    <div class="comments-container">
+    <div class="unique-comments-container">
         <!-- コメントリスト -->
-        <div id="comment-list-container">
-            <div id="comment-title-container">
-                <h1>Comments</h1>
+        <div id="unique-comment-list-container">
+            <div id="unique-comment-title-container">
             </div>
-            <ul id="comment-list">
+            <ul id="unique-comment-list">
                 <li th:each="comment : ${comments}">
-                    <span class="comment-username" th:text="${comment.username}">Username</span>
-                    <span class="comment-timestamp" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>
-                    <p class="comment-content" th:text="${comment.content}">Comment content</p>
+                    <span class="unique-comment-username" th:text="${comment.username}">Username</span>
+                    <span class="unique-comment-timestamp" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>
+                    <p class="unique-comment-content" th:text="${comment.content}">Comment content</p>
                 </li>
             </ul>
         </div>
 
         <!-- コメントフォーム -->
-        <div id="comment-form-container">
-            <form id="commentForm">
-                <textarea id="commentContent" placeholder="Add a comment"></textarea>
-                <button type="submit">Post</button>
-            </form>
+        <div id="unique-comment-form-container">
+            <textarea id="unique-commentContent" placeholder="Add a comment"></textarea>
+            <button type="submit" id="unique-submitComment">Post</button>
         </div>
     </div>
 
@@ -45,13 +42,11 @@
 
                 stompClient.subscribe('/topic/comments', (message) => {
                     const comment = JSON.parse(message.body);
-                    console.log("Received comment:", comment);
                     addCommentToList(comment);
                 });
             });
         }
 
-        // コメントを投稿
         function postComment(content) {
             fetch('/comments/add', {
                 method: 'POST',
@@ -62,36 +57,36 @@
                 if (!response.ok) {
                     throw new Error('Failed to post comment');
                 }
-                return response.json(); // サーバーから返された保存済みコメントを取得
+                return response.json();
             })
             .then(data => {
                 console.log('Comment added:', data);
-                // WebSocket通知のみに頼るため、ここではリスト追加処理を行わない
             })
             .catch(error => console.error('Error posting comment:', error));
         }
 
-        // コメントリストに追加
         function addCommentToList(comment) {
-            const commentList = document.getElementById('comment-list');
+            const commentList = document.getElementById('unique-comment-list');
             const li = document.createElement('li');
             li.innerHTML = `
-                <span class="comment-username">${comment.username}</span>
-                <span class="comment-timestamp">${new Date(comment.createdAt).toLocaleString()}</span>
-                <p class="comment-content">${comment.content}</p>
+                <span class="unique-comment-username">${comment.username}</span>
+                <span class="unique-comment-timestamp">${new Date(comment.createdAt).toLocaleString()}</span>
+                <p class="unique-comment-content">${comment.content}</p>
             `;
-            commentList.appendChild(li);
+            commentList.prepend(li);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             connect();
 
-            document.getElementById('commentForm').addEventListener('submit', (event) => {
+            const submitButton = document.getElementById('unique-submitComment');
+            const commentContent = document.getElementById('unique-commentContent');
+
+            submitButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                const commentContent = document.getElementById('commentContent').value;
-                if (commentContent) {
-                    postComment(commentContent);
-                    document.getElementById('commentContent').value = '';
+                if (commentContent.value.trim()) {
+                    postComment(commentContent.value.trim());
+                    commentContent.value = '';
                 }
             });
         });
