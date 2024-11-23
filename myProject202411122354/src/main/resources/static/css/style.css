@@ -1,9 +1,21 @@
+/* ======== ヘッダー ======== */
+header {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    /* margin-top: 60px; ナビゲーションバーの高さ分 */
+}
+
+
+
+
 /* ======== 全体の基本スタイル ======== */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: #F8F8F8; /* 背景色を淡いグレーに */
     color: #1C1C1E; /* テキスト色を暗いグレーに */
-    margin: 0; /* ページ全体の余白をリセット */
+    margin: -7px; /* ページ全体の余白をリセット */
     padding: 0;
     display: flex;
     flex-direction: column; /* 子要素を縦に並べる */
@@ -84,18 +96,18 @@ a:hover {
 
 /* ======== ナビゲーションバー ======== */
 .navbar {
-    position: fixed; /* ページの一番上に固定 */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px; /* ナビゲーションバーの高さ */
-    background-color: rgba(255, 255, 255, 0.9); /* 半透明の白背景 */
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.9);
     display: flex;
-    justify-content: space-between; /* 左右に配置 */
-    align-items: center; /* 縦方向に中央揃え */
+    justify-content: space-between;
+    align-items: center;
     padding: 0 20px;
-    z-index: 20; /* 背景スライドショーの上に配置 */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
+    z-index: 20;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* ロゴ */
@@ -139,7 +151,7 @@ header {
     width: 100%;
     height: 300px;
     overflow: hidden;
-    margin-top: 60px; /* ナビゲーションバーの高さ分だけ下げる */
+    /* margin-top: 60px; ナビゲーションバーの高さ分だけ下げる */
 }
 
 header .slideshow {
@@ -155,7 +167,7 @@ header .slideshow img {
     height: 100%;
     object-fit: cover; /* 画像をトリミングして全体を覆う */
     opacity: 0; /* 初期状態は非表示 */
-    animation: fadeInOut 18s infinite; /* フェードイン・アウトのアニメーション */
+    animation: fadeInOut 8.5s infinite; /* フェードイン・アウトのアニメーション */
 }
 
 /* アニメーションのタイミング */
@@ -182,27 +194,20 @@ header .slideshow img:nth-child(3) {
 
 
 /* ======== レスポンシブ対応 ======== */
-/* 最大幅768px以下（タブレット）でのレスポンシブ設定 */
 @media (max-width: 768px) {
     .navbar {
-        padding: 0 10px; /* 画面幅が狭くなったときに余白を調整 */
+        height: 50px;
     }
-
-    .nav-links {
-        flex-wrap: nowrap; /* リンクが縦並びにならないように指定 */
-        justify-content: flex-end; /* リンクを右寄せに配置 */
-    }
+    /* header {
+        margin-top: 50px;
+    } */
 }
 
-/* 最大幅430px以下（スマートフォン）でのレスポンシブ設定 */
 @media (max-width: 430px) {
     .navbar {
-        height: 50px; /* ナビゲーションバーの高さを調整 */
-        padding: 0 5px;
+        height: 50px;
     }
-
-    .nav-links a {
-        font-size: 0.8rem; /* フォントサイズを少し小さく調整 */
-        padding: 5px; /* クリックしやすい領域を調整 */
-    }
+    /* header {
+        margin-top: 3px;
+    } */
 }
