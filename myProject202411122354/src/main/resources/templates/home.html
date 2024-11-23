@@ -42,8 +42,6 @@
         <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
     </ul>
 
-    <!-- ログアウトリンク -->
-    <a href="/auth/logout">Logout</a>
 
     <script>
         let stompClient = null;
