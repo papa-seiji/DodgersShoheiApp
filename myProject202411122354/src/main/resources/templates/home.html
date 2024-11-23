@@ -31,17 +31,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- コメント機能 -->
-    <h1>TUBUYAKI</h1>
-    <form id="commentForm">
-        <textarea id="commentContent" placeholder="Add a comment"></textarea>
-        <button type="submit">Post</button>
-    </form>
-    <ul id="commentList">
-        <li th:each="comment : ${comments}" th:text="${comment.content}">Comment</li>
-    </ul>
-
 
     <script>
         let stompClient = null;
@@ -64,12 +53,6 @@
                 stompClient.subscribe('/topic/SecondaryCounter', (message) => {
                     const counter = JSON.parse(message.body);
                     document.getElementById('secondary-counter-value').textContent = counter.value;
-                });
-
-                // コメントの購読
-                stompClient.subscribe('/topic/comments', (message) => {
-                    const comment = JSON.parse(message.body);
-                    addCommentToList(comment.content);
                 });
 
                 // 初期値を取得
@@ -103,33 +86,6 @@
             .catch(error => console.error(`Error updating ${counterName} counter:`, error));
         }
 
-        // コメントを投稿
-        function postComment(content) {
-            fetch('/comments/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: content }),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to post comment');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Comment added:', data);
-            })
-            .catch(error => console.error('Error posting comment:', error));
-        }
-
-        // コメントリストに追加
-        function addCommentToList(content) {
-            const commentList = document.getElementById('commentList');
-            const li = document.createElement('li');
-            li.textContent = content;
-            commentList.appendChild(li);
-        }
-
         // ページロード時に接続
         document.addEventListener('DOMContentLoaded', () => {
             connect();
@@ -148,16 +104,6 @@
             });
             document.getElementById('secondary-decrement-button').addEventListener('click', () => {
                 updateCounter("SecondaryCounter", -1);
-            });
-
-            // コメントフォームの送信処理
-            document.getElementById('commentForm').addEventListener('submit', (event) => {
-                event.preventDefault();
-                const commentContent = document.getElementById('commentContent').value;
-                if (commentContent) {
-                    postComment(commentContent);
-                    document.getElementById('commentContent').value = '';
-                }
             });
         });
     </script>
