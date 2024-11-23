@@ -76,132 +76,133 @@ a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
 
-/* ======== Apple風ヘッダーのスタイル ======== */
-.apple-header {
-    background: #96b1f6; /* ヘッダーの背景色 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ヘッダーの下に影をつける */
-    padding: 0.5rem 1rem; /* ヘッダーの内側余白 */
-    position: sticky; /* スクロール時に固定 */
-    top: 0; /* ページ上部に固定 */
-    z-index: 1000; /* 他の要素より上に表示 */
-    width: 100%; /* ヘッダーをページ幅いっぱいに */
+
+
+
+
+
+
+/* ======== ナビゲーションバー ======== */
+.navbar {
+    position: fixed; /* ページの一番上に固定 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* ナビゲーションバーの高さ */
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明の白背景 */
+    display: flex;
+    justify-content: space-between; /* 左右に配置 */
+    align-items: center; /* 縦方向に中央揃え */
+    padding: 0 20px;
+    z-index: 20; /* 背景スライドショーの上に配置 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
 }
 
-.header-container {
-    max-width: 1200px; /* ヘッダーの最大幅 */
-    margin: 0 auto; /* 中央揃え */
-    display: flex; /* 子要素を横並びに */
-    justify-content: space-between; /* 左右に要素を配置 */
-    align-items: center; /* 要素を上下中央揃え */
-}
-
+/* ロゴ */
 .logo a {
-    font-size: 1.5rem; /* ロゴのフォントサイズ */
-    font-weight: bold; /* 太字 */
-    color: #2200ff; /* ロゴの色を黒に */
-    text-decoration: none; /* 下線を消す */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000; /* ロゴの文字色を黒に設定 */
 }
 
+/* ナビゲーションリンク */
 .nav-links {
-    display: flex; /* リンクを横並びに */
-    gap: 1rem; /* 各リンク間にスペースを追加 */
+    display: flex; /* 横並びを維持 */
+    gap: 20px; /* 各リンク間の余白 */
+    flex-wrap: nowrap; /* リンクが折り返されないようにする */
 }
 
 .nav-links a {
-    text-decoration: none; /* リンクの下線を消す */
-    font-size: 1rem; /* リンクのフォントサイズ */
-    color: #f8f8f9; /* Apple風のアクセントカラー */
-    transition: color 0.3s; /* ホバー時の色変化をスムーズに */
+    font-size: 1rem;
+    color: #000; /* リンク文字色を黒に設定 */
+    padding: 5px 10px; /* クリックしやすい領域を追加 */
+    border-radius: 4px; /* 角を少し丸く */
+    transition: background-color 0.3s; /* ホバー時の背景色変化をスムーズに */
 }
 
 .nav-links a:hover {
-    color: #0056b3; /* ホバー時に濃い青に変化 */
-}
-
-/* ======== レスポンシブ対応 (タブレット以下) ======== */
-@media (max-width: 768px) {
-    .nav-links {
-        flex-direction: column; /* リンクを縦並びに */
-        gap: 0.5rem; /* 各リンク間のスペースを調整 */
-    }
-    .header-container {
-        flex-direction: column; /* コンテナ全体を縦並びに */
-    }
-}
-
-/* ======== レスポンシブ対応 (スマートフォン) ======== */
-@media (max-width: 430px) {
-    h1, h2, h3 {
-        font-size: 1.2rem; /* 見出しのフォントサイズを調整 */
-    }
-    form {
-        padding: 1rem; /* フォームの余白を調整 */
-    }
-    .nav-links a {
-        font-size: 0.9rem; /* リンクのフォントサイズを縮小 */
-    }
+    background-color: #E0E0E0; /* ホバー時の背景色を薄いグレーに変更 */
 }
 
 
 
-/* ===== ヘッダーのスタイル ===== */
+
+
+
+
+
+
+
+/* ======== スライドショー ======== */
 header {
-    position: relative; /* 背景画像や内容を重ねられるようにrelativeを設定 */
-    width: 100%; /* ヘッダーをページ全体の幅に対応 */
-    height: 300px; /* ヘッダーの高さを300pxに固定 */
-    overflow: hidden; /* 背景画像の一部がはみ出さないように隠す */
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    margin-top: 60px; /* ナビゲーションバーの高さ分だけ下げる */
 }
 
-/* ===== 背景画像コンテナ ===== */
 header .slideshow {
-    position: absolute; /* 親要素（ヘッダー）の位置を基準に配置 */
-    width: 100%; /* コンテナ全体を横幅いっぱいに広げる */
-    height: 100%; /* ヘッダー全体を覆う高さに設定 */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* 背景として表示 */
 }
 
-/* ===== 背景画像の設定 ===== */
 header .slideshow img {
-    position: absolute; /* 画像をコンテナ内で配置 */
-    width: 100%; /* 画像を横幅いっぱいに拡大縮小 */
-    height: 100%; /* 縦幅もコンテナ全体にフィット */
-    object-fit: cover; /* 画像をトリミングしてコンテナ全体を覆うように調整 */
-    opacity: 0; /* 初期状態では非表示（透明）に設定 */
-    animation: fadeInOut 18s infinite; /* フェードイン・アウトアニメーションを18秒サイクルで繰り返す */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 画像をトリミングして全体を覆う */
+    opacity: 0; /* 初期状態は非表示 */
+    animation: fadeInOut 18s infinite; /* フェードイン・アウトのアニメーション */
 }
 
-/* ===== 画像ごとのタイミング設定 ===== */
-/* 各画像が滑らかに切り替わるようにタイミングを設定 */
+/* アニメーションのタイミング */
 header .slideshow img:nth-child(1) {
-    animation-delay: 0s; /* 最初の画像はすぐに表示を開始 */
+    animation-delay: 0s;
 }
+
 header .slideshow img:nth-child(2) {
-    animation-delay: 6s; /* 2枚目の画像は6秒後に表示を開始 */
+    animation-delay: 6s;
 }
+
 header .slideshow img:nth-child(3) {
-    animation-delay: 12s; /* 3枚目の画像は12秒後に表示を開始 */
+    animation-delay: 12s;
 }
 
-/* ===== フェードイン・アウトアニメーション ===== */
+/* フェードイン・アウトアニメーション */
 @keyframes fadeInOut {
-    0% {
-        opacity: 0; /* 完全に透明 */
+    0%, 100% { opacity: 0; } /* 最初と最後は非表示 */
+    20%, 80% { opacity: 1; } /* 中間部分で表示 */
+}
+
+
+
+
+
+/* ======== レスポンシブ対応 ======== */
+/* 最大幅768px以下（タブレット）でのレスポンシブ設定 */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 10px; /* 画面幅が狭くなったときに余白を調整 */
     }
-    10% {
-        opacity: 0.5; /* ゆっくり透明度を上げ始める */
-    }
-    20%, 30% {
-        opacity: 1; /* 徐々に完全に表示 */
-    }
-    40% {
-        opacity: 0.7; /* 徐々に薄くなる */
-    }
-    50%, 100% {
-        opacity: 0; /* 完全に透明 */
+
+    .nav-links {
+        flex-wrap: nowrap; /* リンクが縦並びにならないように指定 */
+        justify-content: flex-end; /* リンクを右寄せに配置 */
     }
 }
 
-/* ===== アクセシビリティ対応 ===== */
-/* スクリーンリーダーなどの補助技術に不要な画像情報を隠すための設定 */
-header .slideshow img[aria-hidden="true"] {
-    visibility: hidden; /* aria-hidden属性がtrueの画像は完全に非表示 */
+/* 最大幅430px以下（スマートフォン）でのレスポンシブ設定 */
+@media (max-width: 430px) {
+    .navbar {
+        height: 50px; /* ナビゲーションバーの高さを調整 */
+        padding: 0 5px;
+    }
+
+    .nav-links a {
+        font-size: 0.8rem; /* フォントサイズを少し小さく調整 */
+        padding: 5px; /* クリックしやすい領域を調整 */
+    }
 }
