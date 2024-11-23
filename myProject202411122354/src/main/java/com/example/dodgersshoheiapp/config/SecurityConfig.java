@@ -28,7 +28,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRFを無効化（必要に応じて変更）
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**", "/comments")
+                        .requestMatchers("/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**", "/comments",
+                                "/links")
                         .permitAll() // 公開URL
                         .anyRequest().authenticated() // その他は認証が必要
                 )
