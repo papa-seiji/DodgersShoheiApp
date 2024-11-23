@@ -11,13 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/comments")
 public class CommentController {
 
@@ -30,13 +32,26 @@ public class CommentController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    // コメントをすべて取得
+    /**
+     * コメントページの表示
+     *
+     * @param model Thymeleaf に渡すモデル
+     * @return comments.html テンプレート
+     */
     @GetMapping
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+    public String showCommentsPage(Model model) {
+        List<Comment> comments = commentRepository.findAll();
+        model.addAttribute("comments", comments); // コメントをモデルに追加
+        return "comments"; // comments.html をレンダリング
     }
 
-    // 新しいコメントを追加
+    /**
+     * 新しいコメントを追加
+     *
+     * @param comment        リクエストボディに含まれるコメントデータ
+     * @param authentication 現在の認証情報
+     * @return 保存されたコメントまたはエラーのレスポンス
+     */
     @PostMapping("/add")
     public ResponseEntity<Comment> addComment(@RequestBody Comment comment, Authentication authentication) {
         if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
@@ -54,14 +69,15 @@ public class CommentController {
         User user = userOptional.get();
 
         // コメントにユーザー情報をセット
-        comment.setUser(user); // ユーザーエンティティの関連付け
-        comment.setUsername(user.getUsername()); // `comments`テーブルの`username`カラムに登録
-        comment.setCreatedAt(LocalDateTime.now()); // 作成日時を設定
+        comment.setUser(user);
+        comment.setUsername(user.getUsername());
+        comment.setCreatedAt(LocalDateTime.now());
 
         // コメントを保存
         Comment savedComment = commentRepository.save(comment);
 
         // WebSocketで通知
+        System.out.println("WebSocket通知データ: " + savedComment); // デバッグログ追加
         messagingTemplate.convertAndSend("/topic/comments", savedComment);
 
         return ResponseEntity.ok(savedComment);
