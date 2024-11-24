@@ -26,7 +26,7 @@ body {
 
 /* ======== 見出しスタイル ======== */
 h1, h2, h3 {
-    font-weight: 400; /* 見出しを太字に */
+    /*font-weight: 400;*/ /* 見出しを太字に */
     color: #007AFF; /* Apple風のアクセントカラー */
     margin-bottom: 2rem; /* 見出しの下に余白を追加 */
 }
@@ -87,6 +87,7 @@ a {
 a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
+
 
 
 
