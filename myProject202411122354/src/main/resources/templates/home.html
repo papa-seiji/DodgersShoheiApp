@@ -1,37 +1,50 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- fragments/headerでhead部分を読み込み -->
     <th:block th:replace="fragments/header :: head ('Home Page')"></th:block>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script src="/js/role-check.js"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/Douga.css}">
 </head>
 <body>
-    <!-- fragments/headerでヘッダー部分を読み込み -->
     <th:block th:replace="fragments/header :: header"></th:block>
 
-    <div id="counters-container" style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0;">
-        <!-- Main Counter -->
-        <div id="main-counter" style="text-align: center;">
-            <h1>HomeRun: <span id="main-counter-value">0</span></h1>
-            <div id="main-counter-controls" style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
-                <button id="main-increment-button">UP</button>
-                <button id="main-decrement-button">DW</button>
+    <!-- 動画セクション -->
+    <div id="douga-page">
+        <div id="douga-grid">
+            <!-- 左側の動画とカウンター -->
+            <div class="douga-section">
+                <h3>2024 World Series メッツ戦 先制HR</h3>
+                <div id="douga-container-1">
+                    <iframe id="douga-video-1" width="560" height="315" src="https://www.youtube.com/embed/fuOMrPaLRP4?si=Dv03ihOMgv0ovkUj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <h3>HomeRun: <span id="main-counter-value">0</span></h3>
+                <div id="main-counter-controls" class="admin-controls" style="display: none;">
+                    <button id="main-increment-button">UP</button>
+                    <button id="main-decrement-button">DW</button>
+                </div>
             </div>
-        </div>
-    
-        <!-- Secondary Counter -->
-        <div id="secondary-counter" style="text-align: center;">
-            <h1>PitchingWin: <span id="secondary-counter-value">0</span></h1>
-            <div id="secondary-counter-controls" style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
-                <button id="secondary-increment-button">UP</button>
-                <button id="secondary-decrement-button">DW</button>
+
+            <!-- 右側の動画とカウンター -->
+            <div class="douga-section">
+                <h3>2023年投げてた頃LAA</h3>
+                <div id="douga-container-2">
+                    <iframe id="douga-video-2" width="560" height="315" src="https://www.youtube.com/embed/GVcOeTh6WcY?si=OySizA_xccNE7SOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <h3>PitchingWin: <span id="secondary-counter-value">0</span></h3>
+                <div id="secondary-counter-controls" class="admin-controls" style="display: none;">
+                    <button id="secondary-increment-button">UP</button>
+                    <button id="secondary-decrement-button">DW</button>
+                </div>
             </div>
         </div>
     </div>
 
+
+    
     <script>
         let stompClient = null;
 
