@@ -1,0 +1,61 @@
+/* 動画ページ全体のスタイル */
+#douga-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* 動画セクション全体のスタイル */
+#douga-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* 各動画セクション */
+.douga-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+}
+
+/* 動画コンテナのスタイル */
+#douga-container-1,
+#douga-container-2 {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    height: 315px;
+    margin: 10px 0;
+    background-color: #000;
+}
+
+/* カウンター部分のスタイル */
+.counter-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.counter-controls button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.counter-controls button:hover {
+    background-color: #0056b3;
+}
+
