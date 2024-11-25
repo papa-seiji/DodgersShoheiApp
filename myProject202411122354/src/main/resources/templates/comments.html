@@ -7,26 +7,36 @@
     <link rel="stylesheet" th:href="@{/css/comment.css}">
 </head>
 <body>
-    <th:block th:replace="~{fragments/header :: header}"></th:block>
+    <!-- ナビゲーションバー -->
+    <div id="header-navbar" th:fragment="header">
+        <div id="header-logo">
+            <a href="https://www.mlb.com/dodgers">Dodgers</a>
+        </div>
+        <nav id="header-nav-links">
+            <a href="/home">Home</a>
+            <a href="/links">Links</a>
+            <a href="/comments">Comments</a>
+            <a href="/auth/logout">Logout</a>
+        </nav>
+    </div>
 
-    <div class="unique-comments-container">
+    <!-- コメント全体コンテナ -->
+    <div class="comment-container">
         <!-- コメントリスト -->
-        <div id="unique-comment-list-container">
-            <div id="unique-comment-title-container">
-            </div>
-            <ul id="unique-comment-list">
+        <div id="comment-list-container">
+            <ul id="comment-list">
                 <li th:each="comment : ${comments}">
-                    <span class="unique-comment-username" th:text="${comment.username}">Username</span>
-                    <span class="unique-comment-timestamp" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>
-                    <p class="unique-comment-content" th:text="${comment.content}">Comment content</p>
+                    <span class="comment-username" th:text="${comment.username}">Username</span>
+                    <span class="comment-timestamp" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>
+                    <p class="comment-content" th:text="${comment.content}">Comment content</p>
                 </li>
             </ul>
         </div>
 
         <!-- コメントフォーム -->
-        <div id="unique-comment-form-container">
-            <textarea id="unique-commentContent" placeholder="Add a comment"></textarea>
-            <button type="submit" id="unique-submitComment">Post</button>
+        <div id="comment-form-container">
+            <textarea id="commentContent" placeholder="Add a comment"></textarea>
+            <button type="submit" id="submitComment">Post</button>
         </div>
     </div>
 
@@ -66,12 +76,12 @@
         }
 
         function addCommentToList(comment) {
-            const commentList = document.getElementById('unique-comment-list');
+            const commentList = document.getElementById('comment-list');
             const li = document.createElement('li');
             li.innerHTML = `
-                <span class="unique-comment-username">${comment.username}</span>
-                <span class="unique-comment-timestamp">${new Date(comment.createdAt).toLocaleString()}</span>
-                <p class="unique-comment-content">${comment.content}</p>
+                <span class="comment-username">${comment.username}</span>
+                <span class="comment-timestamp">${new Date(comment.createdAt).toLocaleString()}</span>
+                <p class="comment-content">${comment.content}</p>
             `;
             commentList.prepend(li);
         }
@@ -79,8 +89,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             connect();
 
-            const submitButton = document.getElementById('unique-submitComment');
-            const commentContent = document.getElementById('unique-commentContent');
+            const submitButton = document.getElementById('submitComment');
+            const commentContent = document.getElementById('commentContent');
 
             submitButton.addEventListener('click', (event) => {
                 event.preventDefault();
