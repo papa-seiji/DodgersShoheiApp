@@ -1,15 +1,3 @@
-/* ======== ヘッダー ======== */
-header {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-    /* margin-top: 60px; ナビゲーションバーの高さ分 */
-}
-
-
-
-
 /* ======== 全体の基本スタイル ======== */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -26,7 +14,6 @@ body {
 
 /* ======== 見出しスタイル ======== */
 h1, h2, h3 {
-    /*font-weight: 400;*/ /* 見出しを太字に */
     color: #007AFF; /* Apple風のアクセントカラー */
     margin-bottom: 2rem; /* 見出しの下に余白を追加 */
 }
@@ -88,127 +75,11 @@ a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
 
-
-
-
-
-
-
-
-/* ======== ナビゲーションバー ======== */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background-color: rgba(255, 255, 255, 0.9);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    z-index: 20;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* ロゴ */
-.logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #000; /* ロゴの文字色を黒に設定 */
-}
-
-/* ナビゲーションリンク */
-.nav-links {
-    display: flex; /* 横並びを維持 */
-    gap: 20px; /* 各リンク間の余白 */
-    flex-wrap: nowrap; /* リンクが折り返されないようにする */
-}
-
-.nav-links a {
-    font-size: 1rem;
-    color: #000; /* リンク文字色を黒に設定 */
-    padding: 5px 10px; /* クリックしやすい領域を追加 */
-    border-radius: 4px; /* 角を少し丸く */
-    transition: background-color 0.3s; /* ホバー時の背景色変化をスムーズに */
-}
-
-.nav-links a:hover {
-    background-color: #E0E0E0; /* ホバー時の背景色を薄いグレーに変更 */
-}
-
-
-
-
-
-
-
-
-
-
-/* ======== スライドショー ======== */
-header {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-    /* margin-top: 60px; ナビゲーションバーの高さ分だけ下げる */
-}
-
-header .slideshow {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 0; /* 背景として表示 */
-}
-
-header .slideshow img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 画像をトリミングして全体を覆う */
-    opacity: 0; /* 初期状態は非表示 */
-    animation: fadeInOut 8.5s infinite; /* フェードイン・アウトのアニメーション */
-}
-
-/* アニメーションのタイミング */
-header .slideshow img:nth-child(1) {
-    animation-delay: 0s;
-}
-
-header .slideshow img:nth-child(2) {
-    animation-delay: 6s;
-}
-
-header .slideshow img:nth-child(3) {
-    animation-delay: 12s;
-}
-
-/* フェードイン・アウトアニメーション */
-@keyframes fadeInOut {
-    0%, 100% { opacity: 0; } /* 最初と最後は非表示 */
-    20%, 80% { opacity: 1; } /* 中間部分で表示 */
-}
-
-
-
-
-
 /* ======== レスポンシブ対応 ======== */
 @media (max-width: 768px) {
-    .navbar {
-        height: 50px;
-    }
-    /* header {
-        margin-top: 50px;
-    } */
+    /* 他のスタイルに応じて必要であれば記述 */
 }
 
 @media (max-width: 430px) {
-    .navbar {
-        height: 50px;
-    }
-    /* header {
-        margin-top: 3px;
-    } */
+    /* 他のスタイルに応じて必要であれば記述 */
 }
