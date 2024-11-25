@@ -45,7 +45,7 @@
     position: relative;
     width: 100%;
     height: 300px; /* 高さはそのまま */
-    margin-top: 50px; /* ナビゲーションバーの高さ分を確保 */
+    margin-top: 40px; /* ナビゲーションバーの高さ分を確保 */
     overflow: hidden;
     z-index: 0; /* ナビゲーションバーの後ろ */
 }
@@ -63,26 +63,28 @@
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    animation: fadeInOut 8.5s infinite; /* スライドショーの設定を維持 */
+    animation: fadeInOut 32s infinite; /* アニメーション全体の時間 */
 }
 
 /* アニメーションのタイミング */
 #header-slideshow-container img:nth-child(1) {
-    animation-delay: 0s;
+    animation-delay: 0s; /* すぐに表示 */
 }
-
 #header-slideshow-container img:nth-child(2) {
-    animation-delay: 6s;
+    animation-delay: 8s;
 }
-
 #header-slideshow-container img:nth-child(3) {
-    animation-delay: 12s;
+    animation-delay: 16s;
+}
+#header-slideshow-container img:nth-child(4) {
+    animation-delay: 24s;
 }
 
 /* フェードイン・アウトアニメーション */
 @keyframes fadeInOut {
-    0%, 100% { opacity: 0; }
-    20%, 80% { opacity: 1; }
+    0%, 10% { opacity: 1; }   /* 最初の瞬間に表示 */
+    25%, 75% { opacity: 0; }  /* 他の画像が表示中 */
+    90%, 100% { opacity: 1; } /* 次の画像がフェードイン */
 }
 
 /* ======== レスポンシブ対応 ======== */
@@ -101,7 +103,7 @@
     }
 
     #header-slideshow {
-        height: 200px; /* 高さを縮小 */
+        height: 190px; /* 高さを縮小 */
     }
 }
 
