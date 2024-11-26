@@ -80,8 +80,46 @@
     background-color: rgba(255, 255, 255, 0.8); /* 半透明の背景 */
     height: calc(100vh - 60px - 50px - 1px); /* navbar: 60px, コメントフォーム: 50px, ギャップ: 1px */
     margin-top: 0.5px; /* navbarとの間隔 */
-    margin-bottom: 0.5px; /* コメントフォームとの間隔 */
+    margin-bottom: 20px; /* コメントフォームとの間に余白を追加 */
+    max-height: 631px; /* スクロール制限 */
 }
+
+
+#comment-list li {
+    list-style: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.comment-username {
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-timestamp {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.comment-content {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold; /* コメント内容を太字に */
+    color: #555;
+}
+
+#comment-list li:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+#comment-list li:nth-child(even) {
+    background-color: #ffffff;
+}
+
 
 /* ===== コメントフォーム ===== */
 #comment-form-container {
