@@ -7,10 +7,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import com.example.dodgersshoheiapp.service.VisitorCounterService;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -18,9 +19,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final VisitorCounterService visitorCounterService;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, VisitorCounterService visitorCounterService) {
         this.userDetailsService = userDetailsService;
+        this.visitorCounterService = visitorCounterService;
     }
 
     @Bean
@@ -29,13 +32,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRFを無効化（必要に応じて変更）
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**", "/comments",
-                                "/links", "/auth/userinfo")
+                                "/links", "/auth/userinfo", "/api/visitorCounter/**")
                         .permitAll() // 公開URL
                         .anyRequest().authenticated() // その他は認証が必要
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login") // カスタムログインページ
                         .defaultSuccessUrl("/home", true) // ログイン成功後の遷移先
+                        .successHandler(visitorCounterSuccessHandler()) // VisitorCounter用の成功ハンドラーを登録
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
@@ -67,5 +71,16 @@ public class SecurityConfig {
                 .passwordEncoder(passwordEncoder()) // パスワードエンコーダを指定
                 .and()
                 .build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler visitorCounterSuccessHandler() {
+        return (request, response, authentication) -> {
+            // VisitorCounterを更新
+            visitorCounterService.incrementVisitorCounter();
+
+            // ログイン成功後のリダイレクト
+            response.sendRedirect("/home");
+        };
     }
 }
