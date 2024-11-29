@@ -9,11 +9,85 @@ body {
     flex-direction: column; /* 子要素を縦に並べる */
     align-items: center; /* 子要素を中央揃え */
     justify-content: center; /* 子要素を上下中央揃え */
-    min-height: 100vh; /* ページ全体を画面いっぱいに表示 */
+    /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
 }
 
+
+/* キラキラテキストエフェクト */
+.shiny-text {
+    font-size: 2.5rem; /* 好みのサイズに調整 */
+    font-weight: bold;
+    background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493, #ffd700);
+    background-size: 400%; /* アニメーション効果を出すために背景を拡大 */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shiny-effect 4s linear infinite;
+    text-align: center; /* 中央揃え */
+    margin: 7px 0; /* 上下の余白を追加 */
+}
+
+/* アニメーション効果 */
+@keyframes shiny-effect {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* テキストスタイル */
+#fifty_fifty {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #ff4500;
+    margin: 3px 0;
+    z-index: 1;
+    position: relative;
+}
+
+/* 紙吹雪用コンテナ */
+#confetti-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    /* height: 300px; */
+    background: transparent;
+}
+
+/* 紙吹雪のデザイン */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--confetti-color, #ff0);
+    opacity: 0.8;
+    border-radius: 50%;
+    animation: confetti-fall 4s linear infinite, confetti-drift 4s ease-in-out infinite;
+}
+
+/* 紙吹雪の落下アニメーション */
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+/* 紙吹雪の左右揺れアニメーション */
+@keyframes confetti-drift {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(50px);
+    }
+}
+
+
 /* ======== 見出しスタイル ======== */
-h1, h2, h3 {
+h2, h3 {
     color: #007AFF; /* Apple風のアクセントカラー */
     margin-bottom: 2rem; /* 見出しの下に余白を追加 */
 }
@@ -75,14 +149,6 @@ a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
 
-/* ======== レスポンシブ対応 ======== */
-@media (max-width: 768px) {
-    /* 他のスタイルに応じて必要であれば記述 */
-}
-
-@media (max-width: 430px) {
-    /* 他のスタイルに応じて必要であれば記述 */
-}
 
 
 /* ======== ヘッダーのナビゲーションバー ======== */
@@ -135,3 +201,419 @@ a:hover {
     background-color: #E0E0E0;
 }
 
+
+
+/* ======== レスポンシブ対応 ======== */
+@media (max-width: 768px) {
+    /* 他のスタイルに応じて必要であれば記述 */
+    /* ======== 全体の基本スタイル ======== */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #F8F8F8; /* 背景色を淡いグレーに */
+    color: #1C1C1E; /* テキスト色を暗いグレーに */
+    margin: -7px; /* ページ全体の余白をリセット */
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* 子要素を縦に並べる */
+    align-items: center; /* 子要素を中央揃え */
+    justify-content: center; /* 子要素を上下中央揃え */
+    /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
+}
+
+
+/* キラキラテキストエフェクト */
+.shiny-text {
+    font-size: 2.5rem; /* 好みのサイズに調整 */
+    font-weight: bold;
+    background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493, #ffd700);
+    background-size: 400%; /* アニメーション効果を出すために背景を拡大 */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shiny-effect 4s linear infinite;
+    text-align: center; /* 中央揃え */
+    margin: 7px 0; /* 上下の余白を追加 */
+}
+
+/* アニメーション効果 */
+@keyframes shiny-effect {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* テキストスタイル */
+#fifty_fifty {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #ff4500;
+    margin: 3px 0;
+    z-index: 1;
+    position: relative;
+}
+
+/* 紙吹雪用コンテナ */
+#confetti-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    /* height: 300px; */
+    background: transparent;
+}
+
+/* 紙吹雪のデザイン */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--confetti-color, #ff0);
+    opacity: 0.8;
+    border-radius: 50%;
+    animation: confetti-fall 4s linear infinite, confetti-drift 4s ease-in-out infinite;
+}
+
+/* 紙吹雪の落下アニメーション */
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+/* 紙吹雪の左右揺れアニメーション */
+@keyframes confetti-drift {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(50px);
+    }
+}
+
+
+/* ======== 見出しスタイル ======== */
+h2, h3 {
+    color: #007AFF; /* Apple風のアクセントカラー */
+    margin-bottom: 2rem; /* 見出しの下に余白を追加 */
+}
+
+/* ======== フォーム全体のスタイル ======== */
+form {
+    background-color: #FFFFFF; /* 白い背景 */
+    padding: 2rem; /* フォーム全体の内側の余白 */
+    border-radius: 8px; /* 角を丸くする */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影をつけて浮いているように見せる */
+    max-width: 400px; /* フォームの最大幅を設定 */
+    width: 100%; /* スマホ対応で幅を可変に */
+}
+
+form label {
+    display: block; /* ラベルをブロック表示 */
+    margin-bottom: 0.5rem; /* 下に余白を追加 */
+    font-size: 1rem; /* フォントサイズを適切に */
+    color: #1C1C1E; /* テキスト色を暗いグレーに */
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%; /* フォームの幅を100%に設定 */
+    padding: 0.8rem; /* テキストフィールドの内側余白 */
+    margin-bottom: 1rem; /* 下に余白を追加 */
+    border: 1px solid #D1D1D6; /* ボーダーを薄いグレーに */
+    border-radius: 6px; /* 角を少し丸くする */
+    font-size: 1rem; /* フォントサイズを適切に */
+}
+
+/* ======== ボタンのスタイル ======== */
+form button {
+    background-color: #007AFF; /* Apple風のアクセントカラー */
+    color: #FFFFFF; /* テキストを白に */
+    border: none; /* ボーダーを消す */
+    padding: 0.8rem; /* ボタンの内側余白 */
+    border-radius: 6px; /* 角を丸くする */
+    cursor: pointer; /* マウスオーバー時にカーソルを変更 */
+    font-size: 1rem; /* フォントサイズ */
+    font-weight: 600; /* フォントを太字に */
+    width: 94%; /* ボタンをフォームの幅に合わせる */
+}
+
+form button:hover {
+    background-color: #005BBB; /* ホバー時に濃い青に変化 */
+}
+
+/* ======== リンクのスタイル ======== */
+a {
+    color: #007AFF; /* Apple風のアクセントカラー */
+    text-decoration: none; /* 下線を消す */
+    font-size: 0.9rem; /* リンクのフォントサイズ */
+    margin-top: 1rem; /* 上に余白を追加 */
+    display: inline-block; /* インライン要素として表示 */
+}
+
+a:hover {
+    text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+
+
+/* ======== ヘッダーのナビゲーションバー ======== */
+#header-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px; /* 高さを調整 */
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10; /* スライドショーより前面 */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 軽めの影 */
+}
+
+#header-logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+}
+
+
+#header-user-info {
+    font-size: 1rem;
+    color: #333;
+    margin-left: 20px;
+    display: inline-block;
+}
+
+#header-nav-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+#header-nav-links a {
+    font-size: 1rem;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease-in-out;
+    text-decoration: none;
+}
+
+#header-nav-links a:hover {
+    background-color: #E0E0E0;
+}
+
+}
+
+@media (max-width: 430px) {
+    /* 他のスタイルに応じて必要であれば記述 */
+    /* ======== 全体の基本スタイル ======== */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #F8F8F8; /* 背景色を淡いグレーに */
+    color: #1C1C1E; /* テキスト色を暗いグレーに */
+    margin: -7px; /* ページ全体の余白をリセット */
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* 子要素を縦に並べる */
+    align-items: center; /* 子要素を中央揃え */
+    justify-content: center; /* 子要素を上下中央揃え */
+    /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
+}
+
+
+/* キラキラテキストエフェクト */
+.shiny-text {
+    font-size: 2.5rem; /* 好みのサイズに調整 */
+    font-weight: bold;
+    background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493, #ffd700);
+    background-size: 400%; /* アニメーション効果を出すために背景を拡大 */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shiny-effect 4s linear infinite;
+    text-align: center; /* 中央揃え */
+    margin: 7px 0; /* 上下の余白を追加 */
+}
+
+/* アニメーション効果 */
+@keyframes shiny-effect {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* テキストスタイル */
+#fifty_fifty {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #ff4500;
+    margin: 3px 0;
+    z-index: 1;
+    position: relative;
+}
+
+/* 紙吹雪用コンテナ */
+#confetti-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    /* height: 300px; */
+    background: transparent;
+}
+
+/* 紙吹雪のデザイン */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--confetti-color, #ff0);
+    opacity: 0.8;
+    border-radius: 50%;
+    animation: confetti-fall 4s linear infinite, confetti-drift 4s ease-in-out infinite;
+}
+
+/* 紙吹雪の落下アニメーション */
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+/* 紙吹雪の左右揺れアニメーション */
+@keyframes confetti-drift {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(50px);
+    }
+}
+
+
+/* ======== 見出しスタイル ======== */
+h2, h3 {
+    color: #007AFF; /* Apple風のアクセントカラー */
+    margin-bottom: 2rem; /* 見出しの下に余白を追加 */
+}
+
+/* ======== フォーム全体のスタイル ======== */
+form {
+    background-color: #FFFFFF; /* 白い背景 */
+    padding: 2rem; /* フォーム全体の内側の余白 */
+    border-radius: 8px; /* 角を丸くする */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影をつけて浮いているように見せる */
+    max-width: 400px; /* フォームの最大幅を設定 */
+    width: 100%; /* スマホ対応で幅を可変に */
+}
+
+form label {
+    display: block; /* ラベルをブロック表示 */
+    margin-bottom: 0.5rem; /* 下に余白を追加 */
+    font-size: 1rem; /* フォントサイズを適切に */
+    color: #1C1C1E; /* テキスト色を暗いグレーに */
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%; /* フォームの幅を100%に設定 */
+    padding: 0.8rem; /* テキストフィールドの内側余白 */
+    margin-bottom: 1rem; /* 下に余白を追加 */
+    border: 1px solid #D1D1D6; /* ボーダーを薄いグレーに */
+    border-radius: 6px; /* 角を少し丸くする */
+    font-size: 1rem; /* フォントサイズを適切に */
+}
+
+/* ======== ボタンのスタイル ======== */
+form button {
+    background-color: #007AFF; /* Apple風のアクセントカラー */
+    color: #FFFFFF; /* テキストを白に */
+    border: none; /* ボーダーを消す */
+    padding: 0.8rem; /* ボタンの内側余白 */
+    border-radius: 6px; /* 角を丸くする */
+    cursor: pointer; /* マウスオーバー時にカーソルを変更 */
+    font-size: 1rem; /* フォントサイズ */
+    font-weight: 600; /* フォントを太字に */
+    width: 94%; /* ボタンをフォームの幅に合わせる */
+}
+
+form button:hover {
+    background-color: #005BBB; /* ホバー時に濃い青に変化 */
+}
+
+/* ======== リンクのスタイル ======== */
+a {
+    color: #007AFF; /* Apple風のアクセントカラー */
+    text-decoration: none; /* 下線を消す */
+    font-size: 0.9rem; /* リンクのフォントサイズ */
+    margin-top: 1rem; /* 上に余白を追加 */
+    display: inline-block; /* インライン要素として表示 */
+}
+
+a:hover {
+    text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+
+
+/* ======== ヘッダーのナビゲーションバー ======== */
+#header-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px; /* 高さを調整 */
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10; /* スライドショーより前面 */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 軽めの影 */
+}
+
+#header-logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+}
+
+
+#header-user-info {
+    font-size: 1rem;
+    color: #333;
+    margin-left: 20px;
+    display: inline-block;
+}
+
+#header-nav-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+#header-nav-links a {
+    font-size: 1rem;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease-in-out;
+    text-decoration: none;
+}
+
+#header-nav-links a:hover {
+    background-color: #E0E0E0;
+}
+
+}
