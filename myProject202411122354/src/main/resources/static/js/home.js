@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error('Error incrementing visitor counter:', error));
     }
 
+    
     // Event Listeners
     if (document.getElementById("main-increment-button")) {
         document.getElementById("main-increment-button").addEventListener("click", () => updateCounter("MainCounter", 1));
