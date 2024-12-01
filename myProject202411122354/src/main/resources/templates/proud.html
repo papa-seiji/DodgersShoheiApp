@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/proud.css}">
-    <script src="/js/proud.js"></script> <!-- home.jsを追加 -->
+    <script src="/js/home.js"></script> <!-- 訪問者カウンターを呼び込むためにhome.jsを追加 -->
+    <script src="/js/proud.js" defer></script>
+    <title>Proud Gallery</title>
 
-    <title>Proud</title>
-    <!--<script src="/js/proud.js" defer></script> -->
 </head>
 <body>
         <!-- ナビゲーションバー -->
@@ -28,24 +28,22 @@
                 <a href="/links">Links</a>
                 <a href="/auth/logout">Logout</a>
             </nav>
-            </div>
-    
-    
-        <!-- fragments/headerを利用してヘッダーを表示 -->
-            <th:block th:replace="fragments/header :: header"></th:block>
-    
-    <header>
-        <h1>Proud Gallery</h1>
-    </header>
-    <div id="image-gallery"></div>
-    <div id="comment-section">
-        <h2>Comments</h2>
-        <form id="comment-form">
-            <textarea id="comment-text" placeholder="Add your comment..."></textarea>
-            <button type="submit">Post</button>
-        </form>
-        <ul id="comment-list"></ul>
-    </div>
+        </div>
+
+        
+        <header>
+            <h1>Proud Gallery</h1>
+        </header>
+        
+        <main>
+            <form id="image-upload-form" enctype="multipart/form-data">
+                <input type="file" id="image-file" name="image" accept="image/*" required>
+                <input type="text" id="image-description" name="description" placeholder="Enter description" required>
+                <input type="hidden" name="createdBy" value="current_user">
+                <button type="submit">Upload</button>
+            </form>
+            <div id="image-gallery" class="gallery"></div>
+        </main>
 
     <script>
         // ユーザー情報を取得してヘッダーに表示
