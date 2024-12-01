@@ -1,82 +1,61 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const counters = {
-        MainCounter: document.getElementById("main-counter-value"),
-        SecondaryCounter: document.getElementById("secondary-counter-value"),
-        VisitorCounter: document.getElementById("visitor-counter-value"), // VisitorCounterを追加
-    };
+    const uploadForm = document.getElementById("image-upload-form");
+    const gallery = document.getElementById("image-gallery");
 
-    // WebSocket初期化
-    let stompClient = null;
+    // 画像アップロード
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    function initializeWebSocket() {
-        const socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
+            const formData = new FormData(uploadForm);
 
-        stompClient.connect({}, function () {
-            console.log("WebSocket connected");
-
-            // VisitorCounterのリアルタイム更新を購読
-            stompClient.subscribe('/topic/visitorCounter', function (message) {
-                const newValue = JSON.parse(message.body);
-                counters.VisitorCounter.textContent = newValue;
-            });
+            fetch('/api/proud/upload', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to upload");
+                    }
+                    return response.text();
+                })
+                .then(message => {
+                    alert(message);
+                    loadGallery();
+                })
+                .catch(error => console.error("Error uploading image:", error));
         });
     }
 
-    // カウンター値をサーバーから取得
-    function fetchCounterValues() {
-        Object.keys(counters).forEach(counterName => {
-            if (counterName !== "VisitorCounter") { // VisitorCounterは個別に取得
-                fetch(`/counter/${counterName}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Failed to fetch ${counterName} value`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        counters[counterName].textContent = data.value;
-                    })
-                    .catch(error => console.error(`Error fetching ${counterName}:`, error));
-            }
-        });
+    // ギャラリー表示
+    function loadGallery() {
+        fetch('/api/proud/images')
+            .then(response => response.json())
+            .then(images => {
+                gallery.innerHTML = '';
+                images.forEach(image => {
+                    const card = document.createElement("div");
+                    card.classList.add("card");
+
+                    const img = document.createElement("img");
+                    img.src = image.imageUrl;
+                    img.alt = image.description;
+
+                    const description = document.createElement("p");
+                    description.textContent = image.description;
+
+                    const createdBy = document.createElement("small");
+                    createdBy.textContent = `Posted by: ${image.createdBy}`;
+
+                    card.appendChild(img);
+                    card.appendChild(description);
+                    card.appendChild(createdBy);
+
+                    gallery.appendChild(card);
+                });
+            })
+            .catch(error => console.error("Error loading gallery:", error));
     }
 
-    // VisitorCounterを取得して表示
-    function fetchVisitorCounter() {
-        fetch('/api/visitorCounter')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch visitor counter');
-                }
-                return response.json();
-            })
-            .then(data => {
-                counters.VisitorCounter.textContent = data; // 初期値を更新
-            })
-            .catch(error => console.error('Error fetching visitor counter:', error));
-    }
-
-    // VisitorCounterをインクリメント
-    function incrementVisitorCounter() {
-        fetch('/api/visitorCounter/increment', { method: 'POST' })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to increment visitor counter');
-                }
-                return response.json();
-            })
-            .then(data => {
-                counters.VisitorCounter.textContent = data; // 値を更新
-                // WebSocketで通知 (サーバー側が行うため、ここは省略可能)
-            })
-            .catch(error => console.error('Error incrementing visitor counter:', error));
-    }
-
-    
-    // 初期化
-    fetchVisitorCounter();        // VisitorCounterを取得して初期表示
-
-    // WebSocketを初期化して購読
-    initializeWebSocket();
+    loadGallery();
 });

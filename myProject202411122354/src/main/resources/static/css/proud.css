@@ -26,9 +26,7 @@
     font-weight: bold;
     color: #000;
     text-decoration: none;
-    /* margin-right: 15px; ロゴとユーザー情報の間にスペース */
 }
-
 
 #header-user-info {
     font-size: 1rem;
@@ -55,3 +53,28 @@
 #header-nav-links a:hover {
     background-color: #E0E0E0;
 }
+
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 10px;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
