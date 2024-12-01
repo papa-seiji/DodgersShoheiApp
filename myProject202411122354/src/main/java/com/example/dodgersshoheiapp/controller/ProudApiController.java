@@ -19,14 +19,13 @@ public class ProudApiController {
         this.proudService = proudService;
     }
 
-
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(
             @RequestParam("image") MultipartFile file,
             @RequestParam("description") String description,
             @RequestParam("createdBy") String createdBy) {
         try {
-            proudService.saveImage(file, description, createdBy);
+            proudService.saveImage(file, description, createdBy); // MultipartFileに対応
             return ResponseEntity.ok("Image uploaded successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -34,9 +33,8 @@ public class ProudApiController {
         }
     }
 
-    @PostMapping("/images")
-    public ResponseEntity<ProudImage> uploadImage(@RequestBody ProudImage image) {
-        return ResponseEntity.ok(proudService.saveImage(image));
+    @GetMapping("/images")
+    public ResponseEntity<List<ProudImage>> getAllImages() {
+        return ResponseEntity.ok(proudService.getAllImages());
     }
-  
-
+}

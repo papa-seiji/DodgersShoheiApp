@@ -27,7 +27,7 @@ public class ProudService {
 
         try {
             if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);// uploads フォルダを作成
+                Files.createDirectories(uploadPath); // uploads フォルダを作成
             }
 
             String fileName = file.getOriginalFilename();
