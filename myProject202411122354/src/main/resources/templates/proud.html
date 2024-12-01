@@ -5,8 +5,9 @@
     <th:block th:replace="fragments/header :: head ('Proud Page')"></th:block>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/proud.css}">
-    <script src="/js/home.js"></script> <!-- 訪問者カウンターを呼び込むためにhome.jsを追加 -->
     <script src="/js/proud.js" defer></script>
     <title>Proud Gallery</title>
 
@@ -44,27 +45,6 @@
             </form>
             <div id="image-gallery" class="gallery"></div>
         </main>
-
-    <script>
-        // ユーザー情報を取得してヘッダーに表示
-        function fetchUserInfo() {
-            fetch('/auth/userinfo')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user info');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const userInfoElement = document.getElementById('user-info');
-                    userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-                })
-                .catch(error => console.error('Error fetching user info:', error));
-        }
-    
-        // ページロード時にユーザー情報を取得
-        document.addEventListener('DOMContentLoaded', fetchUserInfo);
-    </script>
 
 </body>
 </html>
