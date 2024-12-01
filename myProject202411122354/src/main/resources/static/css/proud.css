@@ -21,14 +21,12 @@
     gap: 15px; /* ロゴとユーザー情報の間隔 */
 }
 
-
 #header-logo a {
     font-size: 1.5rem;
     font-weight: bold;
     color: #000;
     text-decoration: none;
 }
-
 
 #header-user-info {
     font-size: 1rem;
@@ -57,8 +55,6 @@
 }
 
 
-
-
 .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -81,3 +77,4 @@
     height: auto;
     display: block;
 }
+

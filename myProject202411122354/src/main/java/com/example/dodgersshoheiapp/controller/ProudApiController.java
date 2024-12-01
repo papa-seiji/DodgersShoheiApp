@@ -19,6 +19,7 @@ public class ProudApiController {
         this.proudService = proudService;
     }
 
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(
             @RequestParam("image") MultipartFile file,
@@ -33,8 +34,9 @@ public class ProudApiController {
         }
     }
 
-    @GetMapping("/images")
-    public ResponseEntity<List<ProudImage>> getAllImages() {
-        return ResponseEntity.ok(proudService.getAllImages());
+    @PostMapping("/images")
+    public ResponseEntity<ProudImage> uploadImage(@RequestBody ProudImage image) {
+        return ResponseEntity.ok(proudService.saveImage(image));
     }
-}
+  
+

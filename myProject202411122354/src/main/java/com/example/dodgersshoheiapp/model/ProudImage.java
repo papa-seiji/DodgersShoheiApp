@@ -11,7 +11,7 @@ public class ProudImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imageUrl;
+    private String imageUrl;  
     private String description;
     private String createdBy;
     private LocalDateTime createdAt;
@@ -56,4 +56,3 @@ public class ProudImage {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-}
