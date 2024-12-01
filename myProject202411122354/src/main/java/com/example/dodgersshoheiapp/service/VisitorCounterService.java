@@ -1,13 +1,9 @@
 package com.example.dodgersshoheiapp.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
 import com.example.dodgersshoheiapp.model.VisitorCounter;
 import com.example.dodgersshoheiapp.repository.VisitorCounterRepository;
-
 import jakarta.transaction.Transactional;
 
 @Service
