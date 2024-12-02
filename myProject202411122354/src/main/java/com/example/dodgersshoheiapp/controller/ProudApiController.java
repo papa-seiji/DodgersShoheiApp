@@ -7,6 +7,8 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,13 +32,16 @@ public class ProudApiController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(
             @RequestParam("image") MultipartFile file,
-            @RequestParam("description") String description,
-            @RequestParam("createdBy") String createdBy) {
+            @RequestParam("description") String description) {
         try {
+            // ログインユーザーの取得
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String createdBy = authentication.getName();
+
             ProudImage savedImage = proudService.saveImage(file, description, createdBy);
 
             // WebSocketで通知
-            messagingTemplate.convertAndSend("/topic/newImage", savedImage);
+            messagingTemplate.convertAndSend("/topic/proudGallery", savedImage);
 
             return ResponseEntity.ok("Image uploaded successfully!");
         } catch (Exception e) {

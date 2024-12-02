@@ -4,21 +4,20 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 40px; /* 高さを調整 */
+    height: 40px;
     background-color: rgba(255, 255, 255, 0.9);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-    z-index: 10; /* スライドショーより前面 */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 軽めの影 */
+    z-index: 10;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 左側のロゴとユーザー情報をまとめる */
 #header-left {
     display: flex;
-    align-items: center; /* 垂直中央揃え */
-    gap: 15px; /* ロゴとユーザー情報の間隔 */
+    align-items: center;
+    gap: 15px;
 }
 
 #header-logo a {
@@ -31,8 +30,6 @@
 #header-user-info {
     font-size: 1rem;
     color: #333;
-    margin-left: 15px;
-    /* display: inline-block; */
 }
 
 #header-nav-links {
@@ -54,7 +51,7 @@
     background-color: #E0E0E0;
 }
 
-
+/* ギャラリー */
 .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -78,27 +75,25 @@
     display: block;
 }
 
-#midashi_1{
+#midashi_1 {
     margin-top: 2em;
 }
 
-#midashi_5_a{
+#midashi_5_a {
     margin-top: -2em;
 }
 
-#midashi_5_b{
+#midashi_5_b {
     margin-bottom: 0em;
 }
 
-#image-description{
+#image-description {
     width: 24rem;
     height: 2em !important;
     margin-bottom: 0.25rem;
 }
 
-
-
-/*ホバー時に紙飛行機が少し動くCSS「送信」ボタン*/
+/* ホバー時に紙飛行機が少し動くCSS「送信」ボタン */
 .pic-container {
     display: flex;
     justify-content: center;
@@ -109,7 +104,6 @@
     box-sizing: border-box;
     background-color: #fefefe;
 }
-
 
 .btn {
     display: flex;
@@ -165,5 +159,31 @@
     75% {
         transform: translate(-3px, 3px);
     }
+}
 
+/* ======== レスポンシブ対応 ======== */
+@media screen and (max-width: 768px) {
+    #header-nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    #image-description {
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-icon {
+        display: none;
+    }
 }

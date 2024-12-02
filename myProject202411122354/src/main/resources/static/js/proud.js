@@ -6,16 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // WebSocket初期化
     function initializeWebSocket() {
-        console.log("Initializing WebSocket...");
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function () {
-            console.log("WebSocket connected.");
             stompClient.subscribe('/topic/proudGallery', function (message) {
-                console.log("Received new image via WebSocket:", message.body);
                 const newImage = JSON.parse(message.body);
-                addImageToGallery(newImage);
+                console.log("Received new image via WebSocket:", newImage);
+                addImageToGallery(newImage, true); // WebSocketからの更新
             });
 
             stompClient.subscribe('/topic/visitorCounter', function (message) {
@@ -23,10 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (visitorCounter) {
                     visitorCounter.textContent = newVisitorCount;
                 }
-                console.log("Updated Visitor Counter:", newVisitorCount);
             });
-        }, function (error) {
-            console.error("WebSocket connection error:", error);
         });
     }
 
@@ -43,19 +38,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ギャラリーに画像を追加
-    function addImageToGallery(image) {
+    const addedImageIds = new Set(); // 重複チェック用
+    function addImageToGallery(image, isWebSocketUpdate = false) {
+        if (addedImageIds.has(image.id)) {
+            if (isWebSocketUpdate) {
+                console.warn("Duplicate image received via WebSocket:", image);
+            }
+            return;
+        }
+        addedImageIds.add(image.id);
+
         const card = document.createElement("div");
         card.classList.add("card");
 
         const img = document.createElement("img");
-        img.src = `/api/proud/files/${image.imageUrl.split('/').pop()}`;
+        img.src = image.imageUrl;
         img.alt = image.description;
 
         const description = document.createElement("p");
         description.textContent = image.description;
 
         const createdBy = document.createElement("small");
-        createdBy.textContent = `Posted by: ${image.createdBy}`;
+        createdBy.textContent = `Posted by: ${image.createdBy} at ${new Date(image.createdAt).toLocaleString()}`;
 
         card.appendChild(img);
         card.appendChild(description);
@@ -70,8 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch('/api/proud/images')
             .then(response => response.json())
             .then(images => {
-                gallery.innerHTML = '';
-                images.forEach(addImageToGallery);
+                gallery.innerHTML = ''; // 初期化
+                addedImageIds.clear(); // 重複チェック用リセット
+                images.forEach(image => addImageToGallery(image));
                 console.log("Gallery loaded successfully.");
             })
             .catch(error => console.error("Error loading gallery:", error));
@@ -81,8 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (uploadForm) {
         uploadForm.addEventListener("submit", function (e) {
             e.preventDefault();
-            console.log("Uploading image...");
-
             const formData = new FormData(uploadForm);
 
             fetch('/api/proud/upload', {
@@ -97,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .then(message => {
                     console.log(message);
-                    loadGallery();
                 })
                 .catch(error => console.error("Error uploading image:", error));
         });
