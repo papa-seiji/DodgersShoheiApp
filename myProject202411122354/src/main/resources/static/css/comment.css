@@ -85,13 +85,16 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow-y: auto;
-    background-color: rgba(255, 255, 255, 0.8); /* 半透明の背景 */
+    /*background-color: rgba(255, 255, 255, 0.8);*/ /* 半透明の背景 */
     height: calc(100vh - 60px - 50px - 1px); /* navbar: 60px, コメントフォーム: 50px, ギャップ: 1px */
     margin-top: 0.5px; /* navbarとの間隔 */
     margin-bottom: 20px; /* コメントフォームとの間に余白を追加 */
-    max-height: 631px; /* スクロール制限 */
+    max-height: 675px; /* スクロール制限 */
 }
 
+#comment-list{
+    max-height: 47em;
+}
 
 #comment-list li {
     list-style: none;
@@ -122,10 +125,12 @@
 
 #comment-list li:nth-child(odd) {
     background-color: #f9f9f9;
+    opacity: 0.77;
 }
 
 #comment-list li:nth-child(even) {
     background-color: #ffffff;
+    opacity: 0.77;
 }
 
 
