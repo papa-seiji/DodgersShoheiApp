@@ -50,7 +50,7 @@ public class ProudService {
 
             // Save image record to the database
             ProudImage image = new ProudImage();
-            image.setImageUrl("/uploads/" + uniqueFileName);
+            image.setImageUrl("/api/proud/files/" + uniqueFileName); // ファイルアクセス用パス
             image.setDescription(description);
             image.setCreatedBy(createdBy);
             image.setCreatedAt(LocalDateTime.now());
