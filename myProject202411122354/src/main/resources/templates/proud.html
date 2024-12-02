@@ -46,5 +46,27 @@
             <div id="image-gallery" class="gallery"></div>
         </main>
 
+        <script>
+            // ユーザー情報を取得してヘッダーに表示
+            function fetchUserInfo() {
+                fetch('/auth/userinfo')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch user info');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const userInfoElement = document.getElementById('user-info');
+                        userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
+                    })
+                    .catch(error => console.error('Error fetching user info:', error));
+            }
+        
+            // ページロード時にユーザー情報を取得
+            document.addEventListener('DOMContentLoaded', fetchUserInfo);
+        </script>
+    
+
 </body>
 </html>
