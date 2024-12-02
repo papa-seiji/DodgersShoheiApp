@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const gallery = document.getElementById("image-gallery");
     const uploadForm = document.getElementById("image-upload-form");
     const visitorCounter = document.getElementById("visitor-counter-value");
-    const customSubmitButton = document.getElementById("custom-submit-button");
     let stompClient = null;
 
     // WebSocket初期化
@@ -102,17 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .catch(error => console.error("Error uploading image:", error));
         });
-
-
-        // if (customSubmitButton) {
-        //     customSubmitButton.addEventListener("click", function (e) {
-        //         e.preventDefault(); // デフォルトのリンク動作を防ぐ
-        //         if (uploadForm) {
-        //             uploadForm.submit(); // フォームをプログラム的に送信
-        //         }
-        //     });
-        // }
-    
     }
 
     // 初期化処理
