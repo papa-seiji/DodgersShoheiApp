@@ -78,3 +78,92 @@
     display: block;
 }
 
+#midashi_1{
+    margin-top: 2em;
+}
+
+#midashi_5_a{
+    margin-top: -2em;
+}
+
+#midashi_5_b{
+    margin-bottom: 0em;
+}
+
+#image-description{
+    width: 24rem;
+    height: 2em !important;
+    margin-bottom: 0.25rem;
+}
+
+
+
+/*ホバー時に紙飛行機が少し動くCSS「送信」ボタン*/
+.pic-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    background-color: #fefefe;
+}
+
+
+.btn {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: 0 3px 3px 0;
+    height: 50px;
+    background-color: #b2d5de;
+    text-align: center;
+    text-decoration: none;
+    width: 8rem;
+}
+
+.btn-icon {
+    position: relative;
+    border-radius: 3px 0 0 3px;
+    background-color: #697d82;
+    width: 50px;
+    height: 100%;
+    color: white;
+    transition: 0.3s;
+    overflow: hidden;
+}
+
+.btn svg {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    fill: #fff;
+    transition: .5s all;
+}
+
+.btn span {
+    display: inline-block;
+    width: 80px;
+    color: #353535;
+    text-align: center;
+}
+
+.btn:hover svg {
+    animation: iconAnime 0.8s ease-in;
+}
+
+@keyframes iconAnime {
+    25% {
+        transform: translate(-3px, 3px);
+    }
+
+    50% {
+        transform: translate(3px, -3px);
+    }
+
+    75% {
+        transform: translate(-3px, 3px);
+    }
+
+}
