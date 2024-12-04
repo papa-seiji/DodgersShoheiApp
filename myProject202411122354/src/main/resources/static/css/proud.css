@@ -52,11 +52,11 @@
 }
 
 
-#midashi_1{
+#midashi_1 {
     margin-top: 50px;
 }
 
-#midashi_5_a{
+#midashi_5_a {
     margin-top: -2em;
 }
 
@@ -87,7 +87,7 @@
     gap: 2px;
 }
 
-#midashi_5_b{
+#midashi_5_b {
     margin: 0em 0em 0em 0em;
 }
 
@@ -101,7 +101,8 @@
 }
 
 .btn {
-    margin-right: 35%; /* ボタン部分を適度に調整 */
+    margin-right: 35%;
+    /* ボタン部分を適度に調整 */
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -147,9 +148,11 @@
     25% {
         transform: translate(-3px, 3px);
     }
+
     50% {
         transform: translate(3px, -3px);
     }
+
     75% {
         transform: translate(-3px, 3px);
     }
