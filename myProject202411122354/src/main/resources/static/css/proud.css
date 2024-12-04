@@ -51,61 +51,57 @@
     background-color: #E0E0E0;
 }
 
-/* ギャラリー */
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    padding: 20px;
+
+#midashi_1{
+    margin-top: 50px;
 }
 
-.card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    padding: 10px;
-}
-
-.card img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-#midashi_1 {
-    margin-top: 2em;
-}
-
-#midashi_5_a {
+#midashi_5_a{
     margin-top: -2em;
 }
 
-#midashi_5_b {
-    margin-bottom: 0em;
+
+
+/* ======== アップロードフォーム ======== */
+#upload-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
 }
+
+#image-file {
+    flex: 1;
+    max-width: 18em;
+}
+
+.description-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#midashi_5_b{
+    margin: 0em 0em 0em 0em;
+}
+
 
 #image-description {
-    width: 24rem;
-    height: 2em !important;
-    margin-bottom: 0.25rem;
-}
-
-/* ホバー時に紙飛行機が少し動くCSS「送信」ボタン */
-.pic-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-    box-sizing: border-box;
-    background-color: #fefefe;
+    width: 96%;
+    height: 2.5em;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .btn {
+    margin-right: 35%; /* ボタン部分を適度に調整 */
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -151,18 +147,47 @@
     25% {
         transform: translate(-3px, 3px);
     }
-
     50% {
         transform: translate(3px, -3px);
     }
-
     75% {
         transform: translate(-3px, 3px);
     }
 }
 
+/* ======== ギャラリー ======== */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background-color: #000;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 10px;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 /* ======== レスポンシブ対応 ======== */
 @media screen and (max-width: 768px) {
+    #upload-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
     #header-nav-links {
         flex-wrap: wrap;
         justify-content: center;
