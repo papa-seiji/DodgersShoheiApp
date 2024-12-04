@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    
     // Visitorカウンターの取得
     function fetchVisitorCounter() {
         fetch('/api/visitorCounter')
