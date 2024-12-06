@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const gallery = document.getElementById("image-gallery");
     const uploadForm = document.getElementById("image-upload-form");
     const visitorCounter = document.getElementById("visitor-counter-value");
+    const gallery = document.getElementById("image-gallery");
+    const modal = document.getElementById("image-modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalDescription = document.getElementById("modal-description");
+    const closeModal = document.querySelector(".close");
     let stompClient = null;
 
     // WebSocket初期化
@@ -105,6 +109,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(error => console.error("Error uploading image:", error));
         });
     }
+
+    
+        // モーダルを開く処理
+        function openModal(imageUrl, description) {
+            modalImage.src = imageUrl;
+            modalDescription.textContent = description;
+            modal.style.display = "block";
+        }
+    
+        // モーダルを閉じる処理
+        closeModal.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+    
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    
+        // ギャラリー画像クリックイベントを追加
+        gallery.addEventListener("click", function (event) {
+            if (event.target.tagName === "IMG") {
+                const imageUrl = event.target.src;
+                const description = event.target.nextElementSibling?.textContent || "";
+                openModal(imageUrl, description);
+            }
+        });
+
+
+
 
     // 初期化処理
     fetchVisitorCounter();
