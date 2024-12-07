@@ -12,9 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class ProudService {
@@ -39,18 +41,16 @@ public class ProudService {
                 LOGGER.info("Upload directory created.");
             }
 
-            // Use UUID for unique file names
             String originalFileName = file.getOriginalFilename();
             String fileExtension = FilenameUtils.getExtension(originalFileName);
             String uniqueFileName = UUID.randomUUID().toString() + "." + fileExtension;
 
             Path filePath = uploadPath.resolve(uniqueFileName);
-            LOGGER.info("Saving file to: " + filePath.toString());
+            LOGGER.info("Saving file to: " + filePath);
             Files.copy(file.getInputStream(), filePath);
 
-            // Save image record to the database
             ProudImage image = new ProudImage();
-            image.setImageUrl("/api/proud/files/" + uniqueFileName); // ファイルアクセス用パス
+            image.setImageUrl("/api/proud/files/" + uniqueFileName);
             image.setDescription(description);
             image.setCreatedBy(createdBy);
             image.setCreatedAt(LocalDateTime.now());
@@ -58,7 +58,6 @@ public class ProudService {
             ProudImage savedImage = proudImageRepository.save(image);
             LOGGER.info("Image saved to database with ID: " + savedImage.getId());
 
-            // Notify other users via WebSocket
             messagingTemplate.convertAndSend("/topic/proudGallery", savedImage);
             LOGGER.info("WebSocket notification sent for image ID: " + savedImage.getId());
 
@@ -73,5 +72,41 @@ public class ProudService {
     public List<ProudImage> getAllImages() {
         LOGGER.info("Fetching all images from the database.");
         return proudImageRepository.findAll();
+    }
+
+    public ProudImage toggleLike(Long imageId, String username) {
+        LOGGER.info("Processing like toggle for image ID: " + imageId + " by user: " + username);
+
+        ProudImage image = proudImageRepository.findById(imageId)
+                .orElseThrow(() -> {
+                    LOGGER.severe("Image not found with ID: " + imageId);
+                    return new RuntimeException("Image not found");
+                });
+
+        List<String> likedUsers = Arrays.stream(image.getLikedBy().split(","))
+                .filter(user -> !user.isBlank())
+                .collect(Collectors.toList());
+
+        if (likedUsers.contains(username)) {
+            likedUsers.remove(username);
+            image.setLikesCount(image.getLikesCount() - 1);
+            LOGGER.info("User " + username + " unliked image ID " + imageId + ". New likes count: "
+                    + image.getLikesCount());
+        } else {
+            likedUsers.add(username);
+            image.setLikesCount(image.getLikesCount() + 1);
+            LOGGER.info(
+                    "User " + username + " liked image ID " + imageId + ". New likes count: " + image.getLikesCount());
+        }
+
+        image.setLikedBy(String.join(",", likedUsers));
+        ProudImage updatedImage = proudImageRepository.save(image);
+
+        LOGGER.info("Updated likes count for image ID " + imageId + ": " + updatedImage.getLikesCount());
+
+        messagingTemplate.convertAndSend("/topic/proudLikes", updatedImage);
+        LOGGER.info("WebSocket message sent for likes update on image ID: " + imageId);
+
+        return updatedImage;
     }
 }

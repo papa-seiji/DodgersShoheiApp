@@ -34,19 +34,30 @@ public class ProudApiController {
             @RequestParam("image") MultipartFile file,
             @RequestParam("description") String description) {
         try {
-            // ログインユーザーの取得
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String createdBy = authentication.getName();
 
             ProudImage savedImage = proudService.saveImage(file, description, createdBy);
 
-            // WebSocketで通知
             messagingTemplate.convertAndSend("/topic/proudGallery", savedImage);
 
             return ResponseEntity.ok("Image uploaded successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error uploading image: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/like/{id}")
+    public ResponseEntity<ProudImage> toggleLike(@PathVariable Long id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+            ProudImage updatedImage = proudService.toggleLike(id, username);
+            return ResponseEntity.ok(updatedImage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -63,7 +74,7 @@ public class ProudApiController {
 
             if (resource.exists() || resource.isReadable()) {
                 return ResponseEntity.ok()
-                        .header("Content-Type", Files.probeContentType(filePath)) // MIMEタイプを動的に設定
+                        .header("Content-Type", Files.probeContentType(filePath))
                         .body(resource);
             } else {
                 return ResponseEntity.notFound().build();

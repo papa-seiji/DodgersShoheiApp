@@ -183,6 +183,29 @@
     display: block;
 }
 
+/* ======== イイね機能対応 ======== */
+.like-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: red;
+}
+
+.like-count {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+
 /* ======== レスポンシブ対応 ======== */
 @media screen and (max-width: 768px) {
     #upload-container {
