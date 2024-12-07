@@ -164,17 +164,18 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     padding: 20px;
-    background-color: #000;
+    background-color: #92d3e3;
 }
 
 .card {
-    background: #fff;
+    background: #ecf9fc;
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     padding: 10px;
+    font-size: 0.8rem;
 }
 
 .card img {
@@ -199,6 +200,7 @@
     cursor: pointer;
     color: red;
 }
+
 
 .like-count {
     font-size: 1.2rem;
