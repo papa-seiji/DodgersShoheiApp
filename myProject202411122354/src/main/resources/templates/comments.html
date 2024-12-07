@@ -5,9 +5,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script src="/js/home.js"></script> <!-- 訪問者カウンターを呼び込むためにhome.jsを追加 -->
+    <script src="/css/comments.js"></script>
     <link rel="stylesheet" th:href="@{/css/comment.css}">
-    <script src="/js/home.js"></script> <!-- home.jsを追加 -->
-
 </head>
 <body>
     <!-- ナビゲーションバー -->
@@ -25,7 +24,7 @@
             <a href="/comments">Chat</a>
             <a href="/links">Links</a>
             <a href="/auth/logout">Logout</a>
-    </nav>
+        </nav>
     </div>
 
     <!-- コメント全体コンテナ -->
@@ -48,88 +47,114 @@
         </div>
     </div>
 
-    <script>
-        let stompClient = null;
+<script>
+    let stompClient = null;
 
-        function connect() {
-            const socket = new SockJS('/ws');
-            stompClient = Stomp.over(socket);
+    // WebSocket接続
+    function connect() {
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
 
-            stompClient.connect({}, () => {
-                console.log("WebSocket connected");
+        stompClient.connect({}, () => {
+            console.log("WebSocket connected");
 
-                stompClient.subscribe('/topic/comments', (message) => {
-                    const comment = JSON.parse(message.body);
-                    addCommentToList(comment);
-                });
+            stompClient.subscribe('/topic/comments', (message) => {
+                const comment = JSON.parse(message.body);
+                addCommentToList(comment); // 新しいコメントをリストに追加
+                scrollToBottom(); // リストの一番下にスクロール
             });
-        }
+        });
+    }
 
-        function postComment(content) {
-            fetch('/comments/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: content }),
-            })
+    // コメント投稿
+    function postComment(content) {
+        fetch('/comments/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: content }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to post comment');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Comment added:', data);
+        })
+        .catch(error => console.error('Error posting comment:', error));
+    }
+
+    // コメントリストに追加
+    function addCommentToList(comment) {
+        const commentList = document.getElementById('comment-list');
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span class="comment-username">${comment.username}</span>
+            <span class="comment-timestamp">${new Date(comment.createdAt).toLocaleString()}</span>
+            <p class="comment-content">${comment.content}</p>
+        `;
+        commentList.appendChild(li);
+    }
+
+    // コメントリストをソート
+    function sortComments(order = 'asc') {
+        const commentList = document.getElementById('comment-list');
+        const comments = Array.from(commentList.children);
+
+        comments.sort((a, b) => {
+            const timeA = new Date(a.querySelector('.comment-timestamp').textContent).getTime();
+            const timeB = new Date(b.querySelector('.comment-timestamp').textContent).getTime();
+
+            return order === 'asc' ? timeA - timeB : timeB - timeA;
+        });
+
+        comments.forEach(comment => commentList.appendChild(comment));
+    }
+
+    // コメントリストの一番下にスクロール
+    function scrollToBottom() {
+        const commentListContainer = document.getElementById('comment-list-container');
+        commentListContainer.scrollTop = commentListContainer.scrollHeight;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        connect();
+
+        const submitButton = document.getElementById('submitComment');
+        const commentContent = document.getElementById('commentContent');
+
+        submitButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (commentContent.value.trim()) {
+                postComment(commentContent.value.trim());
+                commentContent.value = '';
+            }
+        });
+
+        // 初期表示時にソートを適用
+        sortComments();
+        scrollToBottom(); // ページロード時に一番下にスクロール
+    });
+
+    // ユーザー情報を取得してヘッダーに表示
+    function fetchUserInfo() {
+        fetch('/auth/userinfo')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to post comment');
+                    throw new Error('Failed to fetch user info');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Comment added:', data);
+                const userInfoElement = document.getElementById('user-info');
+                userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
             })
-            .catch(error => console.error('Error posting comment:', error));
-        }
+            .catch(error => console.error('Error fetching user info:', error));
+    }
 
-        function addCommentToList(comment) {
-            const commentList = document.getElementById('comment-list');
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <span class="comment-username">${comment.username}</span>
-                <span class="comment-timestamp">${new Date(comment.createdAt).toLocaleString()}</span>
-                <p class="comment-content">${comment.content}</p>
-            `;
-            commentList.prepend(li);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            connect();
-
-            const submitButton = document.getElementById('submitComment');
-            const commentContent = document.getElementById('commentContent');
-
-            submitButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                if (commentContent.value.trim()) {
-                    postComment(commentContent.value.trim());
-                    commentContent.value = '';
-                }
-            });
-        });
-    </script>
-
-    <script>
-        // ユーザー情報を取得してヘッダーに表示
-        function fetchUserInfo() {
-            fetch('/auth/userinfo')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user info');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const userInfoElement = document.getElementById('user-info');
-                    userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-                })
-                .catch(error => console.error('Error fetching user info:', error));
-        }
-    
-        // ページロード時にユーザー情報を取得
-        document.addEventListener('DOMContentLoaded', fetchUserInfo);
-    </script>
-
+    // ページロード時にユーザー情報を取得
+    document.addEventListener('DOMContentLoaded', fetchUserInfo);
+</script>
 </body>
 </html>
