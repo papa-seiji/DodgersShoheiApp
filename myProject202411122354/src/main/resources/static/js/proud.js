@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const likeButton = document.createElement("button");
         likeButton.classList.add("like-button");
-        likeButton.textContent = "♡";
+        likeButton.textContent = "❤";
 
         const likeCount = document.createElement("span");
         likeCount.classList.add("like-count");

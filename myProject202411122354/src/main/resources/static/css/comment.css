@@ -108,30 +108,42 @@
 
 .comment-username {
     font-weight: bold;
-    color: #333;
+    color: #000000;
 }
 
 .comment-timestamp {
     font-size: 0.8rem;
-    color: #999;
+    color: #000000;
 }
 
 .comment-content {
     margin: 0;
     font-size: 1rem;
     font-weight: bold; /* コメント内容を太字に */
-    color: #555;
+    color: #000000;
 }
 
 #comment-list li:nth-child(odd) {
     background-color: #f9f9f9;
-    opacity: 0.77;
+    /* opacity: 0.77; */
 }
 
-#comment-list li:nth-child(even) {
+#commen-ltist li:nth-child(even) {
     background-color: #ffffff;
     opacity: 0.77;
 }
+
+/*最新のコメントリスト項目が視覚的に強調されます。*/
+#comment-list li:last-child {
+    font-weight: bold;
+    border-top: 2px solid #d3d3d3;
+    padding-top: 10px;
+    margin-top: 10px;
+    color: #444;
+    background-color: #dbacbe;
+    border-radius: 5px;
+}
+
 
 
 /* ===== コメントフォーム ===== */
