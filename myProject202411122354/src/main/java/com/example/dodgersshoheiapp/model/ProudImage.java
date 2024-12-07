@@ -16,6 +16,12 @@ public class ProudImage {
     private String createdBy;
     private LocalDateTime createdAt;
 
+    @Column(name = "likes_count", nullable = false)
+    private int likesCount = 0;
+
+    @Column(name = "liked_by", columnDefinition = "TEXT")
+    private String likedBy = "";
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -55,5 +61,21 @@ public class ProudImage {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public String getLikedBy() {
+        return likedBy;
+    }
+
+    public void setLikedBy(String likedBy) {
+        this.likedBy = likedBy;
     }
 }
