@@ -2,6 +2,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const gallery = document.getElementById("image-gallery");
     const uploadForm = document.getElementById("image-upload-form");
     const visitorCounter = document.getElementById("visitor-counter-value");
+    const modal = document.getElementById("image-modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalDescription = document.getElementById("modal-description");
+    const closeModal = document.querySelector(".close");
     let stompClient = null;
 
     // WebSocket初期化
@@ -54,6 +58,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const img = document.createElement("img");
         img.src = image.imageUrl;
         img.alt = image.description;
+        img.addEventListener("click", function () {
+            openModal(image.imageUrl, image.description); // モーダルを開く
+        });
 
         const description = document.createElement("p");
         description.textContent = image.description;
@@ -63,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const likeContainer = document.createElement("div");
         likeContainer.classList.add("like-container");
-        likeContainer.setAttribute("data-image-id", image.id); // 動的に data-image-id を設定
+        likeContainer.setAttribute("data-image-id", image.id);
 
         const likeButton = document.createElement("button");
         likeButton.classList.add("like-button");
@@ -115,6 +122,24 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(console.error);
     }
+
+    // モーダルを開く処理
+    function openModal(imageUrl, description) {
+        modalImage.src = imageUrl;
+        modalDescription.textContent = description;
+        modal.style.display = "block";
+    }
+
+    // モーダルを閉じる処理
+    closeModal.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
 
     // ギャラリーを読み込む
     function loadGallery() {
