@@ -88,8 +88,8 @@
     /*background-color: rgba(255, 255, 255, 0.8);*/ /* 半透明の背景 */
     height: calc(100vh - 60px - 50px - 1px); /* navbar: 60px, コメントフォーム: 50px, ギャップ: 1px */
     margin-top: 0.5px; /* navbarとの間隔 */
-    margin-bottom: 20px; /* コメントフォームとの間に余白を追加 */
-    max-height: 675px; /* スクロール制限 */
+    /*margin-bottom: 20px;  コメントフォームとの間に余白を追加 */
+    max-height: 706px; /* スクロール制限 */
 }
 
 #comment-list{
@@ -148,92 +148,100 @@
 
 /* ===== コメントフォーム ===== */
 #comment-form-container {
+    /*position: fixed;  常に画面の一番下に固定 */
     bottom: 0;
     width: 100%;
     max-width: 800px;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px;
-    border-top: 1px solid #ddd;
-    background-color: rgba(255, 255, 255, 0.9);
-    height: 50px; /* コメントフォームの高さ */
+    padding: 15px 20px;
+    background: linear-gradient(
+        to right,
+        rgba(0, 90, 156, 0.95),
+        rgba(0, 122, 204, 0.95)
+    ); /* Dodgers Blueグラデーション */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* 上方向に影をつける */
+    border-radius: 12px 12px 0 0; /* 上側の角を丸く */
+    z-index: 100;
+    color: white; /* 全体の文字色を白に */
+    margin-bottom: 2px;
 }
 
 /* コメントフォームのテキストエリア */
 #commentContent {
     flex-grow: 1;
     resize: none;
-    height: 100%; /* フォーム全体に合わせる */
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
+    height: 50px; /* 一貫性を保つ高さ */
+    border: none; /* 枠線を削除 */
+    border-radius: 8px;
+    padding: 10px 15px;
     font-size: 1rem;
+    font-family: 'Raleway', sans-serif;
+    color: #333; /* ダークグレーのテキスト */
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明の背景色 */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 内側に軽い影 */
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 #commentContent:focus {
     outline: none;
-    border-color: #aaa;
+    background-color: rgba(255, 255, 255, 1); /* フォーカス時に背景を完全に白に */
+    box-shadow: 0 0 8px rgba(0, 122, 204, 0.5); /* フォーカス時の光る効果 */
 }
 
 /* コメント送信ボタン */
 #submitComment {
     width: 60px;
     height: 60px;
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.95); /* 白背景 */
     border: none;
+    border-radius: 50%; /* 完全な円形 */
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 立体感のある影 */
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* ボタンのホバーエフェクト */
 #submitComment:hover {
-    transform: scale(1.1);
+    background-color: rgba(255, 215, 0, 0.9); /* ゴールド色 */
+    transform: scale(1.1); /* ホバー時に少し拡大 */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* ホバー時に影を濃く */
 }
 
 #submitComment:disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    background-color: rgba(200, 200, 200, 0.8); /* 無効時は薄いグレー */
+    box-shadow: none;
+    opacity: 0.7;
 }
-
-/* ボールのSVG */
-.baseball-icon {
-    width: 100%;
-    height: 100%;
-}
-
-
-
-
-
 
 /* ===== レスポンシブ対応 ===== */
 @media (max-width: 768px) {
-    #comment-list-container {
-        max-width: 90%;
-        height: calc(100vh - 50px - 50px - 1px); /* navbar: 50px, コメントフォーム: 50px */
-    }
-
     #comment-form-container {
         max-width: 90%;
+        padding: 10px 15px;
+    }
+
+    #commentContent {
+        font-size: 0.9rem; /* 小さな画面でフォントを縮小 */
+    }
+
+    #submitComment {
+        width: 50px;
+        height: 50px; /* ボタンサイズを調整 */
     }
 }
 
 @media (max-width: 430px) {
-    #comment-list-container {
-        max-width: 95%;
-        height: calc(100vh - 50px - 50px - 1px);
-    }
-
     #comment-form-container {
         max-width: 95%;
     }
 
     #submitComment {
-        padding: 0 10px;
+        width: 45px;
+        height: 45px; /* 小さい画面向けに更に縮小 */
     }
 }
