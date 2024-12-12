@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* スペースを均等に配置 */
+    justify-content: flex-start; /* スペースを上詰めに配置 */
     width: 100%;
     height: calc(100vh - 60px); /* navbarの高さを除外 */
     background-image: url('/images/dodger-stadium-tours.jpg');
@@ -12,7 +12,7 @@
     opacity: 0.9;
     font-family: Arial, sans-serif;
     box-sizing: border-box;
-    padding: 0.5px 0; /* 上下に0.5pxの余白 */
+    padding: 0; /* 不要な余白を削除 */
     margin-top: 60px; /* navbarの高さ分を追加 */
 }
 
@@ -74,98 +74,141 @@
     background-color: #E0E0E0;
 }
 
-/* ===== コメントリスト ===== */
+
+/* コメントリストコンテナ */
 #comment-list-container {
-    flex-grow: 1; /* コメントリストが中央を埋める */
+    flex-grow: 1;
     width: 100%;
     max-width: 800px;
-    margin: 0 auto;
-    padding: 10px;
+    margin: 0 auto; /* 外側の余白を完全削除 */
+    padding: 10px; /* 内側の余白 */
     box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: none; /* 枠線を削除 */
+    border-radius: 0; /* 吹き出し全体に一体感を与えるため */
     overflow-y: auto;
-    /*background-color: rgba(255, 255, 255, 0.8);*/ /* 半透明の背景 */
-    height: calc(100vh - 60px - 50px - 1px); /* navbar: 60px, コメントフォーム: 50px, ギャップ: 1px */
-    margin-top: 0.5px; /* navbarとの間隔 */
-    /*margin-bottom: 20px;  コメントフォームとの間に余白を追加 */
-    max-height: 706px; /* スクロール制限 */
+    height: calc(100vh - 60px - 50px); /* navbar: 60px, コメントフォーム: 50px */
+    max-height: 805px;
+    backdrop-filter: blur(5px); /* 背景を少しぼかす */
+    color: #333; /* テキストを暗いグレーに */
+    margin-bottom: 6px; /* コメントフォームとの隙間 */
 }
 
-#comment-list{
-    max-height: 47em;
+/* コメントリスト */
+#comment-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }
 
+/* コメント項目（吹き出し型） */
 #comment-list li {
     list-style: none;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative; /* 吹き出しの三角を配置するため */
+    background: rgba(255, 255, 255, 0.8); /* 柔らかな白背景で視認性向上 */
+    border-radius: 15px; /* 吹き出しの角丸 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影 */
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
+/* 吹き出しの三角部分 */
+#comment-list li::before {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* 吹き出しの三角を下に配置 */
+    left: 20px; /* 吹き出しの基点 */
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 10px 0 10px; /* 三角形のサイズ */
+    border-color: rgba(255, 255, 255, 0.8) transparent transparent transparent; /* 吹き出しの色 */
+}
+
+/* コメントのマウスホバー時の効果 */
+#comment-list li:hover {
+    background: rgba(255, 255, 255, 1); /* ホバー時に背景を明るく */
+    transform: translateY(-2px); /* 軽く浮き上がる */
+}
+
+/* ユーザー名 */
 .comment-username {
     font-weight: bold;
-    color: #000000;
+    font-size: 1.1rem;
+    color: #000000; /* Dodgers Blue */
 }
 
+/* タイムスタンプ */
 .comment-timestamp {
-    font-size: 0.8rem;
-    color: #000000;
+    font-size: 0.9rem;
+    color: #000000; /* 柔らかなグレー */
 }
 
+/* コメント内容 */
 .comment-content {
     margin: 0;
     font-size: 1rem;
-    font-weight: bold; /* コメント内容を太字に */
-    color: #000000;
+    font-weight: normal;
+    /*color: #333;  暗いグレー */
+    line-height: 1.5; /* 読みやすい行間 */
 }
 
-#comment-list li:nth-child(odd) {
-    background-color: #f9f9f9;
-    /* opacity: 0.77; */
-}
-
-#commen-ltist li:nth-child(even) {
-    background-color: #ffffff;
-    opacity: 0.77;
-}
-
-/*最新のコメントリスト項目が視覚的に強調されます。*/
+/* 最新のコメントを強調 */
 #comment-list li:last-child {
+    position: relative;
+    border-top: 2px solid rgba(0, 90, 156, 0.7); /* 強調の青ライン */
+    background: linear-gradient(
+        135deg,
+        rgba(0, 90, 156, 0.8),
+        rgba(0, 122, 204, 0.8)
+    ); /* Dodgers Blueのグラデーション */
+    color: white; /* テキスト色を白に */
+    border-radius: 15px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 影を強調 */
+    padding-top: 20px; /* NEWバッジと内容を分離 */
+    overflow: hidden;
+}
+
+/* 最新のコメントの装飾バッジ */
+#comment-list li:last-child::after {
+    content: "NEW";
+    position: absolute;
+    top: 1px; /* 吹き出しの中でタイムスタンプと被らないよう上部に配置 */
+    left: 92%; /* 左端からの位置を調整 */
+    background-color: rgba(255, 215, 0, 0.9); /* ゴールドの背景 */
+    color: #333;
+    font-size: 0.8rem;
     font-weight: bold;
-    border-top: 2px solid #d3d3d3;
-    padding-top: 10px;
-    margin-top: 10px;
-    color: #444;
-    background-color: #dbacbe;
-    border-radius: 5px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 
 
-/* ===== コメントフォーム ===== */
+
+/* コメントフォームコンテナ */
 #comment-form-container {
-    /*position: fixed;  常に画面の一番下に固定 */
+    position: relative; /* 必要であれば修正 */
     bottom: 0;
     width: 100%;
     max-width: 800px;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 15px 20px;
+    padding: 15px 20px; /* 内側の余白を保つ */
+    border-top: 1px solid rgba(0, 90, 156, 0.8);
     background: linear-gradient(
         to right,
         rgba(0, 90, 156, 0.95),
         rgba(0, 122, 204, 0.95)
-    ); /* Dodgers Blueグラデーション */
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* 上方向に影をつける */
-    border-radius: 12px 12px 0 0; /* 上側の角を丸く */
-    z-index: 100;
-    color: white; /* 全体の文字色を白に */
-    margin-bottom: 2px;
+    );
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 12px 12px; /* コメントリストと統一感を持たせる */
+    z-index: 10;
+    color: white;
+    margin-top: -3px; /* コメントリストとの距離をマイナスに調整 */
 }
 
 /* コメントフォームのテキストエリア */
