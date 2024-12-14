@@ -8,5 +8,6 @@ public class DodgersShoheiAppApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// アプリケーションコンテキストが正しくロードされることを確認
 	}
 }
