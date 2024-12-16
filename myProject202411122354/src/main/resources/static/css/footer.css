@@ -15,7 +15,7 @@ footer {
     text-align: center;
     padding: 20px;
     width: 100%;
-    margin-top: auto; /* 空きスペースを埋めて一番下に配置 */
+    margin-top: 35%; /* 空きスペースを埋めて一番下に配置 */
 }
 
 /* コンテナ内の配置 */
