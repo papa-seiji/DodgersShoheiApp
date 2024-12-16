@@ -39,3 +39,7 @@ python
 # 必要に応じて特定のディレクトリ内だけを除外
 # myProject202411122354/pip
 # myProject202411122354/python
+
+*.pem
+id_rsa
+*.key
