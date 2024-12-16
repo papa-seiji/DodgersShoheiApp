@@ -401,7 +401,7 @@ a:hover {
 
 #header-nav-links {
     display: flex;
-    gap: 20px;
+    gap: 6px;
     flex-wrap: nowrap;
 }
 
@@ -439,7 +439,7 @@ body {
 
 /* キラキラテキストエフェクト */
 .shiny-text {
-    font-size: 2.5rem; /* 好みのサイズに調整 */
+    font-size: 1.5rem; /* 好みのサイズに調整 */
     font-weight: bold;
     background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493, #ffd700);
     background-size: 400%; /* アニメーション効果を出すために背景を拡大 */
@@ -460,7 +460,7 @@ body {
 
 /* テキストスタイル */
 #fifty_fifty {
-    font-size: 2.5rem;
+    font-size: 1rem;
     font-weight: bold;
     text-align: center;
     color: #ff4500;
@@ -522,7 +522,7 @@ form {
     padding: 2rem; /* フォーム全体の内側の余白 */
     border-radius: 8px; /* 角を丸くする */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影をつけて浮いているように見せる */
-    max-width: 400px; /* フォームの最大幅を設定 */
+    max-width: 300px; /* フォームの最大幅を設定 */
     width: 100%; /* スマホ対応で幅を可変に */
 }
 
@@ -535,7 +535,7 @@ form label {
 
 form input[type="text"],
 form input[type="password"] {
-    width: 100%; /* フォームの幅を100%に設定 */
+    width: 91%; /* フォームの幅を100%に設定 */
     padding: 0.8rem; /* テキストフィールドの内側余白 */
     margin-bottom: 1rem; /* 下に余白を追加 */
     border: 1px solid #D1D1D6; /* ボーダーを薄いグレーに */
@@ -553,7 +553,7 @@ form button {
     cursor: pointer; /* マウスオーバー時にカーソルを変更 */
     font-size: 1rem; /* フォントサイズ */
     font-weight: 600; /* フォントを太字に */
-    width: 94%; /* ボタンをフォームの幅に合わせる */
+    width: 100%; /* ボタンをフォームの幅に合わせる */
 }
 
 form button:hover {
@@ -564,8 +564,8 @@ form button:hover {
 a {
     color: #007AFF; /* Apple風のアクセントカラー */
     text-decoration: none; /* 下線を消す */
-    font-size: 0.9rem; /* リンクのフォントサイズ */
-    margin-top: 1rem; /* 上に余白を追加 */
+    font-size: 1.1emm; /* リンクのフォントサイズ */
+    margin: 1rem 1rem 0rem 2rem;
     display: inline-block; /* インライン要素として表示 */
 }
 
@@ -609,7 +609,7 @@ a:hover {
 
 #header-nav-links {
     display: flex;
-    gap: 20px;
+    /* gap: 20px; */
     /* flex-wrap: nowrap; */
     align-items: center;
 }
@@ -617,7 +617,7 @@ a:hover {
 #header-nav-links a {
     font-size: 1rem;
     color: #000;
-    padding: 5px 10px;
+    padding: 4px 0px 16px 0px;
     border-radius: 4px;
     transition: background-color 0.3s ease-in-out;
     text-decoration: none;
