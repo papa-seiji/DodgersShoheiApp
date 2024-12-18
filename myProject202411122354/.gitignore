@@ -43,3 +43,8 @@ python
 *.pem
 id_rsa
 *.key
+
+# .gitignore
+application.properties
+application-dev.properties
+application-prod.properties
