@@ -12,12 +12,15 @@ body {
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
 }
 
-
+#kiji{
+    margin: 10px 32px 0px 28px;
+    font-size: 10px;
+}
 
 
 /* キラキラテキストエフェクト */
 .shiny-text {
-    font-size: 2.5rem; /* 好みのサイズに調整 */
+    font-size: 1.2rem; /* 好みのサイズに調整 */
     font-weight: bold;
     background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493, #ffd700);
     background-size: 400%; /* アニメーション効果を出すために背景を拡大 */
@@ -38,7 +41,7 @@ body {
 
 /* テキストスタイル */
 #fifty_fifty {
-    font-size: 2.5rem;
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
     color: #ff4500;
@@ -94,6 +97,10 @@ h2, h3 {
     margin-bottom: 2rem; /* 見出しの下に余白を追加 */
 }
 
+h5 {
+    color: #020202; /* Apple風のアクセントカラー */
+    /* margin-bottom: 1rem; */
+}
 
 
 /* ======== フォーム全体のスタイル ======== */
@@ -234,18 +241,6 @@ body {
 }
 
 
-/* キラキラテキストエフェクト */
-.shiny-text {
-    font-size: 2.5rem; /* 好みのサイズに調整 */
-    font-weight: bold;
-    background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493, #ffd700);
-    background-size: 400%; /* アニメーション効果を出すために背景を拡大 */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shiny-effect 4s linear infinite;
-    text-align: right; /* 右揃え */
-    margin: 7px 0; /* 上下の余白を追加 */
-}
 
 /* アニメーション効果 */
 @keyframes shiny-effect {
@@ -254,57 +249,6 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-
-/* テキストスタイル */
-#fifty_fifty {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-align: center;
-    color: #ff4500;
-    margin: 3px 0;
-    z-index: 1;
-    position: relative;
-}
-
-/* 紙吹雪用コンテナ */
-#confetti-container {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    /* height: 300px; */
-    background: transparent;
-}
-
-/* 紙吹雪のデザイン */
-.confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: var(--confetti-color, #ff0);
-    opacity: 0.8;
-    border-radius: 50%;
-    animation: confetti-fall 4s linear infinite, confetti-drift 4s ease-in-out infinite;
-}
-
-/* 紙吹雪の落下アニメーション */
-@keyframes confetti-fall {
-    0% {
-        transform: translateY(-100vh) rotate(0deg);
-    }
-    100% {
-        transform: translateY(100vh) rotate(360deg);
-    }
-}
-
-/* 紙吹雪の左右揺れアニメーション */
-@keyframes confetti-drift {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    50% {
-        transform: translateX(50px);
-    }
-}
 
 
 /* ======== 見出しスタイル ======== */
@@ -444,18 +388,6 @@ body {
 
 
 
-/* キラキラテキストエフェクト */
-.shiny-text {
-    font-size: 1.5rem; /* 好みのサイズに調整 */
-    font-weight: bold;
-    background: linear-gradient(90deg, #ffd700, #ff8c00, #ff1493, #ffd700);
-    background-size: 400%; /* アニメーション効果を出すために背景を拡大 */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shiny-effect 4s linear infinite;
-    text-align: center; /* 中央揃え */
-    margin: 7px 0; /* 上下の余白を追加 */
-}
 
 /* アニメーション効果 */
 @keyframes shiny-effect {
@@ -465,56 +397,6 @@ body {
 }
 
 
-/* テキストスタイル */
-#fifty_fifty {
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    color: #ff4500;
-    margin: 3px 0;
-    z-index: 1;
-    position: relative;
-}
-
-/* 紙吹雪用コンテナ */
-#confetti-container {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    /* height: 300px; */
-    background: transparent;
-}
-
-/* 紙吹雪のデザイン */
-.confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: var(--confetti-color, #ff0);
-    opacity: 0.8;
-    border-radius: 50%;
-    animation: confetti-fall 4s linear infinite, confetti-drift 4s ease-in-out infinite;
-}
-
-/* 紙吹雪の落下アニメーション */
-@keyframes confetti-fall {
-    0% {
-        transform: translateY(-100vh) rotate(0deg);
-    }
-    100% {
-        transform: translateY(100vh) rotate(360deg);
-    }
-}
-
-/* 紙吹雪の左右揺れアニメーション */
-@keyframes confetti-drift {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    50% {
-        transform: translateX(50px);
-    }
-}
 
 
 /* ======== 見出しスタイル ======== */
