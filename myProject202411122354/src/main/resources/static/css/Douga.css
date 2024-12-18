@@ -4,8 +4,8 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background-color: #f8f9fa;
-    padding-top: 4rem;
+    background-color: #ffffff;
+    padding-top: 0.5rem;
 }
 
 /* 動画セクション全体のスタイル */
@@ -27,23 +27,36 @@
     max-width: 600px;
 }
 
-/* 動画コンテナのスタイル */
+/* Responsive video container */
 #douga-container-1,
 #douga-container-2 {
     position: relative;
-    width: 100%;
-    max-width: 560px;
-    height: 315px;
-    margin: 10px 0;
+    width: 130%;
+    padding-top: 70.25%; /* 16:9 Aspect Ratio */
     background-color: #000;
 }
+
+#douga-container-1 iframe,
+#douga-container-2 iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#main-counter-controls,
+#secondary-counter-controls{
+    margin-top: -28px;
+}
+
 
 /* カウンター部分のスタイル */
 .counter-controls {
     display: flex;
     gap: 10px;
     justify-content: center;
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
 .counter-controls button {
@@ -60,3 +73,18 @@
     background-color: #0056b3;
 }
 
+/* Media query for small screens */
+@media (max-width: 768px) {
+    #douga-grid {
+        flex-direction: column; /* Stack videos vertically */
+        gap: 1rem;
+    }
+
+    .douga-section {
+        max-width: 100%;
+    }
+
+    h3 {
+        font-size: 1rem; /* Smaller heading size */
+    }
+}
