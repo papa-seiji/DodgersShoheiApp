@@ -755,4 +755,23 @@ a:hover {
     color: #005A9C;
     margin-top: 10px;
 }
+
+
+/* サインアップ、サインアップ成功、ログイン、ログアウト */
+/* 共通のh1タグ */
+
+#util_Accoun{
+    text-align: center;
+}
+
+#protectFooter{
+    margin-bottom: 13.5em;
+}
+
+
+
+
+
+
+
 }
