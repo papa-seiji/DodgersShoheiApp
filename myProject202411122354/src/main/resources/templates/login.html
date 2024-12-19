@@ -18,7 +18,7 @@
         <h1 id='util_Accoun'>Login</h1>
         
         <!-- メッセージ表示 -->
-        <p th:if="${message}" th:text="${message}"></p>
+        <p id='util_Accoun' th:if="${message}" th:text="${message}"></p>
         
         <form action="/auth/login" method="post">
             <label for="username">Username:</label>
