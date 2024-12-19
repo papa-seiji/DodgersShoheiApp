@@ -6,7 +6,7 @@
     height: 300px; /* 高さはそのまま */
     margin-top: 40px; /* ナビゲーションバーの高さ分を確保 */
     overflow: hidden; /* オーバーフローを非表示 */
-    gap: 10px; /* 左右の間に適度なスペース */
+    gap: 0.5%; /* 左右の間に適度なスペース */
 }
 
 /* 左側スライドショー */
@@ -66,32 +66,25 @@
     animation-delay: 12s;
 }
 
-
 /* フェードイン・アウトアニメーション */
 @keyframes fadeInOut {
     0%, 25% { opacity: 1; }
     50%, 100% { opacity: 0; }
 }
 
-
-/* 右側のスライドショー（ズームイン＆フェードエフェクト） */
-#header-slideshow-right {
-    flex: 3; /* 右側の幅を小さく */
-    position: relative;
-    overflow: hidden;
-}
-
+/* 右側のスライドショー調整 */
 #header-slideshow-right img {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0;
-    animation: zoomFade 16s infinite; /* ズームイン＆フェードエフェクト */
+    opacity: 0; /* 初期は透明 */
+    animation: fadeLoop 16s infinite; /* 新しいアニメーション */
 }
 
-/* アニメーションのタイミング（右側） */
+/* 初期状態で1枚目を表示 */
 #header-slideshow-right img:nth-child(1) {
+    opacity: 1; /* 初期表示で透明度を1に設定 */
     animation-delay: 0s;
 }
 #header-slideshow-right img:nth-child(2) {
@@ -104,13 +97,14 @@
     animation-delay: 12s;
 }
 
-/* ズームイン＆フェードエフェクト */
-@keyframes zoomFade {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0; }
-    100% { transform: scale(1); opacity: 0; }
+/* フェードインとフェードアウトのループアニメーション */
+@keyframes fadeLoop {
+    0% { opacity: 0; }
+    10% { opacity: 1; } /* フェードイン */
+    40% { opacity: 1; } /* 表示継続 */
+    50% { opacity: 0; } /* フェードアウト */
+    100% { opacity: 0; } /* 待機 */
 }
-
 
 /* ======== レスポンシブ対応 ======== */
 @media (max-width: 768px) {
