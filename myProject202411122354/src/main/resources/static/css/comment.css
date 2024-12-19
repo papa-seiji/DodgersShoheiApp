@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: flex-start; /* スペースを上詰めに配置 */
     width: 100%;
-    height: calc(100vh - 60px); /* navbarの高さを除外 */
+    height: calc(100vh - 17px); /* navbarの高さを除外 */
     background-image: url('/images/dodger-stadium-tours.jpg');
     background-size: cover;
     background-position: center;
@@ -259,12 +259,24 @@
     border: none;
     border-radius: 50%; /* 完全な円形 */
     cursor: pointer;
-    display: flex !important;
+    display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 立体感のある影 */
     transition: transform 0.3s ease, background-color 0.3s ease;
+    z-index: 20; /* 他の要素の下に隠れないようにする */
+    position: relative; /* レイヤー位置を調整 */
 }
+
+/* SVGアイコン（野球のボール） */
+#submitComment svg.baseball-icon {
+    width: 50px; /* アイコンサイズ調整 */
+    height: 50px;
+    flex-shrink: 0; /* サイズを保つ */
+    z-index: 21; /* ボタンより上に表示 */
+    pointer-events: none; /* ボタンのクリック操作を妨げない */
+}
+
 
 #submitComment:hover {
     background-color: rgba(255, 215, 0, 0.9); /* ゴールド色 */
@@ -279,11 +291,13 @@
     opacity: 0.7;
 }
 
+
 /* ===== レスポンシブ対応 ===== */
 @media (max-width: 768px) {
     #comment-form-container {
         max-width: 90%;
         padding: 10px 15px;
+        margin-bottom: -8.5em;
     }
 
     #commentContent {
@@ -298,7 +312,7 @@
 
 @media (max-width: 430px) {
     #comment-form-container {
-        max-width: 95%;
+        max-width: 92%;
     }
 
     #submitComment {
