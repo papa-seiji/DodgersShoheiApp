@@ -13,10 +13,11 @@
     <th:block th:replace="fragments/header :: header"></th:block>
 
     <main>
-        <h1 th:text="${message}">Signup Successful</h1>
-        <p>Thank you for signing up.</p>
-        <a href="/auth/login">Go to Login</a>
+        <h1 id='util_Accoun' th:text="${message}">Signup Successful</h1>
+        <p id='util_Accoun'>Thank you for signing up.</p>
+        <p id='util_Accoun'><a href="/auth/login">Go to Login</a></p>
     </main>
+    <span id='protectFooter'></span><!-- フッターを下げる為だけに設置 -->
     <th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>
