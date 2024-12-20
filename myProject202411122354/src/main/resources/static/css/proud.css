@@ -65,7 +65,7 @@
 }
 
 #header-nav-links a {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     padding: 0px 0px 0px 3px;
     margin: 13px 38px 0px -35px;
     color: rgb(180, 46, 46);
@@ -82,15 +82,22 @@
 
 #midashi_1 {
     margin-top: 50px;
+    text-align: center;
 }
 
 #midashi_5_a {
     margin-top: -2em;
+    text-align: center;
 }
 
 
 
 /* ======== アップロードフォーム ======== */
+
+#image-upload-form{
+    padding: 0px 21px 2px 23px;
+}
+
 #upload-container {
     display: flex;
     justify-content: space-between;
@@ -100,7 +107,7 @@
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 5px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 #image-file {
@@ -129,7 +136,7 @@
 }
 
 .btn {
-    margin-right: 35%;
+    margin-right: 4%;
     /* ボタン部分を適度に調整 */
     display: flex;
     align-items: center;
@@ -240,7 +247,7 @@
 @media screen and (max-width: 768px) {
     #upload-container {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         gap: 10px;
     }
 
@@ -256,11 +263,12 @@
     }
 
     #image-description {
-        width: 100%;
+        width: 157%;
+        margin-left: -35%;
     }
 
     .btn {
-        width: 100%;
+        width: 96%;
         justify-content: center;
     }
 

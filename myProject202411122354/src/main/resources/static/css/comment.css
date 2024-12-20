@@ -7,9 +7,9 @@
     width: 100%;
     height: calc(100vh - 17px); /* navbarの高さを除外 */
     background-image: url('/images/dodger-stadium-tours.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.9;
+    background-size: auto;
+    background-position: top;
+    opacity: 1;
     font-family: Arial, sans-serif;
     box-sizing: border-box;
     padding: 0; /* 不要な余白を削除 */
@@ -323,9 +323,9 @@
 
     
     #header-nav-links a {
-        font-size: 0.5rem;
+        font-size: 0.6rem;
         padding: 0px 0px 0px 3px;
-        margin: 13px 38px 0px -35px;
+        margin: 13px 32px 0px -35px;
         color: rgb(180, 46, 46);
         font-weight: bolder;
     }
