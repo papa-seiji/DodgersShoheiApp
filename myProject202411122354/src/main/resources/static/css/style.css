@@ -165,7 +165,7 @@ a:hover {
 
 #header-logo{
     font-size: 16px;
-    margin: -27px -25px -5px -30px;
+    margin: -45px -26px -7px -43px
 }
 
 
@@ -502,7 +502,7 @@ a:hover {
     background-color: #ffffff; /* 背景色を薄いグレーに */
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
-    margin: 10rem auto; /* 上下の余白と中央配置 */
+    margin: 4rem 0em 0em 0em; /* 上下の余白と中央配置 */
     max-width: 100%; /* 最大幅を設定 */
 }
 
@@ -582,7 +582,7 @@ a:hover {
     background-color: #ffffff; /* 背景色を薄いグレーに */
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
-    margin: 20px auto; /* 上下の余白と中央配置 */
+    margin: 0px auto; /* 上下の余白と中央配置 */
     max-width: 100%; /* 最大幅を設定 */
 }
 
