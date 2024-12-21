@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- fragments/headerを利用し、ページタイトルを指定 -->
-    <th:block th:replace="fragments/header :: head ('Login Page')"></th:block>
+    <th:block th:replace="~{fragments/header :: head ('Login Page')}"></th:block>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -10,16 +10,18 @@
 </head>
 <body>
     <!-- fragments/headerを利用してヘッダーを表示 -->
-    <th:block th:replace="fragments/header :: header"></th:block>
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
     <div id="kiji">MLB,Dodgers,大谷選手、山本選手を密かに応援している人の</div>
     <div id="kiji">コミュニケーション場として共有できればいいなと作りました</div>
 
     <main>
         <h1 id='util_Accoun'>Login</h1>
-        
-        <!-- メッセージ表示 -->
-        <p id='util_Accoun' th:if="${message}" th:text="${message}"></p>
-        
+
+        <!-- エラーメッセージ表示 -->
+        <p th:if="${errorMessage}" style="color: red; text-align: center;">
+            <span id="sippai" th:text="${errorMessage}"></span>
+        </p>
+
         <form action="/auth/login" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
@@ -30,8 +32,8 @@
             <button type="submit">Login</button>
         </form>
         
-        <a href="/auth/signup">Don't have an account? Sign up here</a>
+        <a href="/auth/signup">未登録の方は こちらからSignUp</a><!-- Don't have an account? Sign up here -->
     </main>
-    <th:block th:replace="fragments/footer :: footer"></th:block>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>
