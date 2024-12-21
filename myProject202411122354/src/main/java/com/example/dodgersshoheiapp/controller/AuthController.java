@@ -27,7 +27,14 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String loginPage(@RequestParam(value = "logout", required = false) String logout, Model model) {
+    public String loginPage(
+            @RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "logout", required = false) String logout,
+            Model model) {
+        if ("true".equals(error)) {
+            model.addAttribute("errorMessage", "ユーザ名かパスワードが正しくありません");// "Invalid username or password. Please try
+                                                                      // again."
+        }
         if ("true".equals(logout)) {
             model.addAttribute("message", "ログアウトしました");
         }
