@@ -22,7 +22,7 @@
     </div>
     <nav id="header-nav-links">
         <div class="navbar-dropdown">
-            <span class="navbar-dropdown-trigger">Chat</span>
+            <span class="navbar-dropdown-trigger" onclick="toggleDropdown()">Chat</span>
             <div class="navbar-dropdown-content">
                 <a href="/home">Home</a>
                 <a href="/proud">Proud</a>
@@ -177,6 +177,24 @@
     // ページロード時にユーザー情報を取得
     document.addEventListener('DOMContentLoaded', fetchUserInfo);
 </script>
+
+<script>
+    function toggleDropdown() {
+        const dropdown = document.querySelector('.navbar-dropdown');
+        dropdown.classList.toggle('open');
+    }
+
+    // 外部クリックでドロップダウンを閉じる
+    document.addEventListener('click', function (event) {
+        const dropdown = document.querySelector('.navbar-dropdown');
+        const isClickInside = dropdown.contains(event.target);
+
+        if (!isClickInside && dropdown.classList.contains('open')) {
+            dropdown.classList.remove('open');
+        }
+    });
+</script>
+
 <th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>
