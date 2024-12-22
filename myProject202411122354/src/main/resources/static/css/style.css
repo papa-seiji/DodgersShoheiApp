@@ -565,6 +565,13 @@ body {
 
 
 
+/* ドロップダウン表示時 */
+.navbar-dropdown.open .navbar-dropdown-content {
+    display: block;
+}
+
+
+
 
 
 /* ======== 見出しスタイル ======== */
