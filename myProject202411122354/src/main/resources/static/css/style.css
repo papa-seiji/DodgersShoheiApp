@@ -170,83 +170,104 @@ a:hover {
 
 
 
-/* ======== ヘッダーのナビゲーションバー ======== */
+/* ナビゲーションバー全体 */
 #header-navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 40px; /* 高さを調整 */
-    background-color: rgba(255, 255, 255, 0.9);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    z-index: 10; /* スライドショーより前面 */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 軽めの影 */
-}
-
-
-
-/* ヘッダーナビゲーション全体 */
-#header-navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
     height: 40px;
-    padding: 0 20px;
     background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 左側ロゴとユーザー情報コンテナ */
+/* ロゴと情報部分 */
 #header-left {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-/* ロゴ */
 #header-logo a {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-decoration: none;
     color: #000;
 }
 
-/* ユーザー情報と訪問者カウンターのコンテナ */
 #header-info-container {
     display: flex;
-    flex-direction: column; /* 子要素を縦に並べる */
-    justify-content: center;
-    gap: 5px; /* 上下の余白 */
+    flex-direction: column;
+    /* gap: 5px; */
 }
 
-/* ユーザー情報 */
 #user-info {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
     color: #333;
 }
 
-/* 訪問者カウンター */
 #visitor-counter-display {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     color: #555;
 }
 
-#header-nav-links a {
-    font-size: 0.5rem;
-    padding: 0px 0px 0px 3px;
-    margin: 13px 38px 0px -35px;
+/* ドロップダウンボタン */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+#current-page {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+#current-page:hover {
+    background-color: #f0f0f0;
+}
+
+/* ドロップダウンの内容 */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 120px;
+}
+
+.dropdown-content a {
     color: rgb(180, 46, 46);
-    font-weight: bolder;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
 }
 
-#header-navbar {
-    padding: 5px; /* 全体の余白を縮小 */
+.dropdown-content a:hover {
+    background-color: #f0f0f0;
 }
 
+/* ホバーやタッチで表示 */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:focus-within .dropdown-content {
+    display: block;
+}
 
 
 
@@ -273,8 +294,118 @@ body {
 }
 
 
+/* ヘッダーナビゲーション全体 */
+#header-navbar {
+    flex-direction: column;
+    height: auto;
+}
 
+#header-left {
+    margin-bottom: 10px;
+}
 
+.dropdown-content {
+    width: 100%;
+}
+
+/* ナビゲーションバー全体 */
+#header-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ロゴと情報部分 */
+#header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#header-logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+}
+
+#header-info-container {
+    display: flex;
+    flex-direction: column;
+    /* gap: 5px; */
+}
+
+#user-info {
+    font-size: 0.8rem;
+    color: #333;
+}
+
+#visitor-counter-display {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+/* ドロップダウンボタン */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+#current-page {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+#current-page:hover {
+    background-color: #f0f0f0;
+}
+
+/* ドロップダウンの内容 */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 120px;
+}
+
+.dropdown-content a {
+    color: rgb(180, 46, 46);
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f0f0f0;
+}
+
+/* ホバーやタッチで表示 */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:focus-within .dropdown-content {
+    display: block;
+}
 
 
 /* ======== 見出しスタイル ======== */
@@ -360,6 +491,82 @@ body {
 }
 
 
+/* 親要素 */
+#header-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 54%;
+    height: 41px;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ドロップダウンメニュー全体 */
+.navbar-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* ドロップダウンのトリガー部分 */
+.navbar-dropdown-trigger {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(180, 46, 46);
+    cursor: pointer;
+}
+
+/* ドロップダウンメニューの内容 */
+.navbar-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    z-index: 100;
+}
+
+/* ドロップダウン内のリンク */
+.navbar-dropdown-content a {
+    display: block;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    color: rgb(180, 46, 46);
+    text-decoration: none;
+    text-align: left;
+}
+
+/* ホバーでメニュー表示 */
+.navbar-dropdown:hover .navbar-dropdown-content {
+    display: block;
+}
+
+/* 横並びリンクの調整 */
+#header-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: fixed;
+    margin: 9px 9px 9px 380px;
+}
+
+/* その他の基本リンク */
+#header-nav-links a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: rgb(180, 46, 46);
+    margin: 10px 10px 0px 10px;
+}
+
+
+
+
+
 /* ======== 見出しスタイル ======== */
 h2, h3 {
     color: #007AFF; /* Apple風のアクセントカラー */
@@ -416,7 +623,7 @@ a {
     color: #007AFF; /* Apple風のアクセントカラー */
     text-decoration: none; /* 下線を消す */
     font-size: 1.1em; /* リンクのフォントサイズ */
-    margin: 2rem 1rem 0rem 3rem;
+    margin: 2rem 1.5rem 0rem 1.5rem;
     display: inline-block; /* インライン要素として表示 */
     text-align: center;
 }
@@ -424,65 +631,6 @@ a {
 a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
-
-
-
-
-
-/* ======== ヘッダーのナビゲーションバー ======== */
-#header-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    background-color: rgba(255, 255, 255, 0.9);
-    display: flex;
-    justify-content: space-between; /* 左右に分ける */
-    align-items: center;
-    padding: 5px 10px; /* 上下左右の余白を調整 */
-    z-index: 10;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    white-space: nowrap; /* テキストの折り返しを防止 */
-}
-
-
-/* 小さい画面用の微調整 */
-@media (max-width: 768px) {
-    /* #header-logo a {
-        font-size: 2rem;
-    } */
-
-    #header-nav-links a {
-        font-size: 0.6rem;
-        padding: 0px 0px 0px 3px;
-        margin: 13px 38px 0px -35px;
-        color: rgb(180, 46, 46);
-        font-weight: bolder;
-    }
-
-    #header-navbar {
-        padding: 5px; /* 全体の余白を縮小 */
-    }
-
-    #sippai{
-        text-align: center;
-    }
-    
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*リンクページのfooterが近寄ってこないためのプロパティ*/
@@ -775,11 +923,6 @@ a:hover {
 #protectFooter{
     margin-bottom: 13.5em;
 }
-
-
-
-
-
 
 
 }
