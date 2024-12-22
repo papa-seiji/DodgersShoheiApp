@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/signup_login_util.css}">
 </head>
 <body>
     <!-- fragments/headerを利用してヘッダーを挿入 -->
@@ -16,7 +16,7 @@
 
     <main>
         <section>
-            <h1 id='util_Accoun'>Create Account</h1>
+            <h1 id='util_Account'>Create Account</h1>
             <p th:if="${message}" th:text="${message}" style="color: red;"></p>
             <form action="/auth/signup" method="post">
                 <label for="username">Username:</label>
@@ -25,7 +25,7 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
                 
-                <button type="submit">Sign Up</button>
+                <button type="submit">Charge!SignUp</button>
             </form>
             <a href="/auth/login">登録がお済の方は こちらlogIn</a><!-- Already have an account? Login here -->
         </section>
