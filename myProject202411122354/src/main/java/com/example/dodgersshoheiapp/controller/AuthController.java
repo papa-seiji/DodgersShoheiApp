@@ -48,18 +48,20 @@ public class AuthController {
         try {
             // ユーザー名の重複チェック
             if (userService.isUsernameTaken(username)) {
-                model.addAttribute("message", "Username is already taken. Please choose a different one.");
+                model.addAttribute("message", "ユーザー名はすでに使用されています。別のユーザー名を選択してください");// "Username is already taken.
+                                                                                    // Please choose a different one."
                 return "signup"; // 登録ページに戻る
             }
 
             // ユーザー登録処理
             userService.saveUser(username, password);
 
-            model.addAttribute("message", "User registered successfully!");
+            model.addAttribute("message", "ユーザー登録完了！");// User registered successfully
             System.out.println("DEBUG: User successfully registered - username: " + username);
             return "signup-success";
         } catch (Exception e) {
-            model.addAttribute("message", "An unexpected error occurred. Please try again.");
+            model.addAttribute("message", "予期しないエラーが発生しました。もう一度お試しください");// "An unexpected error occurred. Please try
+                                                                         // again."
             e.printStackTrace();
             return "signup";
         }
