@@ -6,16 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup Success</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/signup_login_util.css}">
 </head>
 <body>
     <!-- fragments/headerを利用してヘッダーを表示 -->
     <th:block th:replace="fragments/header :: header"></th:block>
 
     <main>
-        <h1 id='util_Accoun' th:text="${message}">Signup Successful</h1>
-        <p id='util_Accoun'>Thank you for signing up.</p>
-        <p id='util_Accoun'><a href="/auth/login">Go to Login</a></p>
+        <h1 id='util_Account' th:text="${message}">Signup Successful</h1>
+        <p id='util_Account'>Thank you for signing up.</p>
+        <p id='util_Account'><a href="/auth/login">Go to Login</a></p>
     </main>
     <span id='protectFooter'></span><!-- フッターを下げる為だけに設置 -->
     <th:block th:replace="fragments/footer :: footer"></th:block>
