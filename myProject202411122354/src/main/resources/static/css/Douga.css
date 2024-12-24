@@ -87,4 +87,12 @@
     h3 {
         font-size: 1rem; /* Smaller heading size */
     }
+
+    /* 画像部分のスタイル */
+.home-image5 {
+    width: 72%;
+    max-width: 400px;
+    border-radius: 10px;
+}
+
 }
