@@ -13,11 +13,17 @@ body {
 }
 
 
+
+
+
 #kiji{
     margin: 10px 32px 0px 28px;
     font-size: 10px;
 }
 
+#and{
+    margin: -1em 0em;
+}
 
 /* キラキラテキストエフェクト */
 .shiny-text {
@@ -90,6 +96,38 @@ body {
         transform: translateX(50px);
     }
 }
+
+
+
+/* ======== ふわっと ======== */
+/* フェードインとふわっと上がるアニメーション */
+@keyframes fadeInAndUp {
+    from {
+        opacity: 0; /* 初期は透明 */
+        transform: translateY(20px); /* 初期位置を少し下に */
+    }
+    to {
+        opacity: 1; /* 完全に表示 */
+        transform: translateY(0); /* 元の位置に */
+    }
+}
+
+/* エフェクト用のクラス */
+.shiny-text {
+    opacity: 0; /* 初期状態で透明 */
+    animation: fadeInAndUp 6s ease-out forwards; /* 1.5秒でエフェクト完了 */
+}
+
+/* エフェクト用のクラス */
+.shiny-text-1 {
+    opacity: 0; /* 初期状態で透明 */
+    animation: fadeInAndUp 3.5s ease-out forwards; /* 1.5秒でエフェクト完了 */
+}
+
+/* ======== ふわっと ======== */
+
+
+
 
 
 /* ======== 見出しスタイル ======== */
