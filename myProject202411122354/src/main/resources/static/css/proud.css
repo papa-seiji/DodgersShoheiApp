@@ -38,7 +38,13 @@
 #user-info {
     font-size: 0.8rem;
     color: #333;
+    white-space: nowrap; /* テキストを一行にする */
+    overflow: hidden; /* はみ出た部分を隠す */
+    text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
+    max-width: 130px; /* 名前の最大幅を指定 */
+    display: inline-block; /* レイアウト調整用 */
 }
+
 
 #visitor-counter-display {
     font-size: 0.8rem;
@@ -109,7 +115,7 @@
 }
 
 #midashi_5_a {
-    margin-top: -2em;
+    margin-top: -1.1em;
     text-align: center;
 }
 
@@ -341,6 +347,7 @@
     align-items: center;
     gap: 15px;
     margin-right: 12em;
+    margin-top: 1px;
 }
 
 #header-logo a {
@@ -359,6 +366,11 @@
 #user-info {
     font-size: 0.8rem;
     color: #333;
+    white-space: nowrap; /* テキストを一行にする */
+    overflow: hidden; /* はみ出た部分を隠す */
+    text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
+    max-width: 130px; /* 名前の最大幅を指定 */
+    display: inline-block; /* レイアウト調整用 */
 }
 
 #visitor-counter-display {
