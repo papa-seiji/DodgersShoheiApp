@@ -463,8 +463,8 @@ body {
 /* ======== 見出しスタイル ======== */
 h2, h3 {
     color: #007AFF; /* Apple風のアクセントカラー */
-    margin-bottom: 2rem; /* 見出しの下に余白を追加 */
-}
+    margin-bottom: 2rem;
+    /* margin-bottom: 2rem; */
 
 /* ======== フォーム全体のスタイル ======== */
 form {
@@ -1003,4 +1003,4 @@ a:hover {
     border-radius: 10px;
 } */
 
-}
+}}
