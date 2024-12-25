@@ -45,26 +45,44 @@
             <h5 id="midashi_5_a" class="shiny-text">『己』の楽しみ方をおしえて</h5>
         <main>
             
-            <form id="image-upload-form" enctype="multipart/form-data">
+<form id="image-upload-form" enctype="multipart/form-data">
+    <div id="upload-container">
+        <!-- 写真のアイコン -->
+        <label for="image-file" class="upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512">
+                <path d="M480 64c26.5 0 48 21.5 48 48v320c0 26.5-21.5 48-48 48H96c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h384zM64 112v320c0 17.6 14.4 32 32 32h384c17.6 0 32-14.4 32-32V112c0-17.6-14.4-32-32-32H96c-17.6 0-32 14.4-32 32zm288 80c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm112 176l-64-96-96 128H160l64-96 64 96H464z"/>
+            </svg>
+            <input type="file" id="image-file" name="image" accept="image/*" required />
+        </label>
+        <!-- テキスト入力エリア -->
+        <input
+            type="text"
+            id="image-description"
+            name="description"
+            placeholder="画像のタイトルなどひと言"
+            required
+        />
+        <!-- 送信ボタン -->
+        <button type="submit" id="upload-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="baseball-icon">
+            <!-- ボール本体 -->
+            <circle cx="50" cy="50" r="48" fill="white" stroke="#111" stroke-width="2"/>
 
-                <div id="upload-container">
-                    <input type="file" id="image-file" name="image" accept="image/*" required>
-                        <div class="description-container">
-                            <input type="text" id="image-description" name="description" placeholder="画像のタイトルなどひと言" required>
-                            <input type="hidden" name="createdBy" value="current_user">
-                        </div><!--<button type="submit">Upload</button>-->
-                        <a href="#" id="upload-btn" class="btn">
-                        <div class="btn-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                                <path d="M16.1 260.2c-22.6 12.9-20.5 47.3 3.6 57.3L160 376V479.3c0 18.1 14.6 32.7 32.7 32.7c9.7 0 18.9-4.3 25.1-11.8l62-74.3 123.9 51.6c18.9 7.9 40.8-4.5 43.9-24.7l64-416c1.9-12.1-3.4-24.3-13.5-31.2s-23.3-7.5-34-1.4l-448 256zm52.1 25.5L409.7 90.6 190.1 336l1.2 1L68.2 285.7zM403.3 425.4L236.7 355.9 450.8 116.6 403.3 425.4z"></path>
-                            </svg>
-                        </div>
-                        <span><button type="submit">Upload</button></span>
-                        </a>
-                </div>
-            </form>
+            <!-- 左側の縫い目 -->
+            <path d="M28 18 C40 40, 40 60, 28 82" stroke="#B71C1C" stroke-width="4" fill="none"/>
+            <path d="M28 22 L32 26 M28 46 L32 50 M28 66 L32 70 M28 78 L32 82"
+                  stroke="#B71C1C" stroke-width="2" fill="none" stroke-linecap="round"/>
 
-            <div id="image-gallery" class="gallery"></div>
+            <!-- 右側の縫い目 -->
+            <path d="M72 18 C60 40, 60 60, 72 82" stroke="#B71C1C" stroke-width="4" fill="none"/>
+            <path d="M72 22 L68 26 M72 46 L68 50 M72 66 L68 70 M72 78 L68 82"
+                  stroke="#B71C1C" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        </button>
+    </div>
+</form>
+
+    <div id="image-gallery" class="gallery"></div>
         </main>
 
             <!-- モーダル -->
