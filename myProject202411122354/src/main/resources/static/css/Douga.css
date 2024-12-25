@@ -48,6 +48,7 @@
 #main-counter-controls,
 #secondary-counter-controls{
     margin-top: -28px;
+    margin-bottom: 3em;
 }
 
 
@@ -87,6 +88,20 @@
     h3 {
         font-size: 1rem; /* Smaller heading size */
     }
+
+    #hoge-hoge_1{
+        font-size: 1rem;
+        color: #0000ff;
+        margin-top: 1rem;
+    }
+
+    #hoge-hoge_2{
+        font-size: 1rem;
+        color: #0000ff;
+        
+        
+    }
+
 
     /* 画像部分のスタイル */
 .home-image5 {
