@@ -146,112 +146,112 @@
     animation: fadeInAndUp 5s ease-out forwards; /* 1.5秒でエフェクト完了 */
 }
 
-/* ======== ふわっと ======== */
+/* ======== ふわっと end ======== */
+
+
+
+
+
+
+
 
 
 
 
 
 /* ======== アップロードフォーム ======== */
-
+/* ===== フォーム全体 ===== */
+/* アップロードフォームのコンテナ */
 #image-upload-form{
-    padding: 0px 21px 2px 23px;
+    padding: 1.5%;
 }
+
 
 #upload-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background-color: #f9f9f9;
+    gap: 10px;
+    /* padding: 7px; */
+    background-color: #321f78;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    /* margin-bottom: 20px; */
+    border-radius: 8px;
+    /* width: 100%; */
+    max-width: 600px; /* 最大幅の設定 */
+    margin: 0 auto; /* 中央揃え */
 }
 
-#image-file {
-    flex: 1;
-    max-width: 18em;
-}
-
-.description-container {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-#midashi_5_b {
-    margin: 0em 0em 0em 0em;
-}
-
-
-#image-description {
-    width: 96%;
-    height: 2.5em;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.btn {
-    margin-right: 4%;
-    /* ボタン部分を適度に調整 */
+/* ファイル選択ボタン（クリップアイコン） */
+.upload-icon {
     display: flex;
     align-items: center;
-    box-sizing: border-box;
-    border-radius: 0 3px 3px 0;
-    height: 50px;
-    background-color: #b2d5de;
-    text-align: center;
-    text-decoration: none;
-    width: 8rem;
-}
-
-.btn-icon {
+    justify-content: center;
+    width: 52px;
+    height: 53px;
+    background-color: #321f78;
+    border-radius: 50%;
+    cursor: pointer;
     position: relative;
-    border-radius: 3px 0 0 3px;
-    background-color: #697d82;
-    width: 50px;
-    height: 100%;
-    color: white;
-    transition: 0.3s;
-    overflow: hidden;
+    padding-left: 5px;
 }
 
-.btn svg {
+.upload-icon input[type="file"] {
     position: absolute;
-    inset: 0;
-    margin: auto;
-    fill: #fff;
-    transition: .5s all;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
 }
 
-.btn span {
-    display: inline-block;
-    width: 80px;
-    color: #353535;
-    text-align: center;
+.upload-icon svg {
+    fill: #ffffff;
+    width: 40px;
+    height: 40px;
 }
 
-.btn:hover svg {
-    animation: iconAnime 0.8s ease-in;
+/* テキスト入力エリア */
+#image-description {
+    flex: 1; /* 入力フィールドが横幅を埋める */
+    padding: 8px;
+    border: 1px solid #321f78;
+    border-radius: 10px;
 }
 
-@keyframes iconAnime {
-    25% {
-        transform: translate(-3px, 3px);
-    }
-
-    50% {
-        transform: translate(3px, -3px);
-    }
-
-    75% {
-        transform: translate(-3px, 3px);
-    }
+/* 送信ボタン */
+#upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background-color: #321f78;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-right: 13px;
 }
+
+#upload-btn svg {
+    fill: white;
+    width: 20px;
+    height: 20px;
+}
+
+/* レスポンシブで横並びを維持 */
+#upload-container {
+    flex-wrap: nowrap;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ======== ギャラリー ======== */
 .gallery {
@@ -306,9 +306,9 @@
 /* ======== レスポンシブ対応 ======== */
 @media screen and (max-width: 768px) {
     #upload-container {
-        flex-direction: column;
+        /* flex-direction: column; */
         align-items: center;
-        gap: 10px;
+        /* gap: 10px; */
     }
 
 /* ヘッダーナビゲーション全体 */
@@ -444,7 +444,7 @@
 
     #image-description {
         width: 157%;
-        margin-left: -35%;
+        margin-left: -2%;
     }
 
     .btn {
