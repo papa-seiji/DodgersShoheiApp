@@ -104,7 +104,9 @@
     display: block;
 }
 
-
+#black{
+    background-color: #000000d9;
+}
 
 
 
@@ -112,11 +114,13 @@
 #midashi_1 {
     margin-top: 50px;
     text-align: center;
+    color: #ffffff;
 }
 
 #midashi_5_a {
     margin-top: -1.1em;
     text-align: center;
+    color: #ffffff;
 }
 
 
@@ -163,7 +167,7 @@
 /* ===== フォーム全体 ===== */
 /* アップロードフォームのコンテナ */
 #image-upload-form{
-    padding: 1.5%;
+    padding: 1px;
 }
 
 
@@ -172,9 +176,9 @@
     align-items: center;
     gap: 10px;
     /* padding: 7px; */
-    background-color: #321f78;
+    background-color: #000000;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 3px;
     /* width: 100%; */
     max-width: 600px; /* 最大幅の設定 */
     margin: 0 auto; /* 中央揃え */
@@ -187,7 +191,7 @@
     justify-content: center;
     width: 52px;
     height: 53px;
-    background-color: #321f78;
+    background-color: #000000;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
@@ -203,10 +207,18 @@
 }
 
 .upload-icon svg {
-    fill: #ffffff;
+    fill: #f08b0a; /* 通常時の色 */
     width: 40px;
     height: 40px;
+    transition: fill 0.3s ease, transform 0.3s ease; /* 色と拡大アニメーションを追加 */
 }
+
+
+.upload-icon:hover svg {
+    fill: #ff6600; /* ホバー時のアイコン色 */
+    transform: scale(1.1); /* ホバー時にアイコンを拡大 */
+}
+
 
 /* テキスト入力エリア */
 #image-description {
@@ -223,11 +235,16 @@
     justify-content: center;
     width: 38px;
     height: 38px;
-    background-color: #321f78;
+    background-color: #474735;
     border: none;
     border-radius: 50%;
     cursor: pointer;
     margin-right: 13px;
+}
+
+#upload-btn:hover {
+    background-color: #cdcd22;/* ホバー時のアイコン色 */
+    transform: scale(1.2); /* ホバー時にアイコンを拡大 */
 }
 
 #upload-btn svg {
@@ -235,6 +252,7 @@
     width: 20px;
     height: 20px;
 }
+
 
 /* レスポンシブで横並びを維持 */
 #upload-container {
@@ -444,7 +462,7 @@
 
     #image-description {
         width: 157%;
-        margin-left: -2%;
+        margin-left: -1%;
     }
 
     .btn {
