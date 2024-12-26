@@ -141,6 +141,11 @@ h5 {
     /* margin-bottom: 1rem; */
 }
 
+#Page_introduction{
+    color: #007AFF;
+    margin-top: 18%;
+}
+
 
 /* ======== フォーム全体のスタイル ======== */
 form {
@@ -466,6 +471,11 @@ h2, h3 {
     margin-bottom: 2rem;
     /* margin-bottom: 2rem; */
 
+
+
+
+
+
 /* ======== フォーム全体のスタイル ======== */
 form {
     background-color: #FFFFFF; /* 白い背景 */
@@ -522,6 +532,9 @@ a {
 a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
+
+
+
 }
 
 
@@ -637,6 +650,14 @@ body {
 
 
 
+#Page_introduction-1{
+    font-size: larger;
+    color: #3c8918;
+    margin: 45px 0px 0px 0px;
+}
+
+
+
 
 
 /* ======== 見出しスタイル ======== */
@@ -722,7 +743,7 @@ a:hover {
     background-color: #ffffff; /* 背景色を薄いグレーに */
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
-    margin: 4rem 0em 0em 0em; /* 上下の余白と中央配置 */
+    margin: 2rem 0em 0em 0em; /* 上下の余白と中央配置 */
     max-width: 100%; /* 最大幅を設定 */
 }
 
