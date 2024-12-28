@@ -378,7 +378,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-right: 10em;
+    margin-right: 9em;
 }
 
 #header-logo a {
@@ -650,11 +650,6 @@ body {
 
 
 
-#Page_introduction-1{
-    font-size: larger;
-    color: #3c8918;
-    margin: 45px 0px 0px 0px;
-}
 
 
 
@@ -724,6 +719,74 @@ a {
 a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
+
+
+
+
+/* ========start 適用すると、右のように横並び    --- P age I ntroductio n ---    ======== */
+
+#fasion {
+    display: flex; /* Flexboxを有効化 */
+    justify-content: center; /* 中央揃え */
+    align-items: center; /* 垂直方向の中央揃え */
+    gap: 1px; /* 各要素間のスペースを追加 */
+}
+
+#Page_introduction-1{/*--------*/
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 0px;
+}
+#Page_introduction-2{/*P*/
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #1c13df;
+    text-transform: uppercase;
+    /* font-weight: bold; */
+    margin: 45px 0px 0px 30px;
+}
+#Page_introduction-3{/*age*/
+    font-size: 12px;
+    /* font-weight: bold; */
+    color: #5f225d;
+    text-transform: uppercase;
+    margin: 53px 0px 0px 0px;
+}
+#Page_introduction-4{/*I*/
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #da1111;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 10px;
+}
+#Page_introduction-5{/*ntroductio*/
+    font-size: 12px;
+    /* font-weight: bold; */
+    color: #035f15;
+    text-transform: uppercase;
+    margin: 47px 0px 0px 0px;
+}
+#Page_introduction-6{/*n*/
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 52px 30px 0px 0px;
+}
+#Page_introduction-7{/*--------*/
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 0px;
+}
+
+/* ======== end 適用すると、右のように横並び    --- P age I ntroductio n ---    ======== */
+
+
+
 
 
 /*リンクページのfooterが近寄ってこないためのプロパティ*/

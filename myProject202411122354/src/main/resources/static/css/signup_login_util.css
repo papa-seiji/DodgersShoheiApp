@@ -260,7 +260,7 @@ body {
     display: flex;
     align-items: center;
     gap: 32px;
-    margin-right: 9em;
+    margin-right: 6em;
     margin-top: 1px;
 }
 
@@ -279,7 +279,7 @@ body {
 }
 
 #user-info {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
     color: #333;
     white-space: nowrap; /* テキストを一行にする */
     overflow: hidden; /* はみ出た部分を隠す */
@@ -521,7 +521,7 @@ body {
     align-items: center;
     gap: 15px;
     position: fixed;
-    margin: 9px 9px 9px 13em;
+    margin: 9px 9px 9px 14em;
 }
 
 /* その他の基本リンク */
@@ -551,7 +551,7 @@ form {
     padding: 2rem; /* フォーム全体の内側の余白 */
     border-radius: 8px; /* 角を丸くする */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影をつけて浮いているように見せる */
-    max-width: 300px; /* フォームの最大幅を設定 */
+    max-width: 242px; /* フォームの最大幅を設定 */
     width: 100%; /* スマホ対応で幅を可変に */
 }
 
@@ -559,8 +559,13 @@ form label {
     display: block; /* ラベルをブロック表示 */
     margin-bottom: 0.5rem; /* 下に余白を追加 */
     font-size: 1rem; /* フォントサイズを適切に */
-    color: #1C1C1E; /* テキスト色を暗いグレーに */
-}
+    color: #ffffff;
+    text-align: center;
+    background-color: #1210ab;
+    /* font-weight: bold; */
+    border-radius: 20px;
+    width: 45%;
+    margin-left: 67px;}
 
 form input[type="text"],
 form input[type="password"] {
@@ -594,7 +599,7 @@ a {
     color: #ff00d9; /* Apple風のアクセントカラー */
     text-decoration: none; /* 下線を消す */
     font-size: 1.1em; /* リンクのフォントサイズ */
-    margin: 2rem 1rem 0rem 3rem;
+    margin: 2rem 1rem 0rem 1rem;
     display: inline-block; /* インライン要素として表示 */
     text-align: center;
 }
