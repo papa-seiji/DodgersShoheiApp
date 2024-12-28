@@ -39,7 +39,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF保護を無効化
                 .authorizeHttpRequests(auth -> auth
                         // 特定のエンドポイントは認証なしでアクセス可能に設定
-                        .requestMatchers("/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**", "/comments",
+                        .requestMatchers("/", "/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**",
+                                "/comments",
                                 "/links", "/auth/userinfo", "/api/visitorCounter/**", "/api/proud/**", "/proud")
                         .permitAll()
                         // それ以外のリクエストは認証が必要
