@@ -21,6 +21,13 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    // 新規追加: / (ルート) エンドポイント
+    @GetMapping("/")
+    public String rootRedirect() {
+        // ルートへのアクセスは常にログイン画面にリダイレクト
+        return "redirect:/auth/login";
+    }
+
     @GetMapping("/signup")
     public String signupPage() {
         return "signup"; // src/main/resources/templates/signup.html
@@ -32,8 +39,7 @@ public class AuthController {
             @RequestParam(value = "logout", required = false) String logout,
             Model model) {
         if ("true".equals(error)) {
-            model.addAttribute("errorMessage", "ユーザ名かパスワードが正しくありません");// "Invalid username or password. Please try
-                                                                      // again."
+            model.addAttribute("errorMessage", "ユーザ名かパスワードが正しくありません");
         }
         if ("true".equals(logout)) {
             model.addAttribute("message", "ログアウトしました");
@@ -48,20 +54,18 @@ public class AuthController {
         try {
             // ユーザー名の重複チェック
             if (userService.isUsernameTaken(username)) {
-                model.addAttribute("message", "ユーザー名はすでに使用されています。別のユーザー名を選択してください");// "Username is already taken.
-                                                                                    // Please choose a different one."
+                model.addAttribute("message", "ユーザー名はすでに使用されています。別のユーザー名を選択してください");
                 return "signup"; // 登録ページに戻る
             }
 
             // ユーザー登録処理
             userService.saveUser(username, password);
 
-            model.addAttribute("message", "ユーザー登録完了！");// User registered successfully
+            model.addAttribute("message", "ユーザー登録完了！");
             System.out.println("DEBUG: User successfully registered - username: " + username);
             return "signup-success";
         } catch (Exception e) {
-            model.addAttribute("message", "予期しないエラーが発生しました。もう一度お試しください");// "An unexpected error occurred. Please try
-                                                                         // again."
+            model.addAttribute("message", "予期しないエラーが発生しました。もう一度お試しください");
             e.printStackTrace();
             return "signup";
         }
@@ -69,10 +73,10 @@ public class AuthController {
 
     @GetMapping("/role")
     public ResponseEntity<Map<String, String>> getUserRole(Authentication authentication) {
-        System.out.println("DEBUG: /auth/role endpoint accessed"); // デバッグログ
+        System.out.println("DEBUG: /auth/role endpoint accessed");
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            System.out.println("DEBUG: Unauthorized access to /auth/role"); // デバッグログ
+            System.out.println("DEBUG: Unauthorized access to /auth/role");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -84,23 +88,23 @@ public class AuthController {
         Map<String, String> response = new HashMap<>();
         response.put("role", role);
 
-        System.out.println("DEBUG: User role fetched - role: " + role); // デバッグログ
+        System.out.println("DEBUG: User role fetched - role: " + role);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        System.out.println("DEBUG: login endpoint called with username: " + username); // デバッグログ
+        System.out.println("DEBUG: login endpoint called with username: " + username);
 
         // ログイン処理を呼び出す
         boolean success = userService.authenticate(username, password);
 
         if (success) {
-            System.out.println("DEBUG: Login successful for username: " + username); // デバッグログ
+            System.out.println("DEBUG: Login successful for username: " + username);
             return ResponseEntity.ok("Login successful");
         } else {
-            System.out.println("DEBUG: Login failed for username: " + username); // デバッグログ
+            System.out.println("DEBUG: Login failed for username: " + username);
             return ResponseEntity.status(401).body("Invalid username or password");
         }
     }
