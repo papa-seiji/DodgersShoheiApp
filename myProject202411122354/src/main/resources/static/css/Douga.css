@@ -25,6 +25,7 @@
     align-items: center;
     flex: 1;
     max-width: 600px;
+    margin-top: 21%;
 }
 
 /* Responsive video container */
@@ -106,8 +107,9 @@
     /* 画像部分のスタイル */
 .home-image5 {
     width: 99%;
-    max-width: 400px;
+    /* max-width: 400px; */
     border-radius: 10px;
+    margin-top: 2%;
 }
 
 }
