@@ -41,7 +41,8 @@ public class SecurityConfig {
                         // 特定のエンドポイントは認証なしでアクセス可能に設定
                         .requestMatchers("/", "/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**",
                                 "/comments",
-                                "/links", "/auth/userinfo", "/api/visitorCounter/**", "/api/proud/**", "/proud")
+                                "/links", "/auth/userinfo", "/api/visitorCounter/**", "/api/proud/**", "/proud",
+                                "/stats", "/api/stats")
                         .permitAll()
                         // それ以外のリクエストは認証が必要
                         .anyRequest().authenticated())
