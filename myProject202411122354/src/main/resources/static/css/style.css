@@ -147,6 +147,96 @@ h5 {
 }
 
 
+
+
+/* start======== ホームラン＆ピッチングカウンター ======= */
+.stats-container-1 {
+    display: flex;
+    align-items: end;
+    gap: 0px;
+    margin-left: 66px;
+}
+
+#SeasonStats-1 {
+    background-color: #3737e2;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 1.2em;
+}
+
+#HitterStats-1 {
+    color: #ffffff;
+    background-color: #3737e2;
+    font-size: 1em;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#hitter-stats {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-width: 400px; /* 最大幅を設定 */
+}
+
+.home-image6 {
+    max-width: 204px;
+    height: 290px;
+}
+
+
+.stats-container-2 {
+    display: flex; /* 横並びにする */
+    align-items: center; /* 要素を中央揃えに変更 */
+    justify-content: flex-start; /* 左寄せ */
+    /* gap: 40px; */
+    margin: 0 0 0 45px;
+}
+
+#SeasonStats-2 {
+    background-color: #fe0000;
+    color: #ffffff;
+    padding: 10px;
+    /* font-size: 10px;
+    max-width: 50px; */
+}
+
+#pitcher-stats-2 {
+    color: #ffffff;
+    background-color: #fe0000;
+    font-size: 13px;
+    padding: 5px;
+    margin-bottom: 10px;
+    max-width: 130px;
+}
+
+#pitcher-stats {
+    background-color: #f9f9f9;
+    /* padding: 10px; */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-width: 130px;
+}
+
+#pitcher-stats-2_child{
+    font-size: 14px;
+    width: 103px;
+}
+
+.home-image9 {
+    max-width: 233px;
+    /* height: 280px; */
+    object-fit: cover;
+    margin-left: -1px;
+}
+/* end ======== ホームラン＆ピッチングカウンター ======= */
+
+
+
+
+
+
 /* ======== フォーム全体のスタイル ======== */
 form {
     background-color: #FFFFFF; /* 白い背景 */
@@ -472,6 +562,89 @@ h2, h3 {
     /* margin-bottom: 2rem; */
 
 
+
+
+    
+/* start======== ホームラン＆ピッチングカウンター ======= */
+.stats-container-1 {
+    display: flex; /* 横並びにする */
+    align-items: flex-start; /* 上揃え */
+    /* gap: 20px; */
+}
+
+#SeasonStats-1 {
+    background-color: #3737e2;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 1.2em;
+}
+
+#HitterStats-1 {
+    color: #ffffff;
+    background-color: #3737e2;
+    font-size: 1em;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#hitter-stats {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-width: 400px; /* 最大幅を設定 */
+}
+
+.home-image6 {
+    max-width: 204px;
+    height: 290px;
+}
+
+
+.stats-container-2 {
+    display: flex; /* 横並びにする */
+    align-items: center; /* 要素を中央揃えに変更 */
+    justify-content: flex-start; /* 左寄せ */
+    /* gap: 20px; */
+    margin: 0 auto;
+}
+
+#SeasonStats-2 {
+    background-color: #fe0000;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 10px;
+    max-width: 50px;
+}
+
+#pitcher-stats-2 {
+    color: #ffffff;
+    background-color: #fe0000;
+    font-size: 9px;
+    padding: 5px;
+    margin-bottom: 10px;
+    max-width: 130px;
+}
+
+#pitcher-stats {
+    background-color: #f9f9f9;
+    /* padding: 10px; */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-width: 130px;
+}
+
+#pitcher-stats-2_child{
+    font-size: 9px;
+}
+
+.home-image5 {
+    max-width: 233px;
+    height: 280px;
+    object-fit: cover;
+    margin-left: -1px;
+}
+/* end ======== ホームラン＆ピッチングカウンター ======= */
 
 
 

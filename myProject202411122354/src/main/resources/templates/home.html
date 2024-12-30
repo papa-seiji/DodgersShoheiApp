@@ -42,10 +42,68 @@
     <div id="confetti-container"><h1 id="fifty_fifty" class="shiny-text">大谷翔平MVP&54-59おめでとう</h1></div>
     <h5 class="shiny-text-1">目標は2025年MLB開幕戦Cubs対Dodgers観戦すること</h5>
 
+
+
+            <div>statsapi.mlb.com 参照</div>
+            <div class="stats-container-1">
+            <div>
+                <div id="SeasonStats-1">2024 Stats</div>
+                <!-- 打者成績セクション -->
+                <div id="hitter-stats">
+                    <div id="HitterStats-1">Hitter Stats</div>
+                    <div><strong>Games:</strong> <span id="gamesPlayed"></span></div>
+                    <div><strong>Average (AVG):</strong> <span id="avg"></span></div>
+                    <div><strong>Home Runs:</strong> <span id="homeRuns"></span></div>
+                    <div><strong>Stolen Bases:</strong> <span id="stolenBases"></span></div>
+                    <div><strong>RBIs:</strong> <span id="rbi"></span></div>
+                    <div><strong>OPS:</strong> <span id="ops"></span></div>
+                </div>
+            </div>
+            <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image6">
+        </div>
+        <!-- main カウンタ -->
+        <h3>HomeRun: <span id="main-counter-value">0</span></h3>
+        <div id="main-counter-controls" class="admin-controls" style="display: none;">
+            <button id="main-increment-button">UP</button>
+            <button id="main-decrement-button">DW</button>
+        </div>
+
+
+
+        <div>👼エンゼルス当時</div>
+        <div class="stats-container-2">
+            <div>
+                <div id="SeasonStats-2">2023 Stats</div>
+                <!-- 投手成績セクション -->
+                <div id="pitcher-stats">
+                    <div id="pitcher-stats-2">Pitcher Stats</div>
+                    <div id="pitcher-stats-2_child"><strong>Games:</strong> <span id="pitcherGamesPlayed"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>Wins:</strong> <span id="wins"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>Losses:</strong> <span id="losses"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>ERA:</strong> <span id="era"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>Strikeouts:</strong> <span id="strikeOuts"></span></div>
+                </div>
+            </div>
+            <img src="/images/LAD投げる大谷翔平-removebg-preview.png" alt="背景画像1" class="home-image9">
+        </div>
+        <!-- secondary カウンタ -->
+        <h3>PitchingWin: <span id="secondary-counter-value">0</span></h3>
+        <div id="secondary-counter-controls" class="admin-controls" style="display: none;">
+            <button id="secondary-increment-button">UP</button>
+            <button id="secondary-decrement-button">DW</button>
+        </div>
+        
+        
+    <script src="/js/stats.js"></script>
+
+
+
+
+
     <!-- 動画セクション -->
     <div id="douga-page">
         <div id="douga-grid">
-            <!-- 左側の動画とカウンター -->
+            <!-- 左側の動画 -->
             <div class="douga-section">
                 <!--<h3>2024 World Series メッツ戦 先制HR</h3>-->
                 <div id="hoge-hoge_1">ベースボール史上最高の１日</div>
@@ -53,25 +111,15 @@
                     <!--<iframe id="douga-video-1" width="560" height="315" src="https://www.youtube.com/embed/fuOMrPaLRP4?si=Dv03ihOMgv0ovkUj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
                     <iframe id="douga-video-1" width="560" height="315" src="https://www.youtube.com/embed/gByTMgn6JxI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
-                <h3>HomeRun: <span id="main-counter-value">0</span></h3>
-                <div id="main-counter-controls" class="admin-controls" style="display: none;">
-                    <button id="main-increment-button">UP</button>
-                    <button id="main-decrement-button">DW</button>
-                </div>
             </div>
 
-            <!-- 右側の動画とカウンター -->
+            <!-- 右側の動画 -->
             <div class="douga-section">
                 <!--<h3>2023年投げてた頃LAA</h3>-->
                 <div id="hoge-hoge_2">【漢】スキップ・シューマッカー監督</div>
                 <div id="douga-container-2">
                     <!--<iframe id="douga-video-2" width="560" height="315" src="https://www.youtube.com/embed/GVcOeTh6WcY?si=OySizA_xccNE7SOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
                     <iframe id="douga-video-2" width="560" height="315" src="https://www.youtube.com/embed/yYb-0dn2-Ag" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <h3>PitchingWin: <span id="secondary-counter-value">0</span></h3>
-                <div id="secondary-counter-controls" class="admin-controls" style="display: none;">
-                    <button id="secondary-increment-button">UP</button>
-                    <button id="secondary-decrement-button">DW</button>
                 </div>
             </div>
         </div>
