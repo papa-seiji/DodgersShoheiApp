@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/signup_login_util.css}">
+    <link rel="stylesheet" th:href="@{/css/link.css}">
     <script src="/js/home.js"></script> <!-- 訪問者カウンターを呼び込むためにhome.jsを追加 -->
     <title>頑張れ翔平君 いつもみんなが応援してるよ!</title>
 </head>
@@ -40,8 +41,18 @@
     <!-- fragments/headerを利用してヘッダーを表示 -->
         <th:block th:replace="fragments/header :: header"></th:block>
 
+        <div id="mongon">=======<< 関連リンク >>=======</div>
+
     <div class="link">
-        <a href="https://www.mlb.com/dodgers">Dodgers</a>
+        <a href="https://www.mlb.com/dodgers">mlb.com(Dodgers)</a>
+        <a href="https://www.instagram.com/dodgers/">Los Angeles Dodgers (@dodgers)</a>
+        <a href="https://www.instagram.com/shoheiohtani/?hl=ja">大谷翔平 (@shoheiohtani) </a>
+        <a href="https://www.mlbshop.jp/ja/">MLB公式オンラインショップ</a>
+        <a href="https://twitter.com/MLBJapan?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">MLB Japan (@MLBJapan) · X</a>
+        <a href="https://www.spotvnow.jp/">SPOTV NOW</a>
+        <a href="https://www.foco.com/">foco.com</a>
+        <a href="https://athletelogos.com/ja">athletelogos.co</a>
+        <a href="https://www.shop.post.japanpost.jp/shop/default.aspx">郵便局</a>
     </div>
 
     <script>
