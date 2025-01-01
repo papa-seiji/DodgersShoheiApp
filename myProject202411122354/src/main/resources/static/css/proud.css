@@ -425,6 +425,17 @@ body{
 }
 }
 
+
+/* 横並びリンクの調整 */
+#header-nav-links {
+    display: flex;
+    align-items: center;
+    /* gap: 15px; */
+    /* position: fixed; */
+    margin: 9px 93px 0 0;
+}
+
+
 /* ドロップダウンボタン */
 .dropdown {
     position: relative;
@@ -637,7 +648,7 @@ body{
     align-items: center;
     /* gap: 15px; */
     /* position: fixed; */
-    margin: 9px 118px 0 0;
+    margin: 9px 93px 0 0;
 }
 
 /* その他の基本リンク */
