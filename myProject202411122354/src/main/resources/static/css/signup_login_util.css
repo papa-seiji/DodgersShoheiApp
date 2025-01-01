@@ -1121,7 +1121,7 @@ a {
     color: #ff00d9; /* Apple風のアクセントカラー */
     text-decoration: none; /* 下線を消す */
     font-size: 1.1em; /* リンクのフォントサイズ */
-    margin: 2rem 1rem 0rem 1rem;
+    margin: 2rem 1rem 0rem 2rem;
     display: inline-block; /* インライン要素として表示 */
     text-align: center;
 }
@@ -1141,6 +1141,7 @@ a:hover {
 
 #util_Account{
     text-align: center;
+    color: black;
 }
 
 #protectFooter{
