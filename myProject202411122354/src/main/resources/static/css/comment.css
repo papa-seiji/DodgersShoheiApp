@@ -17,20 +17,6 @@
 }
 
 /* ======== ヘッダーのナビゲーションバー ======== */
-/* ヘッダーナビゲーション全体 */
-#header-navbar {
-    flex-direction: column;
-    height: auto;
-}
-
-#header-left {
-    margin-bottom: 10px;
-}
-
-.dropdown-content {
-    width: 100%;
-}
-
 /* ナビゲーションバー全体 */
 #header-navbar {
     position: fixed;
@@ -38,34 +24,49 @@
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    /* padding: 0 20px; */
     z-index: 10;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
 }
+
+
 
 /* ロゴと情報部分 */
 #header-left {
     display: flex;
     align-items: center;
     gap: 15px;
+    /* margin-right: 9em; */
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
+
+#header-logo {
+    margin: -13px -8px -5px -103px;
+    position: fixed;
+    
+.home-image10{
+    height: 36px;
+    margin: 7px 0px 2px 0px;
 }
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
+}
+
+
 
 #header-info-container {
     display: flex;
     flex-direction: column;
     /* gap: 5px; */
-}
+    margin: 0 -66px 0 58px;
+
 
 #user-info {
     font-size: 0.8rem;
@@ -81,6 +82,11 @@
 #visitor-counter-display {
     font-size: 0.8rem;
     color: #555;
+}
+}
+
+#header-nav-links{
+    margin-right: 128px;
 }
 
 /* ドロップダウンボタン */
@@ -356,35 +362,49 @@
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    /* padding: 0 20px; */
     z-index: 10;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
 }
+
+
 
 /* ロゴと情報部分 */
 #header-left {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-right: 10em;
+    /* margin-right: 9em; */
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
+
+#header-logo {
+    margin: -13px -8px -5px -103px;
+    position: fixed;
+    
+.home-image10{
+    height: 36px;
+    margin: 7px 0px 2px 0px;
 }
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
+}
+
+
 
 #header-info-container {
     display: flex;
     flex-direction: column;
     /* gap: 5px; */
-}
+    margin: 0 -66px 0 58px;
+
 
 #user-info {
     font-size: 0.8rem;
@@ -401,6 +421,12 @@
     font-size: 0.8rem;
     color: #555;
 }
+}
+
+#header-nav-links{
+    margin-right: 128px;
+}
+
 
 /* ドロップダウンボタン */
 .dropdown {
@@ -479,21 +505,77 @@
 
 @media (max-width: 430px) {
 
-/* 親要素 */
+/* ナビゲーションバー全体 */
 #header-navbar {
     position: fixed;
     top: 0;
     left: 0;
-    width:100%;
-    height: 5.6%;
-    background-color: rgba(255, 255, 255, 0.9);
+    width: 100%;
+    height: 40px;
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 20px;
+    /* padding: 0 24px; */
     z-index: 10;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 3%;
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
+    margin: 12px 0 2px 112px;
+}
+
+
+
+/* ロゴと情報部分 */
+#header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* margin-right: 9em; */
+}
+
+
+#header-logo {
+    margin: -13px -8px -5px -103px;
+    position: fixed;
+    
+.home-image10{
+    height: 36px;
+    margin: 7px 0px 2px 0px;
+}
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
+}
+
+
+
+#header-info-container {
+    display: flex;
+    flex-direction: column;
+    /* gap: 5px; */
+    margin: 0 0px 0 48px;
+
+
+#user-info {
+    font-size: 0.8rem;
+    color: #333;
+    white-space: nowrap; /* テキストを一行にする */
+    overflow: hidden; /* はみ出た部分を隠す */
+    text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
+    max-width: 130px; /* 名前の最大幅を指定 */
+    display: inline-block; /* レイアウト調整用 */
+}
+
+
+#visitor-counter-display {
+    font-size: 0.8rem;
+    color: #555;
+}
+}
+
+#header-nav-links{
+    margin-right: 128px;
 }
 
 /* ドロップダウンメニュー全体 */
@@ -537,21 +619,21 @@
 }
 
 /* 横並びリンクの調整 */
-#header-nav-links {
+/* #header-nav-links {
     display: flex;
     align-items: center;
     gap: 15px;
     position: fixed;
     margin: 9px 9px 9px 13em;
-}
+} */
 
 /* その他の基本リンク */
-#header-nav-links a {
+/* #header-nav-links a {
     font-size: 1rem;
     text-decoration: none;
     color: rgb(180, 46, 46);
     margin: 10px 10px 0px 10px;
-}
+} */
 
 
 /* ドロップダウン表示時 */

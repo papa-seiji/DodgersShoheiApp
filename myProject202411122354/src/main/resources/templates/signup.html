@@ -13,23 +13,83 @@
     <th:block th:replace="fragments/header :: header"></th:block>
     <div id="kiji">MLB,Dodgers,大谷選手、山本選手を密かに応援している人の</div>
     <div id="kiji">コミュニケーション場として共有できればいいなと作りました</div>
+    <div id="kiji">ニックネームと簡単なパスワード登録で参加できます。</div>
+    <div id="kiji" style="color: red;">↓↓↓ サイト名は ↓↓↓</div>
+
+    <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
 
     <main>
         <section>
             <h1 id='util_Account'>Create Account</h1>
             <p th:if="${message}" th:text="${message}" style="color: red;"></p>
             <form action="/auth/signup" method="post">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="username">Nickname:</label>
+                <input type="text" id="username" name="username" placeholder="ニックネームでいいです" required >
                 
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" placeholder="4桁以上の英数字" required>
                 
                 <button type="submit">Charge!SignUp</button>
             </form>
             <a href="/auth/login">登録がお済の方は こちらlogIn</a><!-- Already have an account? Login here -->
         </section>
     </main>
+
+    <div id="fasion">
+        <div id="Page_introduction-1">--------</div>
+        <div id="Page_introduction-2">P</div>
+        <div id="Page_introduction-3">age</div>
+        <div id="Page_introduction-4">I</div>
+        <div id="Page_introduction-5">ntroductio</div>
+        <div id="Page_introduction-6">n</div>
+        <div id="Page_introduction-7">--------</div>
+    </div>
+        <div id="kiji" style="color: red;">各ページの紹介(コンテンツ)</div>
+
+        <div class="home-layout1">
+        <img src="/images/yamamoto_ay2-removebg-preview.png" alt="背景画像1" class="home-image1-1" style="margin-right: 1.7em">
+        <div class="home-content1">
+            <h1 id="oomidashi" class="shiny-text">Home</h1>
+            <div>直近HR&直近投番.mp4</div>
+            <div>　リアルタイムHR</div>
+            <div id="and">　　　　　&</div>
+            <div>　PitchWinカウンター</div>
+            <!-- <h4>Top画面、Home画面の説明</h4> -->
+        </div>
+        <!-- <img src="/images/trimmin'-ohtani_pitchin'.png" alt="背景画像1" class="home-image1"> -->
+    </div>
+
+    <div class="home-layout2">
+        <div class="home-content2">
+            <h1 id="oomidashi" class="shiny-text">Proud</h1>
+            <div>応援スタイル</div>
+            <div>自慢の応援グッズ..etc..</div>
+            <h4 style="margin-top: -2%">画像投稿して自慢(PROUD)してください</h4>
+        </div>
+        <img src="/images/trimmin'-ohtani_creats.png" alt="背景画像1" class="home-image2">
+    </div>
+
+    <div class="home-layout3">
+        <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image3">
+        <div class="home-content3">
+            <h1 id="oomidashi" class="shiny-text">Chat</h1>
+            <div>好きな選手,今日の翔平君</div>
+            <div>対戦相手,応援メッセージ..etc..</div>
+            <div>リアルタイムでひとこと言い合える</div>
+            <h4>いずれは応援コメントがたまったら正式にDodgers翔平君に送ります</h4>
+        </div>
+    </div>
+
+    <div class="home-layout4" style="margin-bottom: -30%">
+        <div class="home-content4">
+            <h1 id="oomidashi" class="shiny-text">Link</h1>
+            <div>Dodgers,翔平君,由伸君</div>
+            <div>デコピン,グッズ,SNS ..etc..</div>
+            <h4 style="margin-top: -2%">HomePageリンク集</h4>
+        </div>
+        <img src="/images/DodgersLogo.png" alt="背景画像1" class="home-image4">
+    </div>
+
     <th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>
