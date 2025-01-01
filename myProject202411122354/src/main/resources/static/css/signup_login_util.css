@@ -10,7 +10,7 @@ body {
     align-items: center; /* 子要素を中央揃え */
     justify-content: center; /* 子要素を上下中央揃え */
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
-    background-image: url('/images/COOL-kabegami.png');
+    /* background-image: url('/images/みんな日本から応援してるぜッ！LOGO.jpg'); */
 
 }
 
@@ -23,42 +23,57 @@ body {
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    /* padding: 0 20px; */
     z-index: 10;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
 }
+
+
 
 /* ロゴと情報部分 */
 #header-left {
     display: flex;
     align-items: center;
     gap: 15px;
+    /* margin-right: 9em; */
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
+
+#header-logo {
+    margin: -13px -8px -5px -103px;
+    position: fixed;
+    
+.home-image10{
+    height: 36px;
+    margin: 7px 0px 2px 0px;
 }
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
+}
+
+
 
 #header-info-container {
     display: flex;
     flex-direction: column;
     /* gap: 5px; */
-}
+    margin: 0 -66px 0 58px;
+
 
 #user-info {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
     color: #333;
     white-space: nowrap; /* テキストを一行にする */
     overflow: hidden; /* はみ出た部分を隠す */
     text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
-    max-width: 150px; /* 名前の最大幅を指定 */
+    max-width: 130px; /* 名前の最大幅を指定 */
     display: inline-block; /* レイアウト調整用 */
 }
 
@@ -67,72 +82,94 @@ body {
     font-size: 0.8rem;
     color: #555;
 }
+}
 
-/* ドロップダウンボタン */
-.dropdown {
+#header-nav-links{
+    margin-right: 128px;
+}
+
+/* ドロップダウンメニュー全体 */
+.navbar-dropdown {
     position: relative;
     display: inline-block;
 }
 
-#current-page {
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #000;
+/* ドロップダウンのトリガー部分 */
+.navbar-dropdown-trigger {
     font-size: 1rem;
     font-weight: bold;
-    border: none;
+    color: rgb(180, 46, 46);
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding-right: 21px;
 }
 
-#current-page:hover {
-    background-color: #f0f0f0;
-}
-
-/* ドロップダウンの内容 */
-.dropdown-content {
+/* ドロップダウンメニューの内容 */
+.navbar-dropdown-content {
     display: none;
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-    border-radius: 4px;
-    overflow: hidden;
-    width: 120px;
+    padding: 10px 0;
+    z-index: 100;
 }
 
-.dropdown-content a {
+/* ドロップダウン内のリンク */
+.navbar-dropdown-content a {
+    display: block;
+    padding: 5px 15px;
+    font-size: 0.9rem;
     color: rgb(180, 46, 46);
-    padding: 8px 12px;
     text-decoration: none;
+    text-align: left;
+}
+
+/* ホバーでメニュー表示 */
+.navbar-dropdown:hover .navbar-dropdown-content {
     display: block;
 }
 
-.dropdown-content a:hover {
-    background-color: #f0f0f0;
+/* 横並びリンクの調整 */
+#header-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: fixed;
+    margin: 9px -192px 9px 0em;
 }
 
-/* ホバーやタッチで表示 */
-.dropdown:hover .dropdown-content {
+/* その他の基本リンク */
+#header-nav-links a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: rgb(180, 46, 46);
+    margin: 10px 10px 0px 10px;
+}
+
+
+
+/* ドロップダウン表示時 */
+.navbar-dropdown.open .navbar-dropdown-content {
     display: block;
 }
-
-.dropdown:focus-within .dropdown-content {
-    display: block;
-}
-
 
 
 
 #kiji{
     margin: 10px 32px 0px 28px;
     font-size: 10px;
+    color: #000;
+}
+
+
+
+.home-image10{
+    margin-top: 5%;
 }
 
 
 /* ======== フォーム全体のスタイル ======== */
 form {
-    background-image: url('/images/Many-Dodgers.jpg');
+    background-image: url('/images/COOL-kabegami.png');
     /* background-color: #FFFFFF; */
     padding: 2rem; /* フォーム全体の内側の余白 */
     border-radius: 8px; /* 角を丸くする */
@@ -195,6 +232,67 @@ a:hover {
     margin: -41px -25px -8px -61px;
 }
 
+/* ========start 適用すると、右のように横並び    --- P age I ntroductio n ---    ======== */
+
+#fasion {
+    display: flex; /* Flexboxを有効化 */
+    justify-content: center; /* 中央揃え */
+    align-items: center; /* 垂直方向の中央揃え */
+    gap: 1px; /* 各要素間のスペースを追加 */
+}
+
+#Page_introduction-1{/*--------*/
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 0px;
+}
+#Page_introduction-2{/*P*/
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #1c13df;
+    text-transform: uppercase;
+    /* font-weight: bold; */
+    margin: 45px 0px 0px 30px;
+}
+#Page_introduction-3{/*age*/
+    font-size: 12px;
+    /* font-weight: bold; */
+    color: #5f225d;
+    text-transform: uppercase;
+    margin: 53px 0px 0px 0px;
+}
+#Page_introduction-4{/*I*/
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #da1111;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 10px;
+}
+#Page_introduction-5{/*ntroductio*/
+    font-size: 12px;
+    /* font-weight: bold; */
+    color: #035f15;
+    text-transform: uppercase;
+    margin: 47px 0px 0px 0px;
+}
+#Page_introduction-6{/*n*/
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 52px 30px 0px 0px;
+}
+#Page_introduction-7{/*--------*/
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 0px;
+}
+
+/* ======== end 適用すると、右のように横並び    --- P age I ntroductio n ---    ======== */
 
 
 
@@ -220,63 +318,61 @@ body {
     align-items: center; /* 子要素を中央揃え */
     justify-content: center; /* 子要素を上下中央揃え */
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
-    background-image: url('/images/COOL-kabegami.png');
+    /* background-image: url('/images/みんな日本から応援してるぜッ！LOGO.jpg'); */
+
 }
     
-/* ヘッダーナビゲーション全体 */
-#header-navbar {
-    flex-direction: column;
-    height: auto;
-}
-
-/* #header-left {
-    margin-bottom: 10px;
-} */
-
-/* .dropdown-content {
-    width: 100%;
-} */
-
-
 /* ======== link.htmlの為だけにNavBarの記述が必要なので ======== */
-/* ======== ヘッダーのナビゲーションバー ======== */
+/* ナビゲーションバー全体 */
 #header-navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    /* padding: 0 20px; */
     z-index: 10;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
 }
+
+
 
 /* ロゴと情報部分 */
 #header-left {
     display: flex;
     align-items: center;
-    gap: 32px;
-    margin-right: 6em;
-    margin-top: 1px;
+    gap: 15px;
+    /* margin-right: 9em; */
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
-    margin-left: 9px;
+
+#header-logo {
+    margin: -13px -8px -5px -103px;
+    position: fixed;
+    
+.home-image10{
+    height: 36px;
+    margin: 7px 0px 2px 0px;
 }
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
+}
+
+
 
 #header-info-container {
     display: flex;
     flex-direction: column;
     /* gap: 5px; */
-}
+    margin: 0 -66px 0 58px;
+
 
 #user-info {
     font-size: 0.8rem;
@@ -284,7 +380,7 @@ body {
     white-space: nowrap; /* テキストを一行にする */
     overflow: hidden; /* はみ出た部分を隠す */
     text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
-    max-width: 150px; /* 名前の最大幅を指定 */
+    max-width: 130px; /* 名前の最大幅を指定 */
     display: inline-block; /* レイアウト調整用 */
 }
 
@@ -293,57 +389,73 @@ body {
     font-size: 0.8rem;
     color: #555;
 }
+}
 
-/* ドロップダウンボタン */
-.dropdown {
+#header-nav-links{
+    margin-right: 128px;
+}
+
+/* ドロップダウンメニュー全体 */
+.navbar-dropdown {
     position: relative;
     display: inline-block;
 }
 
-#current-page {
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #000;
+/* ドロップダウンのトリガー部分 */
+.navbar-dropdown-trigger {
     font-size: 1rem;
     font-weight: bold;
-    border: none;
+    color: rgb(180, 46, 46);
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding-right: 21px;
 }
 
-#current-page:hover {
-    background-color: #f0f0f0;
-}
-
-/* ドロップダウンの内容 */
-.dropdown-content {
+/* ドロップダウンメニューの内容 */
+.navbar-dropdown-content {
     display: none;
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-    border-radius: 4px;
-    overflow: hidden;
-    width: 120px;
+    padding: 10px 0;
+    z-index: 100;
 }
 
-.dropdown-content a {
+/* ドロップダウン内のリンク */
+.navbar-dropdown-content a {
+    display: block;
+    padding: 5px 15px;
+    font-size: 0.9rem;
     color: rgb(180, 46, 46);
-    padding: 8px 12px;
     text-decoration: none;
+    text-align: left;
+}
+
+/* ホバーでメニュー表示 */
+.navbar-dropdown:hover .navbar-dropdown-content {
     display: block;
 }
 
-.dropdown-content a:hover {
-    background-color: #f0f0f0;
+/* 横並びリンクの調整 */
+#header-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: fixed;
+    margin: 9px -192px 9px 0em;
 }
 
-/* ホバーやタッチで表示 */
-.dropdown:hover .dropdown-content {
-    display: block;
+/* その他の基本リンク */
+#header-nav-links a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: rgb(180, 46, 46);
+    margin: 10px 10px 0px 10px;
 }
 
-.dropdown:focus-within .dropdown-content {
+
+
+/* ドロップダウン表示時 */
+.navbar-dropdown.open .navbar-dropdown-content {
     display: block;
 }
 
@@ -351,7 +463,7 @@ body {
 
     /* ======== フォーム全体のスタイル ======== */
     form {
-        background-image: url('/images/Many-Dodgers.jpg');
+        background-image: url('/images/COOL-kabegami.png');
         /* background-color: #FFFFFF; */
         padding: 2rem; /* フォーム全体の内側の余白 */
         border-radius: 8px; /* 角を丸くする */
@@ -408,6 +520,351 @@ body {
         text-decoration: underline; /* ホバー時に下線を追加 */
     }
     
+
+
+    /* ========start 適用すると、右のように横並び    --- P age I ntroductio n ---    ======== */
+
+#fasion {
+    display: flex; /* Flexboxを有効化 */
+    justify-content: center; /* 中央揃え */
+    align-items: center; /* 垂直方向の中央揃え */
+    gap: 1px; /* 各要素間のスペースを追加 */
+}
+
+#Page_introduction-1{/*--------*/
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 0px;
+}
+#Page_introduction-2{/*P*/
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #1c13df;
+    text-transform: uppercase;
+    /* font-weight: bold; */
+    margin: 45px 0px 0px 30px;
+}
+#Page_introduction-3{/*age*/
+    font-size: 12px;
+    /* font-weight: bold; */
+    color: #5f225d;
+    text-transform: uppercase;
+    margin: 53px 0px 0px 0px;
+}
+#Page_introduction-4{/*I*/
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #da1111;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 10px;
+}
+#Page_introduction-5{/*ntroductio*/
+    font-size: 12px;
+    /* font-weight: bold; */
+    color: #035f15;
+    text-transform: uppercase;
+    margin: 47px 0px 0px 0px;
+}
+#Page_introduction-6{/*n*/
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 52px 30px 0px 0px;
+}
+#Page_introduction-7{/*--------*/
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    margin: 45px 0px 0px 0px;
+}
+
+/* ======== end 適用すると、右のように横並び    --- P age I ntroductio n ---    ======== */
+
+
+/* 横並びのレイアウトを設定 */
+.home-layout1 {
+    display: flex;
+    align-items: center; /* 垂直方向のセンタリング */
+    justify-content: space-between; /* 均等配置 */
+    padding: 20px;
+    /*gap: 20px;  画像とテキストの間隔 */
+    background-color: #ffffff; /* 背景色を薄いグレーに */
+    border-radius: 12px; /* 角を丸める */
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
+    margin: 2rem 0em 0em 0em; /* 上下の余白と中央配置 */
+    max-width: 100%; /* 最大幅を設定 */
+    color: black;
+}
+
+/* 画像部分のスタイル */
+.home-image1 {
+    width: 40%; /* 画像幅を40%に設定 */
+    max-width: 400px; /* 最大幅を設定 */
+    border-radius: 10px; /* 角を丸める */
+     /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 軽い影 */
+}
+
+/* テキストコンテンツ部分 */
+.home-content1 {
+    flex: 1; /* 残りのスペースを自動的に埋める */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 要素間のスペース */
+    text-align: left; /* 左揃え */
+    font-family: 'Arial', sans-serif; /* 読みやすいフォント */
+}
+
+/* 画像部分のスタイル */
+.home-image1-1 {
+    width: 40%; /* 画像幅を40%に設定 */
+    max-width: 400px; /* 最大幅を設定 */
+    border-radius: 10px; /* 角を丸める */
+    animation: moveSideToSide 4s ease-in-out infinite; /* アニメーションを適用 */
+}
+
+/* 左右に動くアニメーション */
+@keyframes moveSideToSide {
+    0%, 100% {
+        transform: translateX(0); /* 初期位置 */
+    }
+    50% {
+        transform: translateX(20px); /* 右に移動 */
+    }
+}
+
+/* 大見出し */
+.home-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #005A9C; /* Dodgers Blue */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 少し光沢感 */
+    margin-bottom: 10px; /* 下部余白 */
+}
+
+/* 説明文のテキスト */
+.home-content div {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* 小見出し */
+.home-content h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #005A9C;
+    margin-top: 10px;
+}
+
+
+
+
+
+
+
+/* 横並びのレイアウトを設定 */
+.home-layout2 {
+    display: flex;
+    align-items: center; /* 垂直方向のセンタリング */
+    justify-content: space-between; /* 均等配置 */
+    padding: 20px;
+    /*gap: 20px;  画像とテキストの間隔 */
+    background-color: #ffffff; /* 背景色を薄いグレーに */
+    border-radius: 12px; /* 角を丸める */
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
+    margin: 0px auto; /* 上下の余白と中央配置 */
+    max-width: 100%; /* 最大幅を設定 */
+    color: black;
+}
+
+/* 画像部分のスタイル */
+.home-image2 {
+    width: 40%; /* 画像幅を40%に設定 */
+    max-width: 400px; /* 最大幅を設定 */
+    border-radius: 10px; /* 角を丸める */
+     /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 軽い影 */
+}
+
+/* テキストコンテンツ部分 */
+.home-content2 {
+    flex: 1; /* 残りのスペースを自動的に埋める */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 要素間のスペース */
+    text-align: left; /* 左揃え */
+    font-family: 'Arial', sans-serif; /* 読みやすいフォント */
+}
+
+/* 大見出し */
+.home-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #005A9C; /* Dodgers Blue */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 少し光沢感 */
+    margin-bottom: 10px; /* 下部余白 */
+}
+
+/* 説明文のテキスト */
+.home-content div {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* 小見出し */
+.home-content h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #005A9C;
+    margin-top: 10px;
+}
+
+
+
+
+
+/* 横並びのレイアウトを設定 */
+.home-layout3 {
+    display: flex;
+    align-items: center; /* 垂直方向のセンタリング */
+    justify-content: space-between; /* 均等配置 */
+    padding: 20px;
+    background-color: #ffffff; /* 背景色 */
+    border-radius: 12px; /* 角を丸める */
+    margin: 20px auto; /* 上下の余白と中央配置 */
+    max-width: 100%; /* 最大幅 */
+    overflow: hidden; /* アニメーション中に画像がはみ出さないようにする */
+    gap: 5%; /* 要素間のスペース */
+    color: black;
+}
+
+/* 画像部分のスタイル */
+.home-image3 {
+    width: 40%; /* 画像幅を40%に設定 */
+    max-width: 400px; /* 最大幅を設定 */
+    border-radius: 10px; /* 角を丸める */
+    animation: rotateClockwise 4s ease-in-out infinite; /* アニメーションを適用 */
+}
+
+/* テキストコンテンツ部分 */
+.home-content3 {
+    flex: 1; /* 残りのスペースを自動的に埋める */
+    display: flex;
+    flex-direction: column;
+    gap: 10%; /* 要素間のスペース */
+    text-align: left; /* 左揃え */
+    font-family: 'Arial', sans-serif; /* 読みやすいフォント */
+}
+
+/* ローテートするアニメーション */
+    @keyframes rotateClockwise {
+        0% {
+            transform: rotate(2deg); /* 時計で1時方向 */
+        }
+        50% {
+            transform: rotate(-2deg); /* 時計で11時方向 */
+        }
+        75% {
+            transform: rotate(-1.9deg); /* 時計で11時方向 */
+        }
+        100% {
+            transform: rotate(1.9deg); /* 時計で1時方向 */
+        }
+
+}
+
+/* 大見出し */
+.home-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #005A9C; /* Dodgers Blue */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 少し光沢感 */
+    margin-bottom: 10px; /* 下部余白 */
+}
+
+/* 説明文のテキスト */
+.home-content div {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* 小見出し */
+.home-content h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #005A9C;
+    margin-top: 10px;
+}
+
+
+
+
+/* 横並びのレイアウトを設定 */
+.home-layout4 {
+    display: flex;
+    align-items: center; /* 垂直方向のセンタリング */
+    justify-content: space-between; /* 均等配置 */
+    padding: 20px;
+    /*gap: 20px;  画像とテキストの間隔 */
+    background-color: #ffffff; /* 背景色を薄いグレーに */
+    border-radius: 12px; /* 角を丸める */
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
+    margin: 20px auto; /* 上下の余白と中央配置 */
+    max-width: 100%; /* 最大幅を設定 */
+    color: black;
+}
+
+/* 画像部分のスタイル */
+.home-image4 {
+    width: 40%; /* 画像幅を40%に設定 */
+    max-width: 400px; /* 最大幅を設定 */
+    border-radius: 10px; /* 角を丸める */
+     /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 軽い影 */
+}
+
+/* テキストコンテンツ部分 */
+.home-content4 {
+    flex: 1; /* 残りのスペースを自動的に埋める */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 要素間のスペース */
+    text-align: left; /* 左揃え */
+    font-family: 'Arial', sans-serif; /* 読みやすいフォント */
+}
+
+/* 大見出し */
+.home-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #005A9C; /* Dodgers Blue */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 少し光沢感 */
+    margin-bottom: 10px; /* 下部余白 */
+}
+
+/* 説明文のテキスト */
+.home-content div {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* 小見出し */
+.home-content h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #005A9C;
+    margin-top: 10px;
+}
+
+
+
+
+
     /*リンクページのfooterが近寄ってこないためのプロパティ*/
     .link{
         height: 29em;
@@ -451,28 +908,89 @@ body {
     align-items: center; /* 子要素を中央揃え */
     justify-content: center; /* 子要素を上下中央揃え */
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
-    background-image: url('/images/COOL-kabegami.png');
+    /* background-image: url('/images/みんな日本から応援してるぜッ！LOGO.jpg'); */
 }
 
-
+.home-image10{
+    margin-top: 5%;
+}
 
 
 /* ======== link.htmlの為だけにNavBarの記述が必要なので ======== */
 /* ======== ヘッダーのナビゲーションバー ======== */
 /* 親要素 */
+/* ナビゲーションバー全体 */
 #header-navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 41px;
-    background-color: rgba(255, 255, 255, 0.9);
+    height: 40px;
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2px 20px 0px 20px;
+    /* padding: 0 20px; */
     z-index: 10;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
+    margin: 2px 0 1px 1px;
+}
+
+
+
+/* ロゴと情報部分 */
+#header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* margin-right: 9em; */
+    margin: 2px 0 0 109px;
+}
+
+
+#header-logo {
+    margin: -13px -8px -5px -103px;
+    position: fixed;
+    
+.home-image10{
+    height: 36px;
+    margin: 7px 0px 2px 0px;
+}
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
+}
+
+
+
+#header-info-container {
+    display: flex;
+    flex-direction: column;
+    /* gap: 5px; */
+    margin: 0 -66px 0 58px;
+
+
+#user-info {
+    font-size: 0.8rem;
+    color: #333;
+    white-space: nowrap; /* テキストを一行にする */
+    overflow: hidden; /* はみ出た部分を隠す */
+    text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
+    max-width: 130px; /* 名前の最大幅を指定 */
+    display: inline-block; /* レイアウト調整用 */
+}
+
+
+#visitor-counter-display {
+    font-size: 0.8rem;
+    color: #555;
+}
+}
+
+#header-nav-links{
+    margin-right: 128px;
 }
 
 /* ドロップダウンメニュー全体 */
@@ -521,7 +1039,7 @@ body {
     align-items: center;
     gap: 15px;
     position: fixed;
-    margin: 9px 9px 9px 14em;
+    margin: 3px 0 0 304px;
 }
 
 /* その他の基本リンク */
@@ -531,6 +1049,7 @@ body {
     color: rgb(180, 46, 46);
     margin: 10px 10px 0px 10px;
 }
+
 
 
 /* ドロップダウン表示時 */
@@ -544,9 +1063,12 @@ body {
 
 
 
+
+
+
 /* ======== フォーム全体のスタイル ======== */
 form {
-    background-image: url('/images/Many-Dodgers.jpg');
+    background-image: url('/images/COOL-kabegami.png');
     /* background-color: #FFFFFF; */
     padding: 2rem; /* フォーム全体の内側の余白 */
     border-radius: 8px; /* 角を丸くする */
