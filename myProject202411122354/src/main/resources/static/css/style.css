@@ -139,6 +139,19 @@ h2, h3 {
 h5 {
     color: #020202; /* Apple風のアクセントカラー */
     /* margin-bottom: 1rem; */
+    margin: 0 0 0 0 ;
+}
+
+#h5under_row{
+    color: #020202; /* Apple風のアクセントカラー */
+    /* margin-bottom: 1rem; */
+    margin: 0 0 30px 0 ;
+}
+
+#h6under_row{
+    color: #020202; /* Apple風のアクセントカラー */
+    /* margin-bottom: 1rem; */
+    margin: 0 0 10px 0 ;
 }
 
 #Page_introduction{
@@ -296,14 +309,14 @@ a:hover {
 }
 
 
-#header-logo{
+/* #header-logo{
     font-size: 16px;
     margin: -45px -26px -7px -43px
-}
+} */
 
 
 
-/* ナビゲーションバー全体 */
+/* start======== ナビゲーションバー全体 ======== */
 #header-navbar {
     position: fixed;
     top: 0;
@@ -326,11 +339,13 @@ a:hover {
     gap: 15px;
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
+#header-logo {
+    margin: -13px -8px -7px -112px;
+}
+
+.home-image10{
+    height: 36px;
+    margin: 7px 37px 2px 0;
 }
 
 #header-info-container {
@@ -408,7 +423,7 @@ a:hover {
     display: block;
 }
 
-
+/* end======== ナビゲーションバー全体 ======== */
 
 
 
@@ -447,6 +462,8 @@ body {
     width: 100%;
 } */
 
+
+
 /* ナビゲーションバー全体 */
 #header-navbar {
     position: fixed;
@@ -463,6 +480,8 @@ body {
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
+
 /* ロゴと情報部分 */
 #header-left {
     display: flex;
@@ -471,19 +490,30 @@ body {
     margin-right: 9em;
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
-    margin-left: 9px;
+
+#header-logo {
+    margin: -13px -8px -5px -103px;
+    position: fixed;
+    
+.home-image10{
+    height: 36px;
+    margin: 7px 0px 2px 0px;
 }
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
+}
+
+
 
 #header-info-container {
     display: flex;
     flex-direction: column;
     /* gap: 5px; */
-}
+    margin: 0 -66px 0 58px;
+
 
 #user-info {
     font-size: 0.8rem;
@@ -500,6 +530,8 @@ body {
     font-size: 0.8rem;
     color: #555;
 }
+}
+
 
 /* ドロップダウンボタン */
 .dropdown {
@@ -743,7 +775,7 @@ body {
     padding: 0 20px;
     z-index: 10;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 2px 0 1px 4px;
+    margin: 2px 0 1px 15px;
 }
 
 #user-info {
@@ -803,7 +835,7 @@ body {
     align-items: center;
     gap: 15px;
     position: fixed;
-    margin: 9px 9px 9px 13em;
+    margin: 9px -192px 9px 0em;
 }
 
 /* その他の基本リンク */

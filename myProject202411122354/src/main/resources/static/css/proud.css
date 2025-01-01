@@ -10,14 +10,15 @@ body{
     top: 0;
     left: 0;
     width: 100%;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.9);
+    height: 38px;
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     z-index: 10;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 2px 0 1px 0px;
 }
 
 /* ロゴと情報部分 */
@@ -27,11 +28,13 @@ body{
     gap: 15px;
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
+#header-logo {
+    margin: -13px -8px -7px -112px;
+}
+
+.home-image10{
+    height: 36px;
+    margin: 7px 37px 2px 0;
 }
 
 #header-info-container {
@@ -39,6 +42,7 @@ body{
     flex-direction: column;
     /* gap: 5px; */
 }
+
 
 #user-info {
     font-size: 0.8rem;
@@ -334,22 +338,8 @@ body{
         /* gap: 10px; */
     }
 
-/* ヘッダーナビゲーション全体 */
-#header-navbar {
-    flex-direction: column;
-    height: auto;
-}
-
-#header-left {
-    margin-bottom: 10px;
-}
-
-.dropdown-content {
-    width: 100%;
-}
-
 /* ナビゲーションバー全体 */
-#header-navbar {
+/* #header-navbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -362,6 +352,31 @@ body{
     padding: 0 20px;
     z-index: 10;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+} */
+
+/* #header-left {
+    margin-bottom: 10px;
+}
+
+.dropdown-content {
+    width: 100%;
+} */
+
+/* ナビゲーションバー全体 */
+#header-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 38px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 2px 0 1px 0px;
 }
 
 /* ロゴと情報部分 */
@@ -369,22 +384,29 @@ body{
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-right: 10em;
-    margin-top: 1px;
+    margin: 0 0 0 -16px;
 }
 
-#header-logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000;
+#header-logo {
+    margin: 0px -8px 0px 0px;
+    position: fixed;
+
+.home-image10{
+    height: 36px;
+    margin: 7px -6px 2px 0px;
+}
+.home-image11{
+    height: 36px;
+    margin: 7px 0px 1px 0;
+}
+
 }
 
 #header-info-container {
     display: flex;
     flex-direction: column;
     /* gap: 5px; */
-}
+    margin: 1px 0px 0px 153px;
 
 #user-info {
     font-size: 0.8rem;
@@ -396,9 +418,11 @@ body{
     display: inline-block; /* レイアウト調整用 */
 }
 
+
 #visitor-counter-display {
     font-size: 0.8rem;
     color: #555;
+}
 }
 
 /* ドロップダウンボタン */
@@ -557,14 +581,15 @@ body{
     top: 0;
     left: 0;
     width: 100%;
-    height: 41px;
-    background-color: rgba(255, 255, 255, 0.9);
+    height: 38px;
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 40px 0 -7px;
+    padding: 0 20px;
     z-index: 10;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 2px 0 1px 0px;
 }
 
 /* ドロップダウンメニュー全体 */
@@ -610,9 +635,9 @@ body{
 #header-nav-links {
     display: flex;
     align-items: center;
-    gap: 15px;
-    position: fixed;
-    margin: 9px 9px 9px 12.5em;
+    /* gap: 15px; */
+    /* position: fixed; */
+    margin: 9px 118px 0 0;
 }
 
 /* その他の基本リンク */
