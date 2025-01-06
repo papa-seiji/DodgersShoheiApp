@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "/comments",
                                 "/links", "/auth/userinfo", "/api/visitorCounter/**", "/api/proud/**", "/proud",
                                 "/stats", "/api/stats", // 既存の許可
-                                "/notifications/subscribe", "/notifications/send", "/icon.png") // 追加: このエンドポイントを許可
+                                "/notifications/subscribe", "/notifications/send", "/icon.png", "/sw.js",
+                                "/notifications/**", "/subscriptions/**") // 追加: このエンドポイントを許可
                         .permitAll()
                         // それ以外のリクエストは認証が必要
                         .anyRequest().authenticated())
