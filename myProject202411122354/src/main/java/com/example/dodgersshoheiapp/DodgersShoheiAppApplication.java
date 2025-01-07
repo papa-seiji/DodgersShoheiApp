@@ -1,5 +1,8 @@
 package com.example.dodgersshoheiapp;
 
+import java.security.Security;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -8,6 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class DodgersShoheiAppApplication {
 	public static void main(String[] args) {
+		// Bouncy Castleプロバイダーを登録
+		Security.addProvider(new BouncyCastleProvider());
 		SpringApplication.run(DodgersShoheiAppApplication.class, args);
 	}
 }
