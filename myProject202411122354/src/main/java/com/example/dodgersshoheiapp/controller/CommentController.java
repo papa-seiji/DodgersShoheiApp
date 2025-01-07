@@ -2,8 +2,11 @@ package com.example.dodgersshoheiapp.controller;
 
 import com.example.dodgersshoheiapp.model.Comment;
 import com.example.dodgersshoheiapp.model.User;
+import com.example.dodgersshoheiapp.model.Subscription;
 import com.example.dodgersshoheiapp.repository.CommentRepository;
 import com.example.dodgersshoheiapp.repository.UserRepository;
+import com.example.dodgersshoheiapp.service.PushNotificationService;
+import com.example.dodgersshoheiapp.repository.SubscriptionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,35 +33,27 @@ public class CommentController {
     private UserRepository userRepository;
 
     @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    /**
-     * コメントページの表示
-     *
-     * @param model Thymeleaf に渡すモデル
-     * @return comments.html テンプレート
-     */
+    @Autowired
+    private PushNotificationService pushNotificationService;
+
     @GetMapping
     public String showCommentsPage(Model model) {
         List<Comment> comments = commentRepository.findAll();
-        model.addAttribute("comments", comments); // コメントをモデルに追加
-        return "comments"; // comments.html をレンダリング
+        model.addAttribute("comments", comments);
+        return "comments";
     }
 
-    /**
-     * 新しいコメントを追加
-     *
-     * @param comment        リクエストボディに含まれるコメントデータ
-     * @param authentication 現在の認証情報
-     * @return 保存されたコメントまたはエラーのレスポンス
-     */
     @PostMapping("/add")
     public ResponseEntity<Comment> addComment(@RequestBody Comment comment, Authentication authentication) {
         if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // 認証ユーザー情報を取得
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
 
@@ -67,18 +62,24 @@ public class CommentController {
         }
 
         User user = userOptional.get();
-
-        // コメントにユーザー情報をセット
         comment.setUser(user);
         comment.setUsername(user.getUsername());
         comment.setCreatedAt(LocalDateTime.now());
 
-        // コメントを保存
         Comment savedComment = commentRepository.save(comment);
 
-        // WebSocketで通知
-        System.out.println("WebSocket通知データ: " + savedComment); // デバッグログ追加
+        System.out.println("WebSocket通知データ: " + savedComment);
         messagingTemplate.convertAndSend("/topic/comments", savedComment);
+
+        List<Subscription> subscriptions = subscriptionRepository.findAll();
+        for (Subscription subscription : subscriptions) {
+            try {
+                pushNotificationService.sendPushNotification(subscription, "新しいコメント",
+                        savedComment.getUsername() + "さんがコメントを投稿しました！");
+            } catch (Exception e) {
+                System.err.println("プッシュ通知の送信に失敗しました: " + e.getMessage());
+            }
+        }
 
         return ResponseEntity.ok(savedComment);
     }
