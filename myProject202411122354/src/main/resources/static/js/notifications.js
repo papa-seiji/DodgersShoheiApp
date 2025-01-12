@@ -56,10 +56,11 @@ async function registerPushSubscription(registration) {
 // サブスクリプション情報をサーバーに送信
 async function sendSubscriptionToServer(subscription) {
     try {
-        const response = await fetch('/subscriptions', {
+        const response = await fetch('https://letsgoohtanifromjapan.click/notifications/subscribe', { // サーバーの完全URLを指定
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(subscription)
+            body: JSON.stringify(subscription),
+            credentials: 'include' // Cookieやセッション情報を送信する場合
         });
 
         if (response.ok) {
