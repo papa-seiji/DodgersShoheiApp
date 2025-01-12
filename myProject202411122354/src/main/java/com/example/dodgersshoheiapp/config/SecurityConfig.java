@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 public class SecurityConfig {
@@ -37,6 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF保護を無効化
+                .headers(headers -> headers.frameOptions(Customizer.withDefaults())) // X-Frame-Optionsを無効化
                 .authorizeHttpRequests(auth -> auth
                         // 特定のエンドポイントは認証なしでアクセス可能に設定
                         .requestMatchers("/", "/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**",
