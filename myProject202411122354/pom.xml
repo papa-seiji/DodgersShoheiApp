@@ -123,7 +123,6 @@
             <version>6.1.0</version> <!-- 現在のプロジェクトのSpring Securityバージョンに応じて変更 -->
         </dependency>
 
-
     </dependencies>
 
     <build>
