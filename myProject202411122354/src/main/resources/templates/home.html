@@ -7,6 +7,7 @@
     <script src="/js/role-check.js"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/Douga.css}">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script src="/js/home.js"></script> <!-- home.jsを追加 -->
     <script src="/js/notifications.js"></script><!-- JavaScriptファイルを読み込む -->
 
@@ -142,6 +143,29 @@
         </div>
     </div>
     <img src="/images/スキップ・シューマッカー-インタビュー.jpg" alt="背景画像1" class="home-image5" width="400" height="445">
+
+
+    <!-- QRコードボタン -->
+    <div class="qr-button-container">
+        <button class="qr-button" onclick="showQRCodeModal()">
+            <div class="qr-icon">
+                <img src="/images/qr-icon.png" alt="QR Icon">
+            </div>
+            <span>当サイトのQRコード表示</span>
+        </button>
+    </div>
+
+    <!-- モーダルウィンドウ -->
+    <div id="qr-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeQRCodeModal()">&times;</span>
+            <h2>登録して初めてね！登録画面のQR(SignUp)</h2>
+            <!-- QRコードが生成される場所 -->
+            <canvas id="qr-code-container"></canvas>
+        </div>
+    </div>
+
+
 
     <div id="fasion">
         <div id="Page_introduction-1">--------</div>
@@ -314,6 +338,51 @@
             }
         });
     </script>
+
+
+
+<script>
+        // モーダルを表示する関数
+    function showQRCodeModal() {
+        generateQRCode(); // QRコードを生成
+        document.getElementById('qr-modal').style.display = 'block';
+    }
+
+    // モーダルを閉じる関数
+    function closeQRCodeModal() {
+        document.getElementById('qr-modal').style.display = 'none';
+    }
+
+    // モーダル外をクリックして閉じる処理
+    window.onclick = function (event) {
+        const modal = document.getElementById('qr-modal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // QRコードを生成する関数
+    function generateQRCode() {
+        const qrCodeContainer = document.getElementById('qr-code-container');
+        qrCodeContainer.innerHTML = ''; // 既存のQRコードをクリア
+
+        const qrText = "[[${'https://letsgoohtanifromjapan.click/auth/signup'}]]"; // tymleafの影響あり QRコードの内容（リンク先URL）
+        console.log("QRコードに設定するURL:", qrText);
+
+        // QRコード生成
+        try {
+            QRCode.toCanvas(qrCodeContainer, qrText, function (error) {
+                if (error) {
+                    console.error('QRコード生成中にエラーが発生しました:', error.message);
+                } else {
+                    console.log('QRコードが正常に生成されました:', qrText);
+                }
+            });
+        } catch (error) {
+            console.error('予期せぬエラーが発生しました:', error.message);
+        }
+    }
+</script>
 
     
     <th:block th:replace="fragments/footer :: footer"></th:block>

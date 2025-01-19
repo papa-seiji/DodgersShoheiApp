@@ -430,6 +430,91 @@ a:hover {
 
 
 
+/* start======== QR ======== */
+.qr-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .qr-button {
+    background: linear-gradient(145deg, #8ec5fc, #e0c3fc);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .qr-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .qr-button .qr-icon img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+  
+  .qr-button span {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+
+/* CSS: モーダルデザイン */
+.modal {
+    display: none; /* デフォルトでは非表示 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .qr-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close-button:hover {
+    color: #000;
+  }
+  
+/* end======== QR ======== */
+
+
+
+
 
 /* ======== レスポンシブ対応 ======== */
 @media (max-width: 768px) {
@@ -738,10 +823,91 @@ a {
 a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
-
-
-
 }
+
+
+/* start======== QR (max-width: 768px) ======== */
+.qr-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .qr-button {
+    background: linear-gradient(145deg, #8ec5fc, #e0c3fc);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .qr-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .qr-button .qr-icon img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+  
+  .qr-button span {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+
+/* CSS: モーダルデザイン */
+.modal {
+    display: none; /* デフォルトでは非表示 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .qr-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close-button:hover {
+    color: #000;
+  }
+  
+/* end======== QR (max-width: 768px)======== */
+
 
 
 
@@ -1308,3 +1474,86 @@ a:hover {
 } */
 
 }}
+
+
+/* start======== QR (max-width: 430px) ======== */
+.qr-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .qr-button {
+    background: linear-gradient(145deg, #8ec5fc, #e0c3fc);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .qr-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .qr-button .qr-icon img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+  
+  .qr-button span {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+
+/* CSS: モーダルデザイン */
+.modal {
+    display: none; /* デフォルトでは非表示 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .qr-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close-button:hover {
+    color: #000;
+  }
+  
+/* end======== QR (max-width: 768px)======== */
