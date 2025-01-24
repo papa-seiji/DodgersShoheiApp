@@ -1,3 +1,6 @@
+// browser-image-compression をインポート
+import browserImageCompression from './browser-image-compression.mjs';
+
 document.addEventListener("DOMContentLoaded", function () {
     const gallery = document.getElementById("image-gallery");
     const uploadForm = document.getElementById("image-upload-form");
@@ -153,21 +156,62 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(console.error);
     }
 
+    // 画像を圧縮する関数
+    async function compressImage(file) {
+        const options = {
+            maxSizeMB: 1, // 最大ファイルサイズ (MB)
+            maxWidthOrHeight: 1920, // 画像の最大幅または高さ
+            useWebWorker: true // WebWorkerを使用して処理
+        };
+
+        try {
+            const compressedFile = await browserImageCompression(file, options);
+            console.log("Compressed File:", compressedFile);
+            return compressedFile;
+        } catch (error) {
+            console.error("Image compression error:", error);
+            throw error;
+        }
+    }
+
     // 画像アップロード
     if (uploadForm) {
-        uploadForm.addEventListener("submit", function (e) {
+        uploadForm.addEventListener("submit", async function (e) {
             e.preventDefault();
             const formData = new FormData(uploadForm);
+            const fileInput = document.getElementById("image-file");
+            const file = fileInput.files[0];
 
-            fetch('/api/proud/upload', {
-                method: 'POST',
-                body: formData,
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error("Failed to upload");
-                    return response.text();
-                })
-                .catch(console.error);
+            if (file) {
+                try {
+                    const compressedFile = await compressImage(file);
+                    formData.set("image", compressedFile, compressedFile.name);
+
+                    // 圧縮後の画像をサーバーに送信
+                    fetch('/api/proud/upload', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => {
+                            if (!response.ok) throw new Error("Failed to upload");
+                            const contentType = response.headers.get("Content-Type");
+                            if (contentType && contentType.includes("application/json")) {
+                                return response.json();
+                            } else {
+                                return response.text();
+                            }
+                        })
+                        .then(data => {
+                            console.log("Image uploaded successfully:", data);
+                            loadGallery(); // ギャラリーをリロード
+                        })
+                        .catch(error => {
+                            console.error("Error during image upload:", error);
+                        });
+                } catch (error) {
+                    console.error("Compression failed:", error);
+                }
+            }
         });
     }
 
