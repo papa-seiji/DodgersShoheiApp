@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script src="/js/home.js"></script> <!-- home.jsを追加 -->
     <script src="/js/notifications.js"></script><!-- JavaScriptファイルを読み込む -->
+    <script src="/js/news-section.js"></script><!-- JavaScriptファイルを読み込む -->
+
 
 </head>
 <body>
@@ -40,6 +42,19 @@
 </div>
 
     <th:block th:replace="fragments/header :: header"></th:block>
+
+<!-- ニュース/トピック/サイト最新情報 -->
+    <section id="news-section">
+        <div class="news-header">
+            <h2 id="news">NEWS</h2>
+        </div>
+        <div class="news-window">
+            <div class="news-list">
+                <!-- JavaScriptで動的に埋め込み -->
+            </div>
+        </div>
+    </section>
+
 
     <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
     <div id="confetti-container"><h1 id="fifty_fifty" class="shiny-text">大谷翔平MVP&54-59おめでとう</h1></div>

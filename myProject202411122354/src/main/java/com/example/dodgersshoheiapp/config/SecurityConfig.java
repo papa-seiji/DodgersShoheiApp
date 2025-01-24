@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 "/comments", "/links", "/auth/userinfo", "/api/visitorCounter/**", "/api/proud/**",
                                 "/proud", "/stats", "/api/stats", "/notifications/subscribe", "/notifications/send",
                                 "/icon.png", "/sw.js", "/notifications/**", "/subscriptions/**",
-                                "/notifications/comments")
+                                "/notifications/comments", "/api/news")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
