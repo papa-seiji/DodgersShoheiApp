@@ -428,6 +428,67 @@ a:hover {
 
 
 
+/* start======== ニュース/トピック/サイト最新情報 ======== */
+
+#news-section {
+    margin: 20px auto;
+    padding: 10px;
+    width: 350px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.news-header h2 {
+    margin: 0;
+    padding: 5px;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+.news-window {
+    height: 100px;
+    overflow-y: auto;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+}
+
+.news-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.news-date {
+    font-size: 12px;
+    color: #666;
+    margin-right: 10px;
+}
+
+.news-link {
+    flex-grow: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.news-new {
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    margin-left: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* end======== ニュース/トピック/サイト最新情報 ======== */
+
+
 
 
 /* start======== QR ======== */
@@ -671,6 +732,70 @@ body {
 .dropdown:focus-within .dropdown-content {
     display: block;
 }
+
+
+
+/* start======== ニュース/トピック/サイト最新情報 ========768px */
+
+#news-section {
+    margin: 20px auto;
+    padding: 10px;
+    width: 350px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.news-header h2 {
+    margin: 0;
+    padding: 5px;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+.news-window {
+    height: 100px;
+    overflow-y: auto;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+}
+
+.news-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.news-date {
+    font-size: 12px;
+    color: #666;
+    margin-right: 10px;
+}
+
+.news-link {
+    flex-grow: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.news-new {
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    margin-left: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* end======== ニュース/トピック/サイト最新情報 ========768px */
+
+
 
 
 /* ======== 見出しスタイル ======== */
@@ -1020,6 +1145,67 @@ body {
     display: block;
 }
 
+
+
+/* start======== ニュース/トピック/サイト最新情報 (max-width: 430px)======== */
+
+#news-section {
+    margin: 20px auto;
+    padding: 10px;
+    width: 350px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.news-header h2 {
+    margin: 0;
+    padding: 5px;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+.news-window {
+    height: 100px;
+    overflow-y: auto;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+}
+
+.news-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.news-date {
+    font-size: 12px;
+    color: #666;
+    margin-right: 10px;
+}
+
+.news-link {
+    flex-grow: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.news-new {
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    margin-left: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* end======== ニュース/トピック/サイト最新情報(max-width: 430px) ======== */
 
 
 
