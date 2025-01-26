@@ -50,34 +50,39 @@ function sanitizeHTML(str) {
         .replace(/\)/g, '&#41;');
 }
 
-function openModal(title, details, imageUrl) {
+function openModal(title, details, imageUrls) {
     const modal = document.getElementById("news-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalContent = document.getElementById("modal-content");
     const modalImages = document.getElementById("modal-images");
 
-    modalTitle.textContent = sanitizeHTML(title);
-    modalContent.innerHTML = sanitizeHTML(details) || "詳細情報がありません。";
+    modalTitle.textContent = title;
 
-    // 複数画像を処理
-    if (imageUrl) {
-        modalImages.innerHTML = ""; // リセット
-        const images = imageUrl.split(','); // カンマ区切りで分割
-        images.forEach((url) => {
-            const img = document.createElement('img');
-            img.src = sanitizeHTML(url.trim());
-            img.alt = "News Image";
-            img.style.maxWidth = "100%";
+    // エスケープされたHTMLを元に戻す処理
+    modalContent.innerHTML = details ? unescapeHtml(details) : "詳細情報がありません。";
+
+    // 画像処理
+    modalImages.innerHTML = ""; // 前回の画像をクリア
+    if (imageUrls) {
+        const urls = imageUrls.split(",");
+        urls.forEach(url => {
+            const img = document.createElement("img");
+            img.src = url.trim();
+            img.alt = title;
+            img.className = "modal-image";
             modalImages.appendChild(img);
         });
-        modalImages.style.display = "block";
-    } else {
-        modalImages.style.display = "none";
     }
 
     modal.style.display = "block";
 
     window.addEventListener("click", handleOutsideClick);
+}
+
+function unescapeHtml(escapedHtml) {
+    const textArea = document.createElement("textarea");
+    textArea.innerHTML = escapedHtml;
+    return textArea.value;
 }
 
 

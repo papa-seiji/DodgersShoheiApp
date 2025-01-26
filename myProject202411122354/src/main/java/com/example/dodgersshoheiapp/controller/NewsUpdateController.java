@@ -8,17 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.dodgersshoheiapp.model.NewsUpdate;
-import com.example.dodgersshoheiapp.repository.NewsUpdateRepository;
+import com.example.dodgersshoheiapp.service.NewsUpdateService;
 
 @RestController
 @RequestMapping("/api/news")
 public class NewsUpdateController {
 
     @Autowired
-    private NewsUpdateRepository newsUpdateRepository;
+    private NewsUpdateService newsUpdateService;
 
     @GetMapping
     public List<NewsUpdate> getAllNewsUpdates() {
-        return newsUpdateRepository.findAllByOrderByCreatedAtDesc();
+        // Serviceクラス経由で処理を行う
+        return newsUpdateService.getAllNewsUpdates();
     }
 }
