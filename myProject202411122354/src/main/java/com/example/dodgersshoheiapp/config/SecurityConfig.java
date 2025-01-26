@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 "/icon.png", "/sw.js", "/notifications/**", "/subscriptions/**",
                                 "/notifications/comments", "/api/news", "/home")
                         .permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // 管理者専用エンドポイントを保護
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/auth/login")
