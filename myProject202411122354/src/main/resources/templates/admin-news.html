@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者用ニュース追加</title>
+</head>
+<body>
+    <h1>ニュースを追加</h1>
+    <form id="newsForm">
+        <label for="date">日付:</label>
+        <input type="date" id="date" name="date" required><br>
+        <label for="content">内容:</label>
+        <textarea id="content" name="content" required></textarea><br>
+        <label for="details">詳細:</label>
+        <textarea id="details" name="details"></textarea><br>
+        <label for="imageUrl">画像URL (カンマ区切り):</label>
+        <input type="text" id="imageUrl" name="imageUrl"><br>
+        <label for="link">リンク:</label>
+        <input type="text" id="link" name="link"><br>
+        <button type="submit">ニュースを追加</button>
+    </form>
+    <h2>既存ニュース一覧</h2>
+    <div id="news-list">
+        <!-- JavaScriptでニュースデータを埋め込み -->
+    </div>
+    <script src="/js/admin-news.js"></script>
+</body>
+</html>
