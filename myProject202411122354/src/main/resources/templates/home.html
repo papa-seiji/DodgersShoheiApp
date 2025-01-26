@@ -43,10 +43,10 @@
 
     <th:block th:replace="fragments/header :: header"></th:block>
 
-<!-- ニュース/トピック/サイト最新情報 -->
+<!-- start ニュース/トピック/サイト最新情報 -->
     <section id="news-section">
         <div class="news-header">
-            <h2 id="news">NEWS</h2>
+            <h2 id="news">NEWSトピック</h2>
         </div>
         <div class="news-window">
             <div class="news-list">
@@ -54,6 +54,19 @@
             </div>
         </div>
     </section>
+
+    <!-- モーダル -->
+    <div id="news-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">×</span>
+            <h3 id="modal-title"></h3>
+            <img id="modal-image" src="" alt="" style="width: 100%; display: none; margin-bottom: 10px;">
+            <p id="modal-content"></p>
+            <div id="modal-images"></div> <!-- 複数画像用コンテナ -->
+        </div>
+    </div>
+<!-- end ニュース/トピック/サイト最新情報 -->
+
 
 
     <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
@@ -161,7 +174,7 @@
 
 
     <!-- QRコードボタン -->
-    <div class="qr-button-container">
+    <div id="qr-button-section" class="qr-button-container">
         <button class="qr-button" onclick="showQRCodeModal()">
             <div class="qr-icon">
                 <img src="/images/qr-icon.png" alt="QR Icon">
