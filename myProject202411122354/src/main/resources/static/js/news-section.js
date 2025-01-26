@@ -37,36 +37,49 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error fetching news updates:', error));
 });
 
-// モーダルを開く関数
-function openModal(title, details, imageUrls) {
+// サニタイズ関数
+function sanitizeHTML(str) {
+    if (!str) return ''; // nullやundefinedを防ぐ
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/\(/g, '&#40;')
+        .replace(/\)/g, '&#41;');
+}
+
+function openModal(title, details, imageUrl) {
     const modal = document.getElementById("news-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalContent = document.getElementById("modal-content");
     const modalImages = document.getElementById("modal-images");
 
-    // モーダルのタイトルと詳細を設定
-    modalTitle.textContent = title;
-    modalContent.textContent = details || "詳細情報がありません。";
+    modalTitle.textContent = sanitizeHTML(title);
+    modalContent.innerHTML = sanitizeHTML(details) || "詳細情報がありません。";
 
-    // モーダルの画像をクリア
-    modalImages.innerHTML = '';
-
-    // カンマ区切りの画像URLを処理
-    if (imageUrls) {
-        const urls = imageUrls.split(','); // カンマで分割
-        urls.forEach(url => {
-            const imgElement = document.createElement("img");
-            imgElement.src = url.trim(); // URLの余白を削除
-            imgElement.alt = "News Image";
-            imgElement.classList.add("modal-image");
-            modalImages.appendChild(imgElement);
+    // 複数画像を処理
+    if (imageUrl) {
+        modalImages.innerHTML = ""; // リセット
+        const images = imageUrl.split(','); // カンマ区切りで分割
+        images.forEach((url) => {
+            const img = document.createElement('img');
+            img.src = sanitizeHTML(url.trim());
+            img.alt = "News Image";
+            img.style.maxWidth = "100%";
+            modalImages.appendChild(img);
         });
+        modalImages.style.display = "block";
+    } else {
+        modalImages.style.display = "none";
     }
 
     modal.style.display = "block";
 
     window.addEventListener("click", handleOutsideClick);
 }
+
 
 function closeModal() {
     const modal = document.getElementById("news-modal");
