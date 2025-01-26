@@ -122,6 +122,11 @@
             <artifactId>spring-security-config</artifactId>
             <version>6.1.0</version> <!-- 現在のプロジェクトのSpring Securityバージョンに応じて変更 -->
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version> <!-- 最新バージョンを確認してください -->
+        </dependency>
 
     </dependencies>
 
