@@ -24,6 +24,15 @@ public class NewsUpdate {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(columnDefinition = "TEXT")
+    private String link; // リンクを追加
+
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl; // 画像URLを追加
+
+    @Column(columnDefinition = "TEXT")
+    private String details; // 記事詳細を追加
+
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -41,6 +50,18 @@ public class NewsUpdate {
         return content;
     }
 
+    public String getLink() {
+        return link;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -56,6 +77,18 @@ public class NewsUpdate {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
