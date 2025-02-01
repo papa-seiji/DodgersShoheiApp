@@ -252,7 +252,7 @@ body{
 }
 
 #upload-btn:hover {
-    background-color: #cdcd22;/* ホバー時のアイコン色 */
+    /*background-color: #cdcd22; ホバー時のアイコン色 */
     transform: scale(1.2); /* ホバー時にアイコンを拡大 */
 }
 
