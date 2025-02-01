@@ -3,13 +3,16 @@ import browserImageCompression from './browser-image-compression.mjs';
 
 document.addEventListener("DOMContentLoaded", function () {
     const gallery = document.getElementById("image-gallery");
-    const uploadForm = document.getElementById("image-upload-form");
     const visitorCounter = document.getElementById("visitor-counter-value");
     const modal = document.getElementById("image-modal");
     const modalImage = document.getElementById("modal-image");
     const modalDescription = document.getElementById("modal-description");
     const closeModal = document.querySelector(".close");
     let stompClient = null;
+    const uploadForm = document.getElementById("image-upload-form");
+    const fileInput = document.getElementById("image-file");
+    const descriptionInput = document.getElementById("image-description");
+    const uploadButton = document.getElementById("upload-btn");
 
     // WebSocket初期化
     function initializeWebSocket() {
@@ -174,46 +177,57 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 画像アップロード
-    if (uploadForm) {
-        uploadForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const formData = new FormData(uploadForm);
-            const fileInput = document.getElementById("image-file");
-            const file = fileInput.files[0];
+// 画像アップロード
+if (uploadForm) {
+    uploadForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const formData = new FormData(uploadForm);
+        const fileInput = document.getElementById("image-file");
+        const descriptionInput = document.getElementById("image-description"); // 修正：入力フィールドの取得
+        const file = fileInput.files[0];
 
-            if (file) {
-                try {
-                    const compressedFile = await compressImage(file);
-                    formData.set("image", compressedFile, compressedFile.name);
+        if (file) {
+            try {
+                const compressedFile = await compressImage(file);
+                formData.set("image", compressedFile, compressedFile.name);
 
-                    // 圧縮後の画像をサーバーに送信
-                    fetch('/api/proud/upload', {
-                        method: 'POST',
-                        body: formData,
-                    })
-                        .then(response => {
-                            if (!response.ok) throw new Error("Failed to upload");
-                            const contentType = response.headers.get("Content-Type");
-                            if (contentType && contentType.includes("application/json")) {
-                                return response.json();
-                            } else {
-                                return response.text();
-                            }
-                        })
-                        .then(data => {
-                            console.log("Image uploaded successfully:", data);
-                            loadGallery(); // ギャラリーをリロード
-                        })
-                        .catch(error => {
-                            console.error("Error during image upload:", error);
-                        });
-                } catch (error) {
-                    console.error("Compression failed:", error);
+                // 確認ダイアログの追加
+                if (!confirm("この画像を投稿しますか？")) {
+                    return;
                 }
+
+                // 圧縮後の画像をサーバーに送信
+                fetch('/api/proud/upload', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Failed to upload");
+                        const contentType = response.headers.get("Content-Type");
+                        if (contentType && contentType.includes("application/json")) {
+                            return response.json();
+                        } else {
+                            return response.text();
+                        }
+                    })
+                    .then(data => {
+                        console.log("Image uploaded successfully:", data);
+                        loadGallery(); // ギャラリーをリロード
+
+                        // 投稿後にフォームのリセット処理を追加
+                        uploadForm.reset(); // 修正：フォームのリセット
+                        fileInput.value = ""; // 修正：画像の選択をリセット
+                        descriptionInput.value = ""; // 修正：テキスト入力をリセット
+                    })
+                    .catch(error => {
+                        console.error("Error during image upload:", error);
+                    });
+            } catch (error) {
+                console.error("Compression failed:", error);
             }
-        });
-    }
+        }
+    });
+}
 
     // 初期化処理
     fetchVisitorCounter();
