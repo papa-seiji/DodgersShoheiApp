@@ -309,6 +309,44 @@ a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
 
+/* ========start デコイのクリーツの調整  a1  ======== */
+.a1 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+}
+
+.a1 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end デコイのクリーツの調整  a1  ======== */
+/* ========start ゆらゆら大谷スイングの調整  a2  ======== */
+.a2 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+    margin: 0 !important;
+}
+
+.a2 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end ゆらゆら大谷スイングの調整  a2  ======== */
+/* ========start LINKのDodgersロゴの調整  a3  ======== */
+.a3 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+    margin: 0 !important;
+}
+
+.a3 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end LINKのDodgersロゴの調整  a3  ======== */
 
 /* #header-logo{
     font-size: 16px;
@@ -1061,6 +1099,45 @@ a:hover {
 }
 }
 
+/* ========start デコイのクリーツの調整  a1  ======== */
+.a1 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+}
+
+.a1 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end デコイのクリーツの調整  a1  ======== */
+/* ========start ゆらゆら大谷スイングの調整  a2  ======== */
+.a2 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+    margin: 0 !important;
+}
+
+.a2 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end ゆらゆら大谷スイングの調整  a2  ======== */
+/* ========start LINKのDodgersロゴの調整  a3  ======== */
+.a3 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+    margin: 0 !important;
+}
+
+.a3 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end LINKのDodgersロゴの調整  a3  ======== */
+
 
 /* start======== QR (max-width: 768px) ======== */
 .qr-button-container {
@@ -1494,6 +1571,44 @@ a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
 
+/* ========start デコイのクリーツの調整  a1  ======== */
+.a1 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+}
+
+.a1 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end デコイのクリーツの調整  a1  ======== */
+/* ========start ゆらゆら大谷スイングの調整  a2  ======== */
+.a2 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+    margin: 0 !important;
+}
+
+.a2 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end ゆらゆら大谷スイングの調整  a2  ======== */
+/* ========start LINKのDodgersロゴの調整  a3  ======== */
+.a3 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+    margin: 0 !important;
+}
+
+.a3 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end LINKのDodgersロゴの調整  a3  ======== */
 
 
 
