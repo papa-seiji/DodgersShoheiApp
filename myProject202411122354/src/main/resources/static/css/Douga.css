@@ -39,6 +39,16 @@
     /* margin-bottom: 92px; */
 }
 
+.douga-section_3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    margin-top: 1%;
+    margin-bottom: 30px;
+}
+
 /* Responsive video container */
 #douga-container-1,
 #douga-container-2 {
@@ -47,7 +57,15 @@
     padding-top: 70.25%; /* 16:9 Aspect Ratio */
     background-color: #000;
 }
-
+/* Responsive video container */
+#douga-container-3 {
+    position: relative;
+    width: 225%;
+    height: 7em !important;
+    padding-top: 70.25%;
+    background-color: #000;
+}
+/* */
 #douga-container-1 iframe,
 #douga-container-2 iframe {
     position: absolute;
@@ -56,6 +74,17 @@
     width: 100%;
     height: 100%;
 }
+/* */
+#douga-container-3 iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+}
+
+
+
 
 #main-counter-controls,
 #secondary-counter-controls{
