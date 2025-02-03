@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<!-- ナビゲーションバー -->
+<!--Start ナビゲーションバー -->
 <div id="header-navbar">
     <div id="header-left">
         <div id="header-logo">
@@ -40,6 +40,45 @@
         </div>
     </nav>
 </div>
+            <!-- 吹き出しの追加 -->
+            <div id="tooltip-navbar" class="tooltip">
+                  "Home"押下で<br>  メニューが開くよ
+                <button class="tooltip-close" onclick="closeTooltip()">✖</button>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<script>
+    function toggleDropdown() {
+        const dropdown = document.querySelector('.navbar-dropdown');
+        dropdown.classList.toggle('open');
+    }
+
+    // 外部クリックでドロップダウンを閉じる
+    document.addEventListener('click', function (event) {
+        const dropdown = document.querySelector('.navbar-dropdown');
+        const isClickInside = dropdown.contains(event.target);
+
+        if (!isClickInside && dropdown.classList.contains('open')) {
+            dropdown.classList.remove('open');
+        }
+    });
+
+    // 吹き出しの制御
+    function closeTooltip() {
+        document.getElementById('tooltip-navbar').style.display = 'none';
+        localStorage.setItem('hideNavbarTooltip', 'true'); // 次回以降非表示
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (localStorage.getItem('hideNavbarTooltip') === 'true') {
+            document.getElementById('tooltip-navbar').style.display = 'none';
+        }
+    });
+</script>
+<!--End ナビゲーションバー -->
+
 
     <th:block th:replace="fragments/header :: header"></th:block>
 
@@ -237,6 +276,9 @@
         <!-- <img src="/images/trimmin'-ohtani_pitchin'.png" alt="背景画像1" class="home-image1"> -->
     </div>
 
+
+
+
     <div class="home-layout2">
         <div class="home-content2">
             <a href="/proud"><h1 id="oomidashi" class="shiny-text">Proud</h1></a>
@@ -372,26 +414,6 @@
         // ページロード時にユーザー情報を取得
         document.addEventListener('DOMContentLoaded', fetchUserInfo);
     </script>
-
-
-
-    <script>
-        function toggleDropdown() {
-            const dropdown = document.querySelector('.navbar-dropdown');
-            dropdown.classList.toggle('open');
-        }
-
-        // 外部クリックでドロップダウンを閉じる
-        document.addEventListener('click', function (event) {
-            const dropdown = document.querySelector('.navbar-dropdown');
-            const isClickInside = dropdown.contains(event.target);
-
-            if (!isClickInside && dropdown.classList.contains('open')) {
-                dropdown.classList.remove('open');
-            }
-        });
-    </script>
-
 
 
 <script>
