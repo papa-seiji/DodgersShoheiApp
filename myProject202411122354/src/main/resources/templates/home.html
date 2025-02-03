@@ -42,8 +42,8 @@
 </div>
             <!-- 吹き出しの追加 -->
             <div id="tooltip-navbar" class="tooltip">
-                  "Home"押下で<br>  メニューが開くよ
-                <button class="tooltip-close" onclick="closeTooltip()">✖</button>
+                  どのページでもこの部分を押下で<br>  ”メニュー”が開くよ
+                 <button class="tooltip-close" data-tooltip-id="navbar">✖</button>
             </div>
         </div>
     </nav>
@@ -66,16 +66,18 @@
     });
 
     // 吹き出しの制御
-    function closeTooltip() {
-        document.getElementById('tooltip-navbar').style.display = 'none';
-        localStorage.setItem('hideNavbarTooltip', 'true'); // 次回以降非表示
-    }
+// 🛠️ Navbar の吹き出しを閉じる
+function closeNavbarTooltip() {
+    document.getElementById('tooltip-navbar').style.display = 'none';
+    localStorage.setItem('hideNavbarTooltip', 'true'); // 次回以降非表示
+}
 
-    document.addEventListener('DOMContentLoaded', function () {
-        if (localStorage.getItem('hideNavbarTooltip') === 'true') {
-            document.getElementById('tooltip-navbar').style.display = 'none';
-        }
-    });
+// 🛠️ Navbar の吹き出しの状態を確認
+document.addEventListener('DOMContentLoaded', function () {
+    if (localStorage.getItem('hideNavbarTooltip') === 'true') {
+        document.getElementById('tooltip-navbar').style.display = 'none';
+    }
+});
 </script>
 <!--End ナビゲーションバー -->
 
@@ -279,42 +281,98 @@
 
 
 
-    <div class="home-layout2">
-        <div class="home-content2">
-            <a href="/proud"><h1 id="oomidashi" class="shiny-text">Proud</h1></a>
-            <div>応援スタイル</div>
-            <div>自慢の応援グッズ..etc..</div>
-            <h4 style="margin-top: -2%">画像投稿して自慢(PROUD)してください</h4>
-        </div>
-        <a href="/proud" class="a1">
-            <img src="/images/trimmin'-ohtani_creats.png" alt="背景画像1" class="home-image2">
-        </a>
-    </div>
+<!-- Proud 吹き出し -->
+<div id="tooltip-proud" class="tooltip">
+    <span><strong>"Proud"か"画像"</strong>を押すと<br>飛べます</span>
+    <button class="tooltip-close" data-tooltip-id="proud"> 　　　　         ✖</button>
+</div>
 
-    <div class="home-layout3">
-        <a href="/comments" class="a2">
-            <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image3">
-        </a>
-        <div class="home-content3">
-            <a href="/comments"><h1 id="oomidashi" class="shiny-text">Chat</h1></a>
-            <div>好きな選手,今日の翔平君</div>
-            <div>対戦相手,応援メッセージ..etc..</div>
-            <div>リアルタイムでひとこと言い合える</div>
-            <h4>いずれは応援コメントがたまったら正式にDodgers翔平君に送ります</h4>
-        </div>
+<div class="home-layout2">
+    <div class="home-content2">
+        <a href="/proud"><h1 id="oomidashi" class="shiny-text">Proud</h1></a>
+        <div>応援スタイル</div>
+        <div>自慢の応援グッズ..etc..</div>
+        <h4 style="margin-top: -2%">画像投稿して自慢(PROUD)してください</h4>
     </div>
+    <a href="/proud" class="a1">
+        <img src="/images/trimmin'-ohtani_creats.png" alt="背景画像1" class="home-image2">
+    </a>
+</div>
 
-    <div class="home-layout4" style="margin-bottom: -30%">
-        <div class="home-content4">
-            <a href="/links"><h1 id="oomidashi" class="shiny-text">Link</h1></a>
-            <div>Dodgers,翔平君,由伸君</div>
-            <div>デコピン,グッズ,SNS ..etc..</div>
-            <h4 style="margin-top: -2%">HomePageリンク集</h4>
-        </div>
-        <a href="/links" class="a3">
-            <img src="/images/DodgersLogo.png" alt="背景画像1" class="home-image4">
-        </a>
+<!-- Chat 吹き出し -->
+<div id="tooltip-chat" class="tooltip">
+    <span><strong>"Chat"か"画像"</strong>を押すと<br>飛べます</span>
+    <button class="tooltip-close" data-tooltip-id="chat"> 　　　　         ✖</button>
+</div>
+
+<div class="home-layout3">
+    <a href="/comments" class="a2">
+        <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image3">
+    </a>
+    <div class="home-content3">
+        <a href="/comments"><h1 id="oomidashi" class="shiny-text">Chat</h1></a>
+        <div>好きな選手,今日の翔平君</div>
+        <div>対戦相手,応援メッセージ..etc..</div>
+        <div>リアルタイムでひとこと言い合える</div>
+        <h4>いずれは応援コメントがたまったら正式にDodgers翔平君に送ります</h4>
     </div>
+</div>
+
+<!-- Link 吹き出し -->
+<div id="tooltip-link" class="tooltip">
+    <span><strong>"Link"か"画像"</strong>を押すと<br>飛べます</span>
+    <button class="tooltip-close" data-tooltip-id="link"> 　　　　         ✖</button>
+</div>
+
+<div class="home-layout4" style="margin-bottom: -30%">
+    <div class="home-content4">
+        <a href="/links"><h1 id="oomidashi" class="shiny-text">Link</h1></a>
+        <div>Dodgers,翔平君,由伸君</div>
+        <div>デコピン,グッズ,SNS ..etc..</div>
+        <h4 style="margin-top: -2%">HomePageリンク集</h4>
+    </div>
+    <a href="/links" class="a3">
+        <img src="/images/DodgersLogo.png" alt="背景画像1" class="home-image4">
+    </a>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function showTooltipIfNeeded(id) {
+        const tooltip = document.getElementById(`tooltip-${id}`);
+        if (tooltip) {
+            // ローカルストレージの値が 'true' でない場合は表示する
+            if (localStorage.getItem(`hideTooltip-${id}`) !== 'true') {
+                tooltip.style.display = 'block';
+            } else {
+                tooltip.style.display = 'none';
+            }
+        }
+    }
+
+    function closeTooltip(id) {
+        const tooltip = document.getElementById(`tooltip-${id}`);
+        if (tooltip) {
+            tooltip.style.display = 'none';
+            localStorage.setItem(`hideTooltip-${id}`, 'true');
+        }
+    }
+
+    // 各吹き出しの初期状態をチェック
+    showTooltipIfNeeded('navbar');
+    showTooltipIfNeeded('proud');
+    showTooltipIfNeeded('chat');
+    showTooltipIfNeeded('link');
+
+    // 吹き出しを閉じるボタンにイベントを追加
+    document.querySelectorAll('.tooltip-close').forEach(button => {
+        button.addEventListener('click', function() {
+            const tooltipId = this.getAttribute('data-tooltip-id');
+            closeTooltip(tooltipId);
+        });
+    });
+});
+</script>
+
 
 
 
