@@ -463,6 +463,142 @@ a:hover {
 }
 
 /* end======== ナビゲーションバー全体 ======== */
+/* ドロップダウンメニュー全体 */
+.navbar-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* ドロップダウンのトリガー部分 */
+.navbar-dropdown-trigger {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(180, 46, 46);
+    cursor: pointer;
+    padding-right: 21px;
+}
+
+/* ドロップダウンメニューの内容 */
+.navbar-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    z-index: 100;
+}
+
+/* ドロップダウン内のリンク */
+.navbar-dropdown-content a {
+    display: block;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    color: rgb(180, 46, 46);
+    text-decoration: none;
+    text-align: left;
+}
+
+/* ホバーでメニュー表示 */
+.navbar-dropdown:hover .navbar-dropdown-content {
+    display: block;
+}
+
+/* 横並びリンクの調整 */
+#header-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: fixed;
+    margin: 9px -192px 9px 0em;
+}
+
+/* その他の基本リンク */
+#header-nav-links a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: rgb(180, 46, 46);
+    margin: 10px 10px 0px 10px;
+}
+
+
+
+/* ドロップダウン表示時 */
+.navbar-dropdown.open .navbar-dropdown-content {
+    display: block;
+}
+
+/* start========  吹き出しのスタイル  (max-width: 430px)======== */ 
+/* 吹き出しのスタイル */
+.tooltip {
+    position: absolute;
+    background-color: #fd0101;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: none; /* 初期状態で非表示にする */
+}
+
+/* 吹き出しの三角形（上に表示） Navbarの吹き出し用 */
+.tooltip#tooltip-navbar::after {
+    content: "";
+    position: absolute;
+    top: -18px;
+    left: 76%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent #fd0101 transparent;
+}
+
+/* 吹き出しの三角形（下に表示）紹介部分の吹き出し用 */
+#tooltip-proud::after,
+#tooltip-chat::after,
+#tooltip-link::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: #fd0101 transparent transparent transparent;
+}
+
+/* 吹き出しを適切な位置に配置 */
+#tooltip-navbar {
+    top: 43px;
+    left: 69%;
+    transform: translateX(-50%);
+}
+
+#tooltip-proud {
+    top: 278em;
+}
+#tooltip-chat {
+    top: 299em;
+    left: 9em;
+}
+#tooltip-link {
+    top: 326em;
+    left: 14em;
+}
+
+/* 閉じるボタン */
+.tooltip-close {
+    background: none;
+    border: none;
+    font-weight: bold;
+    color: #333;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* End========  吹き出しのスタイル  (max-width: 430px)======== */
 
 
 
@@ -826,6 +962,142 @@ body {
     display: block;
 }
 
+/* ドロップダウンメニュー全体 */
+.navbar-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* ドロップダウンのトリガー部分 */
+.navbar-dropdown-trigger {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(180, 46, 46);
+    cursor: pointer;
+    padding-right: 21px;
+}
+
+/* ドロップダウンメニューの内容 */
+.navbar-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    z-index: 100;
+}
+
+/* ドロップダウン内のリンク */
+.navbar-dropdown-content a {
+    display: block;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    color: rgb(180, 46, 46);
+    text-decoration: none;
+    text-align: left;
+}
+
+/* ホバーでメニュー表示 */
+.navbar-dropdown:hover .navbar-dropdown-content {
+    display: block;
+}
+
+/* 横並びリンクの調整 */
+#header-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: fixed;
+    margin: 9px -192px 9px 0em;
+}
+
+/* その他の基本リンク */
+#header-nav-links a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: rgb(180, 46, 46);
+    margin: 10px 10px 0px 10px;
+}
+
+
+
+/* ドロップダウン表示時 */
+.navbar-dropdown.open .navbar-dropdown-content {
+    display: block;
+}
+
+/* start========  吹き出しのスタイル  (max-width: 430px)======== */ 
+/* 吹き出しのスタイル */
+.tooltip {
+    position: absolute;
+    background-color: #fd0101;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: none; /* 初期状態で非表示にする */
+}
+
+/* 吹き出しの三角形（上に表示） Navbarの吹き出し用 */
+.tooltip#tooltip-navbar::after {
+    content: "";
+    position: absolute;
+    top: -18px;
+    left: 76%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent #fd0101 transparent;
+}
+
+/* 吹き出しの三角形（下に表示）紹介部分の吹き出し用 */
+#tooltip-proud::after,
+#tooltip-chat::after,
+#tooltip-link::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: #fd0101 transparent transparent transparent;
+}
+
+/* 吹き出しを適切な位置に配置 */
+#tooltip-navbar {
+    top: 43px;
+    left: 69%;
+    transform: translateX(-50%);
+}
+
+#tooltip-proud {
+    top: 278em;
+}
+#tooltip-chat {
+    top: 299em;
+    left: 9em;
+}
+#tooltip-link {
+    top: 326em;
+    left: 14em;
+}
+
+/* 閉じるボタン */
+.tooltip-close {
+    background: none;
+    border: none;
+    font-weight: bold;
+    color: #333;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* End========  吹き出しのスタイル  (max-width: 430px)======== */
 
 
 /* start======== ニュース/トピック/サイト最新情報 ========768px */
@@ -1333,6 +1605,79 @@ body {
     display: block;
 }
 
+/* start========  吹き出しのスタイル  (max-width: 430px)======== */ 
+/* 吹き出しのスタイル */
+.tooltip {
+    position: absolute;
+    background-color: #fd0101;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: none; /* 初期状態で非表示にする */
+}
+
+/* 吹き出しの三角形（上に表示） Navbarの吹き出し用 */
+.tooltip#tooltip-navbar::after {
+    content: "";
+    position: absolute;
+    top: -18px;
+    left: 76%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent #fd0101 transparent;
+}
+
+/* 吹き出しの三角形（下に表示）紹介部分の吹き出し用 */
+#tooltip-proud::after,
+#tooltip-chat::after,
+#tooltip-link::after {
+    content: "";
+    position: absolute;
+    bottom: -19px;
+    left: 30%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: #fd0101 transparent transparent transparent;
+}
+
+/* 吹き出しを適切な位置に配置 */
+#tooltip-navbar {
+    top: 43px;
+    left: 69%;
+    transform: translateX(-50%);
+}
+
+#tooltip-proud {
+    top: 271em;
+    left: 12em;
+}
+#tooltip-chat {
+    top: 292em;
+    left: 4em;
+}
+#tooltip-link {
+    top: 320em;
+    left: 10em;
+}
+
+/* 閉じるボタン */
+.tooltip-close {
+    background: none;
+    border: none;
+    font-weight: bold;
+    color: #333;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* End========  吹き出しのスタイル  (max-width: 430px)======== */
 
 
 /* start======== ニュース/トピック/サイト最新情報 (max-width: 430px)======== */
@@ -1873,6 +2218,11 @@ a:hover {
         }
 
 }
+
+
+
+
+
 
 /* 大見出し */
 .home-content h1 {
