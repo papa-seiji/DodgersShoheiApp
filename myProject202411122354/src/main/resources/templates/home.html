@@ -110,51 +110,139 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-<!-- start NL西地区 順位表 -->
-    <div id="standings-table">
-        <h2>🏆 NL西地区 順位表</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>順位</th>
-                    <th>チーム</th>
-                    <th>勝</th>
-                    <th>負</th>
-                    <th>勝率</th>
-                    <th>ゲーム差</th>
-                </tr>
-            </thead>
-            <tbody id="standings-body"></tbody>
-        </table>
+<!-- MLB 地区別順位表 (スワイプ対応) -->
+<div class="standings-container">
+    <div class="standings-wrapper">
+        <!-- NL 東地区 -->
+        <div class="standings-slide">
+            <h3>NL 東地区</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>チーム</th>
+                        <th>勝</th>
+                        <th>負</th>
+                        <th>勝率</th>
+                        <th>ゲーム差</th>
+                    </tr>
+                </thead>
+                <tbody id="nl-east-body"></tbody>
+            </table>
+        </div>
+
+        <!-- NL 中地区 -->
+        <div class="standings-slide">
+            <h3>NL 中地区</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>チーム</th>
+                        <th>勝</th>
+                        <th>負</th>
+                        <th>勝率</th>
+                        <th>ゲーム差</th>
+                    </tr>
+                </thead>
+                <tbody id="nl-central-body"></tbody>
+            </table>
+        </div>
+
+        <!-- NL 西地区 -->
+        <div class="standings-slide">
+            <h3>NL 西地区</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>チーム</th>
+                        <th>勝</th>
+                        <th>負</th>
+                        <th>勝率</th>
+                        <th>ゲーム差</th>
+                    </tr>
+                </thead>
+                <tbody id="nl-west-body"></tbody>
+            </table>
+        </div>
     </div>
+</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch("/api/dodgers/standings")
-                .then(response => response.json())
-                .then(data => {
-                    let tbody = document.getElementById("standings-body");
-                    tbody.innerHTML = "";
+<!-- 左右のナビゲーションボタン -->
+<button id="prevBtn">◀</button>
+<button id="nextBtn">▶</button>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentIndex = 2; // デフォルトを NL 西地区（index: 2）に設定
+        const slides = document.querySelectorAll(".standings-slide");
+        const wrapper = document.querySelector(".standings-wrapper");
+
+        function updateSlide() {
+            wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        // 初期表示を NL 西地区に設定
+        updateSlide();
+
+        document.getElementById("nextBtn").addEventListener("click", function () {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlide();
+        });
+
+        document.getElementById("prevBtn").addEventListener("click", function () {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateSlide();
+        });
+
+        // スワイプ対応
+        let startX = 0;
+        wrapper.addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        wrapper.addEventListener("touchend", (e) => {
+            let endX = e.changedTouches[0].clientX;
+            if (startX - endX > 50) { 
+                currentIndex = (currentIndex + 1) % slides.length;
+            } else if (endX - startX > 50) {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            }
+            updateSlide();
+        });
+
+        // データを取得して各地区に挿入
+        fetch("/api/dodgers/standings")
+            .then(response => response.json())
+            .then(data => {
+                function populateTable(data, tbody) {
                     data.forEach(team => {
                         let row = document.createElement("tr");
                         let trophy = team.rank === "1" ? "🏆" : "";
-                        
+                        let winPercentage = team.winPercentage !== null 
+                            ? parseFloat(team.winPercentage).toFixed(3) 
+                            : (team.wins / (team.wins + team.losses)).toFixed(3);
+
                         row.innerHTML = `
                             <td>${team.rank}️⃣ ${trophy}</td>
                             <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> ${team.name}</td>
                             <td>${team.wins}</td>
                             <td>${team.losses}</td>
-                            <td>${team.winPercentage}</td>
+                            <td>${winPercentage}</td>
                             <td>${team.gamesBack}</td>
                         `;
                         tbody.appendChild(row);
                     });
-                })
-                .catch(error => console.error("Error loading standings:", error));
-        });
-    </script>
-<!-- End NL西地区 順位表 -->
+                }
+
+                populateTable(data["NL 東地区"], document.getElementById("nl-east-body"));
+                populateTable(data["NL 中地区"], document.getElementById("nl-central-body"));
+                populateTable(data["NL 西地区"], document.getElementById("nl-west-body"));
+            })
+            .catch(error => console.error("Error loading standings:", error));
+    });
+</script>
 
 
 
@@ -178,12 +266,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <!-- 打者成績セクション -->
                 <div id="hitter-stats">
                     <div id="HitterStats-1">Hitter Stats</div>
-                    <div><strong>Games:</strong> <span id="gamesPlayed"></span></div>
-                    <div><strong>Average (AVG):</strong> <span id="avg"></span></div>
-                    <div><strong>Home Runs:</strong> <span id="homeRuns"></span></div>
-                    <div><strong>Stolen Bases:</strong> <span id="stolenBases"></span></div>
-                    <div><strong>RBIs:</strong> <span id="rbi"></span></div>
-                    <div><strong>OPS:</strong> <span id="ops"></span></div>
+                    <div><strong>出場数:</strong> <span id="gamesPlayed"></span></div>
+                    <div><strong>打率:　</strong> <span id="avg"></span></div>
+                    <div><strong>本塁打:</strong> <span id="homeRuns"></span></div>
+                    <div><strong>盗塁:　</strong> <span id="stolenBases"></span></div>
+                    <div><strong>打点:　</strong> <span id="rbi"></span></div>
+                    <div><strong>OPS:　</strong> <span id="ops"></span></div>
                 </div>
             </div>
             <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image6">
@@ -204,11 +292,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <!-- 投手成績セクション -->
                 <div id="pitcher-stats">
                     <div id="pitcher-stats-2">Pitcher Stats</div>
-                    <div id="pitcher-stats-2_child"><strong>Games:</strong> <span id="pitcherGamesPlayed"></span></div>
-                    <div id="pitcher-stats-2_child"><strong>Wins:</strong> <span id="wins"></span></div>
-                    <div id="pitcher-stats-2_child"><strong>Losses:</strong> <span id="losses"></span></div>
-                    <div id="pitcher-stats-2_child"><strong>ERA:</strong> <span id="era"></span></div>
-                    <div id="pitcher-stats-2_child"><strong>Strikeouts:</strong> <span id="strikeOuts"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>投球日:　</strong> <span id="pitcherGamesPlayed"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>勝ち:　　</strong> <span id="wins"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>負け:　　</strong> <span id="losses"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>防御率:　</strong> <span id="era"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>奪三振:　</strong> <span id="strikeOuts"></span></div>
                 </div>
             </div>
             <img src="/images/LAD投げる大谷翔平-removebg-preview.png" alt="背景画像1" class="home-image9">

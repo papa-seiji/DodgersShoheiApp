@@ -9,7 +9,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/dodgers/standings")
 public class DodgersStandingsController {
-
     private final DodgersStandingsService standingsService;
 
     public DodgersStandingsController(DodgersStandingsService standingsService) {
@@ -17,7 +16,7 @@ public class DodgersStandingsController {
     }
 
     @GetMapping
-    public List<Map<String, Object>> getStandings() {
-        return standingsService.getDodgersStandings();
+    public Map<String, List<Map<String, Object>>> getStandings() {
+        return standingsService.getDodgersStandings(); // ← Map をそのまま返すように修正
     }
 }
