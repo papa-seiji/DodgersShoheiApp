@@ -110,6 +110,57 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+<!-- start NL西地区 順位表 -->
+    <div id="standings-table">
+        <h2>🏆 NL西地区 順位表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>順位</th>
+                    <th>チーム</th>
+                    <th>勝</th>
+                    <th>負</th>
+                    <th>勝率</th>
+                    <th>ゲーム差</th>
+                </tr>
+            </thead>
+            <tbody id="standings-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/api/dodgers/standings")
+                .then(response => response.json())
+                .then(data => {
+                    let tbody = document.getElementById("standings-body");
+                    tbody.innerHTML = "";
+
+                    data.forEach(team => {
+                        let row = document.createElement("tr");
+                        let trophy = team.rank === "1" ? "🏆" : "";
+                        
+                        row.innerHTML = `
+                            <td>${team.rank}️⃣ ${trophy}</td>
+                            <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> ${team.name}</td>
+                            <td>${team.wins}</td>
+                            <td>${team.losses}</td>
+                            <td>${team.winPercentage}</td>
+                            <td>${team.gamesBack}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error("Error loading standings:", error));
+        });
+    </script>
+<!-- End NL西地区 順位表 -->
+
+
+
+
+
+
     <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
     <div id="confetti-container"><h1 id="fifty_fifty" class="shiny-text">大谷翔平MVP&54-59おめでとう</h1></div>
     <h5 class="shiny-text-1">目標は2025年MLB開幕戦Cubs対Dodgers観戦すること</h5>
