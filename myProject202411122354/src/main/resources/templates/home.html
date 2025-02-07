@@ -110,139 +110,109 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-<!-- MLB 地区別順位表 (スワイプ対応) -->
+<!--start MLB 地区別順位表 (スワイプ対応) -->
 <div class="standings-container">
     <div class="standings-wrapper">
-        <!-- NL 東地区 -->
-        <div class="standings-slide">
-            <h3>NL 東地区</h3>
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <th>チーム</th>
-                        <th>勝</th>
-                        <th>負</th>
-                        <th>勝率</th>
-                        <th>ゲーム差</th>
-                    </tr>
-                </thead>
-                <tbody id="nl-east-body"></tbody>
-            </table>
-        </div>
-
-        <!-- NL 中地区 -->
-        <div class="standings-slide">
-            <h3>NL 中地区</h3>
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <th>チーム</th>
-                        <th>勝</th>
-                        <th>負</th>
-                        <th>勝率</th>
-                        <th>ゲーム差</th>
-                    </tr>
-                </thead>
-                <tbody id="nl-central-body"></tbody>
-            </table>
-        </div>
-
-        <!-- NL 西地区 -->
-        <div class="standings-slide">
-            <h3>NL 西地区</h3>
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <th>チーム</th>
-                        <th>勝</th>
-                        <th>負</th>
-                        <th>勝率</th>
-                        <th>ゲーム差</th>
-                    </tr>
-                </thead>
-                <tbody id="nl-west-body"></tbody>
-            </table>
-        </div>
+        <div class="standings-slide" id="nl-west"><h3>NL 西地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-west-body"></tbody></table></div>
+        <div class="standings-slide" id="nl-central"><h3>NL 中地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-central-body"></tbody></table></div>
+        <div class="standings-slide" id="nl-east"><h3>NL 東地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-east-body"></tbody></table></div>
+        <div class="standings-slide" id="al-west"><h3>AL 西地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-west-body"></tbody></table></div>
+        <div class="standings-slide" id="al-central"><h3>AL 中地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-central-body"></tbody></table></div>
+        <div class="standings-slide" id="al-east"><h3>AL 東地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-east-body"></tbody></table></div>
     </div>
 </div>
 
-<!-- 左右のナビゲーションボタン -->
 <button id="prevBtn">◀</button>
 <button id="nextBtn">▶</button>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let currentIndex = 2; // デフォルトを NL 西地区（index: 2）に設定
-        const slides = document.querySelectorAll(".standings-slide");
-        const wrapper = document.querySelector(".standings-wrapper");
+document.addEventListener("DOMContentLoaded", function () {
+    let currentIndex = 0; // 🚀 デフォルトを NL 西地区に設定
+    const slides = document.querySelectorAll(".standings-slide");
+    const wrapper = document.querySelector(".standings-wrapper");
 
-        function updateSlide() {
-            wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
+    function updateSlide() {
+        wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
 
-        // 初期表示を NL 西地区に設定
+    // 🚀 ページロード時に NL 西地区を表示
+    updateSlide();
+
+    document.getElementById("nextBtn").addEventListener("click", function () {
+        currentIndex = (currentIndex + 1) % slides.length;
         updateSlide();
-
-        document.getElementById("nextBtn").addEventListener("click", function () {
-            currentIndex = (currentIndex + 1) % slides.length;
-            updateSlide();
-        });
-
-        document.getElementById("prevBtn").addEventListener("click", function () {
-            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-            updateSlide();
-        });
-
-        // スワイプ対応
-        let startX = 0;
-        wrapper.addEventListener("touchstart", (e) => {
-            startX = e.touches[0].clientX;
-        });
-
-        wrapper.addEventListener("touchend", (e) => {
-            let endX = e.changedTouches[0].clientX;
-            if (startX - endX > 50) { 
-                currentIndex = (currentIndex + 1) % slides.length;
-            } else if (endX - startX > 50) {
-                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-            }
-            updateSlide();
-        });
-
-        // データを取得して各地区に挿入
-        fetch("/api/dodgers/standings")
-            .then(response => response.json())
-            .then(data => {
-                function populateTable(data, tbody) {
-                    data.forEach(team => {
-                        let row = document.createElement("tr");
-                        let trophy = team.rank === "1" ? "🏆" : "";
-                        let winPercentage = team.winPercentage !== null 
-                            ? parseFloat(team.winPercentage).toFixed(3) 
-                            : (team.wins / (team.wins + team.losses)).toFixed(3);
-
-                        row.innerHTML = `
-                            <td>${team.rank}️⃣ ${trophy}</td>
-                            <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> ${team.name}</td>
-                            <td>${team.wins}</td>
-                            <td>${team.losses}</td>
-                            <td>${winPercentage}</td>
-                            <td>${team.gamesBack}</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
-                }
-
-                populateTable(data["NL 東地区"], document.getElementById("nl-east-body"));
-                populateTable(data["NL 中地区"], document.getElementById("nl-central-body"));
-                populateTable(data["NL 西地区"], document.getElementById("nl-west-body"));
-            })
-            .catch(error => console.error("Error loading standings:", error));
     });
+
+    document.getElementById("prevBtn").addEventListener("click", function () {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        updateSlide();
+    });
+
+    // スワイプ対応
+    let startX = 0;
+    wrapper.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    wrapper.addEventListener("touchend", (e) => {
+        let endX = e.changedTouches[0].clientX;
+        if (startX - endX > 50) { 
+            currentIndex = (currentIndex + 1) % slides.length;
+        } else if (endX - startX > 50) {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        }
+        updateSlide();
+    });
+
+    // 🚀 **データを取得して各地区のテーブルに挿入**
+    fetch("/api/dodgers/standings")
+        .then(response => response.json())
+        .then(data => {
+            function populateTable(data, tbody) {
+                data.forEach(team => {
+                    let row = document.createElement("tr");
+                    let trophy = team.rank === "1" ? "🏆" : "";
+                    let winPercentage = team.winPercentage !== null 
+                        ? parseFloat(team.winPercentage).toFixed(3) 
+                        : (team.wins / (team.wins + team.losses)).toFixed(3);
+
+                    row.innerHTML = `
+                        <td>${team.rank}️⃣ ${trophy}</td>
+                        <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> ${team.name}</td>
+                        <td>${team.wins}</td>
+                        <td>${team.losses}</td>
+                        <td>${winPercentage}</td>
+                        <td>${team.gamesBack}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // **各地区にデータを挿入**
+            const tableIds = {
+                "NL 東地区": "nl-east-body",
+                "NL 中地区": "nl-central-body",
+                "NL 西地区": "nl-west-body",
+                "AL 東地区": "al-east-body",
+                "AL 中地区": "al-central-body",
+                "AL 西地区": "al-west-body"
+            };
+
+            Object.entries(data).forEach(([key, value]) => {
+                let tableId = tableIds[key];
+                if (tableId) {
+                    let tbody = document.getElementById(tableId);
+                    if (tbody) {
+                        tbody.innerHTML = ""; // **前回のデータをクリア**
+                        populateTable(value, tbody);
+                    }
+                }
+            });
+        })
+        .catch(error => console.error("Error loading standings:", error));
+});
 </script>
+<!-- end MLB 地区別順位表 (スワイプ対応) -->
 
 
 
@@ -314,15 +284,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 <!--Start 動画セクション 2025-->
-    <div id="hoge-hoge_landing3" class="shiny-text-1">DodgerFest 2025: Shohei Ohtani interview</div>
-    <h5 class="shiny-text-1">今期のDodgerFestの動画です</h5>
-    <h5 class="shiny-text-1">消防署行った時と髪型が変わりましたね</h5>
-    <h5 class="shiny-text-1">順調そうで何よりです！</h5>
+    <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
+    <h5 class="shiny-text-1">【2.6現地速報】ドジャース･大谷</h5>
+    <h5 class="shiny-text-1"> 4日連続で自主トレ捕手を座らせて</h5>
+    <h5 class="shiny-text-1">7球の投球練習～ベースランニングまでみっちり</h5>
 
         <div class="douga-section_3">
-            <div id="hoge-hoge_3">大谷翔平インタビュー</div>
+            <div id="hoge-hoge_3">【2.6現地速報】ドジャース･大谷</div>
             <div id="douga-container-3">
-                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/R6VnEjtxti4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/_9KuVWhQZoE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 <!--End 動画セクション 2025-->
