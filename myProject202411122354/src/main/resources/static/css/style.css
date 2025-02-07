@@ -577,15 +577,17 @@ a:hover {
 }
 
 #tooltip-proud {
-    top: 278em;
+    top: 314em;
+    left: 12em;
 }
+
 #tooltip-chat {
-    top: 299em;
-    left: 9em;
+    top: 334em;
+    left: 5em;
 }
 #tooltip-link {
-    top: 326em;
-    left: 14em;
+    top: 362em;
+    left: 10em;
 }
 
 /* 閉じるボタン */
@@ -716,6 +718,77 @@ a:hover {
 }
 
 /* end======== ニュース/トピック/サイト最新情報 ======== */
+
+
+/* start======== MLB 地区別順位表 ======== */
+
+/* コンテナの基本設定 */
+.standings-container {
+    width: 50%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 各地区のスライドを独立させる */
+.standings-wrapper {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    width: 100%; /* 3スライド分 */
+}
+
+.standings-slide {
+    width: 100%;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+/* テーブルデザイン */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px auto;
+    font-size: 16px;
+    text-align: center;
+}
+
+.styled-table thead {
+    background-color: #003366;
+    color: white;
+}
+
+.styled-table th, .styled-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* ボタンデザイン */
+#prevBtn, #nextBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#prevBtn { left: 10px; }
+#nextBtn { right: 10px; }
+
+/* スマホ対応 */
+@media screen and (max-width: 768px) {
+    .styled-table {
+        font-size: 14px;
+    }
+}
+/* end ========  MLB 地区別順位表 ======== */
+
 
 
 
@@ -1076,15 +1149,17 @@ body {
 }
 
 #tooltip-proud {
-    top: 278em;
+    top: 314em;
+    left: 12em;
 }
+
 #tooltip-chat {
-    top: 299em;
-    left: 9em;
+    top: 334em;
+    left: 5em;
 }
 #tooltip-link {
-    top: 326em;
-    left: 14em;
+    top: 362em;
+    left: 10em;
 }
 
 /* 閉じるボタン */
@@ -1215,6 +1290,80 @@ body {
 
 
 /* end======== ニュース/トピック/サイト最新情報 ========768px */
+
+
+
+
+
+/* start======== MLB 地区別順位表(max-width: 768px) ======== */
+
+/* コンテナの基本設定 */
+.standings-container {
+    width: 94%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 各地区のスライドを独立させる */
+.standings-wrapper {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    width: 100%; /* 3スライド分 */
+}
+
+.standings-slide {
+    width: 100%;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+/* テーブルデザイン */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px auto;
+    font-size: 16px;
+    text-align: center;
+}
+
+.styled-table thead {
+    background-color: #003366;
+    color: white;
+}
+
+.styled-table th, .styled-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* ボタンデザイン */
+#prevBtn, #nextBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#prevBtn { left: 10px; }
+#nextBtn { right: 10px; }
+
+/* スマホ対応 */
+@media screen and (max-width: 768px) {
+    .styled-table {
+        font-size: 14px;
+    }
+}
+/* end ========  MLB 地区別順位表(max-width: 768px) ======== */
+
 
 
 
@@ -1655,15 +1804,16 @@ body {
 }
 
 #tooltip-proud {
-    top: 271em;
+    top: 314em;
     left: 12em;
 }
+
 #tooltip-chat {
-    top: 292em;
-    left: 4em;
+    top: 334em;
+    left: 5em;
 }
 #tooltip-link {
-    top: 320em;
+    top: 362em;
     left: 10em;
 }
 
@@ -1833,6 +1983,74 @@ body {
 
 
 
+/* start======== MLB 地区別順位表(max-width: 430px) ======== */
+
+/* コンテナの基本設定 */
+.standings-container {
+    width: 94%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 各地区のスライドを独立させる */
+.standings-wrapper {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    width: 100%; /* 3スライド分 */
+}
+
+.standings-slide {
+    width: 100%;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+/* テーブルデザイン */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px auto;
+    font-size: 16px;
+    text-align: center;
+}
+
+.styled-table thead {
+    background-color: #003366;
+    color: white;
+}
+
+.styled-table th, .styled-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* ボタンデザイン */
+#prevBtn, #nextBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#prevBtn { left: 10px; }
+#nextBtn { right: 10px; }
+
+/* スマホ対応 */
+@media screen and (max-width: 768px) {
+    .styled-table {
+        font-size: 14px;
+    }
+}
+/* end ========  MLB 地区別順位表(max-width: 430px) ======== */
 
 
 
