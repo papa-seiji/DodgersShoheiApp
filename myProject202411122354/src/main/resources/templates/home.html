@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     wrapper.addEventListener("touchend", (e) => {
         let endX = e.changedTouches[0].clientX;
-        if (startX - endX > 50) { 
+        if (startX - endX > 50) {
             currentIndex = (currentIndex + 1) % slides.length;
         } else if (endX - startX > 50) {
             currentIndex = (currentIndex - 1 + slides.length) % slides.length;
@@ -172,13 +172,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 data.forEach(team => {
                     let row = document.createElement("tr");
                     let trophy = team.rank === "1" ? "🏆" : "";
-                    let winPercentage = team.winPercentage !== null 
-                        ? parseFloat(team.winPercentage).toFixed(3) 
+                    let winPercentage = team.winPercentage !== null
+                        ? parseFloat(team.winPercentage).toFixed(3)
                         : (team.wins / (team.wins + team.losses)).toFixed(3);
 
+
+//<td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> となっていたがチーム名は一旦削除した。好きな時に戻せるようにコメントで残置！
                     row.innerHTML = `
                         <td>${team.rank}️⃣ ${trophy}</td>
-                        <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> ${team.name}</td>
+                        <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> </td>
                         <td>${team.wins}</td>
                         <td>${team.losses}</td>
                         <td>${winPercentage}</td>
