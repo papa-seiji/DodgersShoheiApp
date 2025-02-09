@@ -16,8 +16,7 @@ public class YosouService {
 
     // ✅ 投票データを登録（1人1票ルール）
     public void saveVote(MlbYosouData voteData) {
-        Optional<MlbYosouData> existing = yosouRepository.findByYosouTypeAndYosouValue(voteData.getYosouType(),
-                voteData.getYosouValue());
+        Optional<MlbYosouData> existing = yosouRepository.findByYosouTypeAndYosouValue(voteData.getYosouType(), voteData.getYosouValue());
 
         if (existing.isPresent()) {
             MlbYosouData data = existing.get();

@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #181818;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Sidebar を上部に持ってくる */
+.sidebar {
+    width: 100%;
+    background-color: #eee;
+    color: black;
+    padding: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 10px; /* メインコンテンツとの間隔を拡張 */
+}
+
+/* メインレイアウト */
+.dashboard {
+    width: 100%;
+    max-width: 1280px;
+}
+
+/* グリッドレイアウト */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+}
+
+/* ボックス共通デザイン */
+.box {
+    background-color: #2a2a2a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid #444;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* ホバー時のエフェクト */
+.box:hover {
+    transform: scale(1.03);
+    box-shadow: 0px 6px 14px rgba(255, 255, 255, 0.2);
+}
+
+/* ボックスサイズ */
+.box-wide { grid-column: span 2; height: 200px; }
+.box-small { grid-column: span 1; height: 120px; }
+.box-medium { grid-column: span 1; height: 160px; }
+
+/* 特定のボックスの調整 */
+#nl-west { height: 220px; } /* 西地区順位予想の高さ修正 */
+#homeruns { height: 220px; }  /* 本塁打予想 */
+#dodgers-wins { height: 160px; }  /* 勝利数予想 */
+#otani-bavg { height: 160px; }  /* 打率予想 */
+#otani-ops { height: 160px; }  /* OPS予想 */
+#otani-wins, #yamamoto-wins, #sasaki-wins { height: 160px; }  /* 投手勝ち星予想 */

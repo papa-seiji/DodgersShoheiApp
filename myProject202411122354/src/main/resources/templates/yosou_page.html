@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <th:block th:replace="fragments/header :: head ('yosou Page')"></th:block>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 予想ページ</title>
+    <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
+    <script th:src="@{/js/yosou_page.js}"></script> <!-- JavaScriptファイルを読み込む -->
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="sidebar">他画面遷移のリンクや説明書き ..etc..</div>
+        <div class="grid">
+            <div class="box box-wide" id="nl-west">1. 西地区順位予想<br>横棒グラフ</div>
+            <div class="box box-small" id="homeruns">3. 大谷翔平 本塁打予想<br>半円グラフ</div>
+            <div class="box box-small" id="otani-bavg">4. 大谷翔平 打率予想<br>3-D円グラフ</div>
+            <div class="box box-small" id="otani-ops">5. 大谷翔平 OPS予想<br>縦棒グラフ</div>
+            <div class="box box-medium" id="dodgers-wins">2. Dodgers勝利数予想<br>ドーナツグラフ</div>
+            <div class="box box-medium" id="otani-wins">6. 大谷翔平 投手勝ち星予想<br>複合グラフ</div>
+            <div class="box box-small" id="yamamoto-wins">7. 山本由伸 投手勝ち星予想<br>複合グラフ</div>
+            <div class="box box-small" id="sasaki-wins">8. 佐々木朗希 投手勝ち星予想<br>複合グラフ</div>
+        </div>
+    </div>
+</body>
+</html>
