@@ -74,3 +74,63 @@ body {
 #otani-bavg { height: 160px; }  /* 打率予想 */
 #otani-ops { height: 160px; }  /* OPS予想 */
 #otani-wins, #yamamoto-wins, #sasaki-wins { height: 160px; }  /* 投手勝ち星予想 */
+
+/* 📌 モーダルの基本スタイル */
+.modal {
+    /* display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center; */
+
+    display: none; /* 初期状態は非表示 */
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 📌 モーダルコンテンツ */
+.modal-content {
+    background-color: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+    position: relative;
+}
+
+/* 📌 モーダルを閉じるボタン */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* 📌 ボタンのデザイン */
+button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

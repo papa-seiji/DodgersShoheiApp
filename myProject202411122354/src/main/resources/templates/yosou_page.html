@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <th:block th:replace="fragments/header :: head ('yosou Page')"></th:block>
+    <th:block th:replace="~{fragments/header :: head ('yosou Page')}"></th:block>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025 予想ページ</title>
     <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
-    <script th:src="@{/js/yosou_page.js}"></script> <!-- JavaScriptファイルを読み込む -->
+    
+    <!-- ✅ 追加: 必要なライブラリ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="dashboard">
         <div class="sidebar">他画面遷移のリンクや説明書き ..etc..</div>
         <div class="grid">
-            <div class="box box-wide" id="nl-west">1. 西地区順位予想<br>横棒グラフ</div>
+            <!-- ✅ クリックでモーダルを開くように修正 -->
+            <div class="box box-wide" id="nl-west">
+                1. 西地区順位予想<br>横棒グラフ
+                <canvas id="nl-west-chart"></canvas> <!-- ✅ 追加 -->
+            </div>
             <div class="box box-small" id="homeruns">3. 大谷翔平 本塁打予想<br>半円グラフ</div>
             <div class="box box-small" id="otani-bavg">4. 大谷翔平 打率予想<br>3-D円グラフ</div>
             <div class="box box-small" id="otani-ops">5. 大谷翔平 OPS予想<br>縦棒グラフ</div>
@@ -23,5 +31,36 @@
             <div class="box box-small" id="sasaki-wins">8. 佐々木朗希 投手勝ち星予想<br>複合グラフ</div>
         </div>
     </div>
+
+    <!-- ✅ NL 西地区順位予想 モーダル -->
+    <div id="nl-west-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-nl-west" onclick="closeModal()">&times;</span>
+            <h2>NL 西地区 1位予想</h2>
+            <label>1つ目のチーム:
+                <select id="team-select-1">
+                    <option value="ドジャース">ドジャース</option>
+                    <option value="パドレス">パドレス</option>
+                    <option value="Dバックス">Dバックス</option>
+                    <option value="ジャイアンツ">ジャイアンツ</option>
+                    <option value="ロッキーズ">ロッキーズ</option>
+                </select>
+            </label>
+            <label>2つ目のチーム:
+                <select id="team-select-2">
+                    <option value="ドジャース">ドジャース</option>
+                    <option value="パドレス">パドレス</option>
+                    <option value="Dバックス">Dバックス</option>
+                    <option value="ジャイアンツ">ジャイアンツ</option>
+                    <option value="ロッキーズ">ロッキーズ</option>
+                </select>
+            </label>
+            <button id="confirm-nl-west">投票する</button>
+        </div>
+    </div>
+
+    <!-- ✅ `yosou_page.js` を最後に読み込む -->
+    <!--<script th:src="@{/js/yosou_page.js}"></script>-->
+    <script src="/js/yosou_page.js"></script>
 </body>
 </html>
