@@ -1,0 +1,80 @@
+/* ✅ 横並びを強制するコンテナ */
+.prediction-container {
+    display: flex;
+    flex-direction: row; /* 横並び */
+    justify-content: center; /* 中央寄せ */
+    gap: 10px; /* 予想カードの間隔 */
+    align-items: flex-start;
+    width: 100%; /* 画面いっぱいを使う */
+    flex-wrap: nowrap; /* 折り返しなし（横並びを強制） */
+    overflow-x: auto; /* 必要なら横スクロールを可能に */
+}
+
+/* ✅ 予想カード（NL西地区1位 & ドジャース勝利数） */
+.prediction-card, .prediction-card-dodgers {
+    flex: 1; /* 両方を均等に並べる */
+    min-width: 170px; /* 画面が小さくても崩れないように */
+    max-width: 250px; /* 大きすぎないように */
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* ✅ iPhone 13 でも横並びに固定 */
+@media screen and (max-width: 430px) {
+    .prediction-container {
+        display: flex;
+        flex-direction: row !important; /* 必ず横並び */
+        flex-wrap: nowrap !important; /* 折り返さない */
+        overflow-x: auto; /* 画面幅に収まらない場合は横スクロール */
+    }
+
+    .prediction-card, .prediction-card-dodgers {
+        width: 45%; /* 画面幅の半分に調整 */
+        min-width: 170px; /* 最小幅を設定 */
+        max-width: 250px; /* 収まりが良いサイズ */
+    }
+}
+
+/* ✅ Dodgers 勝利数予想のカード */
+.prediction-card-dodgers {
+    width: 300px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* ✅ Dodgers 勝利数予想 モーダル */
+.modal {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.modal-content {
+    text-align: center;
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* ✅ 円グラフのスタイル */
+#dodgers-wins-chart {
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto;
+}

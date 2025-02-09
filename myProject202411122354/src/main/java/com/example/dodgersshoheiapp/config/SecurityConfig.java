@@ -40,7 +40,8 @@ public class SecurityConfig {
                                 "/comments", "/links", "/auth/userinfo", "/api/visitorCounter/**", "/api/proud/**",
                                 "/proud", "/stats", "/api/stats", "/notifications/subscribe", "/notifications/send",
                                 "/icon.png", "/sw.js", "/notifications/**", "/subscriptions/**",
-                                "/notifications/comments", "/api/news", "/api/dodgers/standings", "/home")
+                                "/notifications/comments", "/api/news", "/api/dodgers/standings", "/yosou_page.html",
+                                "/home")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // 管理者専用エンドポイントを保護
                         .anyRequest().authenticated())

@@ -1,0 +1,153 @@
+/* ==================== 📜 メインレイアウト ==================== */
+/* ✅ 西地区予想とドジャース勝利数予想を横並びに */
+.prediction-wrapper {
+    display: flex;
+    flex-wrap: nowrap;  /* 横並びを維持 */
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px; /* カード同士の間隔 */
+}
+
+/* ✅ 西地区1位予想のコンテナ */
+.prediction-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    flex: 1; /* 🎯 幅を均等にする */
+}
+
+/* ✅ 西地区1位予想 カード */
+.prediction-card {
+    width: 202px;
+    padding: 5px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 8px;
+}
+
+/* 🎯 横棒グラフの高さを固定 */
+#nl-west-chart {
+    width: 100%;
+    height: 200px; /* 高さを制限 */
+    max-height: 200px; /* さらに最大高さを指定 */
+}
+
+
+
+
+/* ✅ ドジャース勝利数予想のレイアウト調整 */
+#dodgers-wins-container {
+    width: 300px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-left: 20px; /* 🔥 これを追加して右側配置 */
+}
+
+/* ✅ 円グラフのスタイル */
+#dodgers-wins-chart {
+    /* margin: 8px; */
+    display: block;
+    box-sizing: border-box;
+    height: 188px;
+    width: 188px;
+}
+
+#custom-legend{
+    display: flex;
+    background-color: rgb(66, 66, 66);
+    margin-top: 2px;
+    color: white;
+}
+
+
+
+
+/* ✅ ボタンのスタイル */
+.open-modal-btn {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 62px;
+    height: 21px;
+    font-size: 8px;
+}
+
+/* ✅ モーダル */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* ✅ レスポンシブ対応 */
+@media screen and (max-width: 768px) {
+    .prediction-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .prediction-card-dodgers{
+        height: 292px;
+        width: 231px;
+        background-color: rgb(66, 66, 66);
+        border-radius: 6px;
+    }
+
+    #dodgers-win-chart{
+        width: 100px;
+        margin: 8px
+    }
+
+    #dodgersnosyouriyosou{
+        font-size: 11px;
+        margin-top: 29px;
+        margin-right: 6px;
+        padding: 0px;
+        text-align: center;
+        color: white;
+    }
+
+    #dodgers-wins-container {
+        margin-left: 0; /* モバイル時は中央寄せ */
+    }
+
+}
+
+@media screen and (max-width: 430px) {
+    .prediction-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #dodgers-wins-container {
+        width: 100%;
+    }
+}

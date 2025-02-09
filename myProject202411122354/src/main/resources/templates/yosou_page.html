@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <th:block th:replace="fragments/header :: head ('yosou_page')"></th:block>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025予想 - NL西地区1位 & Dodgers 勝利数予想</title>
+    <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
+
+    <!-- WebSocket & SockJS ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+</head>
+<body>
+
+<!-- 🎯 両方の予想を横並びにするコンテナ -->
+<div class="prediction-container">
+
+    <!-- 🎯 2025 NL西地区 1位予想 -->
+    <section id="wrap_1" class="prediction-card">
+        <h2>🏆 2025 NL西地区 1位予想</h2>
+        <div class="prediction-result">
+            <div id="nl-west-result">未選択</div>
+            <button id="open-nl-west-modal">選択する</button>
+        </div>
+        <canvas id="nl-west-chart"></canvas>
+    </section>
+
+    <!-- 🎯 Dodgers 勝利数予想 -->
+    <section class="prediction-card-dodgers">
+        <h3 id="dodgersnosyouriyosou">ドジャースの勝利数予想</h3>
+        <button id="open-dodgers-wins-modal" class="open-modal-btn">選択する</button>
+        <!-- 🎯 Dodgers 勝利数予想 グラフ -->
+        <canvas id="dodgers-wins-chart"></canvas>
+
+        <!-- 🎯 カスタム凡例を表示するコンテナ -->
+        <div id="custom-legend"></div>
+
+    </section>
+
+</div>
+
+<!-- 🎯 NL西地区1位 モーダル -->
+<div id="nl-west-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-nl-west-modal" class="close">&times;</span>
+        <h3>NL西地区 1位を予想（最大2つまで）</h3>
+        <select id="team-select-1">
+            <option value="">選択なし</option>
+            <option value="119">ドジャース</option>
+            <option value="135">パドレス</option>
+            <option value="109">Dバックス</option>
+            <option value="137">ジャイアンツ</option>
+            <option value="115">ロッキーズ</option>
+        </select>
+        <select id="team-select-2">
+            <option value="">選択なし</option>
+            <option value="119">ドジャース</option>
+            <option value="135">パドレス</option>
+            <option value="109">Dバックス</option>
+            <option value="137">ジャイアンツ</option>
+            <option value="115">ロッキーズ</option>
+        </select>
+        <button id="confirm-nl-west">確定</button>
+    </div>
+</div>
+
+<!-- 🎯 Dodgers 勝利数予想 モーダル -->
+<div id="dodgers-wins-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-dodgers-wins-modal" class="close">&times;</span>
+        <h3>ドジャースの勝利数予想</h3>
+        <select id="dodgers-wins-select">
+            <option value="50">50W台</option>
+            <option value="60">60W台</option>
+            <option value="70">70W台</option>
+            <option value="80">80W台</option>
+            <option value="90">90W台</option>
+            <option value="100">100W以上</option>
+        </select>
+        <button id="confirm-dodgers-wins">確定</button>
+    </div>
+</div>
+
+<script src="/js/yosou_page.js"></script>
+<script src="/js/dodgers_wins.js"></script>
+
+</body>
+</html>
