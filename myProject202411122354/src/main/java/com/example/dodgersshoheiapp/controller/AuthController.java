@@ -1,10 +1,6 @@
 package com.example.dodgersshoheiapp.controller;
 
 import com.example.dodgersshoheiapp.service.UserService;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -21,16 +20,14 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    // 新規追加: / (ルート) エンドポイント
     @GetMapping("/")
     public String rootRedirect() {
-        // ルートへのアクセスは常にログイン画面にリダイレクト
         return "redirect:/auth/login";
     }
 
     @GetMapping("/signup")
     public String signupPage() {
-        return "signup"; // src/main/resources/templates/signup.html
+        return "signup";
     }
 
     @GetMapping("/login")
@@ -44,7 +41,7 @@ public class AuthController {
         if ("true".equals(logout)) {
             model.addAttribute("message", "ログアウトしました");
         }
-        return "login"; // login.htmlを表示
+        return "login";
     }
 
     @PostMapping("/signup")
@@ -52,20 +49,16 @@ public class AuthController {
         System.out.println("DEBUG: signup endpoint called with username: " + username);
 
         try {
-            // ユーザー名の重複チェック
             if (userService.isUsernameTaken(username)) {
-                model.addAttribute("message", "ユーザー名はすでに使用されています。別のユーザー名を選択してください");
-                return "signup"; // 登録ページに戻る
+                model.addAttribute("message", "ユーザー名はすでに使用されています。");
+                return "signup";
             }
-
-            // ユーザー登録処理
             userService.saveUser(username, password);
-
             model.addAttribute("message", "ユーザー登録完了！");
-            System.out.println("DEBUG: User successfully registered - username: " + username);
+            System.out.println("DEBUG: User registered - username: " + username);
             return "signup-success";
         } catch (Exception e) {
-            model.addAttribute("message", "予期しないエラーが発生しました。もう一度お試しください");
+            model.addAttribute("message", "エラーが発生しました。");
             e.printStackTrace();
             return "signup";
         }
@@ -73,7 +66,7 @@ public class AuthController {
 
     @GetMapping("/role")
     public ResponseEntity<Map<String, String>> getUserRole(Authentication authentication) {
-        System.out.println("DEBUG: /auth/role endpoint accessed");
+        System.out.println("DEBUG: /auth/role accessed");
 
         if (authentication == null || !authentication.isAuthenticated()) {
             System.out.println("DEBUG: Unauthorized access to /auth/role");
@@ -97,7 +90,6 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
         System.out.println("DEBUG: login endpoint called with username: " + username);
 
-        // ログイン処理を呼び出す
         boolean success = userService.authenticate(username, password);
 
         if (success) {
@@ -107,5 +99,19 @@ public class AuthController {
             System.out.println("DEBUG: Login failed for username: " + username);
             return ResponseEntity.status(401).body("Invalid username or password");
         }
+    }
+
+    // ✅ **追加: ログインユーザー情報を取得**
+    @GetMapping("/user")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> getAuthenticatedUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("username", authentication.getName());
+
+        return ResponseEntity.ok(response);
     }
 }
