@@ -34,4 +34,10 @@ public class HomeController {
         model.addAttribute("comments", commentService.getAllComments());
         return "home"; // "home.html" を表示
     }
+
+    // 🎯 `yosou_page.html` を表示するルートを追加
+    @GetMapping("/yosou")
+    public String showYosouPage() {
+        return "yosou_page"; // templates/yosou_page.html を表示
+    }
 }
