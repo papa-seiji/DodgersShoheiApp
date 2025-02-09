@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         stompClient.subscribe("/topic/yosou", (message) => {
             const data = JSON.parse(message.body);
             updateChart(data);
+            updatePreviousVote(data); // 🔥 ユーザーの投票情報を更新
         });
 
         // 🎯 初回データ取得（NL西1位）
@@ -39,8 +40,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modal = document.getElementById("nl-west-modal");
     const openButton = document.getElementById("nl-west");
     const closeButton = document.getElementById("close-nl-west");
+    const confirmButton = document.getElementById("confirm-nl-west");
+    const teamSelect1 = document.getElementById("team-select-1");
+    const teamSelect2 = document.getElementById("team-select-2");
 
-    if (!modal || !openButton || !closeButton) {
+    if (!modal || !openButton || !closeButton || !confirmButton || !teamSelect1 || !teamSelect2) {
         console.error("❌ モーダル要素が見つかりません！");
         return;
     }
@@ -49,6 +53,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     function openModal() {
         console.log("📢 モーダルを開く");
         modal.style.display = "block";
+
+        // 🎯 既存の投票情報をセット
+        if (previousVotes.length > 0) {
+            teamSelect1.value = previousVotes[0] || "";
+            teamSelect2.value = previousVotes[1] || "";
+        }
     }
 
     function closeModal() {
@@ -69,20 +79,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    let previousVotes = [];
+
     // ✅ 投票ボタンのクリックイベント
-    document.getElementById("confirm-nl-west").addEventListener("click", () => {
-        const selectedTeam1 = document.getElementById("team-select-1").value;
-        const selectedTeam2 = document.getElementById("team-select-2").value;
+    confirmButton.addEventListener("click", () => {
+        const selectedTeam1 = teamSelect1.value;
+        const selectedTeam2 = teamSelect2.value;
 
         if (!selectedTeam1 && !selectedTeam2) {
             alert("チームを選択してください");
             return;
         }
 
-        if (selectedTeam1) sendVote("NL_WEST_1位", selectedTeam1, username);
-        if (selectedTeam2) sendVote("NL_WEST_1位", selectedTeam2, username);
+        // 🎯 既に2チーム投票済みの場合、新規投票できない
+        if (previousVotes.length >= 2) {
+            alert(`⚠️ あなたは既に「${previousVotes.join(" & ")}」に投票しています！`);
+            return;
+        }
 
-        closeModal(); // 🎯 投票後モーダルを閉じる
+        // 🎯 2チーム以上の投票は不可
+        if (selectedTeam1 === selectedTeam2) {
+            alert("同じチームを2回選択できません");
+            return;
+        }
+
+        if (selectedTeam1 && !previousVotes.includes(selectedTeam1)) {
+            sendVote("NL_WEST_1位", selectedTeam1, username);
+        }
+        if (selectedTeam2 && !previousVotes.includes(selectedTeam2)) {
+            sendVote("NL_WEST_1位", selectedTeam2, username);
+        }
+
+        closeModal();
     });
 
     // ✅ 投票データを送信
@@ -98,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
         .then(response => {
             if (!response.ok) throw new Error("サーバーエラー: " + response.status);
-            return response.text();  // 文字列で処理し、エラーを防ぐ
+            return response.text();
         })
         .then(data => {
             console.log("✅ 投票成功:", data);
@@ -114,8 +142,36 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (!response.ok) throw new Error("サーバーエラー: " + response.status);
                 return response.json();
             })
-            .then(data => updateChart(data))
-            .catch(error => console.error("❌ データ取得エラー:", error));
+            .then(data => {
+                console.log("📊 予想データ取得成功:", data);
+                updateChart(data);
+                updatePreviousVote(data);
+            })
+            .catch(error => {
+                console.error("❌ データ取得エラー:", error);
+                alert(`データ取得に失敗しました: ${error.message}`);
+            });
+    }
+
+    // ✅ 投票済み情報の更新
+    function updatePreviousVote(yosouData) {
+        if (!yosouData || !Array.isArray(yosouData)) return;
+
+        previousVotes = [];
+
+        for (const item of yosouData) {
+            if (item.votedBy.includes(username)) {
+                previousVotes.push(item.yosouValue);
+            }
+        }
+
+        const voteInfo = document.getElementById("vote-info");
+        if (voteInfo) {
+            voteInfo.innerHTML = previousVotes.length > 0
+                ? `✅ あなたの投票: <strong>${previousVotes.join(" & ")}</strong>`
+                : "❌ まだ投票していません";
+            voteInfo.style.color = previousVotes.length > 0 ? "green" : "red";
+        }
     }
 
     // ✅ グラフの更新
