@@ -6,6 +6,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     let currentUser = "ゲスト";
     let currentVote = null;
 
+    // ✅ WebSocket 接続
+    const socket = new SockJS("/ws");
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, () => {
+        console.log("🔗 WebSocket 接続成功");
+
+        // ✅ 投票データをリアルタイム受信
+        stompClient.subscribe("/topic/yosou", (message) => {
+            console.log("📩 リアルタイム更新:", JSON.parse(message.body));
+            fetchYosouData(); // ✅ グラフを更新
+        });
+    });
+
     // ✅ 現在のログインユーザーを取得
     async function fetchCurrentUser() {
         try {
@@ -33,11 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // ✅ モーダルに既存の投票情報を表示
             const voteMessage = document.getElementById("vote-message");
-            if (currentVote) {
-                voteMessage.innerText = `現在の投票: ${currentVote.yosouValue}`;
-            } else {
-                voteMessage.innerText = "未投票";
-            }
+            voteMessage.innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
 
             // ✅ グラフを更新
             updateChart(data);
@@ -48,26 +58,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function sendVote(yosouValue) {
         try {
-            // ✅ 投票前の確認ダイアログ
             let confirmMessage = currentVote
                 ? `現在「${currentVote.yosouValue}」に投票済です。\n「${yosouValue}」に変更しますか？`
                 : `「${yosouValue}」で投票していいですか？`;
 
             if (!confirm(confirmMessage)) return;
 
-            const response = await fetch("/api/yosou/vote", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ yosouType, yosouValue, votedBy: currentUser })
-            });
+            const voteData = { yosouType, yosouValue, votedBy: currentUser };
 
-            if (!response.ok) throw new Error("投票エラー: " + response.status);
+            // ✅ WebSocket 経由でサーバーに送信
+            stompClient.send("/app/vote", {}, JSON.stringify(voteData));
 
             alert(`✅ 「${yosouValue}」に投票しました！`);
+
             closeModal();
-            fetchYosouData();
         } catch (error) {
-            alert("❌ 投票が失敗しました。");
+            alert("❌ 投票に失敗しました。");
             console.error("❌ 投票エラー:", error);
         }
     }
@@ -118,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         display: true,
                         position: "top",
                         labels: {
-                            color: "white" // ✅ 凡例のフォントカラーを白に
+                            color: "white" // ✅ フォントカラーを白に
                         }
                     }
                 },
@@ -148,7 +154,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    
     // ✅ モーダル処理
     const modal = document.getElementById("vote-modal");
     const modalSelect = document.getElementById("team-select");
@@ -156,12 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function openModal() {
         modal.style.display = "block";
-
-        if (currentVote) {
-            document.getElementById("vote-message").innerText = `現在の投票: ${currentVote.yosouValue}`;
-        } else {
-            document.getElementById("vote-message").innerText = "未投票";
-        }
+        document.getElementById("vote-message").innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
     }
 
     function closeModal() {
