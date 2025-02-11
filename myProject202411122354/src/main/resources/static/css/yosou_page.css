@@ -12,7 +12,7 @@ body {
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 3px;
 }
 
 /* Sidebar を上部に持ってくる */
@@ -63,14 +63,33 @@ body {
 }
 
 /* ボックスサイズ */
-.box-wide { grid-column: span 2; height: 200px; }
+.box-wide {
+    grid-column: span 2;
+    height: 200px;
+
+    display: flex;
+    flex-direction: column; /* ✅ 縦方向に並べる */
+    justify-content: flex-start; /* ✅ 上部寄せ */
+    align-items: center; /* ✅ 中央寄せ */
+    padding: 10px;
+
+}
 .box-small { grid-column: span 1; height: 120px; }
 .box-medium { grid-column: span 1; height: 160px; }
 
 /* 特定のボックスの調整 */
-#nl-west { height: 220px; } /* 西地区順位予想の高さ修正 */
+#nl-west {
+    /* height: 220px; */
+    height: 100%;
+    font-size: 13px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px; /* ✅ グラフとの間に余白 */
+    width: 100%; /* ✅ 幅を全体に */
+     } /* 西地区順位予想の高さ修正 */
+
 #chart-nl-west {
-    width: 80% !important;
+    width: 96% !important;
     height: auto !important;
     max-height: 220px; /* ✅ グラフの高さを調整 */
 }

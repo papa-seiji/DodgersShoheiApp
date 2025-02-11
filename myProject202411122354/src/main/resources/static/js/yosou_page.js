@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     backgroundColor: colors,
                     borderColor: colors.map(c => c.replace("0.8", "1")),
                     borderWidth: 1,
-                    barThickness: 40
+                    barThickness: 4
                 }]
             },
             options: {
@@ -128,6 +128,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         }
                     }
                 },
+
+                
                 scales: {
                     x: {
                         beginAtZero: true,
