@@ -69,6 +69,58 @@ body {
 
 /* 特定のボックスの調整 */
 #nl-west { height: 220px; } /* 西地区順位予想の高さ修正 */
+#chart-nl-west {
+    width: 80% !important;
+    height: auto !important;
+    max-height: 220px; /* ✅ グラフの高さを調整 */
+}
+
+/* モーダルのスタイル */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    margin: 15% auto;
+    text-align: center;
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005f73;
+}
+
 #homeruns { height: 220px; }  /* 本塁打予想 */
 #dodgers-wins { height: 160px; }  /* 勝利数予想 */
 #otani-bavg { height: 160px; }  /* 打率予想 */
