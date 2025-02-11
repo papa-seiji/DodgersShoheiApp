@@ -1,29 +1,37 @@
 package com.example.dodgersshoheiapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "mlb_yosou_datas")
+@JsonIgnoreProperties(ignoreUnknown = true) // ✅ JSON に含まれていても無視
 public class MlbYosouData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // ✅ 修正: GenerationType.IDENTITY
     private Long id;
 
-    @Column(nullable = false)
-    private String yosouType; // 予想の種類 (例: NL_WEST_1位)
+    @JsonProperty("yosouType") // ✅ JSON のキー名を明示
+    @Column(name = "yosou_type")
+    private String yosouType;
 
-    @Column(nullable = false)
-    private String yosouValue; // 予想内容 (例: ドジャース)
+    @JsonProperty("yosouValue")
+    @Column(name = "yosou_value")
+    private String yosouValue;
 
-    @Column(nullable = false)
-    private String votedBy; // 投票したユーザー
+    @JsonProperty("votedBy")
+    @Column(name = "voted_by")
+    private String votedBy;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(); // 作成日時
+    @JsonProperty("createdAt")
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ✅ Getter メソッド
+    // ✅ Getter & Setter
     public Long getId() {
         return id;
     }
@@ -44,7 +52,6 @@ public class MlbYosouData {
         return createdAt;
     }
 
-    // ✅ Setter メソッド
     public void setId(Long id) {
         this.id = id;
     }
