@@ -28,19 +28,20 @@
     </div>
 
     <!-- ✅ モーダル追加 -->
-    <div id="vote-modal" class="modal">
-        <div class="modal-content">
-            <span id="close-modal" class="close">&times;</span>
-            <h2>投票するチームを選択</h2>
-            <select id="team-select">
-                <option value="ドジャース">ドジャース</option>
-                <option value="パドレス">パドレス</option>
-                <option value="Dバックス">Dバックス</option>
-                <option value="ジャイアンツ">ジャイアンツ</option>
-                <option value="ロッキーズ">ロッキーズ</option>
-            </select>
-            <button id="vote-button">投票</button>
-        </div>
+<div id="vote-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+        <h3>投票するチームを選択</h3>
+        <p id="vote-message">現在の投票: なし</p> <!-- ★ ここに現在の投票を表示 -->
+        <select id="team-select">
+            <option value="ドジャース">ドジャース</option>
+            <option value="パドレス">パドレス</option>
+            <option value="Dバックス">Dバックス</option>
+            <option value="ジャイアンツ">ジャイアンツ</option>
+            <option value="ロッキーズ">ロッキーズ</option>
+        </select>
+        <button id="vote-button">投票</button>
     </div>
+</div>
     </body>
 </html>
