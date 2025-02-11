@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const yosouType = "NL_WEST_yuusho";
     let chartInstance = null;
-    let currentUser = "ゲスト"; // ✅ デフォルト値
+    let currentUser = "ゲスト";
+    let currentVote = null;
 
     // ✅ 現在のログインユーザーを取得
     async function fetchCurrentUser() {
@@ -18,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // ✅ 予想データを取得
     async function fetchYosouData() {
         try {
             const response = await fetch(`/api/yosou/data?yosouType=${encodeURIComponent(yosouType)}`);
@@ -25,7 +27,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
             console.log("📊 予想データ取得成功:", data);
 
-            // ✅ 横棒グラフを更新
+            // ✅ 現在のユーザーの投票を取得
+            currentVote = data.find(vote => vote.votedBy === currentUser) || null;
+            console.log("✅ 現在の投票データ:", currentVote);
+
+            // ✅ モーダルに既存の投票情報を表示
+            if (currentVote) {
+                document.getElementById("vote-message").innerText = `現在の投票: ${currentVote.yosouValue}`;
+            } else {
+                document.getElementById("vote-message").innerText = "未投票";
+            }
+
+            // ✅ グラフを更新
             updateChart(data);
         } catch (error) {
             console.error("❌ データ取得エラー:", error);
@@ -37,12 +50,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const response = await fetch("/api/yosou/vote", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ yosouType, yosouValue, votedBy: currentUser }) // ✅ ユーザー名を送信
+                body: JSON.stringify({ yosouType, yosouValue, votedBy: currentUser })
             });
             if (!response.ok) throw new Error("投票エラー: " + response.status);
             console.log("✅ 投票成功");
-            closeModal(); // ✅ 投票後にモーダルを閉じる
-            fetchYosouData(); // ✅ 投票後にグラフ更新
+
+            closeModal();
+            fetchYosouData();
         } catch (error) {
             console.error("❌ 投票エラー:", error);
         }
@@ -50,11 +64,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ✅ チームごとに色を設定
     const teamColors = {
-        "ドジャース": "rgba(0, 85, 165, 0.8)",   // ドジャーブルー
-        "パドレス": "rgba(189, 155, 96, 0.8)",  // パドレスブラウン
-        "Dバックス": "rgba(167, 25, 48, 0.8)",  // Dバックスレッド
-        "ジャイアンツ": "rgba(235, 97, 35, 0.8)", // ジャイアンツオレンジ
-        "ロッキーズ": "rgba(70, 70, 150, 0.8)" // ロッキーズパープル
+        "ドジャース": "rgba(0, 85, 165, 0.8)",
+        "パドレス": "rgba(189, 155, 96, 0.8)",
+        "Dバックス": "rgba(167, 25, 48, 0.8)",
+        "ジャイアンツ": "rgba(235, 97, 35, 0.8)",
+        "ロッキーズ": "rgba(70, 70, 150, 0.8)"
     };
 
     function updateChart(data) {
@@ -113,6 +127,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function openModal() {
         modal.style.display = "block";
+
+        if (currentVote) {
+            document.getElementById("vote-message").innerText = `現在の投票: ${currentVote.yosouValue}`;
+        } else {
+            document.getElementById("vote-message").innerText = "未投票";
+        }
     }
 
     function closeModal() {
@@ -129,6 +149,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    await fetchCurrentUser(); // ✅ ユーザー情報を先に取得
+    await fetchCurrentUser();
     fetchYosouData();
 });

@@ -2,18 +2,17 @@ package com.example.dodgersshoheiapp.repository;
 
 import com.example.dodgersshoheiapp.model.MlbYosouData;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface YosouRepository extends JpaRepository<MlbYosouData, Long> {
 
-    // ✅ 予想タイプ & 予想値で検索（1人1票ルール用）
-    Optional<MlbYosouData> findByYosouTypeAndYosouValue(String yosouType, String yosouValue);
+    // ✅ 指定した `yosouType` に属するデータをすべて取得
+    List<MlbYosouData> findByYosouType(String yosouType);
 
-    // ✅ 修正: 明示的な JPQL クエリを追加
-    @Query("SELECT y FROM MlbYosouData y WHERE y.yosouType = :yosouType")
-    List<MlbYosouData> findByYosouType(@Param("yosouType") String yosouType);
+    // ✅ 特定の `yosouType` で、指定した `votedBy`（ユーザー）の投票データを取得
+    Optional<MlbYosouData> findTopByYosouTypeAndVotedByOrderByCreatedAtDesc(String yosouType, String votedBy);
 }

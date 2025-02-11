@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class YosouController {
@@ -44,7 +45,7 @@ public class YosouController {
             return ResponseEntity.ok(response);
         }
 
-        // ✅ 投票データを登録
+        // ✅ 投票データを登録・更新
         @PostMapping("/vote")
         public ResponseEntity<Map<String, String>> saveVote(@RequestBody MlbYosouData voteData) {
             System.out.println("📝 投票データ受信: " + voteData);
@@ -55,20 +56,22 @@ public class YosouController {
             return ResponseEntity.ok(response);
         }
 
-        // ✅ 予想データを取得（クエリパラメータを利用）
+        // ✅ 予想データを取得
         @GetMapping("/data")
         public ResponseEntity<List<MlbYosouData>> getYosou(@RequestParam String yosouType) {
-            System.out.println("🔍 予想データ取得リクエスト受信: " + yosouType);
             List<MlbYosouData> yosouList = yosouService.getYosouByType(yosouType);
-
-            // ✅ 取得したデータをログ出力
-            System.out.println("✅ 取得データのサイズ: " + yosouList.size());
-            for (MlbYosouData data : yosouList) {
-                System.out.println(
-                        "✅ データ: " + data.getYosouType() + ", " + data.getYosouValue() + ", " + data.getVotedBy());
-            }
-
             return ResponseEntity.ok(yosouList);
+        }
+
+        // ✅ ユーザーの現在の投票情報を取得
+        @GetMapping("/user-vote")
+        public ResponseEntity<MlbYosouData> getUserVote(
+                @RequestParam String yosouType,
+                @RequestParam String votedBy) {
+
+            Optional<MlbYosouData> vote = yosouService.getUserVote(yosouType, votedBy);
+            return vote.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.ok(null));
         }
     }
 }

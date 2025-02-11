@@ -1,37 +1,29 @@
 package com.example.dodgersshoheiapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "mlb_yosou_datas")
-@JsonIgnoreProperties(ignoreUnknown = true) // ✅ JSON に含まれていても無視
 public class MlbYosouData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ✅ 修正: GenerationType.IDENTITY
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonProperty("yosouType") // ✅ JSON のキー名を明示
-    @Column(name = "yosou_type")
+    @Column(nullable = false)
     private String yosouType;
 
-    @JsonProperty("yosouValue")
-    @Column(name = "yosou_value")
+    @Column(nullable = false)
     private String yosouValue;
 
-    @JsonProperty("votedBy")
-    @Column(name = "voted_by")
+    @Column(nullable = false)
     private String votedBy;
 
-    @JsonProperty("createdAt")
-    @Column(name = "created_at", updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ✅ Getter & Setter
+    // ✅ Getter メソッドを追加（Lombok なし）
     public Long getId() {
         return id;
     }
@@ -52,10 +44,7 @@ public class MlbYosouData {
         return createdAt;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // ✅ Setter メソッド（必要なら追加）
     public void setYosouType(String yosouType) {
         this.yosouType = yosouType;
     }
@@ -66,9 +55,5 @@ public class MlbYosouData {
 
     public void setVotedBy(String votedBy) {
         this.votedBy = votedBy;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
