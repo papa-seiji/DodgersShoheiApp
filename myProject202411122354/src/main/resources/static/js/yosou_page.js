@@ -116,20 +116,39 @@ document.addEventListener("DOMContentLoaded", async () => {
                 plugins: {
                     legend: {
                         display: true,
-                        position: "top"
+                        position: "top",
+                        labels: {
+                            color: "white" // ✅ 凡例のフォントカラーを白に
+                        }
                     }
                 },
                 scales: {
                     x: {
                         beginAtZero: true,
                         max: Math.max(...values) + 2,
-                        ticks: { font: { size: 14 } }
+                        ticks: {
+                            font: { size: 14 },
+                            color: "white" // ✅ X軸ラベルを白に
+                        },
+                        grid: {
+                            color: "rgba(255, 255, 255, 0.2)" // ✅ X軸のグリッド線を薄い白に
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: { size: 14 },
+                            color: "white" // ✅ Y軸ラベルを白に
+                        },
+                        grid: {
+                            color: "rgba(255, 255, 255, 0.2)" // ✅ Y軸のグリッド線を薄い白に
+                        }
                     }
                 }
             }
         });
     }
 
+    
     // ✅ モーダル処理
     const modal = document.getElementById("vote-modal");
     const modalSelect = document.getElementById("team-select");
