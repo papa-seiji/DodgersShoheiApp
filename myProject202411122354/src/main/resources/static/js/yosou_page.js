@@ -32,10 +32,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("✅ 現在の投票データ:", currentVote);
 
             // ✅ モーダルに既存の投票情報を表示
+            const voteMessage = document.getElementById("vote-message");
             if (currentVote) {
-                document.getElementById("vote-message").innerText = `現在の投票: ${currentVote.yosouValue}`;
+                voteMessage.innerText = `現在の投票: ${currentVote.yosouValue}`;
             } else {
-                document.getElementById("vote-message").innerText = "未投票";
+                voteMessage.innerText = "未投票";
             }
 
             // ✅ グラフを更新
@@ -47,17 +48,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function sendVote(yosouValue) {
         try {
+            // ✅ 投票前の確認ダイアログ
+            let confirmMessage = currentVote
+                ? `現在「${currentVote.yosouValue}」に投票済です。\n「${yosouValue}」に変更しますか？`
+                : `「${yosouValue}」で投票していいですか？`;
+
+            if (!confirm(confirmMessage)) return;
+
             const response = await fetch("/api/yosou/vote", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ yosouType, yosouValue, votedBy: currentUser })
             });
-            if (!response.ok) throw new Error("投票エラー: " + response.status);
-            console.log("✅ 投票成功");
 
+            if (!response.ok) throw new Error("投票エラー: " + response.status);
+
+            alert(`✅ 「${yosouValue}」に投票しました！`);
             closeModal();
             fetchYosouData();
         } catch (error) {
+            alert("❌ 投票が失敗しました。");
             console.error("❌ 投票エラー:", error);
         }
     }
