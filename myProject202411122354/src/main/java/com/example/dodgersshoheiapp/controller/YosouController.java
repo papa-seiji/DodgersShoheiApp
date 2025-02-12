@@ -73,5 +73,12 @@ public class YosouController {
             return vote.map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.ok(null));
         }
+
+        // ✅ データがOTANI_HR取得
+        @GetMapping("/api/yosou/data")
+        public List<MlbYosouData> getYosouData(@RequestParam String yosouType) {
+            return yosouService.getYosouDataByType(yosouType);
+        }
+
     }
 }

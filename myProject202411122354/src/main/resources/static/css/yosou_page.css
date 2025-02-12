@@ -74,7 +74,32 @@ body {
     padding: 10px;
 
 }
-.box-small { grid-column: span 1; height: 120px; }
+/* .box-small { grid-column: span 1; height: 265px; } */
+
+.box-small {
+    grid-column: span 1;
+    height: 265px;
+    display: flex;
+    justify-content: center;  /* ✅ 中央寄せ */
+    align-items: center;
+}
+
+#otani-hr {
+    height: 264px;  /* ✅ 高さを固定 */
+    width: 411px;   /* ✅ 横幅を固定 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;  /* ✅ 中央寄せ */
+    padding-left: 20px;  /* ✅ 必要に応じて右にずらす */
+}
+
+
+#chart-otani-hr {
+    max-width: 100%; /* ✅ 親要素に合わせる */
+    max-height: 91%;
+}
+
 .box-medium { grid-column: span 1; height: 160px; }
 
 /* 特定のボックスの調整 */
@@ -140,7 +165,10 @@ button:hover {
     background-color: #005f73;
 }
 
-#homeruns { height: 264px; }  /* 本塁打予想 */
+/*#otani-hr { height: 264px; }   本塁打予想 */
+
+
+
 #dodgers-wins { height: 160px; }  /* 勝利数予想 */
 #otani-bavg { height: 160px; }  /* 打率予想 */
 #otani-ops { height: 160px; }  /* OPS予想 */

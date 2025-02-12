@@ -44,4 +44,9 @@ public class YosouService {
     public Optional<MlbYosouData> getUserVote(String yosouType, String votedBy) {
         return yosouRepository.findTopByYosouTypeAndVotedByOrderByCreatedAtDesc(yosouType, votedBy);
     }
+
+    public List<MlbYosouData> getYosouDataByType(String yosouType) {
+        return yosouRepository.findByYosouType(yosouType);
+    }
+
 }
