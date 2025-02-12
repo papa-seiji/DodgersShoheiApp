@@ -15,4 +15,5 @@ public interface YosouRepository extends JpaRepository<MlbYosouData, Long> {
 
     // ✅ 特定の `yosouType` で、指定した `votedBy`（ユーザー）の投票データを取得
     Optional<MlbYosouData> findTopByYosouTypeAndVotedByOrderByCreatedAtDesc(String yosouType, String votedBy);
+
 }

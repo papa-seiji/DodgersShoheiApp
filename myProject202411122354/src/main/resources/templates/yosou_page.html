@@ -12,6 +12,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
     <script th:src="@{/js/yosou_page.js}"></script>
+    <script th:src="@{/js/yosou_page_otani_hr.js}"></script>
+
 </head>
 
 <body>
@@ -28,7 +30,11 @@
             <div class="box box-wide" id="nl-west">西地区1位予想<br>
                 <canvas id="chart-nl-west" width="400" height="350"></canvas> <!-- ✅ グラフ描画用のキャンバス -->
             </div>
-            <div class="box box-small" id="homeruns">3. 大谷翔平 本塁打予想<br>半円グラフ</div>
+
+            <div class="box box-small" id="otani-hr">翔平HR予想<br>
+                <canvas id="chart-otani-hr"></canvas> <!-- ✅ グラフ描画用のキャンバス -->
+            </div>
+
             <div class="box box-small" id="otani-bavg">4. 大谷翔平 打率予想<br>3-D円グラフ</div>
             <div class="box box-small" id="otani-ops">5. 大谷翔平 OPS予想<br>縦棒グラフ</div>
             <div class="box box-medium" id="dodgers-wins">2. Dodgers勝利数予想<br>ドーナツグラフ</div>
@@ -54,5 +60,24 @@
         <button id="vote-button">投票</button>
     </div>
 </div>
+
+<div id="vote-modal-hr" class="modal">
+    <div class="modal-content">
+        <span id="close-modal-hr" class="close">&times;</span>
+        <h2>本塁打数を選択</h2>
+        <p id="vote-message-hr">未投票</p>
+        <select id="team-select-hr">
+            <option value="10本台">10本台</option>
+            <option value="20本台">20本台</option>
+            <option value="30本台">30本台</option>
+            <option value="40本台">40本台</option>
+            <option value="50本台">50本台</option>
+            <option value="60本台">60本台</option>
+            <option value="70本台">70本台</option>
+        </select>
+        <button id="vote-button-hr">投票</button>
+    </div>
+</div>
+
     </body>
 </html>
