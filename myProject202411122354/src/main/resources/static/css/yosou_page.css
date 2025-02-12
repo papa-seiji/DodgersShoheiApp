@@ -76,29 +76,83 @@ body {
 }
 /* .box-small { grid-column: span 1; height: 265px; } */
 
-.box-small {
+/* .box-small {
     grid-column: span 1;
     height: 265px;
     display: flex;
-    justify-content: center;  /* ✅ 中央寄せ */
+    justify-content: center;
     align-items: center;
 }
 
 #otani-hr {
-    height: 264px;  /* ✅ 高さを固定 */
-    width: 411px;   /* ✅ 横幅を固定 */
+    height: 264px;
+    width: 411px; 
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;  /* ✅ 中央寄せ */
-    padding-left: 20px;  /* ✅ 必要に応じて右にずらす */
+    text-align: center; 
+    padding-left: 20px;
 }
 
 
 #chart-otani-hr {
-    max-width: 100%; /* ✅ 親要素に合わせる */
+    max-width: 100%;
+    max-height: 91%;
+} */
+
+
+
+
+
+.box-small {
+    grid-column: span 1;
+    height: 265px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;  /* ✅ 幅を全体に広げる（固定幅を回避） */
+    max-width: 100%; /* ✅ 画面サイズに応じたスケール */
+}
+
+#otani-hr {
+    height: 264px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column; /* ✅ 縦方向に整列 */
+    align-items: center; /* ✅ 水平方向の中央寄せ */
+    justify-content: center; /* ✅ 垂直方向の中央寄せ */
+    text-align: center;
+    padding-left: 0; /* ✅ 余分なずれを解消 */
+}
+
+#chart-otani-hr {
+    max-width: 100%;
+    height: auto;  /* ✅ 高さを自動調整 */
     max-height: 91%;
 }
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+}
+
+.dodgers-logo {
+    position: absolute;
+    width: 32px;
+    height: auto;
+    top: 31%;
+    left: 52%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+
+
+
 
 .box-medium { grid-column: span 1; height: 160px; }
 
