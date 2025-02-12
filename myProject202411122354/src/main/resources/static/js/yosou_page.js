@@ -136,7 +136,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         max: Math.max(...values) + 2,
                         ticks: {
                             font: { size: 14 },
-                            color: "white" // ✅ X軸ラベルを白に
+                            color: "white", // ✅ X軸ラベルを白に
+                            stepSize: 1 // ✅ 整数のみ表示 (1,2,3,...)
                         },
                         grid: {
                             color: "rgba(255, 255, 255, 0.2)" // ✅ X軸のグリッド線を薄い白に
