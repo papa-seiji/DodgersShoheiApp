@@ -84,61 +84,82 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function updateChart(data) {
-        const counts = {};
-        data.forEach(item => {
-            counts[item.yosouValue] = (counts[item.yosouValue] || 0) + 1;
-        });
-    
-        const labels = Object.keys(counts);
-        const values = Object.values(counts);
-        const colors = ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9966FF", "#FF4500", "#FFD700"];
-    
-        const ctx = document.getElementById("chart-otani-hr").getContext("2d");
-    
-        if (chartInstance) {
-            chartInstance.destroy();
-        }
-    
-        chartInstance = new Chart(ctx, {
-            type: "doughnut",  // ✅ ドーナツ円グラフに変更
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: values,
-                    backgroundColor: colors
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,  // ✅ aspectRatioを無効化（CSSサイズを維持）
-                cutout: "60%",  // ✅ 内部の空洞を適切なサイズに調整
-                plugins: {
-                    legend: {
-                        position: "bottom",
-                        labels: { color: "white",
-                            font: {
-                                size: 12   // ✅ ここを変更して凡例のサイズを調整
-                            },
-                            boxWidth: 9,  // ✅ ここを調整（デフォルトは40）
-                            padding: 10  // ✅ カラーバーと円グラフの間隔を広げる
-                        }
-                    },
-                    datalabels: {
+
+
+function updateChart(data) {
+    const counts = {};
+    data.forEach(item => {
+        counts[item.yosouValue] = (counts[item.yosouValue] || 0) + 1;
+    });
+
+    const labels = Object.keys(counts);
+    const values = Object.values(counts);
+    const colors = ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9966FF", "#FF4500", "#FFD700"];
+
+    const ctx = document.getElementById("chart-otani-hr").getContext("2d");
+
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
+    chartInstance = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,  // ✅ CSSサイズを優先
+            cutout: "55%",  // ✅ 内部の穴を少し大きく調整
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: {
                         color: "white",
-                        anchor: "end",
-                        align: "end",
-                        formatter: (value, ctx) => {
-                            let sum = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            let percentage = (value * 100 / sum).toFixed(1) + "%";
-                            return percentage;
-                        }
+                        font: { size: 12 },  // ✅ 凡例のフォントサイズ
+                        boxWidth: 9,  // ✅ カラーバーのサイズ調整
+                        padding: 10  // ✅ 凡例とグラフの間隔
+                    }
+                },
+                datalabels: {
+                    color: "white",
+                    anchor: "end",
+                    align: "end",
+                    formatter: (value, ctx) => {
+                        let sum = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                        let percentage = (value * 100 / sum).toFixed(1) + "%";
+                        return percentage;
                     }
                 }
+            },
+            animation: {
+                onComplete: function () {
+                    drawDodgersLogo();  // ✅ グラフ描画完了時にロゴを中央に描画
+                }
             }
-        });
-    }
+        }
+    });
+
+    // ✅ **ロゴを中央に適切なサイズで描画する関数**
+    function drawDodgersLogo() {
+        const centerX = ctx.canvas.width / 2;
+        const centerY = ctx.canvas.height / 2;
+        const imageSize = 70;  // ✅ ロゴのサイズ（適宜調整）
     
+        const img = new Image();
+        img.src = "https://www.mlbstatic.com/team-logos/119.svg";  // ✅ ドジャースのロゴ
+        img.onload = function () {
+            const offsetX = 25;  // ✅ 右に寄せるオフセット値（適宜調整）
+            const offsetY = 15;  // ✅ 上にずらすオフセット値（適宜調整）
+            ctx.drawImage(img, centerX - imageSize / 2 + offsetX, centerY - imageSize / 2, imageSize, imageSize);
+        };
+    }
+}
+        
 
 
 
