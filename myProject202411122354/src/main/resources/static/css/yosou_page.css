@@ -140,7 +140,7 @@ button:hover {
     background-color: #005f73;
 }
 
-#homeruns { height: 220px; }  /* 本塁打予想 */
+#homeruns { height: 264px; }  /* 本塁打予想 */
 #dodgers-wins { height: 160px; }  /* 勝利数予想 */
 #otani-bavg { height: 160px; }  /* 打率予想 */
 #otani-ops { height: 160px; }  /* OPS予想 */
