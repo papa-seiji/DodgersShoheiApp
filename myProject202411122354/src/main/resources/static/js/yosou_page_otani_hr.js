@@ -136,29 +136,10 @@ function updateChart(data) {
                     }
                 }
             },
-            animation: {
-                onComplete: function () {
-                    drawDodgersLogo();  // ✅ グラフ描画完了時にロゴを中央に描画
-                }
-            }
         }
     });
 
-    // ✅ **ロゴを中央に適切なサイズで描画する関数**
-    function drawDodgersLogo() {
-        const centerX = ctx.canvas.width / 2;
-        const centerY = ctx.canvas.height / 2;
-        const imageSize = 70;  // ✅ ロゴのサイズ（適宜調整）
-    
-        const img = new Image();
-        img.src = "https://www.mlbstatic.com/team-logos/119.svg";  // ✅ ドジャースのロゴ
-        img.onload = function () {
-            const offsetX = 25;  // ✅ 右に寄せるオフセット値（適宜調整）
-            const offsetY = 15;  // ✅ 上にずらすオフセット値（適宜調整）
-            ctx.drawImage(img, centerX - imageSize / 2 + offsetX, centerY - imageSize / 2, imageSize, imageSize);
-        };
     }
-}
         
 
 
