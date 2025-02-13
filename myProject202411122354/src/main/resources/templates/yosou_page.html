@@ -14,6 +14,7 @@
     <script th:src="@{/js/yosou_page.js}"></script>
     <script th:src="@{/js/yosou_page_otani_hr.js}"></script>
     <script th:src="@{/js/updateOtaniWinsChart.js}"></script>
+    <script th:src="@{/js/updateYamamotoWinsChart.js}"></script>
 
 </head>
 
@@ -27,35 +28,34 @@
             <a href="/auth/logout">Logout</a>　
         </div>
 
-        <div class="grid">
-            <div class="box box-wide" id="nl-west">西地区1位予想<br>
-                <canvas id="chart-nl-west" width="400" height="350"></canvas> <!-- ✅ グラフ描画用のキャンバス -->
-            </div>
+            <div class="grid">
+                <div class="box box-wide" id="nl-west">西地区1位予想<br>
+                    <canvas id="chart-nl-west" width="400" height="350"></canvas> <!-- ✅ グラフ描画用のキャンバス -->
+                </div>
 
-        <div class="box box-small" id="otani-hr">
-            <div class="chart-container">
-                翔平HR予想
-                <canvas id="chart-otani-hr"></canvas> <!-- ✅ グラフ描画用のキャンバス -->
-                <img src="https://www.mlbstatic.com/team-logos/119.svg" class="dodgers-logo">
+            <div class="box box-small" id="otani-hr">
+                <div class="chart-container">
+                    翔平HR予想
+                    <canvas id="chart-otani-hr"></canvas> <!-- ✅ グラフ描画用のキャンバス -->
+                    <img src="https://www.mlbstatic.com/team-logos/119.svg" class="dodgers-logo">
+                </div>
             </div>
-        </div>
-
 
             <div class="box box-small" id="otani-bavg">4. 大谷翔平 打率予想<br>3-D円グラフ</div>
             <div class="box box-small" id="otani-ops">5. 大谷翔平 OPS予想<br>縦棒グラフ</div>
             <div class="box box-medium" id="dodgers-wins">2. Dodgers勝利数予想<br>ドーナツグラフ</div>
-
-
-            <!-- <div class="box box-medium" id="otani-wins">6. 大谷翔平 投手勝ち星予想<br>複合グラフ</div> -->
 
             <div class="box box-medium" id="otani-wins">
                 投手大谷 勝星数 予想<br>
                 <canvas id="chart-otani-wins" width="260" height="350"></canvas>
             </div>
 
+            <!-- ✅ 7. 山本由伸 投手勝ち星予想 -->
+            <div class="box box-medium" id="yamamoto-wins">
+                山本由伸 勝星数 予想<br>
+                <canvas id="chart-yamamoto-wins"></canvas>
+            </div>
 
-
-            <div class="box box-small" id="yamamoto-wins">7. 山本由伸 投手勝ち星予想<br>複合グラフ</div>
             <div class="box box-small" id="sasaki-wins">8. 佐々木朗希 投手勝ち星予想<br>複合グラフ</div>
         </div>
     </div>
@@ -113,6 +113,23 @@
         </select>
 
         <button id="vote-button-wins">投票する</button>
+    </div>
+</div>
+
+            <!-- ✅ モーダルウィンドウ -->
+<div id="vote-modal-yamamoto" class="modal">
+    <div class="modal-content">
+        <span id="close-modal-yamamoto" class="close">&times;</span>
+        <h2>投票: 山本由伸 投手勝ち星予想</h2>
+        <p id="vote-message-yamamoto">現在の投票: 未投票</p>
+        <select id="yamamoto-select">
+            <option value="0-4勝">0-4勝</option>
+            <option value="5-9勝">5-9勝</option>
+            <option value="10-14勝">10-14勝</option>
+            <option value="15-19勝">15-19勝</option>
+            <option value="20勝以上">20勝以上</option>
+        </select>
+        <button id="vote-button-yamamoto">投票する</button>
     </div>
 </div>
 
