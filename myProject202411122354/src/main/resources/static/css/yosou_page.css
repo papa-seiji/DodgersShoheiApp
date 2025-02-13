@@ -109,6 +109,8 @@ body {
     /* display: flex; */
     justify-content: center;
     align-items: center;
+    padding-top: 2px;
+    font-size: 13px;
 }
 
 .dodgers-logo {
@@ -197,7 +199,13 @@ button:hover {
 
 #dodgers-wins { height: 160px; }  /* 勝利数予想 */
 #otani-bavg { height: 160px; }  /* 打率予想 */
-#otani-ops { height: 160px; }  /* OPS予想 */
+
+#otani-ops {
+    height: 160px;
+    background-color: blue;
+    color: #f9f9f9;
+    font-weight: bolder;
+ }  /* OPS予想 */
 
 
 #otani-wins {

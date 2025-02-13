@@ -162,34 +162,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     
-    // ✅ モーダル処理
-    const modal = document.getElementById("vote-modal-wins");
-    const modalSelect = document.getElementById("wins-select");
-    const voteButton = document.getElementById("vote-button-wins");
+// ✅ モーダル処理 
+const modal = document.getElementById("vote-modal-wins");
+const modalSelect = document.getElementById("wins-select");
+const voteButton = document.getElementById("vote-button-wins");
 
-    function openModal() {
-        modal.style.display = "block";
+function openModal() {
+    modal.style.display = "block";
 
-        if (currentVote) {
-            document.getElementById("vote-message-wins").innerText = `現在の投票: ${currentVote.yosouValue}`;
-        } else {
-            document.getElementById("vote-message-wins").innerText = "未投票";
-        }
+    if (currentVote) {
+        document.getElementById("vote-message-wins").innerText = `現在の投票: ${currentVote.yosouValue}`;
+    } else {
+        document.getElementById("vote-message-wins").innerText = "未投票";
     }
+}
 
-    function closeModal() {
-        modal.style.display = "none";
+function closeModal() {
+    modal.style.display = "none";
+}
+
+document.getElementById("otani-wins").addEventListener("click", openModal);
+document.getElementById("close-modal-wins").addEventListener("click", closeModal);
+
+// ✅ 追加: モーダルの外側をクリックしたら閉じる処理
+modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        closeModal();
     }
+});
 
-    document.getElementById("otani-wins").addEventListener("click", openModal);
-    document.getElementById("close-modal-wins").addEventListener("click", closeModal);
-
-    voteButton.addEventListener("click", () => {
-        const selectedValue = modalSelect.value;
-        if (selectedValue) {
-            sendVote(selectedValue);
-        }
-    });
+voteButton.addEventListener("click", () => {
+    const selectedValue = modalSelect.value;
+    if (selectedValue) {
+        sendVote(selectedValue);
+    }
+});
 
     await fetchCurrentUser();
     fetchYosouData();

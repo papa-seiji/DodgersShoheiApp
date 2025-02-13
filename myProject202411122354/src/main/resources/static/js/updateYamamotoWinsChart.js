@@ -162,34 +162,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // ✅ モーダル処理
-    const modal = document.getElementById("vote-modal-yamamoto"); // 修正済み
-    const modalSelect = document.getElementById("yamamoto-select"); // 修正済み
-    const voteButton = document.getElementById("vote-button-yamamoto"); // 修正済み
-    
-    function openModal() {
-        modal.style.display = "block";
-    
-        if (currentVote) {
-            document.getElementById("vote-message-yamamoto").innerText = `現在の投票: ${currentVote.yosouValue}`; // 修正済み
-        } else {
-            document.getElementById("vote-message-yamamoto").innerText = "未投票"; // 修正済み
-        }
-    }
-    
-    function closeModal() {
-        modal.style.display = "none";
-    }
+// ✅ モーダル処理
+const modal = document.getElementById("vote-modal-yamamoto"); // 修正済み
+const modalSelect = document.getElementById("yamamoto-select"); // 修正済み
+const voteButton = document.getElementById("vote-button-yamamoto"); // 修正済み
 
-    document.getElementById("yamamoto-wins").addEventListener("click", openModal);
-    document.getElementById("close-modal-yamamoto").addEventListener("click", closeModal);
+function openModal() {
+    modal.style.display = "block";
 
-    voteButton.addEventListener("click", () => {
-        const selectedValue = modalSelect.value;
-        if (selectedValue) {
-            sendVote(selectedValue);
-        }
-    });
+    if (currentVote) {
+        document.getElementById("vote-message-yamamoto").innerText = `現在の投票: ${currentVote.yosouValue}`; // 修正済み
+    } else {
+        document.getElementById("vote-message-yamamoto").innerText = "未投票"; // 修正済み
+    }
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+document.getElementById("yamamoto-wins").addEventListener("click", openModal);
+document.getElementById("close-modal-yamamoto").addEventListener("click", closeModal);
+
+// ✅ 追加: モーダルの外側をクリックしたら閉じる処理
+modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
+voteButton.addEventListener("click", () => {
+    const selectedValue = modalSelect.value;
+    if (selectedValue) {
+        sendVote(selectedValue);
+    }
+});
 
     await fetchCurrentUser();
     fetchYosouData();
