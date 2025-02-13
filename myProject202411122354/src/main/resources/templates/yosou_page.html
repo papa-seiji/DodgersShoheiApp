@@ -15,6 +15,8 @@
     <script th:src="@{/js/yosou_page_otani_hr.js}"></script>
     <script th:src="@{/js/updateOtaniWinsChart.js}"></script>
     <script th:src="@{/js/updateYamamotoWinsChart.js}"></script>
+    <script th:src="@{/js/updateSasakiWinsChart.js}"></script>
+
 
 </head>
 
@@ -45,6 +47,7 @@
             <div class="box box-small" id="otani-ops">5. 大谷翔平 OPS予想<br>縦棒グラフ</div>
             <div class="box box-medium" id="dodgers-wins">2. Dodgers勝利数予想<br>ドーナツグラフ</div>
 
+            <!-- ✅ 投手大谷 勝星数 予想 -->
             <div class="box box-medium" id="otani-wins">
                 投手大谷 勝星数 予想<br>
                 <canvas id="chart-otani-wins" width="260" height="350"></canvas>
@@ -56,7 +59,11 @@
                 <canvas id="chart-yamamoto-wins"></canvas>
             </div>
 
-            <div class="box box-small" id="sasaki-wins">8. 佐々木朗希 投手勝ち星予想<br>複合グラフ</div>
+            <!-- ✅ 8. 佐々木朗希 投手勝ち星予想 -->
+            <div class="box box-medium" id="sasaki-wins">
+                佐々木朗希 勝星数 予想<br>
+                <canvas id="chart-sasaki-wins"></canvas>
+            </div>
         </div>
     </div>
 
@@ -133,6 +140,22 @@
     </div>
 </div>
 
+<!-- ✅ モーダルウィンドウ -->
+<div id="vote-modal-sasaki" class="modal">
+    <div class="modal-content">
+        <span id="close-modal-sasaki" class="close">&times;</span>
+        <h2>投票: 佐々木朗希 投手勝ち星予想</h2>
+        <p id="vote-message-sasaki">現在の投票: 未投票</p>
+        <select id="sasaki-select">
+            <option value="0-4勝">0-4勝</option>
+            <option value="5-9勝">5-9勝</option>
+            <option value="10-14勝">10-14勝</option>
+            <option value="15-19勝">15-19勝</option>
+            <option value="20勝以上">20勝以上</option>
+        </select>
+        <button id="vote-button-sasaki">投票する</button>
+    </div>
+</div>
 
     </body>
 </html>

@@ -100,21 +100,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     
         chartInstance = new Chart(ctx, {
-            type: "bar",  // ✅ 複合グラフ（棒グラフ+折れ線）
+            type: "bar",
             data: {
                 labels: labels,
                 datasets: [
                     {
-                        type: "bar",  // ✅ メインの棒グラフ
-                        label: "投票数",
+                        type: "bar",
+                        label: "項目",
                         data: values,
-                        backgroundColor: "rgba(54, 162, 235, 0.6)"
+                        backgroundColor: "rgb(107, 84, 255)",
+                        barThickness: 9, // ✅ 棒の太さを固定
+                        categoryPercentage: 0.5, // ✅ 各カテゴリの幅
                     },
                     {
-                        type: "line",  // ✅ 累積の折れ線グラフ
-                        label: "累積投票",
+                        type: "line",
+                        label: "人数",
                         data: cumulative,
-                        borderColor: "#FF6384",
+                        borderColor: "rgba(246, 6, 6, 0.8)",
                         borderWidth: 1,
                         fill: false,
                         tension: 0.2
@@ -127,7 +129,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 plugins: {
                     legend: {
                         display: true,
-                        labels: { color: "white" }
+                        labels: { color: "white",
+                            font: { size: 10 }, // ✅ フォントサイズを小さく
+                            boxWidth: 10 // ✅ 色付き四角のサイズを小さく
+                        }
                     },
                     datalabels: {
                         color: "white",
@@ -143,13 +148,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { color: "white" }
+                        ticks: {
+                            color: "white",
+                            stepSize: 1 // ✅ y軸を1刻みにする
+                        }
                     },
                     x: {
-                        ticks: { color: "white" },
-                        barThickness: 20, // ✅ 棒の太さをピクセル指定（例：20px）
-                        categoryPercentage: 0.8, // ✅ カテゴリー幅
-                        barPercentage: 0.5 // ✅ 棒を少し細くする
+                        ticks: { color: "white" }
                     }
                 }
             }
