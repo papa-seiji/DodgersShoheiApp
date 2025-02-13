@@ -146,34 +146,41 @@ function updateChart(data) {
 
 
                 
-    // ✅ モーダル処理
-    const modal = document.getElementById("vote-modal-hr");
-    const modalSelect = document.getElementById("team-select-hr");
-    const voteButton = document.getElementById("vote-button-hr");
+// ✅ モーダル処理
+const modal = document.getElementById("vote-modal-hr");
+const modalSelect = document.getElementById("team-select-hr");
+const voteButton = document.getElementById("vote-button-hr");
 
-    function openModal() {
-        modal.style.display = "block";
+function openModal() {
+    modal.style.display = "block";
 
-        if (currentVote) {
-            document.getElementById("vote-message-hr").innerText = `現在の投票: ${currentVote.yosouValue}`;
-        } else {
-            document.getElementById("vote-message-hr").innerText = "未投票";
-        }
+    if (currentVote) {
+        document.getElementById("vote-message-hr").innerText = `現在の投票: ${currentVote.yosouValue}`;
+    } else {
+        document.getElementById("vote-message-hr").innerText = "未投票";
     }
+}
 
-    function closeModal() {
-        modal.style.display = "none";
+function closeModal() {
+    modal.style.display = "none";
+}
+
+document.getElementById("otani-hr").addEventListener("click", openModal);
+document.getElementById("close-modal-hr").addEventListener("click", closeModal);
+
+voteButton.addEventListener("click", () => {
+    const selectedValue = modalSelect.value;
+    if (selectedValue) {
+        sendVote(selectedValue);
     }
+});
 
-    document.getElementById("otani-hr").addEventListener("click", openModal);
-    document.getElementById("close-modal-hr").addEventListener("click", closeModal);
-
-    voteButton.addEventListener("click", () => {
-        const selectedValue = modalSelect.value;
-        if (selectedValue) {
-            sendVote(selectedValue);
-        }
-    });
+// ✅ 追加: モーダルの外側をクリックしたら閉じる処理
+modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        closeModal();
+    }
+});
 
     await fetchCurrentUser();
     fetchYosouData();

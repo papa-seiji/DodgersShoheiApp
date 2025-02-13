@@ -157,29 +157,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // ✅ モーダル処理
-    const modal = document.getElementById("vote-modal");
-    const modalSelect = document.getElementById("team-select");
-    const voteButton = document.getElementById("vote-button");
+// ✅ モーダル処理
+const modal = document.getElementById("vote-modal");
+const modalSelect = document.getElementById("team-select");
+const voteButton = document.getElementById("vote-button");
 
-    function openModal() {
-        modal.style.display = "block";
-        document.getElementById("vote-message").innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
+function openModal() {
+    modal.style.display = "block";
+    document.getElementById("vote-message").innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+document.getElementById("nl-west").addEventListener("click", openModal);
+document.getElementById("close-modal").addEventListener("click", closeModal);
+
+voteButton.addEventListener("click", () => {
+    const selectedTeam = modalSelect.value;
+    if (selectedTeam) {
+        sendVote(selectedTeam);
     }
+});
 
-    function closeModal() {
-        modal.style.display = "none";
+// ✅ 追加: モーダルの外側をクリックしたら閉じる処理
+modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        closeModal();
     }
-
-    document.getElementById("nl-west").addEventListener("click", openModal);
-    document.getElementById("close-modal").addEventListener("click", closeModal);
-
-    voteButton.addEventListener("click", () => {
-        const selectedTeam = modalSelect.value;
-        if (selectedTeam) {
-            sendVote(selectedTeam);
-        }
-    });
+});
 
     await fetchCurrentUser();
     fetchYosouData();
