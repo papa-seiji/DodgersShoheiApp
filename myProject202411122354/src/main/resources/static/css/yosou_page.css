@@ -74,35 +74,6 @@ body {
     padding: 10px;
 
 }
-/* .box-small { grid-column: span 1; height: 265px; } */
-
-/* .box-small {
-    grid-column: span 1;
-    height: 265px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#otani-hr {
-    height: 264px;
-    width: 411px; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center; 
-    padding-left: 20px;
-}
-
-
-#chart-otani-hr {
-    max-width: 100%;
-    max-height: 91%;
-} */
-
-
-
-
 
 .box-small {
     grid-column: span 1;
@@ -151,9 +122,6 @@ body {
 }
 
 
-
-
-
 .box-medium { grid-column: span 1; height: 160px; }
 
 /* 特定のボックスの調整 */
@@ -174,6 +142,7 @@ body {
 }
 
 /* モーダルのスタイル */
+/* ✅ モーダル全体のスタイル */
 .modal {
     display: none;
     position: fixed;
@@ -185,6 +154,7 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+/* ✅ モーダルの中身 */
 .modal-content {
     background-color: #222;
     padding: 20px;
@@ -194,6 +164,7 @@ body {
     text-align: center;
 }
 
+/* ✅ 閉じるボタン */
 .close {
     color: white;
     float: right;
@@ -201,12 +172,14 @@ body {
     cursor: pointer;
 }
 
+/* ✅ ドロップダウンリスト */
 select {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
 }
 
+/* ✅ ボタン */
 button {
     background-color: #008CBA;
     color: white;
@@ -219,11 +192,33 @@ button:hover {
     background-color: #005f73;
 }
 
-/*#otani-hr { height: 264px; }   本塁打予想 */
 
 
 
 #dodgers-wins { height: 160px; }  /* 勝利数予想 */
 #otani-bavg { height: 160px; }  /* 打率予想 */
 #otani-ops { height: 160px; }  /* OPS予想 */
-#otani-wins, #yamamoto-wins, #sasaki-wins { height: 160px; }  /* 投手勝ち星予想 */
+
+
+#otani-wins {
+    width: 100%;
+    max-width: 413px; /* ✅ これで横幅の無限拡大を防ぐ */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#chart-otani-wins {
+    width: 100%;
+    max-width: 380px; /* ✅ 最大幅を制限 */
+    height: auto;
+    max-height: 200px;
+}
+
+
+
+
+#yamamoto-wins { height: 160px; }
+#sasaki-wins { height: 160px; }  /* 投手勝ち星予想 */
