@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => { 
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("📢 yosou_page.js ロード完了");
 
     const yosouType = "NL_WEST_yuusho";
@@ -124,30 +124,32 @@ document.addEventListener("DOMContentLoaded", async () => {
                         display: true,
                         position: "top",
                         labels: {
-                            color: "white"
+                            color: "white" // ✅ フォントカラーを白に
                         }
                     }
                 },
+
+                
                 scales: {
                     x: {
                         beginAtZero: true,
                         max: Math.max(...values) + 2,
                         ticks: {
                             font: { size: 14 },
-                            color: "white",
-                            stepSize: 1
+                            color: "white", // ✅ X軸ラベルを白に
+                            stepSize: 1 // ✅ 整数のみ表示 (1,2,3,...)
                         },
                         grid: {
-                            color: "rgba(255, 255, 255, 0.2)"
+                            color: "rgba(255, 255, 255, 0.2)" // ✅ X軸のグリッド線を薄い白に
                         }
                     },
                     y: {
                         ticks: {
                             font: { size: 14 },
-                            color: "white"
+                            color: "white" // ✅ Y軸ラベルを白に
                         },
                         grid: {
-                            color: "rgba(255, 255, 255, 0.2)"
+                            color: "rgba(255, 255, 255, 0.2)" // ✅ Y軸のグリッド線を薄い白に
                         }
                     }
                 }
@@ -155,53 +157,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // ✅ 画面回転時のキャンバスリサイズ処理
-    function adjustCanvasSize() {
-        const canvases = document.querySelectorAll("canvas");
-        canvases.forEach(canvas => {
-            const parent = canvas.parentElement;
-            if (parent) {
-                canvas.width = parent.clientWidth;
-                canvas.height = parent.clientWidth * (150 / 200); // ✅ 比率を維持
-            }
-        });
+// ✅ モーダル処理
+const modal = document.getElementById("vote-modal");
+const modalSelect = document.getElementById("team-select");
+const voteButton = document.getElementById("vote-button");
+
+function openModal() {
+    modal.style.display = "block";
+    document.getElementById("vote-message").innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+document.getElementById("nl-west").addEventListener("click", openModal);
+document.getElementById("close-modal").addEventListener("click", closeModal);
+
+voteButton.addEventListener("click", () => {
+    const selectedTeam = modalSelect.value;
+    if (selectedTeam) {
+        sendVote(selectedTeam);
     }
+});
 
-    adjustCanvasSize(); // ✅ 初回適用
-
-    // ✅ 画面の向きが変わったらリサイズを実行
-    window.addEventListener("resize", adjustCanvasSize);
-
-    // ✅ モーダル処理
-    const modal = document.getElementById("vote-modal");
-    const modalSelect = document.getElementById("team-select");
-    const voteButton = document.getElementById("vote-button");
-
-    function openModal() {
-        modal.style.display = "block";
-        document.getElementById("vote-message").innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
+// ✅ 追加: モーダルの外側をクリックしたら閉じる処理
+modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+        closeModal();
     }
-
-    function closeModal() {
-        modal.style.display = "none";
-    }
-
-    document.getElementById("nl-west").addEventListener("click", openModal);
-    document.getElementById("close-modal").addEventListener("click", closeModal);
-
-    voteButton.addEventListener("click", () => {
-        const selectedTeam = modalSelect.value;
-        if (selectedTeam) {
-            sendVote(selectedTeam);
-        }
-    });
-
-    // ✅ 追加: モーダルの外側をクリックしたら閉じる処理
-    modal.addEventListener("click", (event) => {
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
+});
 
     await fetchCurrentUser();
     fetchYosouData();
