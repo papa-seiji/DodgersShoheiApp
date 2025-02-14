@@ -1,7 +1,7 @@
-document.addEventListener("DOMContentLoaded", async () => { 
-    console.log("📢 yosou_page.js ロード完了");
+document.addEventListener("DOMContentLoaded", async () => {
+    console.log("📢 updateDodgersWinsChart.js ロード完了");
 
-    const yosouType = "NL_WEST_yuusho";
+    const yosouType = "DODGERS_WINS";  // ✅ Dodgers 勝利数予想
     let chartInstance = null;
     let currentUser = "ゲスト";
     let currentVote = null;
@@ -19,6 +19,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             fetchYosouData(); // ✅ グラフを更新
         });
     });
+
+    // ✅ Dodgers勝利数予想の選択肢
+    const winsOptions = [
+        "50W台", "60W台", "70W台", "80W台", "90W台", "100W以上"
+    ];
 
     // ✅ 現在のログインユーザーを取得
     async function fetchCurrentUser() {
@@ -39,14 +44,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             const response = await fetch(`/api/yosou/data?yosouType=${encodeURIComponent(yosouType)}`);
             if (!response.ok) throw new Error("データ取得エラー: " + response.status);
             const data = await response.json();
-            console.log("📊 予想データ取得成功:", data);
+            console.log("📊 Dodgers 勝利数予想データ取得成功:", data);
 
             // ✅ 現在のユーザーの投票を取得
             currentVote = data.find(vote => vote.votedBy === currentUser) || null;
             console.log("✅ 現在の投票データ:", currentVote);
 
             // ✅ モーダルに既存の投票情報を表示
-            const voteMessage = document.getElementById("vote-message");
+            const voteMessage = document.getElementById("vote-message-dodgers");
             voteMessage.innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
 
             // ✅ グラフを更新
@@ -78,15 +83,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // ✅ チームごとに色を設定
-    const teamColors = {
-        "ドジャース": "rgba(0, 85, 165, 0.8)",
-        "パドレス": "rgba(189, 155, 96, 0.8)",
-        "Dバックス": "rgba(167, 25, 48, 0.8)",
-        "ジャイアンツ": "rgba(235, 97, 35, 0.8)",
-        "ロッキーズ": "rgba(70, 70, 150, 0.8)"
-    };
-
     function updateChart(data) {
         const counts = {};
         data.forEach(item => {
@@ -95,111 +91,104 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const labels = Object.keys(counts);
         const values = Object.values(counts);
-        const colors = labels.map(label => teamColors[label] || "rgba(54, 162, 235, 0.6)");
 
-        const ctx = document.getElementById("chart-nl-west").getContext("2d");
+        const ctx = document.getElementById("chart-dodgers-wins").getContext("2d");
 
         if (chartInstance) {
             chartInstance.destroy();
         }
 
         chartInstance = new Chart(ctx, {
-            type: "bar",
+            type: "line",
             data: {
                 labels: labels,
-                datasets: [{
-                    label: "投票数",
-                    data: values,
-                    backgroundColor: colors,
-                    borderColor: colors.map(c => c.replace("0.8", "1")),
-                    borderWidth: 1,
-                    barThickness: 4
-                }]
+                datasets: [
+                    {
+                        label: "投票数",
+                        data: values,
+                        borderColor: "rgb(75, 192, 192)",
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1,
+                        pointBackgroundColor: "white",
+                        pointBorderColor: "rgb(75, 192, 192)",
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }
+                ]
             },
             options: {
-                indexAxis: 'y',
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: true,
-                        position: "top",
                         labels: {
-                            color: "white"
+                            color: "white",
+                            font: { size: 10 },
+                            boxWidth: 10
+                        }
+                    },
+                    datalabels: {
+                        color: "white",
+                        anchor: "end",
+                        align: "end",
+                        formatter: (value, ctx) => {
+                            let sum = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                            let percentage = (value * 100 / sum).toFixed(1) + "%";
+                            return percentage;
                         }
                     }
                 },
                 scales: {
-                    x: {
+                    y: {
                         beginAtZero: true,
-                        max: Math.max(...values) + 2,
                         ticks: {
-                            font: { size: 14 },
                             color: "white",
                             stepSize: 1
-                        },
-                        grid: {
-                            color: "rgba(255, 255, 255, 0.2)"
                         }
                     },
-                    y: {
-                        ticks: {
-                            font: { size: 14 },
-                            color: "white"
-                        },
-                        grid: {
-                            color: "rgba(255, 255, 255, 0.2)"
-                        }
+                    x: {
+                        ticks: { color: "white" }
                     }
                 }
             }
         });
     }
 
-    // ✅ 画面回転時のキャンバスリサイズ処理
-    function adjustCanvasSize() {
-        const canvases = document.querySelectorAll("canvas");
-        canvases.forEach(canvas => {
-            const parent = canvas.parentElement;
-            if (parent) {
-                canvas.width = parent.clientWidth;
-                canvas.height = parent.clientWidth * (150 / 200); // ✅ 比率を維持
-            }
-        });
-    }
-
-    adjustCanvasSize(); // ✅ 初回適用
-
-    // ✅ 画面の向きが変わったらリサイズを実行
-    window.addEventListener("resize", adjustCanvasSize);
-
     // ✅ モーダル処理
-    const modal = document.getElementById("vote-modal");
-    const modalSelect = document.getElementById("team-select");
-    const voteButton = document.getElementById("vote-button");
+    const modal = document.getElementById("vote-modal-dodgers");
+    const modalSelect = document.getElementById("dodgers-select");
+    const voteButton = document.getElementById("vote-button-dodgers");
 
     function openModal() {
         modal.style.display = "block";
-        document.getElementById("vote-message").innerText = currentVote ? `現在の投票: ${currentVote.yosouValue}` : "未投票";
+
+        if (currentVote) {
+            document.getElementById("vote-message-dodgers").innerText = `現在の投票: ${currentVote.yosouValue}`;
+        } else {
+            document.getElementById("vote-message-dodgers").innerText = "未投票";
+        }
     }
 
     function closeModal() {
         modal.style.display = "none";
     }
 
-    document.getElementById("nl-west").addEventListener("click", openModal);
-    document.getElementById("close-modal").addEventListener("click", closeModal);
-
-    voteButton.addEventListener("click", () => {
-        const selectedTeam = modalSelect.value;
-        if (selectedTeam) {
-            sendVote(selectedTeam);
-        }
-    });
+    document.getElementById("dodgers-wins").addEventListener("click", openModal);
+    document.getElementById("close-modal-dodgers").addEventListener("click", closeModal);
 
     // ✅ 追加: モーダルの外側をクリックしたら閉じる処理
     modal.addEventListener("click", (event) => {
         if (event.target === modal) {
             closeModal();
+        }
+    });
+
+    voteButton.addEventListener("click", () => {
+        const selectedValue = modalSelect.value;
+        if (selectedValue) {
+            sendVote(selectedValue);
         }
     });
 
