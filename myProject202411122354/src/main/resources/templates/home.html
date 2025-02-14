@@ -111,17 +111,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 <!--start MLB 地区別順位表 (スワイプ対応) -->
+<!-- MLB 地区別順位表 -->
 <div class="standings-container">
     <div class="standings-wrapper">
-        <div class="standings-slide" id="nl-west"><h3>NL 西地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-west-body"></tbody></table></div>
-        <div class="standings-slide" id="nl-central"><h3>NL 中地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-central-body"></tbody></table></div>
-        <div class="standings-slide" id="nl-east"><h3>NL 東地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-east-body"></tbody></table></div>
-        <div class="standings-slide" id="al-west"><h3>AL 西地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-west-body"></tbody></table></div>
-        <div class="standings-slide" id="al-central"><h3>AL 中地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-central-body"></tbody></table></div>
-        <div class="standings-slide" id="al-east"><h3>AL 東地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-east-body"></tbody></table></div>
-    </div>
-</div>
+        <!-- ✅ NL 西地区 -->
+        <div class="standings-slide" id="nl-west">
+            <h3>NL 西地区</h3>
+            <table class="styled-table">
+                <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-west-body"></tbody></table></div>
+        <!-- ✅ NL 中地区 -->
+        <div class="standings-slide" id="nl-central">
+            <h3>NL 中地区</h3>
+            <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-central-body"></tbody></table></div>
+        <!-- ✅ NL 東地区 -->
+        <div class="standings-slide" id="nl-east">
+            <h3>NL 東地区</h3>
+            <table class="styled-table">
+                <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-east-body"></tbody></table></div>
+                
+        <!-- ✅ AL 西地区 -->
+        <div class="standings-slide" id="al-west">
+            <h3>AL 西地区</h3>
+            <table class="styled-table">
+                <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-west-body"></tbody></table></div>
+        <!-- ✅ AL 中地区 -->
+        <div class="standings-slide" id="al-central">
+            <h3>AL 中地区</h3><table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-central-body"></tbody></table></div>
+        <!-- ✅ AL 東地区 -->
+        <div class="standings-slide" id="al-east">
+            <h3>AL 東地区</h3>
+            <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-east-body"></tbody></table></div></div></div>
 
+<!-- ✅ スワイプボタン -->
 <button id="prevBtn">◀</button>
 <button id="nextBtn">▶</button>
 
