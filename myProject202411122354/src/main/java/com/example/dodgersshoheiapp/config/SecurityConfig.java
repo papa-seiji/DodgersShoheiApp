@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // 管理者専用エンドポイントを保護
                         .anyRequest().authenticated())
+
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .successHandler(visitorCounterSuccessHandler())
