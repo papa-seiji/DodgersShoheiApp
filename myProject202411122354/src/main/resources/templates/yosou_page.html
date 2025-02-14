@@ -16,6 +16,8 @@
     <script th:src="@{/js/updateOtaniWinsChart.js}"></script>
     <script th:src="@{/js/updateYamamotoWinsChart.js}"></script>
     <script th:src="@{/js/updateSasakiWinsChart.js}"></script>
+    <script th:src="@{/js/updateOtaniBavgChart.js}"></script>
+
 
 
 </head>
@@ -43,8 +45,12 @@
                 </div>
             </div>
 
-            <!--<div class="box box-small" id="otani-bavg">4. 大谷翔平 打率予想<br>3-D円グラフ</div>-->
-            <div class="box box-small" id="otani-bavg">開発中<br>近日リリース予定</div>
+            <!-- ✅ 4. 大谷翔平 打率予想 -->
+            <div class="box box-small" id="otani-bavg">
+                大谷翔平 打率予想
+                <canvas id="chart-otani-bavg"></canvas>
+            </div>
+
             <div class="box box-small" id="otani-ops">２０２５<br>予想チャート<br>投票してね</div>
             <!--<div class="box box-medium" id="dodgers-wins">2. Dodgers勝利数予想<br>ドーナツグラフ</div>-->
             <div class="box box-medium" id="dodgers-wins">開発中<br>近日リリース予定</div>
@@ -156,6 +162,22 @@
             <option value="20勝以上">20勝以上</option>
         </select>
         <button id="vote-button-sasaki">投票する</button>
+    </div>
+</div>
+
+<!-- ✅ モーダルウィンドウ -->
+<div id="vote-modal-bavg" class="modal">
+    <div class="modal-content">
+        <span id="close-modal-bavg" class="close">&times;</span>
+        <h2>投票: 大谷翔平 打率予想</h2>
+        <p id="vote-message-bavg">現在の投票: 未投票</p>
+        <select id="bavg-select">
+            <option value="1割台">1割台</option>
+            <option value="2割台">2割台</option>
+            <option value="3割台">3割台</option>
+            <option value="4割以上">4割以上</option>
+        </select>
+        <button id="vote-button-bavg">投票する</button>
     </div>
 </div>
 
