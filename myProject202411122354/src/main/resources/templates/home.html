@@ -31,7 +31,7 @@
         <div class="navbar-dropdown">
             <span class="navbar-dropdown-trigger" onclick="toggleDropdown()">Home</span>
             <div class="navbar-dropdown-content">
-                <!-- <a href="/home">Home</a> -->
+                <a href="/yosou">予想</a>
                 <a href="/proud">Proud</a>
                 <a href="/comments">Chat</a>
                 <a href="/links">Links</a>
@@ -111,17 +111,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 <!--start MLB 地区別順位表 (スワイプ対応) -->
+<!-- MLB 地区別順位表 -->
 <div class="standings-container">
     <div class="standings-wrapper">
-        <div class="standings-slide" id="nl-west"><h3>NL 西地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-west-body"></tbody></table></div>
-        <div class="standings-slide" id="nl-central"><h3>NL 中地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-central-body"></tbody></table></div>
-        <div class="standings-slide" id="nl-east"><h3>NL 東地区</h3><table class="styled-table"><thead>...</thead><tbody id="nl-east-body"></tbody></table></div>
-        <div class="standings-slide" id="al-west"><h3>AL 西地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-west-body"></tbody></table></div>
-        <div class="standings-slide" id="al-central"><h3>AL 中地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-central-body"></tbody></table></div>
-        <div class="standings-slide" id="al-east"><h3>AL 東地区</h3><table class="styled-table"><thead>...</thead><tbody id="al-east-body"></tbody></table></div>
-    </div>
-</div>
+        <!-- ✅ NL 西地区 -->
+        <div class="standings-slide" id="nl-west">
+            <h3>NL 西地区</h3>
+            <table class="styled-table">
+                <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-west-body"></tbody></table></div>
+        <!-- ✅ NL 中地区 -->
+        <div class="standings-slide" id="nl-central">
+            <h3>NL 中地区</h3>
+            <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-central-body"></tbody></table></div>
+        <!-- ✅ NL 東地区 -->
+        <div class="standings-slide" id="nl-east">
+            <h3>NL 東地区</h3>
+            <table class="styled-table">
+                <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-east-body"></tbody></table></div>
+                
+        <!-- ✅ AL 西地区 -->
+        <div class="standings-slide" id="al-west">
+            <h3>AL 西地区</h3>
+            <table class="styled-table">
+                <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-west-body"></tbody></table></div>
+        <!-- ✅ AL 中地区 -->
+        <div class="standings-slide" id="al-central">
+            <h3>AL 中地区</h3><table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-central-body"></tbody></table></div>
+        <!-- ✅ AL 東地区 -->
+        <div class="standings-slide" id="al-east">
+            <h3>AL 東地区</h3>
+            <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-east-body"></tbody></table></div></div></div>
 
+<!-- ✅ スワイプボタン -->
 <button id="prevBtn">◀</button>
 <button id="nextBtn">▶</button>
 
@@ -287,14 +308,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!--Start 動画セクション 2025-->
     <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">【2.6現地速報】ドジャース･大谷</h5>
-    <h5 class="shiny-text-1"> 4日連続で自主トレ捕手を座らせて</h5>
-    <h5 class="shiny-text-1">7球の投球練習～ベースランニングまでみっちり</h5>
+    <h5 class="shiny-text-1">ドジャースキャンプ情報</h5>
+    <h5 class="shiny-text-1"> </h5>
+    <h5 class="shiny-text-1"></h5>
 
         <div class="douga-section_3">
-            <div id="hoge-hoge_3">【2.6現地速報】ドジャース･大谷</div>
+            <div id="hoge-hoge_3">大谷がブルペン入り！山本由伸、佐々木朗希</div>
             <div id="douga-container-3">
-                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/_9KuVWhQZoE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/uH-gbFGGcM0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 <!--End 動画セクション 2025-->
