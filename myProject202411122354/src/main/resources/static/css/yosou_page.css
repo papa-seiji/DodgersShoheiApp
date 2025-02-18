@@ -16,16 +16,86 @@ body {
 }
 
 /* Sidebar を上部に持ってくる */
-.sidebar {
+/* .sidebar {
     width: 100%;
     background-color: #eee;
     color: black;
     padding: 20px;
     font-weight: bold;
     border-radius: 8px;
-    text-align: center;
-    margin-bottom: 10px; /* メインコンテンツとの間隔を拡張 */
+    text-align: center; */
+    /* メインコンテンツとの間隔を拡張 */
+    /* margin-bottom: 10px;
+} */
+
+/* start======== ナビゲーションバー全体 ======== */
+#header-navbar {
+    /* position: fixed; */
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* height: 40px; */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* display: flex; */
+    /* justify-content: space-between; */
+    align-items: center;
+    /* padding: 0 20px; */
+    z-index: 10;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* ロゴと情報部分 */
+#header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    max-height: 50px;
+}
+
+#header-logo {
+    margin: -13px -8px -7px -112px;
+}
+
+.home-image10{
+    height: 3em;
+    margin: 12% 10px 0px 58%
+}
+
+.home-image11{
+    height: 36px;
+    margin: 7px -1px 0px 360px;
+}
+
+#header-info-container {
+    display: flex;
+    flex-direction: column;
+    /* gap: 5px; */
+    margin-left: -58px;
+}
+
+#user-info {
+    font-size: 0.8rem;
+    color: #333;
+    white-space: nowrap; /* テキストを一行にする */
+    overflow: hidden; /* はみ出た部分を隠す */
+    text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
+    max-width: 130px; /* 名前の最大幅を指定 */
+    display: inline-block; /* レイアウト調整用 */
+}
+
+
+#visitor-counter-display {
+    font-size: 0.8rem;
+    color: #555;
+}
+/* end======== ナビゲーションバー全体 ======== */
+
+
+
+
+
+
 
 /* メインレイアウト */
 .dashboard {
