@@ -10,7 +10,7 @@
     <!-- ✅ SockJS と STOMP のライブラリを追加 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="/js/home.js"></script> <!--VisitorCounter取得用に home.jsを追加 -->
+<script src="/js/home_2.js"></script> <!--VisitorCounter取得用に home_2.jsを追加 -->
     <script th:src="@{/js/yosou_page.js}"></script>
     <script th:src="@{/js/yosou_page_otani_hr.js}"></script>
     <script th:src="@{/js/updateOtaniWinsChart.js}"></script>
@@ -62,42 +62,8 @@
                 .catch(error => console.error('Error fetching user info:', error));
         }
     
-    // WebSocket初期化
-    let stompClient = null;
-
-    function initializeWebSocket() {
-        const socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, function () {
-            console.log("WebSocket connected");
-
-            // VisitorCounterのリアルタイム更新を購読
-            stompClient.subscribe('/topic/visitorCounter', function (message) {
-                const newValue = JSON.parse(message.body);
-                counters.VisitorCounter.textContent = newValue;
-            });
-        });
-    }
-
-    // カウンター値をサーバーから取得
-    function fetchCounterValues() {
-        Object.keys(counters).forEach(counterName => {
-            if (counterName !== "VisitorCounter") { // VisitorCounterは個別に取得
-                fetch(`/counter/${counterName}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Failed to fetch ${counterName} value`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        counters[counterName].textContent = data.value;
-                    })
-                    .catch(error => console.error(`Error fetching ${counterName}:`, error));
-            }
-        });
-    }
+        // ページロード時にユーザー情報を取得
+        document.addEventListener('DOMContentLoaded', fetchUserInfo);
     </script>
 
 
