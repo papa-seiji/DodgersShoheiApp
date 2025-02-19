@@ -108,11 +108,11 @@ body {
     top: 0;
     left: -250px;
     width: 113px;
-    height: 49%;
-    background-color: rgb(0 0 0 / 67%);
+    height:100vh;
+    background-color: #005a9c78;
     color: white;
     padding: 21% 0px 0px 15px;
-    transition: left 0.3sease-in-out;
+    transition: left 0.3sease -in-out;
     display: flex;
     flex-direction: column;
     z-index: 15; /* オーバーレイより前面に */
