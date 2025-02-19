@@ -1,0 +1,37 @@
+/* HTMLとボディの全体スタイル */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%; /* ページ全体をフルサイズに */
+    display: flex;
+    flex-direction: column; /* 上下にレイアウト */
+}
+
+/* フッター全体のスタイル */
+footer {
+    background-color: #005A9C; /* Dodgers Blue */
+    color: white;
+    font-family: 'Raleway', sans-serif; /* Dodgersに近い雰囲気のフォント */
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+     /* 空きスペースを埋めて一番下に配置 */
+    /* margin-top: 49%; */
+}
+
+/* コンテナ内の配置 */
+#footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* コピーライトのテキスト */
+#footer-container p {
+    font-size: 1rem;
+    margin-bottom: -12px;
+    margin-top: 7px;
+}

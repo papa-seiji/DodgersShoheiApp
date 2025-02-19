@@ -16,16 +16,147 @@ body {
 }
 
 /* Sidebar を上部に持ってくる */
-.sidebar {
+/* .sidebar {
     width: 100%;
     background-color: #eee;
     color: black;
     padding: 20px;
     font-weight: bold;
     border-radius: 8px;
-    text-align: center;
-    margin-bottom: 10px; /* メインコンテンツとの間隔を拡張 */
+    text-align: center; */
+    /* メインコンテンツとの間隔を拡張 */
+    /* margin-bottom: 10px;
+} */
+
+/* start======== ナビゲーションバー全体 ======== */
+/* ヘッダー全体の高さを確保 */
+#header-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(0 0 0 / 90%);
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative; /* 他の要素と重なりを管理 */
+    z-index: 15;
 }
+
+/* ロゴと情報部分 */
+#header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: white;
+    max-height: 50px;
+    width: 100%;
+}
+
+/* ロゴの位置調整 */
+#header-logo {
+    margin: 0px 0px 0px 50px; /* ハンバーガーメニューと被らないように調整 */
+}
+
+/* home-image10 のマージン調整 */
+.home-image10 {
+    height: 37px;
+    margin: 3px 16px 0px 131px; /* ハンバーガーメニューとの干渉を避ける */
+}
+
+#header-info-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: -24px;
+}
+
+#user-info {
+    font-size: 0.8rem;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+    display: inline-block;
+}
+
+#visitor-counter-display {
+    font-size: 0.8rem;
+    color: #555;
+}
+/* end======== ナビゲーションバー全体 ======== */
+
+/* ハンバーガーメニューを前面に配置 */
+/* ハンバーガーメニューを前面に配置 */
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    user-select: none;
+    padding: 5px 10px;
+    background: none;
+    border: none;
+    color: #ff0000;
+    font-weight: 500;
+    position: absolute;
+    left: 10px;  /* 左に寄せる */
+    top: 10px;   /* 上の位置を適切に調整 */
+    z-index: 20; /* ロゴより前面に表示 */
+}
+
+/* スライドメニュー */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 113px;
+    height:100vh;
+    background-color: #005a9c78;
+    color: white;
+    padding: 21% 0px 0px 15px;
+    transition: left 0.3sease -in-out;
+    display: flex;
+    flex-direction: column;
+    z-index: 15; /* オーバーレイより前面に */
+}
+
+.side-menu a {
+    display: block;       /* ブロック要素にして縦並び */
+    color: white;
+    padding: 12px 15px;   /* 内側の余白 */
+    text-decoration: none;
+    font-size: 16px;      /* フォントサイズ調整 */
+    margin-bottom: 8px;   /* 下に余白を追加 */
+}
+
+.side-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 閉じるボタン */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* オーバーレイ */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 10;
+    pointer-events: none; /* クリックを通す */
+}
+
+
+
+
+
 
 /* メインレイアウト */
 .dashboard {
