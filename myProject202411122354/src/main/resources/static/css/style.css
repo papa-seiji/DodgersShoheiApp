@@ -1124,7 +1124,7 @@ body {
     border-color: #fd0101 transparent transparent transparent;
 }
 
-/* 吹き出しを適切な位置に配置 */
+/* 吹き出しを適切な位置に配置 ブラウザでのちょうどいい位置はスマホだと150px程下ににずれる！！から開発中は＋150pxするといい */
 #tooltip-navbar {
     top: 43px;
     left: 69%;
