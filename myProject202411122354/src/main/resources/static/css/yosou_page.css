@@ -55,12 +55,20 @@ body {
 /* ロゴの位置調整 */
 #header-logo {
     margin: 0px 0px 0px 50px; /* ハンバーガーメニューと被らないように調整 */
+    display: flex
+
 }
 
 /* home-image10 のマージン調整 */
 .home-image10 {
     height: 37px;
-    margin: 3px 16px 0px 131px; /* ハンバーガーメニューとの干渉を避ける */
+    margin: 0px -2px 1px 70px; /* ハンバーガーメニューとの干渉を避ける */
+}
+
+/* home-image10 のマージン調整 */
+.home-image11 {
+    height: 22px;
+    margin: 6px 15px 0px 2px;
 }
 
 #header-info-container {
