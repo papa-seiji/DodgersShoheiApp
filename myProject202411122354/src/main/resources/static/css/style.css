@@ -576,17 +576,22 @@ a:hover {
     transform: translateX(-50%);
 }
 
+#tooltip-yosou {
+    top: 3801px;
+    left: 12em;
+}
+
 #tooltip-proud {
-    top: 314em;
+    top: 4095px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 334em;
+    top: 4350px;
     left: 5em;
 }
 #tooltip-link {
-    top: 362em;
+    top: 4710px;
     left: 10em;
 }
 
@@ -1126,17 +1131,22 @@ body {
     transform: translateX(-50%);
 }
 
+#tooltip-yosou {
+    top: 3801px;
+    left: 12em;
+}
+
 #tooltip-proud {
-    top: 314em;
+    top: 4095px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 334em;
+    top: 4350px;
     left: 5em;
 }
 #tooltip-link {
-    top: 362em;
+    top: 4710px;
     left: 10em;
 }
 
@@ -1793,21 +1803,21 @@ body {
 
 
 #tooltip-yosou {
-    top: 308.5em;
+    top: 3801px;
     left: 12em;
 }
 
 #tooltip-proud {
-    top: 332em;
+    top: 4095px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 353em;
+    top: 4350px;
     left: 5em;
 }
 #tooltip-link {
-    top: 380em;
+    top: 4710px;
     left: 10em;
 }
 
