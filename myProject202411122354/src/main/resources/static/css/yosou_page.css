@@ -116,37 +116,42 @@ body {
     top: 0;
     left: -250px;
     width: 113px;
-    height:100vh;
+    height: 100vh;
     background-color: #005a9c78;
     color: white;
     padding: 21% 0px 0px 15px;
-    transition: left 0.3sease -in-out;
+    transition: left 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start; /* メニューを上部寄せ */
     z-index: 15; /* オーバーレイより前面に */
 }
 
+/* メニューのリンク */
 .side-menu a {
-    display: block;       /* ブロック要素にして縦並び */
+    display: block;
     color: white;
-    padding: 12px 15px;   /* 内側の余白 */
+    padding: 12px 15px;
     text-decoration: none;
-    font-size: 16px;      /* フォントサイズ調整 */
-    margin-bottom: 8px;   /* 下に余白を追加 */
+    font-size: 16px;
+    margin-bottom: 8px;
 }
 
+/* ホバー時の背景 */
 .side-menu a:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* 閉じるボタン */
+/* 閉じるボタン（×）をリストの下に固定配置 */
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
+    font-size: 35px;
     cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    margin-top: 10px;/* リストと適度な間隔 */
+    margin-right: 59px;
 }
+
 
 /* オーバーレイ */
 .overlay {
