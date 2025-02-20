@@ -411,6 +411,24 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 
 
+<!-- 予想 吹き出し -->
+<div id="tooltip-yosou" class="tooltip">
+    <span><strong>"2025予想"か"画像"</strong>を押すと<br>飛べます</span>
+    <button class="tooltip-close" data-tooltip-id="yosou"> 　　　　         ✖</button>
+</div>
+
+<div class="home-layout5" style="margin-bottom: -30%">
+    <div class="home-content5">
+        <a href="/yosou"><h1 id="oomidashi" class="shiny-text">2025予想</h1></a>
+        <div>皆様に各項目を</div>
+        <div>選択し1票入れてもらい</div>
+        <div>今期成績を集計/解析</div>
+        <h4 style="margin-top: -2%">誰でも投票できますょ</h4>
+    </div>
+    <a href="/yosou" class="a5">
+        <img src="/images/予想画面.jpg" alt="背景画像1" class="home-image5">
+    </a>
+</div>
 
 
 <!-- Proud 吹き出し -->
@@ -491,6 +509,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 各吹き出しの初期状態をチェック
     showTooltipIfNeeded('navbar');
+    showTooltipIfNeeded('yosou');
     showTooltipIfNeeded('proud');
     showTooltipIfNeeded('chat');
     showTooltipIfNeeded('link');

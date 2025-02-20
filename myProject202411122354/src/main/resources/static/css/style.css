@@ -576,17 +576,22 @@ a:hover {
     transform: translateX(-50%);
 }
 
+#tooltip-yosou {
+    top: 3801px;
+    left: 12em;
+}
+
 #tooltip-proud {
-    top: 314em;
+    top: 4095px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 334em;
+    top: 4350px;
     left: 5em;
 }
 #tooltip-link {
-    top: 362em;
+    top: 4710px;
     left: 10em;
 }
 
@@ -1119,24 +1124,29 @@ body {
     border-color: #fd0101 transparent transparent transparent;
 }
 
-/* 吹き出しを適切な位置に配置 */
+/* 吹き出しを適切な位置に配置 ブラウザでのちょうどいい位置はスマホだと150px程下ににずれる！！から開発中は＋150pxするといい */
 #tooltip-navbar {
     top: 43px;
     left: 69%;
     transform: translateX(-50%);
 }
 
+#tooltip-yosou {
+    top: 3801px;
+    left: 12em;
+}
+
 #tooltip-proud {
-    top: 314em;
+    top: 4095px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 334em;
+    top: 4350px;
     left: 5em;
 }
 #tooltip-link {
-    top: 362em;
+    top: 4710px;
     left: 10em;
 }
 
@@ -1791,17 +1801,23 @@ body {
     transform: translateX(-50%);
 }
 
+
+#tooltip-yosou {
+    top: 3801px;
+    left: 12em;
+}
+
 #tooltip-proud {
-    top: 314em;
+    top: 4095px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 334em;
+    top: 4350px;
     left: 5em;
 }
 #tooltip-link {
-    top: 362em;
+    top: 4710px;
     left: 10em;
 }
 
@@ -2132,6 +2148,20 @@ a:hover {
     text-decoration: underline; /* ホバー時に下線を追加 */
 }
 
+/* ========start 予想の調整  a5  ======== */
+.a5 {
+    display: inline-block; /* インライン要素のままサイズ調整可能 */
+    width: auto; /* 画像サイズに合わせる */
+    text-decoration: none; /* リンクの下線を消す */
+}
+
+.a5 img {
+    width: 134px; /* 画像のサイズ調整（適宜変更） */
+    height: auto;
+}
+/* ========end 予想の調整  a5  ======== */
+
+
 /* ========start デコイのクリーツの調整  a1  ======== */
 .a1 {
     display: inline-block; /* インライン要素のままサイズ調整可能 */
@@ -2322,6 +2352,63 @@ a:hover {
 
 
 
+/* 横並びのレイアウトを設定 */
+.home-layout5 {
+    display: flex;
+    align-items: center; /* 垂直方向のセンタリング */
+    justify-content: space-between; /* 均等配置 */
+    padding: 20px;
+    /*gap: 20px;  画像とテキストの間隔 */
+    background-color: #ffffff; /* 背景色を薄いグレーに */
+    border-radius: 12px; /* 角を丸める */
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
+    margin: 0px auto; /* 上下の余白と中央配置 */
+    max-width: 100%; /* 最大幅を設定 */
+}
+
+/* 画像部分のスタイル */
+.home-image5 {
+    width: 40%; /* 画像幅を40%に設定 */
+    max-width: 400px; /* 最大幅を設定 */
+    border-radius: 10px; /* 角を丸める */
+     /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 軽い影 */
+}
+
+/* テキストコンテンツ部分 */
+.home-content5 {
+    flex: 1; /* 残りのスペースを自動的に埋める */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 要素間のスペース */
+    text-align: left; /* 左揃え */
+    font-family: 'Arial', sans-serif; /* 読みやすいフォント */
+    font-size: 15px;
+    margin-bottom: 127px;
+}
+
+/* 大見出し */
+.home-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #005A9C; /* Dodgers Blue */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 少し光沢感 */
+    margin-bottom: 10px; /* 下部余白 */
+}
+
+/* 説明文のテキスト */
+.home-content div {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* 小見出し */
+.home-content h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #005A9C;
+    margin-top: 10px;
+}
 
 
 
