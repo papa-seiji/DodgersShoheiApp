@@ -533,8 +533,8 @@
 /* ロゴの位置調整 */
 #header-logo {
     margin: 0px 0px 0px 123px; /* ハンバーガーメニューと被らないように調整 */
-    display: flex
-
+    display: flex;
+    /* position: relative; */
 }
 
 /* home-image10 のマージン調整 */
