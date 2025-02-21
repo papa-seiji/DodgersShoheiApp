@@ -11,8 +11,9 @@
 <body>
     <!-- fragments/headerを利用してヘッダーを挿入 -->
     <th:block th:replace="fragments/header :: header"></th:block>
-    <div id="kiji">MLB,Dodgers,大谷選手、山本選手を密かに応援している人の</div>
-    <div id="kiji">コミュニケーション場として共有できればいいなと作りました</div>
+    <div id="kiji">MLB,Dodgers、翔平、由伸、朗希を密かに応援している人の</div>
+    <div id="kiji">コミュニケーション場として情報共有できればいいなと</div>
+    <div id="kiji">完全個人開発（趣味）で2024/11から隙間時間に作りました。</div>
     <div id="kiji">ニックネームと簡単なパスワード登録で参加できます。</div>
     <div id="kiji" style="color: red;">↓↓↓ サイト名は ↓↓↓</div>
 
@@ -20,7 +21,7 @@
 
     <main>
         <section>
-            <h1 id='util_Account'>Create Account</h1>
+            <h1 id='util_Account'>新規アカウント登録</h1>
             <p th:if="${message}" th:text="${message}" style="color: red;"></p>
             <form action="/auth/signup" method="post">
                 <label for="username">Nickname:</label>
@@ -31,7 +32,7 @@
                 
                 <button type="submit">Charge!SignUp</button>
             </form>
-            <a href="/auth/login">登録がお済の方は こちらlogIn</a><!-- Already have an account? Login here -->
+            <a href="/auth/login">　　　登録がお済の方は ログイン画面へ</a><!-- Already have an account? Login here -->
         </section>
     </main>
 
@@ -50,14 +51,29 @@
         <img src="/images/yamamoto_ay2-removebg-preview.png" alt="背景画像1" class="home-image1-1" style="margin-right: 1.7em">
         <div class="home-content1">
             <h1 id="oomidashi" class="shiny-text">Home</h1>
-            <div>直近HR&直近投番.mp4</div>
-            <div>　リアルタイムHR</div>
-            <div id="and">　　　　　&</div>
-            <div>　PitchWinカウンター</div>
+            <div>このサイトのHOME（TOP）です</div>
+            <div>NEWSトピックに最近の動向表示</div>
+            <div>公式データを用いてチーム&個人成績表示</div>
+            <div>厳選のYoutube動画表示</div>
             <!-- <h4>Top画面、Home画面の説明</h4> -->
         </div>
         <!-- <img src="/images/trimmin'-ohtani_pitchin'.png" alt="背景画像1" class="home-image1"> -->
     </div>
+
+
+<div class="home-layout5" style="margin-bottom: -30%">
+    <div class="home-content5">
+        <h1 id="oomidashi">2025予想</h1>
+        <div>皆様に各項目を</div>
+        <div>選択し1票入れてもらい</div>
+        <div>今期成績を集計/解析</div>
+        <h4 style="margin-top: -2%">誰でも投票できますょ</h4>
+    </div>
+    <!-- <a href="/yosou" class="a5">　-->
+        <img src="/images/予想画面.jpg" alt="背景画像1" class="home-image5">
+    </a>
+</div>
+
 
     <div class="home-layout2">
         <div class="home-content2">
@@ -83,9 +99,10 @@
     <div class="home-layout4" style="margin-bottom: -30%">
         <div class="home-content4">
             <h1 id="oomidashi" class="shiny-text">Link</h1>
-            <div>Dodgers,翔平君,由伸君</div>
-            <div>デコピン,グッズ,SNS ..etc..</div>
-            <h4 style="margin-top: -2%">HomePageリンク集</h4>
+            <div>管理人がよく見ている</div>
+            <div>ドジャース関連サイトURL</div>
+            <div>インスタ,ファンクラブ,mlb.com, ..etc..</div>
+            <h4 style="margin-top: -2%">URLリンクまとめ</h4>
         </div>
         <img src="/images/DodgersLogo.png" alt="背景画像1" class="home-image4">
     </div>
