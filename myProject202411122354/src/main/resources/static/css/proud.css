@@ -121,7 +121,7 @@ body{
 
 
 #midashi_1 {
-    margin-top: 50px;
+    margin-top: 20px;
     text-align: center;
     color: #ffffff;
 }
@@ -613,8 +613,8 @@ body{
 /* ロゴの位置調整 */
 #header-logo {
     margin: 0px 0px 0px 140px; /* ハンバーガーメニューと被らないように調整 */
-    display: flex
-
+    display: flex;
+    position: relative;
 }
 
 /* home-image10 のマージン調整 */
@@ -632,7 +632,7 @@ body{
 #header-info-container {
     display: flex;
     flex-direction: column;
-    margin-left: 262px;
+    margin-left: -9px;
 }
 
 #user-info {
