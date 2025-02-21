@@ -1178,7 +1178,7 @@ a {
     color: #ff00d9;
     text-decoration: none;
     /* font-size: 1.1em; */
-    margin: 2rem 0px 0rem -1px;
+    margin: 2rem 0px 0rem 2px;
     display: inline-block;
     text-align: center;
     font-size: 15px;
