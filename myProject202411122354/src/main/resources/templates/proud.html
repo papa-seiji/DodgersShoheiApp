@@ -12,12 +12,13 @@
 
     <!-- browser-image-compression.mjs をモジュールとして読み込む -->
     <script type="module" src="/js/proud.js"></script>
+    <script src="/js/home_2.js"></script> <!-- home_2.jsを追加 -->
 
     <title>頑張れ翔平君 いつもみんなが応援してるよ!</title>
 </head>
 <body>
         <!-- ナビゲーションバー -->
-        <div id="header-navbar">
+        <!--<div id="header-navbar">
             <div id="header-left">
                 <div id="header-logo">
                 <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
@@ -40,7 +41,43 @@
                     </div>
                 </div>
             </nav>
+        </div>-->
+        <!-- ナビゲーションバー -->
+        <!-- ヘッダーエリア -->
+<div id="header-navbar">
+    <div id="header-left">
+        <!-- ハンバーガーメニューのアイコン（左配置） -->
+        <div id="menu-toggle" class="hamburger-menu">PROUD</div>
+        <div id="header-logo">
+            <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
+            <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
         </div>
+        <div id="header-info-container">
+            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="visitor-counter-display">
+                <span id="visitor-counter-value">243</span>人目
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- スライドメニュー -->
+<div id="side-menu" class="side-menu">
+    <nav>
+        <a href="/home">Home(TOP)</a>
+        <!--<a href="/proud">Proud</a>-->
+        <a href="/yosou">予想</a>
+        <a href="/comments">Chat</a>
+        <a href="/links">Links</a>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+    <!-- ×ボタンを下に配置 -->
+    <div class="close-btn" id="menu-close">×</div>
+</div>
+
+<!-- 背景オーバーレイ -->
+<div id="overlay" class="overlay"></div>
+
 
         <div id='black'>
             <header>
