@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup Success</title>
     <link rel="stylesheet" th:href="@{/css/signup_login_util.css}">
+    <link rel="stylesheet" th:href="@{/css/header-2.css}">
 </head>
 <body>
     <!-- fragments/headerを利用してヘッダーを表示 -->
@@ -14,9 +15,9 @@
     <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
 
     <main>
-        <h1 id='util_Account' th:text="${message}">Signup Successful</h1>
-        <p id='util_Account'>Thank you for signing up.</p>
-        <p id='util_Account'><a href="/auth/login">Go to Login</a></p>
+        <h1 id='util_Account' th:text="${message}">登録出来ました</h1>
+        <p id='util_Account'>新規ユーザ登録ありがとうございます</p>
+        <p id='util_Account'><a href="/auth/login">ログイン画面へ</a></p>
     </main>
     <span id='protectFooter'></span><!-- フッターを下げる為だけに設置 -->
     <th:block th:replace="fragments/footer :: footer"></th:block>
