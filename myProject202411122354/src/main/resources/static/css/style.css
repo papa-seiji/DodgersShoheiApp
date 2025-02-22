@@ -1,3 +1,12 @@
+/* 画面の横スクロールを防止 */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+
 /* ======== 全体の基本スタイル ======== */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -1793,7 +1802,7 @@ body {
     content: "";
     position: absolute;
     top: -18px;
-    left: 76%;
+    left: 18%;
     transform: translateX(-50%);
     border-width: 10px;
     border-style: solid;
@@ -1816,28 +1825,28 @@ body {
 
 /* 吹き出しを適切な位置に配置 */
 #tooltip-navbar {
-    top: 43px;
-    left: 69%;
+    top: 52px;
+    left: 29%;
     transform: translateX(-50%);
 }
 
 
 #tooltip-yosou {
-    top: 3801px;
+    top: 3862px;
     left: 12em;
 }
 
 #tooltip-proud {
-    top: 4095px;
+    top: 4157px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 4350px;
+    top: 4435px;
     left: 5em;
 }
 #tooltip-link {
-    top: 4710px;
+    top: 4787px;
     left: 10em;
 }
 
