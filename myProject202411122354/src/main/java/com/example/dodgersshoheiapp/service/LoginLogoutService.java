@@ -16,15 +16,19 @@ import java.util.zip.ZipOutputStream;
 import java.util.stream.Collectors;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 @Service
 public class LoginLogoutService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginLogoutService.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private LoginLogoutRepository loginLogoutRepository;
 
-    private static final String LOG_FILE_PATH = "login_logout_logs.txt";
+    private static final String LOG_FILE_PATH = "login_logout_logs.json"; // .txt → .json に変更
     private static final String ARCHIVE_FOLDER = "logs_archive";
     private static final long MAX_LOG_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 
@@ -39,15 +43,38 @@ public class LoginLogoutService {
 
             loginLogoutRepository.save(log);
 
-            String logEntry = String.format(
-                    "Username: %s, Action: %s, IP: %s, UserAgent: %s, Timestamp: %s%n",
-                    username, action, ipAddress, userAgent, log.getTimestamp());
+            // ★ フォーマットをJSON形式にする（統一）
+            String formattedLogEntry = formatLogEntry(log);
+            writeLogToFile(formattedLogEntry);
 
-            writeLogToFile(logEntry);
             logger.debug("★★★ ログイン・ログアウト情報をDB & ファイルに保存成功: {}", log);
         } catch (Exception e) {
             logger.error("ログイン・ログアウト情報の保存に失敗しました", e);
         }
+    }
+
+    /**
+     * JSONフォーマットでログを作成
+     */
+    private String formatLogEntry(LoginLogoutLog log) {
+        ObjectNode logJson = objectMapper.createObjectNode();
+        logJson.put("username", log.getUsername());
+        logJson.put("action", log.getAction());
+        logJson.put("ipAddress", normalizeIpAddress(log.getIpAddress()));
+        logJson.put("userAgent", log.getUserAgent());
+        logJson.put("timestamp", log.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+
+        return logJson.toString() + System.lineSeparator();
+    }
+
+    /**
+     * IPアドレスを整形
+     */
+    private String normalizeIpAddress(String ipAddress) {
+        if ("0:0:0:0:0:0:0:1".equals(ipAddress) || "::1".equals(ipAddress)) {
+            return "localhost";
+        }
+        return ipAddress;
     }
 
     private void writeLogToFile(String logEntry) {
@@ -59,7 +86,7 @@ public class LoginLogoutService {
                 archiveLogFile();
             }
 
-            // ログファイルに書き込み
+            // ログファイルに書き込み（JSON形式）
             Files.write(Paths.get(LOG_FILE_PATH), logEntry.getBytes(), StandardOpenOption.CREATE,
                     StandardOpenOption.APPEND);
         } catch (IOException e) {
@@ -80,7 +107,7 @@ public class LoginLogoutService {
                     ZipOutputStream zos = new ZipOutputStream(fos);
                     FileInputStream fis = new FileInputStream(LOG_FILE_PATH)) {
 
-                ZipEntry zipEntry = new ZipEntry("login_logout_logs.txt");
+                ZipEntry zipEntry = new ZipEntry("login_logout_logs.json");
                 zos.putNextEntry(zipEntry);
 
                 byte[] buffer = new byte[1024];
