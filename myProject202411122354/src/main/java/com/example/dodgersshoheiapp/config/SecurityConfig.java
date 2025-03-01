@@ -1,5 +1,6 @@
 package com.example.dodgersshoheiapp.config;
 
+import com.example.dodgersshoheiapp.service.LoginLogoutService;
 import com.example.dodgersshoheiapp.service.VisitorCounterService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,16 +18,25 @@ import org.springframework.security.core.Authentication;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.config.Customizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Configuration
 public class SecurityConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+
     private final UserDetailsServiceImpl userDetailsService;
     private final VisitorCounterService visitorCounterService;
+    private final LoginLogoutService loginLogoutService;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, VisitorCounterService visitorCounterService) {
+    // ★ `LoginLogoutService` をコンストラクタで受け取る
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
+            VisitorCounterService visitorCounterService,
+            LoginLogoutService loginLogoutService) {
         this.userDetailsService = userDetailsService;
         this.visitorCounterService = visitorCounterService;
+        this.loginLogoutService = loginLogoutService;
     }
 
     @Bean
@@ -72,11 +82,23 @@ public class SecurityConfig {
         return (web) -> web.ignoring().requestMatchers("/favicon.ico");
     }
 
+    /**
+     * ログアウト時の処理（ログ記録 & リダイレクト）
+     */
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-            System.out.println(
-                    "DEBUG: ログアウトしたユーザー: " + (authentication != null ? authentication.getName() : "不明"));
+            if (authentication != null) {
+                String username = authentication.getName();
+                String ipAddress = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                // 🔹 ログアウト情報を記録
+                loginLogoutService.logAction(username, "LOGOUT", ipAddress, userAgent);
+
+                logger.info("✅ ログアウト: ユーザー名={}, IP={}, ユーザーエージェント={}",
+                        username, ipAddress, userAgent);
+            }
             response.sendRedirect("/auth/login?logout=true");
         };
     }
@@ -95,18 +117,45 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * ログイン成功時の処理（カウンター更新 & ログ記録）
+     */
     @Bean
     public AuthenticationSuccessHandler visitorCounterSuccessHandler() {
         return (request, response, authentication) -> {
+            if (authentication != null) {
+                String username = authentication.getName();
+                String ipAddress = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                // 🔹 ログイン情報を記録
+                loginLogoutService.logAction(username, "LOGIN", ipAddress, userAgent);
+
+                logger.info("✅ ログイン成功: ユーザー名={}, IP={}, ユーザーエージェント={}",
+                        username, ipAddress, userAgent);
+            }
+
             visitorCounterService.incrementVisitorCounter();
             response.sendRedirect("/home");
         };
     }
 
+    /**
+     * ログイン失敗時の処理（ログ記録 & エラーメッセージ表示）
+     */
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
-            System.out.println("DEBUG: ログイン失敗 - " + exception.getMessage());
+            String username = request.getParameter("username"); // 入力されたユーザー名
+            String ipAddress = request.getRemoteAddr(); // クライアントのIPアドレス
+            String userAgent = request.getHeader("User-Agent"); // ユーザーエージェント
+
+            // 🔹 ログイン失敗の記録
+            loginLogoutService.logAction(username != null ? username : "UNKNOWN", "FAILED_LOGIN", ipAddress, userAgent);
+
+            logger.warn("⚠️ ログイン失敗: ユーザー名={}, IP={}, ユーザーエージェント={}, エラー={}",
+                    username, ipAddress, userAgent, exception.getMessage());
+
             request.getSession().setAttribute("SPRING_SECURITY_LAST_EXCEPTION", exception.getMessage());
             response.sendRedirect("/auth/login?error=true");
         };

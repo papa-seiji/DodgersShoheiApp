@@ -1810,6 +1810,7 @@ body {
 }
 
 /* 吹き出しの三角形（下に表示）紹介部分の吹き出し用 */
+#tooltip-yosou::after,
 #tooltip-proud::after,
 #tooltip-chat::after,
 #tooltip-link::after {
@@ -1832,21 +1833,21 @@ body {
 
 
 #tooltip-yosou {
-    top: 3782px;
+    top: 4140px;
     left: 12em;
 }
 
 #tooltip-proud {
-    top: 4077px;
+    top: 4432px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 4335px;
+    top: 4693px;
     left: 5em;
 }
 #tooltip-link {
-    top: 4707px;
+    top: 5050px;
     left: 10em;
 }
 

@@ -39,7 +39,8 @@ public class MlbApiHealthCheckBatch {
     // @Scheduled(fixedRate = 60000) // 1分ごとに実行（テストしたい時間に応じて変更）
     // @Scheduled(fixedRate = 480 * 60 * 1000) // 8時間ごとに実行
     // 「8時、16時、24時に固定で実行」 するなら、
-    @Scheduled(cron = "0 0 8,16,0 * * ?", zone = "Asia/Tokyo") // が最適！ 🎯
+    // @Scheduled(cron = "0 0 8,16,0 * * ?", zone = "Asia/Tokyo") // が最適！ 🎯
+    @Scheduled(cron = "0 0 8 * * ?", zone = "Asia/Tokyo") // 毎日 8:00 のみに実行
     public void checkMlbApiHealth() {
         logger.info("=== MLB API Health Check Started ===");
         appendLog("=== MLB API Health Check Started ===");
