@@ -43,11 +43,14 @@ public class LoginLogoutService {
 
             loginLogoutRepository.save(log);
 
-            // ★ フォーマットをJSON形式にする（統一）
             String formattedLogEntry = formatLogEntry(log);
             writeLogToFile(formattedLogEntry);
 
-            logger.debug("★★★ ログイン・ログアウト情報をDB & ファイルに保存成功: {}", log);
+            if ("FAILED_LOGIN".equals(action)) {
+                logger.warn("⚠️【ログイン失敗】ユーザー: {}, IP: {}, UserAgent: {}", username, ipAddress, userAgent);
+            } else {
+                logger.debug("★★★ ログイン・ログアウト情報をDB & ファイルに保存成功: {}", log);
+            }
         } catch (Exception e) {
             logger.error("ログイン・ログアウト情報の保存に失敗しました", e);
         }
