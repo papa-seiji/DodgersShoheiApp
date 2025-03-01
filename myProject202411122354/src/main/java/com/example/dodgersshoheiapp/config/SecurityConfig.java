@@ -1,6 +1,7 @@
 package com.example.dodgersshoheiapp.config;
 
 import com.example.dodgersshoheiapp.service.VisitorCounterService;
+import com.example.dodgersshoheiapp.service.LoginLogoutService; // ★ 追加
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,10 +24,15 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final VisitorCounterService visitorCounterService;
+    private final LoginLogoutService loginLogoutService; // ★ 追加
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, VisitorCounterService visitorCounterService) {
+    // ★ LoginLogoutServiceをコンストラクタで受け取る
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
+            VisitorCounterService visitorCounterService,
+            LoginLogoutService loginLogoutService) {
         this.userDetailsService = userDetailsService;
         this.visitorCounterService = visitorCounterService;
+        this.loginLogoutService = loginLogoutService;
     }
 
     @Bean
@@ -75,8 +81,16 @@ public class SecurityConfig {
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-            System.out.println(
-                    "DEBUG: ログアウトしたユーザー: " + (authentication != null ? authentication.getName() : "不明"));
+            if (authentication != null) {
+                String username = authentication.getName();
+                String ipAddress = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                // ★★★ ログアウト情報を記録
+                loginLogoutService.logAction(username, "LOGOUT", ipAddress, userAgent);
+
+                System.out.println("DEBUG: ログアウトしたユーザー: " + username);
+            }
             response.sendRedirect("/auth/login?logout=true");
         };
     }
@@ -98,6 +112,15 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler visitorCounterSuccessHandler() {
         return (request, response, authentication) -> {
+            if (authentication != null) {
+                String username = authentication.getName();
+                String ipAddress = request.getRemoteAddr();
+                String userAgent = request.getHeader("User-Agent");
+
+                // ★★★ ログイン情報を記録
+                loginLogoutService.logAction(username, "LOGIN", ipAddress, userAgent);
+            }
+
             visitorCounterService.incrementVisitorCounter();
             response.sendRedirect("/home");
         };
