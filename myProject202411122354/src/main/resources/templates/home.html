@@ -247,8 +247,12 @@ async function fetchGameInfo() {
     today.setDate(today.getDate() - 1);
     const yesterdayStr = today.toISOString().split("T")[0];
 
-    const response = await fetch(`http://localhost:8080/api/mlb/game?date=${yesterdayStr}`);
+    //const response = await fetch(`http://localhost:8080/api/mlb/game?date=${yesterdayStr}`);//ローカル用
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-06`);
+
+    const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=${yesterdayStr}`);
+    // const response = await fetch("https://34.200.146.188:8080/api/mlb/game?date=${yesterdayStr}");//本番用
+
 
     const data = await response.json();
 

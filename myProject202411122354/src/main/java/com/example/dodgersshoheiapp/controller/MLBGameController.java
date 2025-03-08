@@ -7,6 +7,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/mlb")
+@CrossOrigin(origins = "https://letsgotohtanifromjapan.click") // 本番環境のドメインを許可
 public class MLBGameController {
     private final MLBGameService mlbGameService;
 
