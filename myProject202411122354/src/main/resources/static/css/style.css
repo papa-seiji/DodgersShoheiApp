@@ -1976,21 +1976,25 @@ body {
 
 
 #tooltip-yosou {
-    top: 4140px;
+    /* top: 4140px; */
+    top: 4676px;
     left: 12em;
 }
 
 #tooltip-proud {
-    top: 4432px;
+    /* top: 4432px; */
+    top: 4968px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 4693px;
+    /* top: 4693px; */
+    top: 5229px;
     left: 5em;
 }
 #tooltip-link {
-    top: 5050px;
+    /* top: 5050px; */
+    top: 5586px;
     left: 10em;
 }
 
@@ -2208,7 +2212,7 @@ body {
 /* スワイプボタンの位置調整 */
 #prevBtn, #nextBtn {
     position: absolute;
-    top: 64%; /* ← 中央に配置 */
+    top: 104%; /* ← 中央に配置 */
     transform: translateY(-50%); /* ← 中央揃え */
     background-color: rgba(0, 0, 0, 0.6); /* 背景を少し透過 */
     color: white;
