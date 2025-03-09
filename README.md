@@ -69,3 +69,21 @@ API連携：MLB API
 ファイル管理：Thymeleaf（テンプレートエンジン）
 デプロイ環境：AWS EC2 + Nginx + Let's Encrypt（SSL証明書取得済み）
 開発ツール：VSCode, Postman
+📌 バージョン管理
+本アプリのソースコードは GitHub で管理しており、ブランチ運用を行いながら開発を進めています。
+リリース時の履歴管理やコードのレビューもGitHub上で実施しています。
+
+🗄️ 運用中のデータベーステーブル
+本アプリでは、以下のPostgreSQLのテーブルを運用中です。
+
+users：ユーザー情報（ID、名前、パスワード、権限 など）
+comments：チャットの投稿データ（ユーザー、メッセージ、タイムスタンプ）
+counters：カウンター機能の管理（管理者用の数値更新機能）
+liked_users：Proudページの「いいね」機能の記録（ユーザーID、画像ID）
+login_logout_logs：ログイン・ログアウトの記録（ユーザー、日時、操作内容）
+mlb_api_logs：MLB APIのデータ取得ログ
+mlb_yosou_datas：MLB順位予想の記録
+news_updates：ニュース記事データ（タイトル、本文、画像パス など）
+proud_image：Proudページの画像投稿データ
+subscriptions：Webプッシュ通知のサブスクリプション情報（現在は未使用）
+visitor_counter：訪問者数の記録
