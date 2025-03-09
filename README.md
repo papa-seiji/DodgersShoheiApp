@@ -1,8 +1,8 @@
-🚀 #DodgersShoheiApp リリースノート
+🚀** DodgersShoheiApp リリースノート**
 本アプリは、MLBの試合情報、大谷翔平の個人成績、6地区30球団の順位表、チャット機能、画像投稿機能、訪問者数の記録などを統合したWebアプリケーションです。Spring Boot (Java) をバックエンドに、PostgreSQLをデータベースに使用し、フロントエンドはHTML/CSS/JavaScriptで構築されています。
 また、SSL証明書を取得し、独自ドメイン（https://letsgoohtanifromjapan.click）で運用しています。
 
-📌 #実装済みの主な機能
+📌** 実装済みの主な機能**
 📝 認証 & 記録
 ユーザー認証：Spring Securityを利用したログイン・ログアウト機能
 ログイン・ログアウト記録：login_logout_logs テーブルに記録（1日1回 8時にバッチ処理で保存＆ログファイルに出力）
