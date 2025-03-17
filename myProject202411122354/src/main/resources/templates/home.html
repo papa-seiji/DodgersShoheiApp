@@ -254,10 +254,10 @@ async function fetchGameInfo() {
 
     // APIを呼び出す（本番環境用）
     // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=${japanTodayStr}`);
-    const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-16`);
+    // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-18`);
     // APIを呼び出す（開発環境用）
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=${japanTodayStr}`);
-    // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-16`);
+    const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-18`);
 
     const data = await response.json();
 
@@ -289,7 +289,15 @@ async function fetchGameInfo() {
         return;
     }
 
-    // `data.date` の値をチェック
+
+//Strat ココはアメリカ本土での試合時に使用するので日本開催時は使わないのでコメントアウトする//APIを呼び出す時は変数に切り替え${japanTodayStr}
+    // **試合データがある場合**
+    // gameDateEl.innerText = new Date(data.date).toLocaleString("ja-JP");
+//End  ココはアメリカ本土での試合時に使用するので日本開催時は使わないのでコメントアウトする//APIを呼び出す時は変数に切り替え${japanTodayStr}
+
+
+//Strat ココからは日本開催用に時間を変換するロジックなのでアメリカ本土での試合時は使わないのでコメントアウトする//APIを呼び出す時は変数には使わず直書き
+// `data.date` の値をチェック
     console.log("受け取った日付:", data.date);
 
     // 日付フォーマットが適切か確認
@@ -306,6 +314,9 @@ async function fetchGameInfo() {
     }
 
     gameDateEl.innerText = japanTime;
+//End  ココからは日本開催用に時間を変換するロジックなのでアメリカ本土での試合時は使わないのでコメントアウトする//APIを呼び出す時は変数には使わず直書き
+
+
     venueEl.innerText = data.venue;
 
     // **ステータスの日本語変換**
