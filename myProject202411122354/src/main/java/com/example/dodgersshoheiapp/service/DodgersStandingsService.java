@@ -6,8 +6,8 @@ import java.util.*;
 
 @Service
 public class DodgersStandingsService {
-    private static final String API_URL_NL = "https://statsapi.mlb.com/api/v1/standings?leagueId=104&season=2024&standingsTypes=regularSeason";
-    private static final String API_URL_AL = "https://statsapi.mlb.com/api/v1/standings?leagueId=103&season=2024&standingsTypes=regularSeason";
+    private static final String API_URL_NL = "https://statsapi.mlb.com/api/v1/standings?leagueId=104&season=2025&standingsTypes=regularSeason";
+    private static final String API_URL_AL = "https://statsapi.mlb.com/api/v1/standings?leagueId=103&season=2025&standingsTypes=regularSeason";
 
     // 他のモードの URL (切り替え用)
     // private static final String SPRING_TRAINING_API_URL =
