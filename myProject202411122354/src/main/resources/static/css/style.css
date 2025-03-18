@@ -505,6 +505,76 @@ a:hover {
 
 
 
+/* 📌 MLB試合情報エリアのデザイン */
+#mlb-game-info {
+    background-color: #0b0a1e;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 15px auto 0px auto;
+    max-width: 90%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 見出しのスタイル */
+#mlb-game-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #ccd417;
+    margin-bottom: 10px;
+}
+
+/* 📌 試合情報の基本スタイル */
+#mlb-game-info p {
+    font-size: 1rem;
+    color: #ffffff;
+    text-align: center;
+}
+
+/* 📌 チームロゴのサイズ調整 */
+#mlb-away-logo,
+#mlb-home-logo {
+    width: 50px;
+    height: auto;
+    margin: 0 10px;
+    display: inline-block;
+}
+
+/* 📌 試合スコアの強調 */
+#mlb-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* 📌 レスポンシブ対応 */
+@media (max-width: 768px) {
+    #mlb-game-info {
+        max-width: 95%;
+        padding: 10px;
+    }
+
+    #mlb-game-title {
+        font-size: 1.2rem;
+    }
+
+    #mlb-game-info p {
+        font-size: 0.9rem;
+        margin: -6px 0 15px 0;
+    }
+
+    #mlb-away-logo,
+    #mlb-home-logo {
+        width: 40px;
+    }
+
+    #mlb-score {
+        font-size: 3.2rem;
+    }
+}
+
+
+
 
 /* start========  吹き出しのスタイル  (max-width: 430px)======== */ 
 /* 吹き出しのスタイル */
@@ -1780,6 +1850,79 @@ body {
 
 
 
+/* 📌 MLB試合情報エリアのデザイン */
+/* 📌 MLB試合情報エリアのデザイン */
+#mlb-game-info {
+    background-color: #0b0a1e;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 15px auto 0px auto;
+    max-width: 90%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 見出しのスタイル */
+#mlb-game-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #ccd417;
+    margin-bottom: 10px;
+}
+
+/* 📌 試合情報の基本スタイル */
+#mlb-game-info p {
+    font-size: 1rem;
+    color: #ffffff;
+    text-align: center;
+}
+
+/* 📌 チームロゴのサイズ調整 */
+#mlb-away-logo,
+#mlb-home-logo {
+    width: 50px;
+    height: auto;
+    margin: 0 10px;
+    display: inline-block;
+}
+
+/* 📌 試合スコアの強調 */
+#mlb-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* 📌 レスポンシブ対応 */
+@media (max-width: 768px) {
+    #mlb-game-info {
+        max-width: 95%;
+        padding: 10px;
+    }
+
+    #mlb-game-title {
+        font-size: 1.2rem;
+    }
+
+    #mlb-game-info p {
+        font-size: 0.9rem;
+        margin: -6px 0 15px 0;
+    }
+
+    #mlb-away-logo,
+    #mlb-home-logo {
+        width: 40px;
+    }
+
+    #mlb-score {
+        font-size: 3.2rem;
+    }
+}
+
+
+
+
+
 
 /* start========  吹き出しのスタイル  (max-width: 430px)======== */
 /* 吹き出しのスタイル */
@@ -1833,21 +1976,25 @@ body {
 
 
 #tooltip-yosou {
-    top: 4140px;
+    /* top: 4676px; */
+    top: 4664px;
     left: 12em;
 }
 
 #tooltip-proud {
-    top: 4432px;
+    /* top: 4968px; */
+    top: 4956px;
     left: 12em;
 }
 
 #tooltip-chat {
-    top: 4693px;
+    /* top: 5229px; */
+    top: 5217px;
     left: 5em;
 }
 #tooltip-link {
-    top: 5050px;
+    /* top: 5586px; */
+    top: 5574px;
     left: 10em;
 }
 
@@ -2065,7 +2212,7 @@ body {
 /* スワイプボタンの位置調整 */
 #prevBtn, #nextBtn {
     position: absolute;
-    top: 64%; /* ← 中央に配置 */
+    top: 136%; /* ← 中央に配置 */
     transform: translateY(-50%); /* ← 中央揃え */
     background-color: rgba(0, 0, 0, 0.6); /* 背景を少し透過 */
     color: white;
