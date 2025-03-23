@@ -51,7 +51,7 @@ public class SecurityConfig {
                                 "/proud", "/stats", "/api/stats", "/notifications/subscribe", "/notifications/send",
                                 "/icon.png", "/sw.js", "/notifications/**", "/subscriptions/**",
                                 "/notifications/comments", "/api/news", "/api/dodgers/standings", "/yosou",
-                                "/api/mlb/**")
+                                "/api/mlb/**", "/archive")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // 管理者専用エンドポイントを保護
                         .anyRequest().authenticated())
