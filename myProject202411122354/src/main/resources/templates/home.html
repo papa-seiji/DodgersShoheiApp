@@ -254,10 +254,10 @@ async function fetchGameInfo() {
 
     // APIを呼び出す（本番環境用）
     // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=${japanTodayStr}`);
-    // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-18`);
+    const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-19`);
     // APIを呼び出す（開発環境用）
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=${japanTodayStr}`);
-    const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-18`);
+    // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-18`);
 
     const data = await response.json();
 
@@ -434,30 +434,30 @@ window.onload = fetchGameInfo;
     <div class="standings-wrapper">
         <!-- ✅ NL 西地区 -->
         <div class="standings-slide" id="nl-west">
-            <h3>2024 NL 西地区</h3>
+            <h3>2025 NL 西地区</h3>
             <table class="styled-table">
                 <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-west-body"></tbody></table></div>
         <!-- ✅ NL 中地区 -->
         <div class="standings-slide" id="nl-central">
-            <h3>2024 NL 中地区</h3>
+            <h3>2025 NL 中地区</h3>
             <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-central-body"></tbody></table></div>
         <!-- ✅ NL 東地区 -->
         <div class="standings-slide" id="nl-east">
-            <h3>2024 NL 東地区</h3>
+            <h3>2025 NL 東地区</h3>
             <table class="styled-table">
                 <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-east-body"></tbody></table></div>
                 
         <!-- ✅ AL 西地区 -->
         <div class="standings-slide" id="al-west">
-            <h3>2024 AL 西地区</h3>
+            <h3>2025 AL 西地区</h3>
             <table class="styled-table">
                 <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-west-body"></tbody></table></div>
         <!-- ✅ AL 中地区 -->
         <div class="standings-slide" id="al-central">
-            <h3>2024 AL 中地区</h3><table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-central-body"></tbody></table></div>
+            <h3>2025 AL 中地区</h3><table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-central-body"></tbody></table></div>
         <!-- ✅ AL 東地区 -->
         <div class="standings-slide" id="al-east">
-            <h3>2024 AL 東地区</h3>
+            <h3>2025 AL 東地区</h3>
             <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-east-body"></tbody></table></div></div></div>
 
 <!-- ✅ スワイプボタン -->
@@ -561,19 +561,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
-    <div id="confetti-container"><h1 id="fifty_fifty" class="shiny-text">大谷翔平MVP&54-59おめでとう</h1></div>
-    <h5 class="shiny-text-1">目標は2025年MLB開幕戦Cubs対Dodgers観戦すること</h5>
-    <h5 class="shiny-text-1">2024は打者成績のみになりますので、投手成績は</h5>
-    <h5 class="shiny-text-1">2023のエンゼルス当時の成績を表示しております</h5>
+    <h5 class="shiny-text-1">2024大谷翔平MVP&54-59おめでとう</h5>
+    <h1 id="oomidashi" class="shiny-text">　♥2025年MLBシーズンスタート♥　</h1>
+    <h5 class="shiny-text-1">東京シリーズ開幕戦 CHC vs LAD 生観戦願い叶わず</h5>
+    <h5 class="shiny-text-1">2025打者成績になります、投手成績は</h5>
+    <h5 class="shiny-text-1">復帰してデータが更新されたら表示されます</h5>
     <h5 class="shiny-text-1">(statsapi.mlb.comより非同期で抽出して表示)</h5>
-    <h5 class="shiny-text-1">見て下さい！2024打者成績凄すぎるでしょ～</h5>
     <h5 id="h5under_row" class="shiny-text-1">今期二刀流復活が楽しみ！みんなで応援しましょう！</h5>
 
 
 
             <div class="stats-container-1">
             <div>
-                <div id="SeasonStats-1">2024 Stats</div>
+                <div id="SeasonStats-1">2025 Stats</div>
                 <!-- 打者成績セクション -->
                 <div id="hitter-stats">
                     <div id="HitterStats-1">Hitter Stats</div>
@@ -596,10 +596,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-        <div>👼エンゼルス当時</div>
+        <!-- <div>👼エンゼルス当時</div> -->
         <div class="stats-container-2">
             <div>
-                <div id="SeasonStats-2">2023 Stats</div>
+                <div id="SeasonStats-2">2025 Stats</div>
                 <!-- 投手成績セクション -->
                 <div id="pitcher-stats">
                     <div id="pitcher-stats-2">Pitcher Stats</div>
@@ -624,31 +624,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!--Start 動画セクション 2025-->
     <div id="hoge-hoge_landing4" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">エキシビション マッチ3/15</h5>
-    <h5 class="shiny-text-1"> 　巨人 vs ドジャース　　</h5>
+    <h5 class="shiny-text-1">2025MLBレギュラーS開幕！</h5>
+    <h5 class="shiny-text-1"> 　カブス vs ドジャース　　</h5>
 
-    <h5 class="shiny-text-1">2025/3/15</h5>
-    <h5 class="shiny-text-1">開幕シリーズ</h5>
+    <h5 class="shiny-text-1">2025/3/18</h5>
+    <h5 class="shiny-text-1">RGシーズン</h5>
 
         <div class="douga-section_4">
-            <div id="hoge-hoge_3"> コンフォート,大谷,テオスカー </div>
+            <div id="hoge-hoge_3">ド軍 vs カ軍 ゲーム Highlights </div>
 
             <div id="douga-container-4">
-                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/ATkalkiJTh4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/HQOR6Ng4eQI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 <!--End 動画セクション 2025-->
 
 <!--Start 動画セクション 2025-->
     <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">世界一連覇を目指す</h5>
-    <h5 class="shiny-text-1"> </h5>
+    <h5 class="shiny-text-1">東京ドームでの復帰</h5>
+
+    <h5 class="shiny-text-1"></h5>
     <h5 class="shiny-text-1"></h5>
 
         <div class="douga-section_3">
-            <div id="hoge-hoge_3">今季の新布陣を徹底チェック！</div>
+            <div id="hoge-hoge_3">Fマンが肋骨負傷について等々</div>
+
             <div id="douga-container-3">
-                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/WHaK_e-syFI"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/EgvfHowmvHI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 <!--End 動画セクション 2025-->
