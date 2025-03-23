@@ -19,6 +19,7 @@ public class HomeController {
         this.messagingTemplate = messagingTemplate;
     }
 
+    // ホーム画面（コメント処理）
     @GetMapping("/home")
     public String handleComment(@RequestParam(required = false) String content, Model model) {
         if (content != null && !content.isEmpty()) {
@@ -33,5 +34,11 @@ public class HomeController {
         // コメントリストをモデルに追加
         model.addAttribute("comments", commentService.getAllComments());
         return "home"; // "home.html" を表示
+    }
+
+    // ✅ アーカイブ画面
+    @GetMapping("/archive")
+    public String showArchivePage() {
+        return "archive"; // archive.html を表示（resources/templates/archive.html）
     }
 }

@@ -18,48 +18,36 @@
 
 
 <style>
-    /* スライドショー全体のスタイル */
-    #mlb-tokyo-series-2025 {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
+/* 一意なリンクスタイルを明示し、他の a タグと分離 */
+
+    /* aタグに影響されないように調整 */
+    a.tokyo-archive-link {
+        display: block;
         width: 100%;
-        max-width: 800px; /* PCで見たときの最大幅 */
-        margin: 0 auto; /* 中央配置 */
-        position: relative;
-        text-align: center; /* 画像を中央寄せ */
-        background-color: #001531; /* MLBの背景に合う濃紺 */
+        text-decoration: none;
+        color: inherit;
         margin-top:1px;
     }
 
-    /* 画像の横並びとスライド設定 */
-    .carousel-wrapper {
-        display: flex;
-        width: 400%; /* 画像4枚分の幅（クローンを含む） */
-        transition: transform 1s ease-in-out;
-        background-color: #001531; /* 画像の背景色に合わせて補完 */
-    }
-
-    .carousel-wrapper img {
-        width: 100%;
-        max-width: 800px;
-        object-fit: contain; /* 画像がはみ出さないように調整 */
-        margin: auto; /* 画像を中央に配置 */
-        display: block;
-        background-color: #001531; /* 画像の背景色を補完 */
+    a.tokyo-archive-link img {
+        width: 100% !important;
+        height: auto !important;
+        object-fit: contain;
     }
 
     /* スマホ対応 */
     @media (max-width: 768px) {
         #mlb-tokyo-series-2025 {
-            max-width: 100%;
+        max-width: 100%;
+        font-weight: bold;
+        color: red;
         }
         .carousel-wrapper img {
             width: 100%;
             height: auto;
         }
     }
+
 </style>
 
 
@@ -170,55 +158,9 @@ document.addEventListener('DOMContentLoaded', function () {
     <th:block th:replace="fragments/header :: header"></th:block>
 
 <!--スタート    MLB東京シリーズ by グッゲンハイム img画像         -->
-    <div id="mlb-tokyo-series-2025">
-        <div class="carousel-wrapper">
-            <img src="/images/tokyo-series(紺色).JPG" alt="Guggenheim1">
-            <img src="/images/tokyo-series(市松模様).JPEG" alt="Guggenheim2">
-            <img src="/images/tokyo-series(選手入).JPEG" alt="Guggenheim3">
-            <!-- クローン画像（1枚目の複製） -->
-            <img src="/images/tokyo-series(紺色).JPG" alt="Guggenheim1 Clone">
-        </div>
-    </div>
-    <script>
-        window.addEventListener("load", function () {
-            const container = document.querySelector(".carousel-wrapper");
-            const slides = document.querySelectorAll(".carousel-wrapper img");
-            const totalSlides = slides.length;
-            let index = 0;
-            let slideWidth = slides[0].clientWidth; // 画像の幅を取得
-
-            console.log("初期設定: スライド幅", slideWidth);
-
-            function updateSlideWidth() {
-                slideWidth = slides[0].clientWidth;
-                console.log("更新されたスライド幅", slideWidth);
-            }
-
-            function showSlide() {
-                index++;
-                container.style.transition = "transform 1s ease-in-out";
-                container.style.transform = `translateX(-${index * slideWidth}px)`;
-
-                console.log("スライド中: index =", index, "translateX =", -index * slideWidth);
-
-                // 無限ループ処理
-                if (index === totalSlides - 1) {
-                    setTimeout(() => {
-                        container.style.transition = "none";
-                        container.style.transform = "translateX(0)";
-                        index = 0;
-                        console.log("リセット: index =", index);
-                    }, 1000); // アニメーションが終わるタイミングでリセット
-                }
-            }
-
-            // 15秒ごとにスライド
-            setInterval(showSlide, 15000);
-
-            // ウィンドウサイズ変更時にスライド幅を更新
-            window.addEventListener("resize", updateSlideWidth);
-        });
-    </script>
+    <a href="/archive" class="tokyo-archive-link">
+        <div id="mlb-tokyo-series-2025">#東京開幕１,２戦アーカイブリンク ←← 押</div>
+    </a>
 <!--エンド    MLB東京シリーズ by グッゲンハイム img画像         -->
 
 

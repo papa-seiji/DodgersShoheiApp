@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MLB東京開幕戦 アーカイブ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <th:block th:replace="fragments/header :: head ('archive.html')"></th:block>
+    <!-- <script src="/js/news-section.js"></script> --><!-- JavaScriptファイルを読み込む -->
+
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 8px;
+            background-color: #e4ec29ab;
+            text-align: center;
+        }
+
+        h1 {
+            color: #001531;
+            margin-bottom: -7px;
+            margin-top: -3px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #001531;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            margin-top: 24px;
+        }
+
+        .back-button:hover {
+            background-color: #003366;
+        }
+
+
+
+    /* スライドショー全体のスタイル */
+    #mlb-tokyo-series-2025 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        width: 100%;
+        max-width: 800px; /* PCで見たときの最大幅 */
+        margin: 0 auto; /* 中央配置 */
+        position: relative;
+        text-align: center; /* 画像を中央寄せ */
+        background-color: #001531; /* MLBの背景に合う濃紺 */
+        margin-top:1px;
+    }
+
+    /* 画像の横並びとスライド設定 */
+    .carousel-wrapper {
+        display: flex;
+        width: 400%; /* 画像4枚分の幅（クローンを含む） */
+        transition: transform 1s ease-in-out;
+        background-color: #001531; /* 画像の背景色に合わせて補完 */
+    }
+
+    .carousel-wrapper img {
+        width: 100%;
+        max-width: 800px;
+        object-fit: contain; /* 画像がはみ出さないように調整 */
+        margin: auto; /* 画像を中央に配置 */
+        display: block;
+        background-color: #001531; /* 画像の背景色を補完 */
+    }
+
+    /* スマホ対応 */
+    @media (max-width: 768px) {
+        #mlb-tokyo-series-2025 {
+            max-width: 100%;
+        }
+        .carousel-wrapper img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+
+/* start======== ニュース/トピック/サイト最新情報 ======== */
+
+#news-section {
+    margin: 20px auto;
+    padding: 10px;
+    width: 350px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #001531;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.news-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: flex-start; スペースを上詰めに配置 */
+    width: 100%;
+    /* height: calc(100vh - 17px); navbarの高さを除外 */
+    /* background-image: url('/images/dodger-stadium-tours.jpg'); */
+    background-color: #001531;
+
+    background-size: auto;
+    /* background-position: top; */
+    opacity: 1;
+    /* font-family: Arial, sans-serif; */
+    box-sizing: border-box;
+    /* padding: 1%; 不要な余白を削除 */
+    /* margin-top: 60px; navbarの高さ分を追加 */
+}
+
+.news-header h2 {
+    margin: 0;
+    padding: 5px;
+    text-align: center;
+    font-size: 18px;
+    color: #f00c0c;
+}
+
+.news-window {
+    height: 100px;
+    overflow-y: auto;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+    background-color: #f1f1f1;
+}
+
+.news-item {
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.news-date {
+    font-size: 9px;
+    color: #666;
+    margin-right: 9px;
+}
+
+.news-text{
+    font-size: 14px;
+}
+
+.news-link {
+    font-size: 14px;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    text-align: left !important;
+    margin: 0px 0px 0px 0px !important;
+}
+
+.news-content {
+    color: black; /* リンクではないコンテンツは普通のテキストに */
+    text-decoration: none;
+    cursor: default; /* ポインタを変更 */
+}
+
+.news-new {
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    margin-left: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* ======== モーダルの中身(max-width: 430px) ======== */
+
+.modal-content img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.modal-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.modal-image {
+    width: 100%; /* 必要に応じて調整 */
+    max-height: 200px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+#news-modal{
+    background-color: white;
+}
+
+.close-button {
+    background-color: white;
+    font-size: 42px;
+    font-weight: bold;
+    color: #f50202;
+    float: right;
+    cursor: pointer;
+    padding: 0px 2px;
+}
+
+
+/* end======== ニュース/トピック/サイト最新情報 ======== */
+
+
+
+/* 動画セクション全体のスタイル */
+#douga-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* 各動画セクション */
+.douga-section_3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    margin-top: 1%;
+    margin-bottom: 30px;
+}
+
+.douga-section_4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    margin-top: 1%;
+    margin-bottom: 30px;
+}
+
+/* Responsive video container */
+#douga-container-3,
+#douga-container-4 {
+    position: relative;
+    width: 100%;
+    height: 0em !important;
+    padding-top: 60%;
+    background-color: #000;
+}
+/* */
+#douga-container-3 iframe,
+#douga-container-4 iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+}
+
+</style>
+</head>
+<body>
+
+    <h1>2025年</h1>
+    <h1>MLB東京開幕戦</h1>
+    <h1>アーカイブ</h1>    <a href="/home" class="back-button">← Home画面に戻る</a>
+
+
+<!--スタート    MLB東京シリーズ by グッゲンハイム img画像         -->
+    <div id="mlb-tokyo-series-2025">
+        <div class="carousel-wrapper">
+            <img src="/images/tokyo-series(紺色).JPG" alt="Guggenheim1">
+            <img src="/images/tokyo-series(市松模様).JPEG" alt="Guggenheim2">
+            <img src="/images/tokyo-series(選手入).JPEG" alt="Guggenheim3">
+            <!-- クローン画像（1枚目の複製） -->
+            <img src="/images/tokyo-series(紺色).JPG" alt="Guggenheim1 Clone">
+        </div>
+    </div>
+    <script>
+        window.addEventListener("load", function () {
+            const container = document.querySelector(".carousel-wrapper");
+            const slides = document.querySelectorAll(".carousel-wrapper img");
+            const totalSlides = slides.length;
+            let index = 0;
+            let slideWidth = slides[0].clientWidth; // 画像の幅を取得
+
+            console.log("初期設定: スライド幅", slideWidth);
+
+            function updateSlideWidth() {
+                slideWidth = slides[0].clientWidth;
+                console.log("更新されたスライド幅", slideWidth);
+            }
+
+            function showSlide() {
+                index++;
+                container.style.transition = "transform 1s ease-in-out";
+                container.style.transform = `translateX(-${index * slideWidth}px)`;
+
+                console.log("スライド中: index =", index, "translateX =", -index * slideWidth);
+
+                // 無限ループ処理
+                if (index === totalSlides - 1) {
+                    setTimeout(() => {
+                        container.style.transition = "none";
+                        container.style.transform = "translateX(0)";
+                        index = 0;
+                        console.log("リセット: index =", index);
+                    }, 1000); // アニメーションが終わるタイミングでリセット
+                }
+            }
+
+            // 15秒ごとにスライド
+            setInterval(showSlide, 15000);
+
+            // ウィンドウサイズ変更時にスライド幅を更新
+            window.addEventListener("resize", updateSlideWidth);
+        });
+    </script>
+<!--エンド    MLB東京シリーズ by グッゲンハイム img画像         -->
+
+<!-- start ニュース/トピック/サイト最新情報 -->
+    <section id="news-section">
+        <div class="news-header">
+            <h2 id="news">MLB東京開幕戦3/18-19</h2>
+        </div>
+        <div class="news-window">
+            <div class="news-list">
+                <!-- JavaScriptで動的に埋め込み -->
+            </div>
+        </div>
+    </section>
+
+    <!-- モーダル -->
+    <div id="news-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">×</span>
+            <h3 id="modal-title"></h3>
+            <img id="modal-image" src="" alt="" style="width: 100%; display: none; margin-bottom: 10px;">
+            <p id="modal-content"></p>
+            <div id="modal-images"></div> <!-- 複数画像用コンテナ -->
+        </div>
+    </div>
+<!-- end ニュース/トピック/サイト最新情報 -->
+
+
+
+<!--Start 動画セクション 2025-->
+    <div id="hoge-hoge_landing4" class="shiny-text-1"></div>
+    <h5 class="shiny-text-1">2025MLBレギュラーS開幕！</h5>
+    <h5 class="shiny-text-1"> 　カブス vs ドジャース　　</h5>
+
+    <h5 class="shiny-text-1">2025/3/18</h5>
+    <h5 class="shiny-text-1">RGシーズン</h5>
+
+        <div class="douga-section_4">
+            <div id="hoge-hoge_3">ド軍 vs カ軍 ゲーム Highlights </div>
+
+            <div id="douga-container-4">
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/HQOR6Ng4eQI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+<!--End 動画セクション 2025-->
+
+<!--Start 動画セクション 2025-->
+    <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
+    <h5 class="shiny-text-1">東京ドーム開幕　 第２戦！</h5>
+
+    <h5 class="shiny-text-1">2025/3/19</h5>
+    <h5 class="shiny-text-1">RGシーズン</h5>
+
+        <div class="douga-section_3">
+            <div id="hoge-hoge_3">ド軍 vs カ軍 ゲーム Highlights </div>
+
+            <div id="douga-container-3">
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/TnRDBW3T_rc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+<!--End 動画セクション 2025-->
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const newsList = document.querySelector('.news-list');
+
+    // APIから取得し、3レコードにフィルター
+    fetch('/api/news')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch news updates');
+            }
+            return response.json();
+        })
+        .then(data => {
+            newsList.innerHTML = ''; // 初期化
+            const filtered = data.filter(news =>
+                ["MLB Tokyo Series 開幕", "開幕１試合目画像", "開幕２試合目画像"].includes(news.content)
+            );
+
+            filtered.forEach(news => {
+                const newsHTML = `
+                    <div class="news-item">
+                        <span class="news-date">${news.date}</span>
+                        <span class="news-link" onclick="openModal('${sanitizeHTML(news.content)}', '${sanitizeHTML(news.details)}', '${sanitizeHTML(news.imageUrl)}')">
+                            ${news.content}
+                        </span>
+                    </div>
+                `;
+                newsList.insertAdjacentHTML('beforeend', newsHTML);
+            });
+        })
+        .catch(error => console.error('ニュース取得エラー:', error));
+});
+
+// モーダル表示処理
+function openModal(title, details, imageUrls) {
+    const modal = document.getElementById("news-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalContent = document.getElementById("modal-content");
+    const modalImages = document.getElementById("modal-images");
+
+    modalTitle.textContent = title || "タイトル未定義";
+    modalContent.innerHTML = details ? unescapeHtml(details) : "詳細がありません";
+
+    modalImages.innerHTML = "";
+    if (imageUrls) {
+        const urls = imageUrls.split(",");
+        urls.forEach(url => {
+            const img = document.createElement("img");
+            img.src = url.trim();
+            img.alt = title;
+            img.className = "modal-image";
+            modalImages.appendChild(img);
+        });
+    }
+
+    modal.style.display = "block";
+    window.addEventListener("click", handleOutsideClick);
+}
+
+function closeModal() {
+    const modal = document.getElementById("news-modal");
+    modal.style.display = "none";
+    window.removeEventListener("click", handleOutsideClick);
+}
+
+function handleOutsideClick(event) {
+    const modal = document.getElementById("news-modal");
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+function sanitizeHTML(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function unescapeHtml(escapedHtml) {
+    const textArea = document.createElement("textarea");
+    textArea.innerHTML = escapedHtml;
+    return textArea.value;
+}
+</script>
+
+
+</body>
+</html>
