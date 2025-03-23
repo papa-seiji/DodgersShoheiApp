@@ -253,11 +253,11 @@ async function fetchGameInfo() {
     console.log(`Fetching MLB game data for: ${japanTodayStr}`);
 
     // APIを呼び出す（本番環境用）
-    // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=${japanTodayStr}`);
-    const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-19`);
+    const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=${japanTodayStr}`);
+    // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-19`);
     // APIを呼び出す（開発環境用）
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=${japanTodayStr}`);
-    // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-18`);
+    // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-23`);
 
     const data = await response.json();
 
@@ -292,28 +292,28 @@ async function fetchGameInfo() {
 
 //Strat ココはアメリカ本土での試合時に使用するので日本開催時は使わないのでコメントアウトする//APIを呼び出す時は変数に切り替え${japanTodayStr}
     // **試合データがある場合**
-    // gameDateEl.innerText = new Date(data.date).toLocaleString("ja-JP");
+    gameDateEl.innerText = new Date(data.date).toLocaleString("ja-JP");
 //End  ココはアメリカ本土での試合時に使用するので日本開催時は使わないのでコメントアウトする//APIを呼び出す時は変数に切り替え${japanTodayStr}
 
 
 //Strat ココからは日本開催用に時間を変換するロジックなのでアメリカ本土での試合時は使わないのでコメントアウトする//APIを呼び出す時は変数には使わず直書き
 // `data.date` の値をチェック
-    console.log("受け取った日付:", data.date);
+    // console.log("受け取った日付:", data.date);
 
     // 日付フォーマットが適切か確認
-    let japanTime = "日付取得エラー";
-    if (data.date) {
-        try {
-            const gameDate = new Date(data.date);
-            japanTime = gameDate.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
-        } catch (error) {
-            console.error("日付の変換に失敗しました:", error);
-        }
-    } else {
-        console.error("試合データの日付がありません");
-    }
+    // let japanTime = "日付取得エラー";
+    // if (data.date) {
+    //     try {
+    //         const gameDate = new Date(data.date);
+    //         japanTime = gameDate.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+    //     } catch (error) {
+    //         console.error("日付の変換に失敗しました:", error);
+    //     }
+    // } else {
+    //     console.error("試合データの日付がありません");
+    // }
 
-    gameDateEl.innerText = japanTime;
+    // gameDateEl.innerText = japanTime;
 //End  ココからは日本開催用に時間を変換するロジックなのでアメリカ本土での試合時は使わないのでコメントアウトする//APIを呼び出す時は変数には使わず直書き
 
 
@@ -588,7 +588,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image6">
         </div>
         <!-- main カウンタ -->
-        <h3>HomeRun: <span id="main-counter-value">0</span></h3>
+        <h3>通算 HR: <span id="main-counter-value">0</span></h3>
         <div id="main-counter-controls" class="admin-controls" style="display: none;">
             <button id="main-increment-button">UP</button>
             <button id="main-decrement-button">DW</button>
@@ -613,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <img src="/images/LAD投げる大谷翔平-removebg-preview.png" alt="背景画像1" class="home-image9">
         </div>
         <!-- secondary カウンタ -->
-        <h3>PitchingWin: <span id="secondary-counter-value">0</span></h3>
+        <h3>通算 Win: <span id="secondary-counter-value">0</span></h3>
         <div id="secondary-counter-controls" class="admin-controls" style="display: none;">
             <button id="secondary-increment-button">UP</button>
             <button id="secondary-decrement-button">DW</button>
@@ -641,16 +641,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!--Start 動画セクション 2025-->
     <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">東京ドームでの復帰</h5>
+    <h5 class="shiny-text-1">東京ドーム開幕　 第２戦！</h5>
 
-    <h5 class="shiny-text-1"></h5>
-    <h5 class="shiny-text-1"></h5>
+    <h5 class="shiny-text-1">2025/3/19</h5>
+    <h5 class="shiny-text-1">RGシーズン</h5>
 
         <div class="douga-section_3">
-            <div id="hoge-hoge_3">Fマンが肋骨負傷について等々</div>
+            <div id="hoge-hoge_3">ド軍 vs カ軍 ゲーム Highlights </div>
 
             <div id="douga-container-3">
-                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/EgvfHowmvHI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/TnRDBW3T_rc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 <!--End 動画セクション 2025-->
