@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  color: white;
+  background: linear-gradient(to right, #b31217, #0f2027);
+}
+
+.container {
+  text-align: center;
+  padding: 1em;
+}
+
+h1 {
+  margin-bottom: 1.5em;
+  font-size: 1.8em;
+}
+
+.image-comparison {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.player-img {
+  width: 45vw;
+  max-width: 600px;
+  height: 442px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.stats-overlay {
+  position: absolute;
+  bottom: 10%;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1em 2em;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 2em;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.label {
+  color: #fff;
+  min-width: 40px;
+  text-align: center;
+}
+
+.hamburger-menu {
+  font-size: 15px !important;
+  color: #ff0000 !important;
+  margin-top: 4px !important;
+}
+
+@media (max-width: 768px) {
+  .image-comparison {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .player-img {
+    width: 90vw;
+    max-width: 300px;
+  }
+
+  .stats-overlay {
+    position: static;
+    margin: 1em 0;
+  }
+
+  .stat-row {
+    justify-content: center;
+    gap: 1em;
+    font-size: 1em;
+  }
+}
