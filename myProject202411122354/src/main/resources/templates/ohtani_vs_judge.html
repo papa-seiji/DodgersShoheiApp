@@ -100,36 +100,43 @@
     </div>
 </div>
 
-<!-- ✅ 成績を取得してDOMに流し込む -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const response = await fetch("/api/ohtani-vs-judge/stats");
-    if (!response.ok) throw new Error("Fetch failed");
+document.addEventListener("DOMContentLoaded", () => {
+  const socket = new SockJS('/ws');  // WebSocketのエンドポイント
+  const stompClient = Stomp.over(socket);
 
-    const data = await response.json();
+  stompClient.connect({}, () => {
+    console.log("✅ WebSocket connected");
 
-    // 大谷翔平 stats
-    const ohtani = data.ohtani.stats[0].splits[0].stat;
-    document.getElementById("gamesPlayed-right").textContent = ohtani.gamesPlayed || "--";
-    document.getElementById("avg-right").textContent = ohtani.avg || "--";
-    document.getElementById("homeRuns-right").textContent = ohtani.homeRuns || "--";
-    document.getElementById("stolenBases-right").textContent = ohtani.stolenBases || "--";
-    document.getElementById("rbi-right").textContent = ohtani.rbi || "--";
-    document.getElementById("ops-right").textContent = ohtani.ops || "--";
+    // メッセージ受信時の処理
+    stompClient.subscribe('/topic/stats', (message) => {
+      const data = JSON.parse(message.body);
+      const ohtani = data.ohtani.stats[0].splits[0].stat;
+      const judge = data.judge.stats[0].splits[0].stat;
 
-    // ジャッジ stats
-    const judge = data.judge.stats[0].splits[0].stat;
-    document.getElementById("gamesPlayed-left").textContent = judge.gamesPlayed || "--";
-    document.getElementById("avg-left").textContent = judge.avg || "--";
-    document.getElementById("homeRuns-left").textContent = judge.homeRuns || "--";
-    document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
-    document.getElementById("rbi-left").textContent = judge.rbi || "--";
-    document.getElementById("ops-left").textContent = judge.ops || "--";
+      // ⏬ 大谷翔平
+      document.getElementById("gamesPlayed-right").textContent = ohtani.gamesPlayed || "--";
+      document.getElementById("avg-right").textContent = ohtani.avg || "--";
+      document.getElementById("homeRuns-right").textContent = ohtani.homeRuns || "--";
+      document.getElementById("stolenBases-right").textContent = ohtani.stolenBases || "--";
+      document.getElementById("rbi-right").textContent = ohtani.rbi || "--";
+      document.getElementById("ops-right").textContent = ohtani.ops || "--";
 
-  } catch (error) {
-    console.error("成績取得エラー:", error);
-  }
+      // ⏬ ジャッジ
+      document.getElementById("gamesPlayed-left").textContent = judge.gamesPlayed || "--";
+      document.getElementById("avg-left").textContent = judge.avg || "--";
+      document.getElementById("homeRuns-left").textContent = judge.homeRuns || "--";
+      document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
+      document.getElementById("rbi-left").textContent = judge.rbi || "--";
+      document.getElementById("ops-left").textContent = judge.ops || "--";
+    });
+
+    // WebSocketにリクエストを送信（自動で取得をトリガー）
+    stompClient.send("/app/stats/request", {}, {});
+  });
 });
 </script>
 

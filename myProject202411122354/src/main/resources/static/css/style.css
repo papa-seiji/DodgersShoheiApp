@@ -2212,7 +2212,7 @@ body {
 /* スワイプボタンの位置調整 */
 #prevBtn, #nextBtn {
     position: absolute;
-    top: 120%; /* ← 中央に配置 */
+    top: 117%; /* ← 中央に配置 */
     transform: translateY(-50%); /* ← 中央揃え */
     background-color: rgba(0, 0, 0, 0.6); /* 背景を少し透過 */
     color: white;
