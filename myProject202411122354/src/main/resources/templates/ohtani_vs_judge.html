@@ -77,22 +77,80 @@
     <div class="image-comparison">
       <img src="/images/judge_02.jpg" alt="ジャッジ" class="player-img" />
       <div class="stats-overlay">
-        <div class="stat-row">
-          <span>.322</span><span class="label">打率</span><span>.310</span>
-        </div>
-        <div class="stat-row">
-          <span>58</span><span class="label">HR</span><span>54</span>
-        </div>
-        <div class="stat-row">
-          <span>144</span><span class="label">打点</span><span>130</span>
-        </div>
-        <div class="stat-row">
-          <span>1.159</span><span class="label">OPS</span><span>1.036</span>
-        </div>
+<div class="stat-row">
+  <span id="gamesPlayed-left">--</span>
+  <span class="label">出場数</span>
+  <span id="gamesPlayed-right">--</span>
+</div>
+<!-- 以下同様に ID を指定 -->
+<div class="stat-row">
+  <span id="avg-left">--</span>
+  <span class="label">打率</span>
+  <span id="avg-right">--</span>
+</div>
+<div class="stat-row">
+  <span id="homeRuns-left">--</span>
+  <span class="label">HR</span>
+  <span id="homeRuns-right">--</span>
+</div>
+<div class="stat-row">
+  <span id="stolenBases-left">--</span>
+  <span class="label">盗塁</span>
+  <span id="stolenBases-right">--</span>
+</div>
+<div class="stat-row">
+  <span id="rbi-left">--</span>
+  <span class="label">打点</span>
+  <span id="rbi-right">--</span>
+</div>
+<div class="stat-row">
+  <span id="ops-left">--</span>
+  <span class="label">OPS</span>
+  <span id="ops-right">--</span>
+</div>
       </div>
       <img src="/images/ohtani.jpg" alt="大谷翔平" class="player-img" />
     </div>
   </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const response = await fetch("/api/stats");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch stats: ${response.status}`);
+      }
+
+      const [hitterStatsData] = await response.json(); // 打者成績のみ使用
+      const hitterStats = hitterStatsData.stats[0].splits[0].stat;
+
+      // HTMLの左右 span に成績を反映（左：ジャッジ、右：大谷）
+      document.getElementById("gamesPlayed-left").textContent = "162"; // ジャッジ固定
+      document.getElementById("gamesPlayed-right").textContent = hitterStats.gamesPlayed || "N/A";
+
+      document.getElementById("avg-left").textContent = ".322"; // ジャッジ固定
+      document.getElementById("avg-right").textContent = hitterStats.avg || "N/A";
+
+      document.getElementById("homeRuns-left").textContent = "58";
+      document.getElementById("homeRuns-right").textContent = hitterStats.homeRuns || "N/A";
+
+      document.getElementById("stolenBases-left").textContent = "59";
+      document.getElementById("stolenBases-right").textContent = hitterStats.stolenBases || "N/A";
+
+      document.getElementById("rbi-left").textContent = "144";
+      document.getElementById("rbi-right").textContent = hitterStats.rbi || "N/A";
+
+      document.getElementById("ops-left").textContent = "1.159";
+      document.getElementById("ops-right").textContent = hitterStats.ops || "N/A";
+
+    } catch (error) {
+      console.error("Error loading stats:", error);
+    }
+  });
+</script>
+
+
       <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>
