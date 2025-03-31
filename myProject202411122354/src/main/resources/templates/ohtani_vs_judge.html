@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- fragments/headerを利用し、ページタイトルを指定 -->
     <th:block th:replace="~{fragments/header :: head ('Login Page')}"></th:block>
     <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ジャッジ vs 大谷翔平 打撃成績比較</title>
-  <link rel="stylesheet" href="/css/ohtani_vs_judge.css" />
-  <script src="/js/home_2.js"></script> <!--VisitorCounter取得用に home_2.jsを追加 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ジャッジ vs 大谷翔平 打撃成績比較</title>
+    <link rel="stylesheet" href="/css/ohtani_vs_judge.css" />
+    <script src="/js/home_2.js"></script>
     <link rel="stylesheet" th:href="@{/css/header-2.css}">
-
 </head>
 <body>
-<!-- ヘッダーエリア -->
+
+<!-- ヘッダー -->
 <div id="header-navbar">
     <div id="header-left">
-        <!-- ハンバーガーメニューのアイコン（左配置） -->
         <div id="menu-toggle" class="hamburger-menu">ジャッジ⇔大谷</div>
         <div id="header-logo">
             <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
@@ -42,115 +39,100 @@
         <a href="/links">Links</a>
         <a href="/auth/logout">Logout</a>
     </nav>
-    <!-- ×ボタンを下に配置 -->
     <div class="close-btn" id="menu-close">×</div>
 </div>
-
-<!-- 背景オーバーレイ -->
 <div id="overlay" class="overlay"></div>
 
+<script>
+    function fetchUserInfo() {
+        fetch('/auth/userinfo')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch user info');
+                return response.json();
+            })
+            .then(data => {
+                const userInfoElement = document.getElementById('user-info');
+                userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
+            })
+            .catch(error => console.error('Error fetching user info:', error));
+    }
+    document.addEventListener('DOMContentLoaded', fetchUserInfo);
+</script>
 
-    <script>
-        // ユーザー情報を取得してヘッダーに表示
-        function fetchUserInfo() {
-            fetch('/auth/userinfo')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user info');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const userInfoElement = document.getElementById('user-info');
-                    userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-                })
-                .catch(error => console.error('Error fetching user info:', error));
-        }
-    
-        // ページロード時にユーザー情報を取得
-        document.addEventListener('DOMContentLoaded', fetchUserInfo);
-    </script>
-
-  <div class="container">
+<div class="container">
     <h1>ジャッジ vs 大谷翔平</h1>
 
     <div class="image-comparison">
-      <img src="/images/judge_02.jpg" alt="ジャッジ" class="player-img" />
-      <div class="stats-overlay">
-<div class="stat-row">
-  <span id="gamesPlayed-left">--</span>
-  <span class="label">出場数</span>
-  <span id="gamesPlayed-right">--</span>
-</div>
-<!-- 以下同様に ID を指定 -->
-<div class="stat-row">
-  <span id="avg-left">--</span>
-  <span class="label">打率</span>
-  <span id="avg-right">--</span>
-</div>
-<div class="stat-row">
-  <span id="homeRuns-left">--</span>
-  <span class="label">HR</span>
-  <span id="homeRuns-right">--</span>
-</div>
-<div class="stat-row">
-  <span id="stolenBases-left">--</span>
-  <span class="label">盗塁</span>
-  <span id="stolenBases-right">--</span>
-</div>
-<div class="stat-row">
-  <span id="rbi-left">--</span>
-  <span class="label">打点</span>
-  <span id="rbi-right">--</span>
-</div>
-<div class="stat-row">
-  <span id="ops-left">--</span>
-  <span class="label">OPS</span>
-  <span id="ops-right">--</span>
-</div>
-      </div>
-      <img src="/images/ohtani.jpg" alt="大谷翔平" class="player-img" />
+        <img src="/images/judge_02.jpg" alt="ジャッジ" class="player-img" />
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="gamesPlayed-left">--</span>
+                <span class="label">出場数</span>
+                <span id="gamesPlayed-right">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="avg-left">--</span>
+                <span class="label">打率</span>
+                <span id="avg-right">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="homeRuns-left">--</span>
+                <span class="label">HR</span>
+                <span id="homeRuns-right">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="stolenBases-left">--</span>
+                <span class="label">盗塁</span>
+                <span id="stolenBases-right">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="rbi-left">--</span>
+                <span class="label">打点</span>
+                <span id="rbi-right">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="ops-left">--</span>
+                <span class="label">OPS</span>
+                <span id="ops-right">--</span>
+            </div>
+        </div>
+        <img src="/images/ohtani.jpg" alt="大谷翔平" class="player-img" />
     </div>
-  </div>
+</div>
 
-
+<!-- ✅ 成績を取得してDOMに流し込む -->
 <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    try {
-      const response = await fetch("/api/stats");
-      if (!response.ok) {
-        throw new Error(`Failed to fetch stats: ${response.status}`);
-      }
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const response = await fetch("/api/ohtani-vs-judge/stats");
+    if (!response.ok) throw new Error("Fetch failed");
 
-      const [hitterStatsData] = await response.json(); // 打者成績のみ使用
-      const hitterStats = hitterStatsData.stats[0].splits[0].stat;
+    const data = await response.json();
 
-      // HTMLの左右 span に成績を反映（左：ジャッジ、右：大谷）
-      document.getElementById("gamesPlayed-left").textContent = "162"; // ジャッジ固定
-      document.getElementById("gamesPlayed-right").textContent = hitterStats.gamesPlayed || "N/A";
+    // 大谷翔平 stats
+    const ohtani = data.ohtani.stats[0].splits[0].stat;
+    document.getElementById("gamesPlayed-right").textContent = ohtani.gamesPlayed || "--";
+    document.getElementById("avg-right").textContent = ohtani.avg || "--";
+    document.getElementById("homeRuns-right").textContent = ohtani.homeRuns || "--";
+    document.getElementById("stolenBases-right").textContent = ohtani.stolenBases || "--";
+    document.getElementById("rbi-right").textContent = ohtani.rbi || "--";
+    document.getElementById("ops-right").textContent = ohtani.ops || "--";
 
-      document.getElementById("avg-left").textContent = ".322"; // ジャッジ固定
-      document.getElementById("avg-right").textContent = hitterStats.avg || "N/A";
+    // ジャッジ stats
+    const judge = data.judge.stats[0].splits[0].stat;
+    document.getElementById("gamesPlayed-left").textContent = judge.gamesPlayed || "--";
+    document.getElementById("avg-left").textContent = judge.avg || "--";
+    document.getElementById("homeRuns-left").textContent = judge.homeRuns || "--";
+    document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
+    document.getElementById("rbi-left").textContent = judge.rbi || "--";
+    document.getElementById("ops-left").textContent = judge.ops || "--";
 
-      document.getElementById("homeRuns-left").textContent = "58";
-      document.getElementById("homeRuns-right").textContent = hitterStats.homeRuns || "N/A";
-
-      document.getElementById("stolenBases-left").textContent = "59";
-      document.getElementById("stolenBases-right").textContent = hitterStats.stolenBases || "N/A";
-
-      document.getElementById("rbi-left").textContent = "144";
-      document.getElementById("rbi-right").textContent = hitterStats.rbi || "N/A";
-
-      document.getElementById("ops-left").textContent = "1.159";
-      document.getElementById("ops-right").textContent = hitterStats.ops || "N/A";
-
-    } catch (error) {
-      console.error("Error loading stats:", error);
-    }
-  });
+  } catch (error) {
+    console.error("成績取得エラー:", error);
+  }
+});
 </script>
 
-
-      <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>
