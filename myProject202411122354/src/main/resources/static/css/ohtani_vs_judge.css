@@ -1,0 +1,130 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  color: white;
+  background: linear-gradient(to right, #b31217, #0072ff);
+}
+
+.container {
+  text-align: center;
+  padding: 1em;
+}
+
+h1 {
+  margin-bottom: 3px;
+  font-size: 1.8em;
+  margin-top: -10px;
+}
+
+.image-comparison {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.player-img {
+  width: 41vw;
+  max-width: 334px;
+  height: 267px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.stats-overlay {
+  position: absolute;
+  bottom: 10%;
+  background: rgb(0 0 0 / 50%);
+  padding: 10px 13px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5px;
+  margin: -23px;
+  width: 209px;
+  height: 149px;
+  font-size: 13px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 2em;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.label {
+  color: #fff;
+  min-width: 40px;
+  text-align: center;
+}
+
+.hamburger-menu {
+  font-size: 15px !important;
+  color: #ff0000 !important;
+  margin-top: 4px !important;
+}
+
+/* ✅ スマホ縦向き：ジャッジ → 成績 → 大谷 */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .image-comparison {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .player-img {
+    width: 90vw;
+    max-width: 300px;
+  }
+
+  .stats-overlay {
+    position: static;
+    margin: 1em 0;
+  }
+
+  .stat-row {
+    justify-content: center;
+    gap: 1em;
+    font-size: 1em;
+  }
+}
+
+/* ✅ スマホ横向き（ランドスケープ）：横並び＋成績を中央に重ねる */
+@media screen and (orientation: landscape) and (max-width: 844px) {
+  .image-comparison {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .player-img {
+    width: 41vw;
+    max-width: 334px;
+    height: 267px;
+  }
+
+  .stats-overlay {
+    position: absolute;
+    bottom: 10%;
+    margin: -23px;
+    background: rgb(0 0 0 / 50%);
+    padding: 10px 13px;
+    width: 209px;
+    height: 149px;
+    font-size: 13px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5px;
+  }
+
+  .stat-row {
+    justify-content: space-between;
+    gap: 2em;
+    font-size: 1.1em;
+  }
+}
