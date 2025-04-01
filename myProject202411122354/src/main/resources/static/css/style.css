@@ -21,7 +21,10 @@ body {
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
 }
 
-
+#judgetani {
+    color: #ceec07;
+    background-color: #13137a;
+}
 
 
 
@@ -1708,6 +1711,10 @@ body {
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
 }
 
+#judgetani {
+    color: #ceec07;
+    background-color: #13137a;
+}
 
 /* start======== ナビゲーションバー全体 ======== */
 /* ヘッダー全体の高さを確保 */
