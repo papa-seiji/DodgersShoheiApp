@@ -59,8 +59,9 @@
     document.addEventListener('DOMContentLoaded', fetchUserInfo);
 </script>
 
+<div>スマホを横にした方が見やすくなります。</div>
 <div class="container">
-    <h1>ジャッジ vs 大谷翔平</h1>
+    <h1>Aaron Judge vs 大谷翔平</h1>
 
     <div class="image-comparison">
         <img src="/images/judge_02.jpg" alt="ジャッジ" class="player-img" />
@@ -100,6 +101,89 @@
     </div>
 </div>
 
+<!-- 🧢 Yamamoto vs Imanaga ピッチング成績表示セクション -->
+<div class="container">
+    <h1>今永昇太 vs 山本由伸</h1>
+
+    <div class="image-comparison">
+        <!-- 今永昇太の画像 -->
+        <img src="/images/今永翔太statsAPI用.jpg" alt="今永昇太" class="player-img" />
+
+        <!-- 成績表示 -->
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="imanaga-games">--</span>
+                <span class="label">登板数</span>
+                <span id="yamamoto-games">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="imanaga-wl">--</span>
+                <span class="label">勝-負</span>
+                <span id="yamamoto-wl">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="imanaga-era">--</span>
+                <span class="label">防御率</span>
+                <span id="yamamoto-era">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="imanaga-strikeouts">--</span>
+                <span class="label">奪三振</span>
+                <span id="yamamoto-strikeouts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="imanaga-whip">--</span>
+                <span class="label">WHIP</span>
+                <span id="yamamoto-whip">--</span>
+            </div>
+        </div>
+
+        <!-- 山本由伸の画像 -->
+        <img src="/images/山本由伸statsAPI用.jpg" alt="山本由伸" class="player-img" />
+    </div>
+</div>
+
+<!-- 🧢 Paul Skenes vs 佐々木朗希 ピッチング成績表示セクション -->
+<div class="container">
+    <h1>Paul Skenes vs 佐々木朗希</h1>
+
+    <div class="image-comparison">
+        <!-- Paul Skenesの画像 -->
+        <img src="/images/ポール・スキーンズstatsAPI用.jpg" alt="ポール・スキーンズ" class="player-img" />
+
+        <!-- 成績表示 -->
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="skenes-games">--</span>
+                <span class="label">登板数</span>
+                <span id="sasaki-games">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="skenes-wl">--</span>
+                <span class="label">勝-負</span>
+                <span id="sasaki-wl">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="skenes-era">--</span>
+                <span class="label">防御率</span>
+                <span id="sasaki-era">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="skenes-strikeouts">--</span>
+                <span class="label">奪三振</span>
+                <span id="sasaki-strikeouts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="skenes-whip">--</span>
+                <span class="label">WHIP</span>
+                <span id="sasaki-whip">--</span>
+            </div>
+        </div>
+
+        <!-- 佐々木朗希の画像 -->
+        <img src="/images/朗希statsAPI用.jpg" alt="佐々木朗希" class="player-img" />
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
@@ -132,6 +216,41 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
       document.getElementById("rbi-left").textContent = judge.rbi || "--";
       document.getElementById("ops-left").textContent = judge.ops || "--";
+
+
+      // ⏬ 山本由伸
+      const yamamoto = data.yamamoto.stats[0].splits[0].stat;
+      document.getElementById("yamamoto-games").textContent = yamamoto.gamesPlayed || "--";
+      document.getElementById("yamamoto-wl").textContent = yamamoto.wins + "-" + yamamoto.losses || "--";
+      document.getElementById("yamamoto-era").textContent = yamamoto.era || "--";
+      document.getElementById("yamamoto-strikeouts").textContent = yamamoto.strikeOuts || "--";
+      document.getElementById("yamamoto-whip").textContent = yamamoto.whip || "--";
+
+      // ⏬ 今永昇太
+      const imanaga = data.imanaga.stats[0].splits[0].stat;
+      document.getElementById("imanaga-games").textContent = imanaga.gamesPlayed || "--";
+      document.getElementById("imanaga-wl").textContent = imanaga.wins + "-" + imanaga.losses || "--";
+      document.getElementById("imanaga-era").textContent = imanaga.era || "--";
+      document.getElementById("imanaga-strikeouts").textContent = imanaga.strikeOuts || "--";
+      document.getElementById("imanaga-whip").textContent = imanaga.whip || "--";
+
+      // ⏬ ポール・スキーンズ
+      const skenes = data.skenes.stats[0].splits[0].stat;
+      document.getElementById("skenes-games").textContent = skenes.gamesPlayed || "--";
+      document.getElementById("skenes-wl").textContent = skenes.wins + "-" + skenes.losses || "--";
+      document.getElementById("skenes-era").textContent = skenes.era || "--";
+      document.getElementById("skenes-strikeouts").textContent = skenes.strikeOuts || "--";
+      document.getElementById("skenes-whip").textContent = skenes.whip || "--";
+
+      // ⏬ 佐々木朗希
+      const sasaki = data.sasaki.stats[0].splits[0].stat;
+      document.getElementById("sasaki-games").textContent = sasaki.gamesPlayed || "--";
+      document.getElementById("sasaki-wl").textContent = sasaki.wins + "-" + sasaki.losses || "--";
+      document.getElementById("sasaki-era").textContent = sasaki.era || "--";
+      document.getElementById("sasaki-strikeouts").textContent = sasaki.strikeOuts || "--";
+      document.getElementById("sasaki-whip").textContent = sasaki.whip || "--";
+
+
     });
 
     // WebSocketにリクエストを送信（自動で取得をトリガー）
