@@ -101,6 +101,89 @@
     </div>
 </div>
 
+<div class="container">
+    <h1>Tommy Edman vs Mike Trout</h1>
+
+    <div class="image-comparison">
+        <img src="/images/Tommy_Edman.jpg" alt="エドマン" class="player-img" />
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="gamesPlayed-left01">--</span>
+                <span class="label">出場数</span>
+                <span id="gamesPlayed-right01">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="avg-left01">--</span>
+                <span class="label">打率</span>
+                <span id="avg-right01">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="homeRuns-left01">--</span>
+                <span class="label">HR</span>
+                <span id="homeRuns-right01">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="stolenBases-left01">--</span>
+                <span class="label">盗塁</span>
+                <span id="stolenBases-right01">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="rbi-left01">--</span>
+                <span class="label">打点</span>
+                <span id="rbi-right01">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="ops-left01">--</span>
+                <span class="label">OPS</span>
+                <span id="ops-right01">--</span>
+            </div>
+        </div>
+        <img src="/images/Mike_Trout.jpg" alt="トラウト" class="player-img" />
+
+    </div>
+</div>
+
+<div class="container">
+    <h1>Mookie Betts vs 鈴木誠也</h1>
+
+    <div class="image-comparison">
+        <img src="/images/Mookie_Betts.jpg" alt="ベッツ" class="player-img" />
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="gamesPlayed-seiya">--</span>
+                <span class="label">出場数</span>
+                <span id="gamesPlayed-betts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="avg-seiya">--</span>
+                <span class="label">打率</span>
+                <span id="avg-betts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="homeRuns-seiya">--</span>
+                <span class="label">HR</span>
+                <span id="homeRuns-betts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="stolenBases-seiya">--</span>
+                <span class="label">盗塁</span>
+                <span id="stolenBases-betts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="rbi-seiya">--</span>
+                <span class="label">打点</span>
+                <span id="rbi-betts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="ops-seiya">--</span>
+                <span class="label">OPS</span>
+                <span id="ops-betts">--</span>
+            </div>
+        </div>
+        <img src="/images/鈴木誠也.jpg" alt="鈴木誠也" class="player-img" />
+    </div>
+</div>
+
 <!-- 🧢 Yamamoto vs Imanaga ピッチング成績表示セクション -->
 <div class="container">
     <h1>今永昇太 vs 山本由伸</h1>
@@ -143,38 +226,38 @@
     </div>
 </div>
 
-<!-- 🧢 Paul Skenes vs 佐々木朗希 ピッチング成績表示セクション -->
+<!-- 🧢 菅野智之 vs 佐々木朗希 ピッチング成績表示セクション -->
 <div class="container">
-    <h1>Paul Skenes vs 佐々木朗希</h1>
+    <h1>菅野智之 vs 佐々木朗希</h1>
 
     <div class="image-comparison">
-        <!-- Paul Skenesの画像 -->
-        <img src="/images/ポール・スキーンズstatsAPI用.jpg" alt="ポール・スキーンズ" class="player-img" />
+        <!-- 菅野智之の画像 -->
+        <img src="/images/菅野智之statsAPI用.jpg" alt="菅野智之" class="player-img" />
 
         <!-- 成績表示 -->
         <div class="stats-overlay">
             <div class="stat-row">
-                <span id="skenes-games">--</span>
+                <span id="sugano-games">--</span>
                 <span class="label">登板数</span>
                 <span id="sasaki-games">--</span>
             </div>
             <div class="stat-row">
-                <span id="skenes-wl">--</span>
+                <span id="sugano-wl">--</span>
                 <span class="label">勝-負</span>
                 <span id="sasaki-wl">--</span>
             </div>
             <div class="stat-row">
-                <span id="skenes-era">--</span>
+                <span id="sugano-era">--</span>
                 <span class="label">防御率</span>
                 <span id="sasaki-era">--</span>
             </div>
             <div class="stat-row">
-                <span id="skenes-strikeouts">--</span>
+                <span id="sugano-strikeouts">--</span>
                 <span class="label">奪三振</span>
                 <span id="sasaki-strikeouts">--</span>
             </div>
             <div class="stat-row">
-                <span id="skenes-whip">--</span>
+                <span id="sugano-whip">--</span>
                 <span class="label">WHIP</span>
                 <span id="sasaki-whip">--</span>
             </div>
@@ -184,6 +267,7 @@
         <img src="/images/朗希statsAPI用.jpg" alt="佐々木朗希" class="player-img" />
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
@@ -200,6 +284,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = JSON.parse(message.body);
       const ohtani = data.ohtani.stats[0].splits[0].stat;
       const judge = data.judge.stats[0].splits[0].stat;
+      const trout = data.trout.stats[0].splits[0].stat;
+      const edoman = data.edoman.stats[0].splits[0].stat;
+      const seiya = data.seiya.stats[0].splits[0].stat;
+      const betts = data.betts.stats[0].splits[0].stat;
+
+
 
       // ⏬ 大谷翔平
       document.getElementById("gamesPlayed-right").textContent = ohtani.gamesPlayed || "--";
@@ -216,6 +306,38 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
       document.getElementById("rbi-left").textContent = judge.rbi || "--";
       document.getElementById("ops-left").textContent = judge.ops || "--";
+
+      // ⏬ トミー・エドマン
+      document.getElementById("gamesPlayed-right01").textContent = trout.gamesPlayed || "--";
+      document.getElementById("avg-right01").textContent = trout.avg || "--";
+      document.getElementById("homeRuns-right01").textContent = trout.homeRuns || "--";
+      document.getElementById("stolenBases-right01").textContent = trout.stolenBases || "--";
+      document.getElementById("rbi-right01").textContent = trout.rbi || "--";
+      document.getElementById("ops-right01").textContent = trout.ops || "--";
+
+      // ⏬ マイク・トラウト
+      document.getElementById("gamesPlayed-left01").textContent = edoman.gamesPlayed || "--";
+      document.getElementById("avg-left01").textContent = edoman.avg || "--";
+      document.getElementById("homeRuns-left01").textContent = edoman.homeRuns || "--";
+      document.getElementById("stolenBases-left01").textContent = edoman.stolenBases || "--";
+      document.getElementById("rbi-left01").textContent = edoman.rbi || "--";
+      document.getElementById("ops-left01").textContent = edoman.ops || "--";
+
+      // ⏬鈴木 誠也
+      document.getElementById("gamesPlayed-seiya").textContent = betts.gamesPlayed || "--";
+      document.getElementById("avg-seiya").textContent = betts.avg || "--";
+      document.getElementById("homeRuns-seiya").textContent = betts.homeRuns || "--";
+      document.getElementById("stolenBases-seiya").textContent = betts.stolenBases || "--";
+      document.getElementById("rbi-seiya").textContent = betts.rbi || "--";
+      document.getElementById("ops-seiya").textContent = betts.ops || "--";
+
+      // ⏬ ムーキー・ベッツ
+      document.getElementById("gamesPlayed-betts").textContent = seiya.gamesPlayed || "--";
+      document.getElementById("avg-betts").textContent = seiya.avg || "--";
+      document.getElementById("homeRuns-betts").textContent = seiya.homeRuns || "--";
+      document.getElementById("stolenBases-betts").textContent = seiya.stolenBases || "--";
+      document.getElementById("rbi-betts").textContent = seiya.rbi || "--";
+      document.getElementById("ops-betts").textContent = seiya.ops || "--";
 
 
       // ⏬ 山本由伸
@@ -234,13 +356,13 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("imanaga-strikeouts").textContent = imanaga.strikeOuts || "--";
       document.getElementById("imanaga-whip").textContent = imanaga.whip || "--";
 
-      // ⏬ ポール・スキーンズ
-      const skenes = data.skenes.stats[0].splits[0].stat;
-      document.getElementById("skenes-games").textContent = skenes.gamesPlayed || "--";
-      document.getElementById("skenes-wl").textContent = skenes.wins + "-" + skenes.losses || "--";
-      document.getElementById("skenes-era").textContent = skenes.era || "--";
-      document.getElementById("skenes-strikeouts").textContent = skenes.strikeOuts || "--";
-      document.getElementById("skenes-whip").textContent = skenes.whip || "--";
+      // ⏬ 菅野智之
+      const sugano = data.sugano.stats[0].splits[0].stat;
+      document.getElementById("sugano-games").textContent = sugano.gamesPlayed || "--";
+      document.getElementById("sugano-wl").textContent = sugano.wins + "-" + sugano.losses || "--";
+      document.getElementById("sugano-era").textContent = sugano.era || "--";
+      document.getElementById("sugano-strikeouts").textContent = sugano.strikeOuts || "--";
+      document.getElementById("sugano-whip").textContent = sugano.whip || "--";
 
       // ⏬ 佐々木朗希
       const sasaki = data.sasaki.stats[0].splits[0].stat;
