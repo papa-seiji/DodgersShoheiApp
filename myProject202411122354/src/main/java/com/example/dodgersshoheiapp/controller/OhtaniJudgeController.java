@@ -15,10 +15,16 @@ public class OhtaniJudgeController {
     private static final String OHTANI_HITTING_API = "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2025&group=hitting";
     private static final String JUDGE_HITTING_API = "https://statsapi.mlb.com/api/v1/people/592450/stats?stats=season&season=2025&group=hitting";
 
+    private static final String TROUT_HITTING_API = "https://statsapi.mlb.com/api/v1/people/545361/stats?stats=season&season=2025&group=hitting";
+    private static final String EDOMAN_HITTING_API = "https://statsapi.mlb.com/api/v1/people/669242/stats?stats=season&season=2025&group=hitting";
+
+    private static final String SEIYA_HITTING_API = "https://statsapi.mlb.com/api/v1/people/673548/stats?stats=season&season=2025&group=hitting";
+    private static final String BETTS_HITTING_API = "https://statsapi.mlb.com/api/v1/people/605141/stats?stats=season&season=2025&group=hitting";
+
     private static final String YAMAMOTO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808967/stats?stats=season&season=2025&group=pitching";
     private static final String IMANAGA_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/684007/stats?stats=season&season=2025&group=pitching";
 
-    private static final String SKENES_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/694973/stats?stats=season&season=2025&group=pitching";
+    private static final String SUGANO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/608372/stats?stats=season&season=2025&group=pitching";
     private static final String SASAKI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=season&season=2025&group=pitching";
     
     @GetMapping("/api/ohtani-vs-judge/stats")
@@ -35,6 +41,36 @@ public class OhtaniJudgeController {
         return ResponseEntity.ok(result);
     }
 
+    
+    @GetMapping("/api/trout-vs-edoman/stats")
+    public ResponseEntity<Map<String, Object>> getTroutVsEdomanStats() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Object troutStats = restTemplate.getForObject(TROUT_HITTING_API, Object.class);
+        Object edomanStats = restTemplate.getForObject(EDOMAN_HITTING_API, Object.class);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("trout", troutStats);
+        result.put("edoman", edomanStats);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/api/seiya-vs-betts/stats")
+    public ResponseEntity<Map<String, Object>> getSeiyaVsBettsStats() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Object seiyaStats = restTemplate.getForObject(SEIYA_HITTING_API, Object.class);
+        Object bettsStats = restTemplate.getForObject(BETTS_HITTING_API, Object.class);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("seiya", seiyaStats);
+        result.put("betts", bettsStats);
+
+        return ResponseEntity.ok(result);
+    }
+
+
     @GetMapping("/api/yamamoto-vs-imanaga/stats")
     public ResponseEntity<Map<String, Object>> getYamamotoVsImanagaStats() {
         RestTemplate restTemplate = new RestTemplate();
@@ -49,15 +85,15 @@ public class OhtaniJudgeController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/api/skenes-vs-sasaki/stats")
+    @GetMapping("/api/sugano-vs-sasaki/stats")
     public ResponseEntity<Map<String, Object>> getSkenesVsSasakiStats() {
         RestTemplate restTemplate = new RestTemplate();
 
-        Object skenesStats = restTemplate.getForObject(SKENES_PITCHING_API, Object.class);
+        Object suganoStats = restTemplate.getForObject(SUGANO_PITCHING_API, Object.class);
         Object sasakiStats = restTemplate.getForObject(SASAKI_PITCHING_API, Object.class);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("skenes", skenesStats);
+        result.put("sugano", suganoStats);
         result.put("sasaki", sasakiStats);
 
         return ResponseEntity.ok(result);
