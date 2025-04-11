@@ -26,7 +26,7 @@ public class OhtaniJudgeController {
 
     private static final String SUGANO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/608372/stats?stats=season&season=2025&group=pitching";
     private static final String SASAKI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=season&season=2025&group=pitching";
-    
+
     @GetMapping("/api/ohtani-vs-judge/stats")
     public ResponseEntity<Map<String, Object>> getOhtaniVsJudgeStats() {
         RestTemplate restTemplate = new RestTemplate();
@@ -41,7 +41,6 @@ public class OhtaniJudgeController {
         return ResponseEntity.ok(result);
     }
 
-    
     @GetMapping("/api/trout-vs-edoman/stats")
     public ResponseEntity<Map<String, Object>> getTroutVsEdomanStats() {
         RestTemplate restTemplate = new RestTemplate();
@@ -69,7 +68,6 @@ public class OhtaniJudgeController {
 
         return ResponseEntity.ok(result);
     }
-
 
     @GetMapping("/api/yamamoto-vs-imanaga/stats")
     public ResponseEntity<Map<String, Object>> getYamamotoVsImanagaStats() {
