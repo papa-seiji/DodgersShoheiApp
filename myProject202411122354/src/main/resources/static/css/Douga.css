@@ -59,6 +59,16 @@
     margin-bottom: 30px;
 }
 
+.douga-section_5 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    margin-top: 1%;
+    margin-bottom: 30px;
+}
+
 /* Responsive video container */
 #douga-container-1,
 #douga-container-2 {
@@ -69,7 +79,8 @@
 }
 /* Responsive video container */
 #douga-container-3,
-#douga-container-4 {
+#douga-container-4,
+#douga-container-5 {
     position: relative;
     width: 159%;
     height: 5em !important;
@@ -87,7 +98,8 @@
 }
 /* */
 #douga-container-3 iframe,
-#douga-container-4 iframe {
+#douga-container-4 iframe,
+#douga-container-5 iframe{
     position: absolute;
     top: 0;
     left: 0;
