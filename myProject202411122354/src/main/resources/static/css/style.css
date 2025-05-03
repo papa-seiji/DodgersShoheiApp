@@ -1984,24 +1984,28 @@ body {
 
 #tooltip-yosou {
     /* top: 4676px; */
-    top: 4664px;
+    /* top: 4664px; */
+    top: 4956px;
     left: 12em;
 }
 
 #tooltip-proud {
     /* top: 4968px; */
-    top: 4956px;
+    /* top: 4956px; */
+    top: 5267px;
     left: 12em;
 }
 
 #tooltip-chat {
     /* top: 5229px; */
-    top: 5217px;
+    /* top: 5217px; */
+    top: 5554px;
     left: 5em;
 }
 #tooltip-link {
     /* top: 5586px; */
-    top: 5574px;
+    /* top: 5574px; */
+    top: 5911px;
     left: 10em;
 }
 
