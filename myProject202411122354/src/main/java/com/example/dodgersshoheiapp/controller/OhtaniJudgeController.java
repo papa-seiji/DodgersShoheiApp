@@ -27,6 +27,9 @@ public class OhtaniJudgeController {
     private static final String SUGANO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/608372/stats?stats=season&season=2025&group=pitching";
     private static final String SASAKI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=season&season=2025&group=pitching";
 
+    private static final String SCHWARBER_HITTING_API = "https://statsapi.mlb.com/api/v1/people/656941/stats?stats=season&season=2025&group=hitting";
+    private static final String TEOSCAR_HITTING_API = "https://statsapi.mlb.com/api/v1/people/606192/stats?stats=season&season=2025&group=hitting";
+
     @GetMapping("/api/ohtani-vs-judge/stats")
     public ResponseEntity<Map<String, Object>> getOhtaniVsJudgeStats() {
         RestTemplate restTemplate = new RestTemplate();
@@ -65,6 +68,20 @@ public class OhtaniJudgeController {
         Map<String, Object> result = new HashMap<>();
         result.put("seiya", seiyaStats);
         result.put("betts", bettsStats);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/api/schwarber-vs-teoscar/stats")
+    public ResponseEntity<Map<String, Object>> getSchwarberVsTeoscarStats() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Object schwarberStats = restTemplate.getForObject(SCHWARBER_HITTING_API, Object.class);
+        Object teoscarStats = restTemplate.getForObject(TEOSCAR_HITTING_API, Object.class);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("schwarber", schwarberStats);
+        result.put("teoscar", teoscarStats);
 
         return ResponseEntity.ok(result);
     }
