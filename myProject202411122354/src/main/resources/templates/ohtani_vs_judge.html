@@ -184,6 +184,48 @@
     </div>
 </div>
 
+<div class="container">
+    <h1>Kyle Schwarber vs Teoscar Hernández</h1>
+
+    <div class="image-comparison">
+        <img src="/images/Kyle_Schwarber.jpg" alt="Schwarber" class="player-img" />
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="gamesPlayed-schwarber">--</span>
+                <span class="label">出場数</span>
+                <span id="gamesPlayed-teoscar">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="avg-schwarber">--</span>
+                <span class="label">打率</span>
+                <span id="avg-teoscar">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="homeRuns-schwarber">--</span>
+                <span class="label">HR</span>
+                <span id="homeRuns-teoscar">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="stolenBases-schwarber">--</span>
+                <span class="label">盗塁</span>
+                <span id="stolenBases-teoscar">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="rbi-schwarber">--</span>
+                <span class="label">打点</span>
+                <span id="rbi-teoscar">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="ops-schwarber">--</span>
+                <span class="label">OPS</span>
+                <span id="ops-teoscar">--</span>
+            </div>
+        </div>
+        <img src="/images/Teoscar_Hernandez.jpg" alt="Teoscar" class="player-img" />
+    </div>
+</div>
+
+
 <!-- 🧢 Yamamoto vs Imanaga ピッチング成績表示セクション -->
 <div class="container">
     <h1>今永昇太 vs 山本由伸</h1>
@@ -274,103 +316,124 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const socket = new SockJS('/ws');  // WebSocketのエンドポイント
-  const stompClient = Stomp.over(socket);
+const stompClient = Stomp.over(socket);
 
-  stompClient.connect({}, () => {
+stompClient.connect({}, () => {
     console.log("✅ WebSocket connected");
 
     // メッセージ受信時の処理
     stompClient.subscribe('/topic/stats', (message) => {
-      const data = JSON.parse(message.body);
-      const ohtani = data.ohtani.stats[0].splits[0].stat;
-      const judge = data.judge.stats[0].splits[0].stat;
-      const trout = data.trout.stats[0].splits[0].stat;
-      const edoman = data.edoman.stats[0].splits[0].stat;
-      const seiya = data.seiya.stats[0].splits[0].stat;
-      const betts = data.betts.stats[0].splits[0].stat;
+    const data = JSON.parse(message.body);
+    const ohtani = data.ohtani.stats[0].splits[0].stat;
+    const judge = data.judge.stats[0].splits[0].stat;
+    const trout = data.trout.stats[0].splits[0].stat;
+    const edoman = data.edoman.stats[0].splits[0].stat;
+    const seiya = data.seiya.stats[0].splits[0].stat;
+    const betts = data.betts.stats[0].splits[0].stat;
+    const schwarber = data.schwarber.stats[0].splits[0].stat;
+    const teoscar = data.teoscar.stats[0].splits[0].stat;
+
+
 
 
 
       // ⏬ 大谷翔平
-      document.getElementById("gamesPlayed-right").textContent = ohtani.gamesPlayed || "--";
-      document.getElementById("avg-right").textContent = ohtani.avg || "--";
-      document.getElementById("homeRuns-right").textContent = ohtani.homeRuns || "--";
-      document.getElementById("stolenBases-right").textContent = ohtani.stolenBases || "--";
-      document.getElementById("rbi-right").textContent = ohtani.rbi || "--";
-      document.getElementById("ops-right").textContent = ohtani.ops || "--";
+    document.getElementById("gamesPlayed-right").textContent = ohtani.gamesPlayed || "--";
+    document.getElementById("avg-right").textContent = ohtani.avg || "--";
+    document.getElementById("homeRuns-right").textContent = ohtani.homeRuns || "--";
+    document.getElementById("stolenBases-right").textContent = ohtani.stolenBases || "--";
+    document.getElementById("rbi-right").textContent = ohtani.rbi || "--";
+    document.getElementById("ops-right").textContent = ohtani.ops || "--";
 
       // ⏬ ジャッジ
-      document.getElementById("gamesPlayed-left").textContent = judge.gamesPlayed || "--";
-      document.getElementById("avg-left").textContent = judge.avg || "--";
-      document.getElementById("homeRuns-left").textContent = judge.homeRuns || "--";
-      document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
-      document.getElementById("rbi-left").textContent = judge.rbi || "--";
-      document.getElementById("ops-left").textContent = judge.ops || "--";
+    document.getElementById("gamesPlayed-left").textContent = judge.gamesPlayed || "--";
+    document.getElementById("avg-left").textContent = judge.avg || "--";
+    document.getElementById("homeRuns-left").textContent = judge.homeRuns || "--";
+    document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
+    document.getElementById("rbi-left").textContent = judge.rbi || "--";
+    document.getElementById("ops-left").textContent = judge.ops || "--";
 
       // ⏬ トミー・エドマン
-      document.getElementById("gamesPlayed-right01").textContent = trout.gamesPlayed || "--";
-      document.getElementById("avg-right01").textContent = trout.avg || "--";
-      document.getElementById("homeRuns-right01").textContent = trout.homeRuns || "--";
-      document.getElementById("stolenBases-right01").textContent = trout.stolenBases || "--";
-      document.getElementById("rbi-right01").textContent = trout.rbi || "--";
-      document.getElementById("ops-right01").textContent = trout.ops || "--";
+    document.getElementById("gamesPlayed-right01").textContent = trout.gamesPlayed || "--";
+    document.getElementById("avg-right01").textContent = trout.avg || "--";
+    document.getElementById("homeRuns-right01").textContent = trout.homeRuns || "--";
+    document.getElementById("stolenBases-right01").textContent = trout.stolenBases || "--";
+    document.getElementById("rbi-right01").textContent = trout.rbi || "--";
+    document.getElementById("ops-right01").textContent = trout.ops || "--";
 
       // ⏬ マイク・トラウト
-      document.getElementById("gamesPlayed-left01").textContent = edoman.gamesPlayed || "--";
-      document.getElementById("avg-left01").textContent = edoman.avg || "--";
-      document.getElementById("homeRuns-left01").textContent = edoman.homeRuns || "--";
-      document.getElementById("stolenBases-left01").textContent = edoman.stolenBases || "--";
-      document.getElementById("rbi-left01").textContent = edoman.rbi || "--";
-      document.getElementById("ops-left01").textContent = edoman.ops || "--";
+    document.getElementById("gamesPlayed-left01").textContent = edoman.gamesPlayed || "--";
+    document.getElementById("avg-left01").textContent = edoman.avg || "--";
+    document.getElementById("homeRuns-left01").textContent = edoman.homeRuns || "--";
+    document.getElementById("stolenBases-left01").textContent = edoman.stolenBases || "--";
+    document.getElementById("rbi-left01").textContent = edoman.rbi || "--";
+    document.getElementById("ops-left01").textContent = edoman.ops || "--";
 
       // ⏬鈴木 誠也
-      document.getElementById("gamesPlayed-seiya").textContent = betts.gamesPlayed || "--";
-      document.getElementById("avg-seiya").textContent = betts.avg || "--";
-      document.getElementById("homeRuns-seiya").textContent = betts.homeRuns || "--";
-      document.getElementById("stolenBases-seiya").textContent = betts.stolenBases || "--";
-      document.getElementById("rbi-seiya").textContent = betts.rbi || "--";
-      document.getElementById("ops-seiya").textContent = betts.ops || "--";
+    document.getElementById("gamesPlayed-seiya").textContent = betts.gamesPlayed || "--";
+    document.getElementById("avg-seiya").textContent = betts.avg || "--";
+    document.getElementById("homeRuns-seiya").textContent = betts.homeRuns || "--";
+    document.getElementById("stolenBases-seiya").textContent = betts.stolenBases || "--";
+    document.getElementById("rbi-seiya").textContent = betts.rbi || "--";
+    document.getElementById("ops-seiya").textContent = betts.ops || "--";
 
       // ⏬ ムーキー・ベッツ
-      document.getElementById("gamesPlayed-betts").textContent = seiya.gamesPlayed || "--";
-      document.getElementById("avg-betts").textContent = seiya.avg || "--";
-      document.getElementById("homeRuns-betts").textContent = seiya.homeRuns || "--";
-      document.getElementById("stolenBases-betts").textContent = seiya.stolenBases || "--";
-      document.getElementById("rbi-betts").textContent = seiya.rbi || "--";
-      document.getElementById("ops-betts").textContent = seiya.ops || "--";
+    document.getElementById("gamesPlayed-betts").textContent = seiya.gamesPlayed || "--";
+    document.getElementById("avg-betts").textContent = seiya.avg || "--";
+    document.getElementById("homeRuns-betts").textContent = seiya.homeRuns || "--";
+    document.getElementById("stolenBases-betts").textContent = seiya.stolenBases || "--";
+    document.getElementById("rbi-betts").textContent = seiya.rbi || "--";
+    document.getElementById("ops-betts").textContent = seiya.ops || "--";
+
+      // ⏬ Kyle Schwarber
+    document.getElementById("gamesPlayed-schwarber").textContent = schwarber.gamesPlayed || "--";
+    document.getElementById("avg-schwarber").textContent = schwarber.avg || "--";
+    document.getElementById("homeRuns-schwarber").textContent = schwarber.homeRuns || "--";
+    document.getElementById("stolenBases-schwarber").textContent = schwarber.stolenBases || "--";
+    document.getElementById("rbi-schwarber").textContent = schwarber.rbi || "--";
+    document.getElementById("ops-schwarber").textContent = schwarber.ops || "--";
+
+    // ⏬ Teoscar Hernández
+    document.getElementById("gamesPlayed-teoscar").textContent = teoscar.gamesPlayed || "--";
+    document.getElementById("avg-teoscar").textContent = teoscar.avg || "--";
+    document.getElementById("homeRuns-teoscar").textContent = teoscar.homeRuns || "--";
+    document.getElementById("stolenBases-teoscar").textContent = teoscar.stolenBases || "--";
+    document.getElementById("rbi-teoscar").textContent = teoscar.rbi || "--";
+    document.getElementById("ops-teoscar").textContent = teoscar.ops || "--";
+
 
 
       // ⏬ 山本由伸
-      const yamamoto = data.yamamoto.stats[0].splits[0].stat;
-      document.getElementById("yamamoto-games").textContent = yamamoto.gamesPlayed || "--";
-      document.getElementById("yamamoto-wl").textContent = yamamoto.wins + "-" + yamamoto.losses || "--";
-      document.getElementById("yamamoto-era").textContent = yamamoto.era || "--";
-      document.getElementById("yamamoto-strikeouts").textContent = yamamoto.strikeOuts || "--";
-      document.getElementById("yamamoto-whip").textContent = yamamoto.whip || "--";
+    const yamamoto = data.yamamoto.stats[0].splits[0].stat;
+    document.getElementById("yamamoto-games").textContent = yamamoto.gamesPlayed || "--";
+    document.getElementById("yamamoto-wl").textContent = yamamoto.wins + "-" + yamamoto.losses || "--";
+    document.getElementById("yamamoto-era").textContent = yamamoto.era || "--";
+    document.getElementById("yamamoto-strikeouts").textContent = yamamoto.strikeOuts || "--";
+    document.getElementById("yamamoto-whip").textContent = yamamoto.whip || "--";
 
       // ⏬ 今永昇太
-      const imanaga = data.imanaga.stats[0].splits[0].stat;
-      document.getElementById("imanaga-games").textContent = imanaga.gamesPlayed || "--";
-      document.getElementById("imanaga-wl").textContent = imanaga.wins + "-" + imanaga.losses || "--";
-      document.getElementById("imanaga-era").textContent = imanaga.era || "--";
-      document.getElementById("imanaga-strikeouts").textContent = imanaga.strikeOuts || "--";
-      document.getElementById("imanaga-whip").textContent = imanaga.whip || "--";
+    const imanaga = data.imanaga.stats[0].splits[0].stat;
+    document.getElementById("imanaga-games").textContent = imanaga.gamesPlayed || "--";
+    document.getElementById("imanaga-wl").textContent = imanaga.wins + "-" + imanaga.losses || "--";
+    document.getElementById("imanaga-era").textContent = imanaga.era || "--";
+    document.getElementById("imanaga-strikeouts").textContent = imanaga.strikeOuts || "--";
+    document.getElementById("imanaga-whip").textContent = imanaga.whip || "--";
 
       // ⏬ 菅野智之
-      const sugano = data.sugano.stats[0].splits[0].stat;
-      document.getElementById("sugano-games").textContent = sugano.gamesPlayed || "--";
-      document.getElementById("sugano-wl").textContent = sugano.wins + "-" + sugano.losses || "--";
-      document.getElementById("sugano-era").textContent = sugano.era || "--";
-      document.getElementById("sugano-strikeouts").textContent = sugano.strikeOuts || "--";
-      document.getElementById("sugano-whip").textContent = sugano.whip || "--";
+    const sugano = data.sugano.stats[0].splits[0].stat;
+    document.getElementById("sugano-games").textContent = sugano.gamesPlayed || "--";
+    document.getElementById("sugano-wl").textContent = sugano.wins + "-" + sugano.losses || "--";
+    document.getElementById("sugano-era").textContent = sugano.era || "--";
+    document.getElementById("sugano-strikeouts").textContent = sugano.strikeOuts || "--";
+    document.getElementById("sugano-whip").textContent = sugano.whip || "--";
 
       // ⏬ 佐々木朗希
-      const sasaki = data.sasaki.stats[0].splits[0].stat;
-      document.getElementById("sasaki-games").textContent = sasaki.gamesPlayed || "--";
-      document.getElementById("sasaki-wl").textContent = sasaki.wins + "-" + sasaki.losses || "--";
-      document.getElementById("sasaki-era").textContent = sasaki.era || "--";
-      document.getElementById("sasaki-strikeouts").textContent = sasaki.strikeOuts || "--";
-      document.getElementById("sasaki-whip").textContent = sasaki.whip || "--";
+    const sasaki = data.sasaki.stats[0].splits[0].stat;
+    document.getElementById("sasaki-games").textContent = sasaki.gamesPlayed || "--";
+    document.getElementById("sasaki-wl").textContent = sasaki.wins + "-" + sasaki.losses || "--";
+    document.getElementById("sasaki-era").textContent = sasaki.era || "--";
+    document.getElementById("sasaki-strikeouts").textContent = sasaki.strikeOuts || "--";
+    document.getElementById("sasaki-whip").textContent = sasaki.whip || "--";
 
 
     });
