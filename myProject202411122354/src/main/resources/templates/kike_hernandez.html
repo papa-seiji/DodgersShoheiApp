@@ -5,8 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>キケ・ヘルナンデス選手 特集</title>
     <link rel="stylesheet" th:href="@{/css/kike_hernandez.css}">
+    <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
+    <script src="/js/home_2.js"></script>
+
 </head>
 <body>
+
+<!-- ヘッダー -->
+<div id="header-navbar">
+    <div id="header-left">
+        <div id="menu-toggle" class="hamburger-menu">LOVEキケ</div>
+        <div id="header-logo">
+            <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
+            <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
+        </div>
+        <div id="header-info-container">
+            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="visitor-counter-display">
+                <span id="visitor-counter-value">243</span>人目
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- スライドメニュー -->
+<div id="side-menu" class="side-menu">
+    <nav>
+        <a href="/home">Home(TOP)</a>
+        <a href="/yosou">予想</a>
+        <a href="/proud">Proud</a>
+        <a href="/comments">Chat</a>
+        <a href="/links">Links</a>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+    <div class="close-btn" id="menu-close">×</div>
+</div>
+<div id="overlay" class="overlay"></div>
+
+<script>
+    function fetchUserInfo() {
+        fetch('/auth/userinfo')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch user info');
+                return response.json();
+            })
+            .then(data => {
+                const userInfoElement = document.getElementById('user-info');
+                userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
+            })
+            .catch(error => console.error('Error fetching user info:', error));
+    }
+    document.addEventListener('DOMContentLoaded', fetchUserInfo);
+</script>
+
+
     <header class="hero">
         <img src="/images/kike_folder/セピア写真.JPG" alt="キケ・ヘルナンデス" class="hero-img">
         <div class="hero-text">
