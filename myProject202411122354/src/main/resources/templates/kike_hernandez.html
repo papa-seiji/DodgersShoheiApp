@@ -7,6 +7,9 @@
     <link rel="stylesheet" th:href="@{/css/kike_hernandez.css}">
     <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
     <script src="/js/home_2.js"></script>
+    <!-- SockJS と StompJS の読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
 </head>
 <body>
@@ -14,7 +17,7 @@
 <!-- ヘッダー -->
 <div id="header-navbar">
     <div id="header-left">
-        <div id="menu-toggle" class="hamburger-menu">LOVEキケ</div>
+        <div id="menu-toggle" class="hamburger-menu_kike">LOVEキケ</div>
         <div id="header-logo">
             <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
             <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
@@ -60,7 +63,7 @@
 
 
     <header class="hero">
-        <img src="/images/kike_folder/セピア写真.JPG" alt="キケ・ヘルナンデス" class="hero-img">
+        <img src="/images/kike_folder/横たわりベロ～ン.JPEG" alt="キケ・ヘルナンデス" class="hero-img">
         <div class="hero-text">
             <h1>Enrique Hernández</h1>
             <p class="p1">チームのムードメーカー愛称はキケ</p>
@@ -82,6 +85,56 @@
             </table>
         </section>
 
+<!-- 📊 2025成績 -->
+    <section class="stats_kike-only">
+        <h2 class="profile_font">2025年シーズン成績</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>試合</th>
+                        <th>打率</th>
+                        <th>本塁打</th>
+                        <th>打点</th>
+                        <th>OPS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${stats.gamesPlayed}">--</td>
+                        <td th:text="${stats.avg}">--</td>
+                        <td th:text="${stats.homeRuns}">--</td>
+                        <td th:text="${stats.rbi}">--</td>
+                        <td th:text="${stats.ops}">--</td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
+
+<!--📊 通算通算成績 -->
+    <section class="career-2014-2025">
+        <h2 class="Career_Stats_font">通算成績</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>年</th><th>チーム</th><th>リーグ</th><th>試合</th><th>打率</th><th>本塁打</th><th>打点</th><th>OPS</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <tr th:each="row : ${careerStats}">
+                            <td th:text="${row.season}">--</td>
+                            <td th:text="${row.team}">--</td>
+                            <td th:text="${row.league}">--</td>
+                            <td th:text="${row.gamesPlayed}">--</td>
+                            <td th:text="${row.avg}">--</td>
+                            <td th:text="${row.homeRuns}">--</td>
+                            <td th:text="${row.rbi}">--</td>
+                            <td th:text="${row.ops}">--</td>
+                        </tr>
+                    </tbody>
+                </table>
+</section>
+
+
         <section class="gallery">
             <h2>フォトギャラリー</h2>
             <div class="photos">
@@ -99,7 +152,7 @@
                 <img th:src="@{/images/kike_folder/05_ヘッドギア_どや顔.JPEG}" alt="キケ写真11">
                 <img th:src="@{/images/kike_folder/06_ヘッドギア着投球.JPG}" alt="キケ写真12">
                 <img th:src="@{/images/kike_folder/スケボー.JPEG}" alt="キケ写真13">
-                <img th:src="@{/images/kike_folder/横たわりベロ～ン.JPEG}" alt="キケ写真14">
+                <img th:src="@{/images/kike_folder/セピア写真.JPG}" alt="キケ写真14">
             </div>
         </section>
 
@@ -109,13 +162,13 @@
             <h2>🎥 キケ・ヘルナンデス ハイライト</h2>
             <div class="video-container">
                 <iframe width="560" height="315"
-                    src="https://www.youtube.com/embed/1jJBPNnDfPo"
+                    src="https://www.youtube.com/embed/1Mca7AmFyhY"
                     title="Kiké Hernández Highlights"
                     frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>
                 </iframe>
                 <iframe width="560" height="315"
-                    src="https://www.youtube.com/embed/R1856KxkeTQ"
+                    src="https://www.youtube.com/embed/w9jD2TWjXkg"
                     title="Kiké Hernández Interview"
                     frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>
@@ -126,11 +179,12 @@
         <section class="career">
             <h2>キャリアハイライト</h2>
             <ul>
-                <li>2003年のMLBドラフトを芹沢（ハコーストロス）に賛成</li>
-                <li>2014年：メジャーデビュー（サンファン）</li>
-                <li>180cm / 26歳：内野手 / 外野手</li>
-                <li>2025年：ドジャース ワールドシリーズ出場</li>
-                <li>2024年：プエルトリコ・WBC優勝</li>
+                <li>2009年: MLBドラフトでヒューストン・アストロズから指名</li>
+                <li>2014年: メジャーデビュー（ヒューストン・アストロズ）</li>
+                <li>2015年: ロサンゼルス・ドジャースに移籍</li>
+                <li>2017年: NLCS第5戦で3本塁打を記録</li>
+                <li>2020年: ドジャースでワールドシリーズ優勝</li>
+                <li>2024年: プエルトリコ代表としてWBC優勝</li>
             </ul>
         </section>
 
@@ -139,5 +193,8 @@
             <p>「キケのプレーにはいつも元気をもらっています！」</p>
         </section>
     </main>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
 </body>
 </html>
