@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>キケ・ヘルナンデス選手 特集</title>
+    <link rel="stylesheet" th:href="@{/css/kike_hernandez.css}">
+</head>
+<body>
+    <header class="hero">
+        <img src="/images/kike_folder/セピア写真.JPG" alt="キケ・ヘルナンデス" class="hero-img">
+        <div class="hero-text">
+            <h1>Enrique Hernández</h1>
+            <p class="p1">チームのムードメーカー愛称はキケ</p>
+            <p class="p1">みんなに愛される The お祭り男</p>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="profile">
+            <h2 class="profile_font">プロフィール</h2>
+            <table>
+                <tr><th>名前</th><td>エンリケ・ハビアー・ヘルナンデス・コンサレス</td></tr>
+                <tr><th>生年月日</th><td>1991年8月24日</td></tr>
+                <tr><th>出身地</th><td>プエルトリコ・サンファン</td></tr>
+                <tr><th>身長 / 体重</th><td>180.3cm / 86.2kg</td></tr>
+                <tr><th>ポジション</th><td>内野手 / 外野手</td></tr>
+                <tr><th>所属チーム</th><td>ロサンゼルス・ドジャース</td></tr>
+            </table>
+        </section>
+
+        <section class="gallery">
+            <h2>フォトギャラリー</h2>
+            <div class="photos">
+                <!-- 表示例 -->
+                <img th:src="@{/images/kike_folder/プエルトリコ代表.JPEG}" alt="キケ写真1">
+                <img th:src="@{/images/kike_folder/アストロズ時代.JPEG}" alt="キケ写真2">
+                <img th:src="@{/images/kike_folder/レッドソックス時代.JPEG}" alt="キケ写真3">
+                <img th:src="@{/images/kike_folder/ニット帽桜.JPG}" alt="キケ写真4">
+                <img th:src="@{/images/kike_folder/バナナ-キケ.JPEG}" alt="キケ写真5">
+                <img th:src="@{/images/kike_folder/大谷と変顔.JPG}" alt="キケ写真6">
+                <img th:src="@{/images/kike_folder/01_ヘッドギア_どや顔.JPEG}" alt="キケ写真7">
+                <img th:src="@{/images/kike_folder/02_ヘッドギア着投球.JPEG}" alt="キケ写真8">
+                <img th:src="@{/images/kike_folder/03_ヘッドギア_どや顔.JPEG}" alt="キケ写真9">
+                <img th:src="@{/images/kike_folder/04_ヘッドギア着投球.JPEG}" alt="キケ写真10">
+                <img th:src="@{/images/kike_folder/05_ヘッドギア_どや顔.JPEG}" alt="キケ写真11">
+                <img th:src="@{/images/kike_folder/06_ヘッドギア着投球.JPG}" alt="キケ写真12">
+                <img th:src="@{/images/kike_folder/スケボー.JPEG}" alt="キケ写真13">
+                <img th:src="@{/images/kike_folder/横たわりベロ～ン.JPEG}" alt="キケ写真14">
+            </div>
+        </section>
+
+
+        <!-- 🎥 YouTube動画セクション -->
+        <section class="video-section">
+            <h2>🎥 キケ・ヘルナンデス ハイライト</h2>
+            <div class="video-container">
+                <iframe width="560" height="315"
+                    src="https://www.youtube.com/embed/1jJBPNnDfPo"
+                    title="Kiké Hernández Highlights"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+                <iframe width="560" height="315"
+                    src="https://www.youtube.com/embed/R1856KxkeTQ"
+                    title="Kiké Hernández Interview"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <section class="career">
+            <h2>キャリアハイライト</h2>
+            <ul>
+                <li>2003年のMLBドラフトを芹沢（ハコーストロス）に賛成</li>
+                <li>2014年：メジャーデビュー（サンファン）</li>
+                <li>180cm / 26歳：内野手 / 外野手</li>
+                <li>2025年：ドジャース ワールドシリーズ出場</li>
+                <li>2024年：プエルトリコ・WBC優勝</li>
+            </ul>
+        </section>
+
+        <section class="fan-message">
+            <h2>ファンからのメッセージ</h2>
+            <p>「キケのプレーにはいつも元気をもらっています！」</p>
+        </section>
+    </main>
+</body>
+</html>
