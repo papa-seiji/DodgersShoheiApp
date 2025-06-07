@@ -1,0 +1,114 @@
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #222;
+}
+
+.p1{
+    font-size: 10px;
+    margin: 1px 1px 1px 1px;
+}
+
+.hero {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+.hero-img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+.hero-text {
+    position: absolute;
+    bottom: 12px;
+    left: 30px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+.hero-text h1 {
+    margin: 0;
+    font-size: 31px;
+}
+main {
+    padding: 20px;
+}
+h2 {
+    color: #273c75;
+    margin-top: 2em;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+.photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+.photos img {
+    width: 100%;
+    border-radius: 6px;
+    object-fit: cover;
+}
+ul {
+    padding-left: 20px;
+}
+.fan-message {
+    background-color: #eee;
+    padding: 1em;
+    margin-top: 2em;
+    border-left: 5px solid #273c75;
+}
+
+/* video */
+.video-section {
+    margin: auto;
+    padding: 1em;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.video-section h2 {
+    font-size: 13px;
+    color: #2c3e50;
+    margin-bottom: 35px;
+    border-bottom: 2px solid #ccc;
+    display: inline-block;
+    padding-bottom: 0.2em;
+    margin-top: 0px;
+}
+
+.video-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+}
+
+.video-container iframe {
+    flex: 1 1 45%;
+    max-width: 100%;
+    height: 315px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+/* profile */
+.profile{
+    padding: 0px 39px;
+    font-size: 7px;
+}
+
+.profile_font{
+    margin-top: -6px;
+}
