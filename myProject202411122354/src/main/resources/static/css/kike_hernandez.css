@@ -169,3 +169,21 @@ ul {
     font-weight: bold;
     cursor: pointer;
 }
+
+
+/* 🎞️ キケ・ヘルナンデス プレイ動画 */
+.video-preview-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 27px;
+    flex-wrap: wrap; /* スマホ時の折り返し対応 */
+}
+
+.decorative-video {
+    width: 105px;
+    height: 130px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+}
