@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>キケ・ヘルナンデス選手 特集</title>
+    <link rel="stylesheet" th:href="@{/css/kike_hernandez.css}">
+    <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
+    <script src="/js/home_2.js"></script>
+    <!-- SockJS と StompJS の読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div id="header-navbar">
+    <div id="header-left">
+        <div id="menu-toggle" class="hamburger-menu_kike">LOVEキケ</div>
+        <div id="header-logo">
+            <img src="/images/みんな日本から応援してるぜッ！LOGO.jpg" alt="背景画像1" class="home-image10">
+            <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
+        </div>
+        <div id="header-info-container">
+            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="visitor-counter-display">
+                <span id="visitor-counter-value">243</span>人目
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- スライドメニュー -->
+<div id="side-menu" class="side-menu">
+    <nav>
+        <a href="/home">Home(TOP)</a>
+        <a href="/yosou">予想</a>
+        <a href="/proud">Proud</a>
+        <a href="/comments">Chat</a>
+        <a href="/links">Links</a>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+    <div class="close-btn" id="menu-close">×</div>
+</div>
+<div id="overlay" class="overlay"></div>
+
+<script>
+    function fetchUserInfo() {
+        fetch('/auth/userinfo')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch user info');
+                return response.json();
+            })
+            .then(data => {
+                const userInfoElement = document.getElementById('user-info');
+                userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
+            })
+            .catch(error => console.error('Error fetching user info:', error));
+    }
+    document.addEventListener('DOMContentLoaded', fetchUserInfo);
+</script>
+
+
+    <header class="hero">
+        <img src="/images/kike_folder/横たわりベロ～ン.JPEG" alt="キケ・ヘルナンデス" class="hero-img">
+        <div class="hero-text">
+            <h1>Enrique Hernández</h1>
+            <p class="p1">チームのムードメーカー愛称はキケ</p>
+            <p class="p1">みんなに愛される The お祭り男</p>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="profile">
+            <h2 class="profile_font">プロフィール</h2>
+            <table>
+                <tr><th>名前</th><td>エンリケ・ハビアー・ヘルナンデス・ゴンサレス</td></tr>
+                <tr><th>生年月日</th><td>1991年8月24日</td></tr>
+                <tr><th>出身地</th><td>プエルトリコ・サンファン</td></tr>
+                <tr><th>身長 / 体重</th><td>180.3cm / 86.2kg</td></tr>
+                <tr><th>ポジション</th><td>内野手 / 外野手</td></tr>
+                <tr><th>所属チーム</th><td>ロサンゼルス・ドジャース</td></tr>
+            </table>
+        </section>
+
+<!-- 🎞️ キケ・ヘルナンデス プレイ動画 -->
+<section class="video-preview-section">
+    <div class="video-preview-wrapper">
+    <h2 class="profile_font">ファンに愛されるオトコ</h2>
+        <video class="decorative-video" controls>
+            <source src="/videos/kike_1.mp4" type="video/mp4">
+        </video>
+        <video class="decorative-video" controls>
+            <source src="/videos/kike_2.mp4" type="video/mp4">
+        </video>
+        <video class="decorative-video" controls>
+            <source src="/videos/kike_3.mp4" type="video/mp4">
+        </video>
+    </div>
+</section>
+
+
+
+
+<!-- 📊 2025成績 -->
+    <section class="stats_kike-only">
+        <h2 class="profile_font">2025年シーズン成績</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>試合</th>
+                        <th>打率</th>
+                        <th>本塁打</th>
+                        <th>打点</th>
+                        <th>OPS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${stats.gamesPlayed}">--</td>
+                        <td th:text="${stats.avg}">--</td>
+                        <td th:text="${stats.homeRuns}">--</td>
+                        <td th:text="${stats.rbi}">--</td>
+                        <td th:text="${stats.ops}">--</td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
+
+<!--📊 通算通算成績 -->
+    <section class="career-2014-2025">
+        <h2 class="Career_Stats_font">通算成績</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>年</th><th>チーム</th><th>リーグ</th><th>試合</th><th>打率</th><th>本塁打</th><th>打点</th><th>OPS</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <tr th:each="row : ${careerStats}">
+                            <td th:text="${row.season}">--</td>
+                            <td th:text="${row.team}">--</td>
+                            <td th:text="${row.league}">--</td>
+                            <td th:text="${row.gamesPlayed}">--</td>
+                            <td th:text="${row.avg}">--</td>
+                            <td th:text="${row.homeRuns}">--</td>
+                            <td th:text="${row.rbi}">--</td>
+                            <td th:text="${row.ops}">--</td>
+                        </tr>
+                    </tbody>
+                </table>
+</section>
+
+
+        <section class="gallery">
+            <h2>フォトギャラリー</h2>
+            <div class="photos">
+                <!-- 表示例 -->
+                <img th:src="@{/images/kike_folder/プエルトリコ代表.JPEG}" alt="キケ写真1">
+                <img th:src="@{/images/kike_folder/アストロズ時代.JPEG}" alt="キケ写真2">
+                <img th:src="@{/images/kike_folder/レッドソックス時代.JPEG}" alt="キケ写真3">
+                <img th:src="@{/images/kike_folder/ニット帽桜.JPG}" alt="キケ写真4">
+                <img th:src="@{/images/kike_folder/バナナ-キケ.JPEG}" alt="キケ写真5">
+                <img th:src="@{/images/kike_folder/大谷と変顔.JPG}" alt="キケ写真6">
+                <img th:src="@{/images/kike_folder/01_ヘッドギア_どや顔.JPEG}" alt="キケ写真7">
+                <img th:src="@{/images/kike_folder/02_ヘッドギア着投球.JPEG}" alt="キケ写真8">
+                <img th:src="@{/images/kike_folder/03_ヘッドギア_どや顔.JPEG}" alt="キケ写真9">
+                <img th:src="@{/images/kike_folder/04_ヘッドギア着投球.JPEG}" alt="キケ写真10">
+                <img th:src="@{/images/kike_folder/05_ヘッドギア_どや顔.JPEG}" alt="キケ写真11">
+                <img th:src="@{/images/kike_folder/06_ヘッドギア着投球.JPG}" alt="キケ写真12">
+                <img th:src="@{/images/kike_folder/スケボー.JPEG}" alt="キケ写真13">
+                <img th:src="@{/images/kike_folder/セピア写真.JPG}" alt="キケ写真14">
+            </div>
+        </section>
+
+<!-- ギャラリー画像モーダル -->
+<div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="modalCaption"></div>
+</div>
+
+<!-- 画像クリックで拡大⇔元通り処理 -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const modalCaption = document.getElementById("modalCaption");
+    const closeModal = document.querySelector(".close");
+
+    document.querySelectorAll(".gallery .photos img").forEach(img => {
+        img.addEventListener("click", () => {
+            modal.style.display = "block";
+            modalImage.src = img.src;
+            modalCaption.textContent = img.alt;
+        });
+    });
+
+    closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+});
+</script>
+
+
+<!-- 🎥 YouTube動画セクション -->
+        <section class="video-section">
+            <h2>🎥 お気に入りの”カッコ悪い”プロテクタを着用し</h2>
+            <div>抑えてやったぜ！感、満載でドヤ顔www</div>
+            <div class="video-container">
+                <iframe width="560" height="315"
+                    src="https://www.youtube.com/embed/1Mca7AmFyhY"
+                    title="Kiké Hernández Highlights"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <h2>🎥 キケ・ヘルナンデス ハイライト</h2>
+            <div>まじめな時のカッコイイシーンwww</div>
+            <div class="video-container">
+                <iframe width="560" height="315"
+                    src="https://www.youtube.com/embed/w9jD2TWjXkg"
+                    title="Kiké Hernández Interview"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- <section class="career">
+            <h2>キャリアハイライト</h2>
+            <ul>
+                <li>2009年: MLBドラフトでヒューストン・アストロズから指名</li>
+                <li>2014年: メジャーデビュー（ヒューストン・アストロズ）</li>
+                <li>2015年: ロサンゼルス・ドジャースに移籍</li>
+                <li>2017年: NLCS第5戦で3本塁打を記録</li>
+                <li>2020年: ドジャースでワールドシリーズ優勝</li>
+                <li>2024年: プエルトリコ代表としてWBC優勝</li>
+            </ul>
+        </section> -->
+
+        <!-- <section class="fan-message">
+            <h2>ファンからのメッセージ</h2>
+            <p>「キケのプレーにはいつも元気をもらっています！」</p>
+        </section> -->
+    </main>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>
