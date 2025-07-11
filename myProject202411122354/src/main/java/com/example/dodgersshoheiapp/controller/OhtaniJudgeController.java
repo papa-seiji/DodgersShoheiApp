@@ -30,6 +30,8 @@ public class OhtaniJudgeController {
     private static final String SCHWARBER_HITTING_API = "https://statsapi.mlb.com/api/v1/people/656941/stats?stats=season&season=2025&group=hitting";
     private static final String TEOSCAR_HITTING_API = "https://statsapi.mlb.com/api/v1/people/606192/stats?stats=season&season=2025&group=hitting";
 
+    private static final String RALEIGH_HITTING_API = "https://statsapi.mlb.com/api/v1/people/663728/stats?stats=season&season=2025&group=hitting";
+
     @GetMapping("/api/ohtani-vs-judge/stats")
     public ResponseEntity<Map<String, Object>> getOhtaniVsJudgeStats() {
         RestTemplate restTemplate = new RestTemplate();
@@ -82,6 +84,21 @@ public class OhtaniJudgeController {
         Map<String, Object> result = new HashMap<>();
         result.put("schwarber", schwarberStats);
         result.put("teoscar", teoscarStats);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/api/raleigh-vs-xxxxxx/stats")
+    public ResponseEntity<Map<String, Object>> getRaleighVsXxxxxxStats() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Object raleighStats = restTemplate.getForObject(RALEIGH_HITTING_API, Object.class);
+        // Object xxxxxxStats = restTemplate.getForObject(xxxxxx_HITTING_API,
+        // Object.class);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("raleigh", raleighStats);
+        // result.put("xxxxxx", xxxxxxStats);
 
         return ResponseEntity.ok(result);
     }
