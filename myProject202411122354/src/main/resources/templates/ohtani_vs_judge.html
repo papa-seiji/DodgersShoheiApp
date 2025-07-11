@@ -226,6 +226,47 @@
     </div>
 </div>
 
+<div class="container">
+    <h1>Cal Raleigh vs xxxxxx xxxxxx</h1>
+
+    <div class="image-comparison">
+        <img src="/images/Cal Raleigh.png" alt="Raleigh" class="player-img" />
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="gamesPlayed-raleigh">--</span>
+                <span class="label">出場数</span>
+                <span id="gamesPlayed-xxxxxx">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="avg-raleigh">--</span>
+                <span class="label">打率</span>
+                <span id="avg-xxxxxx">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="homeRuns-raleigh">--</span>
+                <span class="label">HR</span>
+                <span id="homeRuns-xxxxxx">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="stolenBases-raleigh">--</span>
+                <span class="label">盗塁</span>
+                <span id="stolenBases-xxxxxx">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="rbi-raleigh">--</span>
+                <span class="label">打点</span>
+                <span id="rbi-xxxxxx">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="ops-raleigh">--</span>
+                <span class="label">OPS</span>
+                <span id="ops-xxxxxx">--</span>
+            </div>
+        </div>
+        <img src="/images/xxxxxx.jpg" alt="xxxxxx" class="player-img" />
+    </div>
+</div>
+
 
 <!-- 🧢 Yamamoto vs Imanaga ピッチング成績表示セクション -->
 <div class="container">
@@ -333,7 +374,7 @@ stompClient.connect({}, () => {
     const betts = data.betts.stats[0].splits[0].stat;
     const schwarber = data.schwarber.stats[0].splits[0].stat;
     const teoscar = data.teoscar.stats[0].splits[0].stat;
-
+    const raleigh = data.raleigh.stats[0].splits[0].stat;
 
 
 
@@ -402,6 +443,13 @@ stompClient.connect({}, () => {
     document.getElementById("rbi-teoscar").textContent = teoscar.rbi || "--";
     document.getElementById("ops-teoscar").textContent = teoscar.ops || "--";
 
+    // ⏬ Cal Raleigh
+    document.getElementById("gamesPlayed-raleigh").textContent = raleigh.gamesPlayed || "--";
+    document.getElementById("avg-raleigh").textContent = raleigh.avg || "--";
+    document.getElementById("homeRuns-raleigh").textContent = raleigh.homeRuns || "--";
+    document.getElementById("stolenBases-raleigh").textContent = raleigh.stolenBases || "--";
+    document.getElementById("rbi-raleigh").textContent = raleigh.rbi || "--";
+    document.getElementById("ops-raleigh").textContent = raleigh.ops || "--";
 
 
       // ⏬ 山本由伸
@@ -441,7 +489,7 @@ stompClient.connect({}, () => {
 
     // WebSocketにリクエストを送信（自動で取得をトリガー）
     stompClient.send("/app/stats/request", {}, {});
-  });
+    });
 });
 </script>
 
