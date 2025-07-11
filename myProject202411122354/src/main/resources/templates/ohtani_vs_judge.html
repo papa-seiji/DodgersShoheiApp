@@ -226,6 +226,47 @@
     </div>
 </div>
 
+<div class="container">
+    <h1>Cal Raleigh vs 吉田正尚</h1>
+
+    <div class="image-comparison">
+        <img src="/images/Cal Raleigh.png" alt="Raleigh" class="player-img" />
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="gamesPlayed-raleigh">--</span>
+                <span class="label">出場数</span>
+                <span id="gamesPlayed-yoshida">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="avg-raleigh">--</span>
+                <span class="label">打率</span>
+                <span id="avg-yoshida">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="homeRuns-raleigh">--</span>
+                <span class="label">HR</span>
+                <span id="homeRuns-yoshida">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="stolenBases-raleigh">--</span>
+                <span class="label">盗塁</span>
+                <span id="stolenBases-yoshida">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="rbi-raleigh">--</span>
+                <span class="label">打点</span>
+                <span id="rbi-yoshida">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="ops-raleigh">--</span>
+                <span class="label">OPS</span>
+                <span id="ops-yoshida">--</span>
+            </div>
+        </div>
+        <img src="/images/yoshida.jpg" alt="yoshida" class="player-img" />
+    </div>
+</div>
+
 
 <!-- 🧢 Yamamoto vs Imanaga ピッチング成績表示セクション -->
 <div class="container">
@@ -311,6 +352,49 @@
     </div>
 </div>
 
+<!-- 🧢 ダルビッシュ有 vs Jacob Misiorowski ピッチング成績表示セクション -->
+<div class="container">
+    <h1>ダルビッシュ有 vs Jacob Misiorowski</h1>
+
+    <div class="image-comparison">
+        <!-- ダルビッシュ有の画像 -->
+        <img src="/images/ダルビッシュ有statsAPI用.jpg" alt="ダルビッシュ有" class="player-img" />
+
+        <!-- 成績表示 -->
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="darvish-games">--</span>
+                <span class="label">登板数</span>
+                <span id="misiorowski-games">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="darvish-wl">--</span>
+                <span class="label">勝-負</span>
+                <span id="misiorowski-wl">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="darvish-era">--</span>
+                <span class="label">防御率</span>
+                <span id="misiorowski-era">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="darvish-strikeouts">--</span>
+                <span class="label">奪三振</span>
+                <span id="misiorowski-strikeouts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="darvish-whip">--</span>
+                <span class="label">WHIP</span>
+                <span id="misiorowski-whip">--</span>
+            </div>
+        </div>
+
+        <!-- 佐々木朗希の画像 -->
+        <img src="/images/Jacob Misiorowski-statsAPI用.jpg" alt="Jacob Misiorowski" class="player-img" />
+    </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
@@ -333,7 +417,8 @@ stompClient.connect({}, () => {
     const betts = data.betts.stats[0].splits[0].stat;
     const schwarber = data.schwarber.stats[0].splits[0].stat;
     const teoscar = data.teoscar.stats[0].splits[0].stat;
-
+    const raleigh = data.raleigh.stats[0].splits[0].stat;
+    const yoshida = data.yoshida.stats[0].splits[0].stat;
 
 
 
@@ -402,6 +487,21 @@ stompClient.connect({}, () => {
     document.getElementById("rbi-teoscar").textContent = teoscar.rbi || "--";
     document.getElementById("ops-teoscar").textContent = teoscar.ops || "--";
 
+    // ⏬ Cal Raleigh
+    document.getElementById("gamesPlayed-raleigh").textContent = raleigh.gamesPlayed || "--";
+    document.getElementById("avg-raleigh").textContent = raleigh.avg || "--";
+    document.getElementById("homeRuns-raleigh").textContent = raleigh.homeRuns || "--";
+    document.getElementById("stolenBases-raleigh").textContent = raleigh.stolenBases || "--";
+    document.getElementById("rbi-raleigh").textContent = raleigh.rbi || "--";
+    document.getElementById("ops-raleigh").textContent = raleigh.ops || "--";
+
+    // ⏬ 吉田正尚
+    document.getElementById("gamesPlayed-yoshida").textContent = yoshida.gamesPlayed || "--";
+    document.getElementById("avg-yoshida").textContent = yoshida.avg || "--";
+    document.getElementById("homeRuns-yoshida").textContent = yoshida.homeRuns || "--";
+    document.getElementById("stolenBases-yoshida").textContent = yoshida.stolenBases || "--";
+    document.getElementById("rbi-yoshida").textContent = yoshida.rbi || "--";
+    document.getElementById("ops-yoshida").textContent = yoshida.ops || "--";
 
 
       // ⏬ 山本由伸
@@ -436,12 +536,28 @@ stompClient.connect({}, () => {
     document.getElementById("sasaki-strikeouts").textContent = sasaki.strikeOuts || "--";
     document.getElementById("sasaki-whip").textContent = sasaki.whip || "--";
 
+      // ⏬ ダルビッシュ有
+    const darvish = data.darvish.stats[0].splits[0].stat;
+    document.getElementById("darvish-games").textContent = darvish.gamesPlayed || "--";
+    document.getElementById("darvish-wl").textContent = darvish.wins + "-" + darvish.losses || "--";
+    document.getElementById("darvish-era").textContent = darvish.era || "--";
+    document.getElementById("darvish-strikeouts").textContent = darvish.strikeOuts || "--";
+    document.getElementById("darvish-whip").textContent = darvish.whip || "--";
+
+      // ⏬ Jacob Misiorowski
+    const misiorowski = data.misiorowski.stats[0].splits[0].stat;
+    document.getElementById("misiorowski-games").textContent = misiorowski.gamesPlayed || "--";
+    document.getElementById("misiorowski-wl").textContent = misiorowski.wins + "-" + misiorowski.losses || "--";
+    document.getElementById("misiorowski-era").textContent = misiorowski.era || "--";
+    document.getElementById("misiorowski-strikeouts").textContent = misiorowski.strikeOuts || "--";
+    document.getElementById("misiorowski-whip").textContent = misiorowski.whip || "--";
+
 
     });
 
     // WebSocketにリクエストを送信（自動で取得をトリガー）
     stompClient.send("/app/stats/request", {}, {});
-  });
+    });
 });
 </script>
 
