@@ -13,13 +13,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * MLB StatsAPI (feed/live) から先発投手とスタメンを取得してDTOに整形するService。
- * 参照: https://statsapi.mlb.com/api/v1.1/game/{gamePk}/feed/live
+ * MLB StatsAPI から先発投手とスタメンを取得してDTOに整形するService。
+ * 参照:
+ * - feed/live: https://statsapi.mlb.com/api/v1.1/game/{gamePk}/feed/live
+ * - schedule:
+ * https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId={teamId}&date={date}&hydrate=probablePitcher
+ * - scheduleR:
+ * https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId={teamId}&startDate={from}&endDate={to}&hydrate=probablePitcher
  */
 @Service
 public class MlbLineupService {
 
     private static final String FEED_URL = "https://statsapi.mlb.com/api/v1.1/game/{gamePk}/feed/live";
+
+    private static final String SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId={teamId}&date={date}&hydrate=probablePitcher";
+
+    private static final String SCHEDULE_RANGE_URL = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId={teamId}&startDate={from}&endDate={to}&hydrate=probablePitcher";
 
     // 強調表示したい日本人選手のpeopleId（必要に応じて増減）
     private static final Set<Long> JAPANESE_IDS = Set.of(
@@ -34,6 +43,7 @@ public class MlbLineupService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
+    /** gamePk 指定で feed/live を取得し、先発＆スタメンを整形 */
     public LineupResponse fetchLineups(long gamePk) {
         String json = restTemplate.getForObject(FEED_URL, String.class, Map.of("gamePk", gamePk));
         try {
@@ -55,6 +65,74 @@ public class MlbLineupService {
             throw new RuntimeException("Failed to parse MLB live feed: " + e.getMessage(), e);
         }
     }
+
+    /** 指定日の teamId の gamePk を schedule から取得（非Finalを優先。なければ先頭） */
+    public OptionalLong findGamePkByDate(int teamId, java.time.LocalDate date) {
+        String json = restTemplate.getForObject(
+                SCHEDULE_URL,
+                String.class,
+                Map.of("teamId", teamId, "date", date.toString()));
+        try {
+            JsonNode root = mapper.readTree(json);
+            JsonNode dates = root.path("dates");
+            if (!dates.isArray() || dates.size() == 0)
+                return OptionalLong.empty();
+
+            JsonNode games = dates.get(0).path("games");
+            if (!games.isArray() || games.size() == 0)
+                return OptionalLong.empty();
+
+            // その日の非Finalを優先（ダブルヘッダー等に備え）
+            Long nonFinal = null;
+            for (var g : games) {
+                String detailed = g.path("status").path("detailedState").asText("");
+                long pk = g.path("gamePk").asLong(0);
+                if (pk != 0 && !detailed.contains("Final")) {
+                    nonFinal = pk;
+                    break;
+                }
+            }
+            if (nonFinal != null)
+                return OptionalLong.of(nonFinal);
+
+            long first = games.get(0).path("gamePk").asLong(0);
+            return (first == 0) ? OptionalLong.empty() : OptionalLong.of(first);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse MLB schedule: " + e.getMessage(), e);
+        }
+    }
+
+    /** from から lookaheadDays 先までの範囲で、最初の非Finalの gamePk を返す */
+    public OptionalLong findNextGamePk(int teamId, java.time.LocalDate from, int lookaheadDays) {
+        String json = restTemplate.getForObject(
+                SCHEDULE_RANGE_URL,
+                String.class,
+                Map.of("teamId", teamId,
+                       "from", from.toString(),
+                       "to", from.plusDays(lookaheadDays).toString())
+        );
+        try {
+            JsonNode root = mapper.readTree(json);
+            JsonNode dates = root.path("dates");
+            if (!dates.isArray() || dates.size() == 0) return OptionalLong.empty();
+
+            for (var d : dates) {
+                JsonNode games = d.path("games");
+                for (var g : games) {
+                    String detailed = g.path("status").path("detailedState").asText("");
+                    long pk = g.path("gamePk").asLong(0);
+                    if (pk != 0 && !detailed.contains("Final")) {
+                        return OptionalLong.of(pk);
+                    }
+                }
+            }
+            return OptionalLong.empty();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse MLB schedule range: " + e.getMessage(), e);
+        }
+    }
+
+    // ---------- 内部ユーティリティ ----------
 
     private Pitcher readProbable(JsonNode root, String side) {
         long id = root.at("/gameData/probablePitchers/" + side + "/id").asLong(0);
