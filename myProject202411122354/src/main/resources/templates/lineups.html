@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>先発＆スタメン</title>
+  <style>
+    :root { color-scheme: dark light; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
+           margin: 24px; background:#111; color:#eee; }
+    h1 { font-size: 22px; margin: 0 0 16px; }
+    .wrap { display:grid; grid-template-columns: 1fr 1fr; gap:24px; }
+    .card { background:#1b1b1b; border:1px solid #2a2a2a; border-radius:12px; padding:16px; }
+    .team { font-size:18px; font-weight:700; margin-bottom:8px; }
+    .pp { margin:8px 0 16px; padding:8px 12px; border-radius:8px; background:#141414;}
+    .jp { color:#42a5f5; font-weight:700; }       /* 日本人選手を強調 */
+    table { width:100%; border-collapse: collapse; font-size:14px; }
+    th, td { padding:8px 10px; border-bottom:1px solid #2a2a2a; text-align:left; }
+    th { color:#bbb; font-weight:600; }
+    .empty { color:#aaa; padding:12px 0; }
+    @media (max-width: 840px){ .wrap { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <h1>先発ピッチャー & スターティングオーダー</h1>
+
+  <div class="wrap">
+    <!-- HOME -->
+    <section class="card">
+      <div class="team" th:text="${home.teamName}">HOME</div>
+
+      <div class="pp">
+        予告先発：
+        <span th:classappend="${home.probablePitcher.japanese} ? 'jp'">
+          <span th:text="${home.probablePitcher.name}">Pitcher</span>
+        </span>
+      </div>
+
+      <div th:if="${#lists.isEmpty(home.lineup)}" class="empty">スタメン未確定</div>
+      <table th:if="${!#lists.isEmpty(home.lineup)}">
+        <thead>
+          <tr><th>#</th><th>選手</th><th>ポジション</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${home.lineup}">
+            <td th:text="${p.order}">1</td>
+            <td th:classappend="${p.japanese} ? 'jp'">
+              <span th:text="${p.name}">Name</span>
+            </td>
+            <td th:text="${p.pos}">CF</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- AWAY -->
+    <section class="card">
+      <div class="team" th:text="${away.teamName}">AWAY</div>
+
+      <div class="pp">
+        予告先発：
+        <span th:classappend="${away.probablePitcher.japanese} ? 'jp'">
+          <span th:text="${away.probablePitcher.name}">Pitcher</span>
+        </span>
+      </div>
+
+      <div th:if="${#lists.isEmpty(away.lineup)}" class="empty">スタメン未確定</div>
+      <table th:if="${!#lists.isEmpty(away.lineup)}">
+        <thead>
+          <tr><th>#</th><th>選手</th><th>ポジション</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${away.lineup}">
+            <td th:text="${p.order}">1</td>
+            <td th:classappend="${p.japanese} ? 'jp'">
+              <span th:text="${p.name}">Name</span>
+            </td>
+            <td th:text="${p.pos}">SS</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+</body>
+</html>
