@@ -116,7 +116,7 @@ h1,h2,h3{ margin:12px 0; }
 
 /* ===== Tighten on small devices ===== */
 @media (max-width: 480px){
-  .container{padding: 0 14px 0 4px; }
+  .container{padding: 0 5px 0 5px; }
 
   .lineups-grid{ gap:10px; }
 
