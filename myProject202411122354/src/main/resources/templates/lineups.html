@@ -26,17 +26,17 @@
     </p>
   </section>
 
-  <!-- ★ スマホでも2カラムを維持 -->
+  <!-- スマホでも2カラム維持 -->
   <div class="wrap lineups-grid">
     <!-- HOME -->
     <section class="card team-card">
       <div class="team team-title" th:text="${home.teamName}">HOME</div>
 
       <div class="pp probable">
-        予告先発：
-        <span th:classappend="${home.probablePitcher.japanese} ? 'jp'">
+        <div class="pp-label">予告先発：</div>
+        <div class="pp-name" th:classappend="${home.probablePitcher.japanese} ? 'jp'">
           <span th:text="${home.probablePitcher.name}">Pitcher</span>
-        </span>
+        </div>
       </div>
 
       <div th:if="${#lists.isEmpty(home.lineup)}" class="empty">スタメン未確定</div>
@@ -65,10 +65,10 @@
       <div class="team team-title" th:text="${away.teamName}">AWAY</div>
 
       <div class="pp probable">
-        予告先発：
-        <span th:classappend="${away.probablePitcher.japanese} ? 'jp'">
+        <div class="pp-label">予告先発：</div>
+        <div class="pp-name" th:classappend="${away.probablePitcher.japanese} ? 'jp'">
           <span th:text="${away.probablePitcher.name}">Pitcher</span>
-        </span>
+        </div>
       </div>
 
       <div th:if="${#lists.isEmpty(away.lineup)}" class="empty">スタメン未確定</div>
