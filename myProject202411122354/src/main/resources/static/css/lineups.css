@@ -1,0 +1,11 @@
+/* src/main/resources/static/css/lineups.css */
+body { background:#0f0f12; color:#e9eef5; font-family:system-ui, -apple-system, Segoe UI, Roboto; }
+h1,h2,h3{ margin:12px 0; }
+.pitchers,.lineups{ display:flex; gap:24px; margin:16px 0; }
+.team{ background:#17191f; border-radius:12px; padding:16px; flex:1; }
+ol{ margin:0; padding-left:20px; }
+li{ padding:6px 0; border-bottom:1px solid #252833; }
+li:last-child{ border-bottom:none; }
+.order{ width:20px; display:inline-block; opacity:.7; }
+.pos{ margin-left:8px; opacity:.7; font-variant:all-small-caps; letter-spacing:.04em; }
+.jp{ color:#ffd166; font-weight:700; } /* ←日本人を強調 */
