@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -171,28 +172,76 @@ public class MlbLineupService {
         if (playersNode.isMissingNode() || !playersNode.isObject())
             return List.of();
 
-        List<PlayerEntry> list = new ArrayList<>();
+        // 打順(1..9) -> 候補を1人に絞る
+        class Holder {
+            PlayerEntry entry;
+            int rawOrder; // 例: 101, 402
+            boolean isSub; // 交代選手か
+            String pos; // 例: PH/PR を後回しにする
+
+            Holder(PlayerEntry e, int raw, boolean sub, String pos) {
+                this.entry = e;
+                this.rawOrder = raw;
+                this.isSub = sub;
+                this.pos = pos;
+            }
+        }
+        Map<Integer, Holder> best = new HashMap<>();
+
         Iterator<String> it = playersNode.fieldNames();
         while (it.hasNext()) {
             String key = it.next();
             JsonNode p = playersNode.get(key);
 
-            String battingOrder = p.path("battingOrder").asText("");
-            if (battingOrder.isEmpty())
+            String battingOrderStr = p.path("battingOrder").asText("");
+            if (battingOrderStr.isEmpty())
                 continue;
 
-            int order = normalizeOrder(battingOrder); // "101" -> 1
-            String pos = p.at("/position/abbreviation").asText("");
+            int raw;
+            try {
+                raw = Integer.parseInt(battingOrderStr); // 101, 402, ...
+            } catch (NumberFormatException ex) {
+                continue;
+            }
+            int slot = Math.max(1, raw / 100); // 1..9 想定（DH含む）
+            if (slot > 9)
+                slot = 9;
 
+            String pos = p.at("/position/abbreviation").asText("");
             long id = p.at("/person/id").asLong(0);
             String name = p.at("/person/fullName").asText("");
             boolean jp = JAPANESE_IDS.contains(id);
+            boolean isSub = p.at("/gameStatus/isSubstitute").asBoolean(false);
 
-            list.add(new PlayerEntry(id, name, pos, order, jp));
+            PlayerEntry entry = new PlayerEntry(id, name, pos, slot, jp);
+
+            Holder cur = best.get(slot);
+            if (cur == null) {
+                best.put(slot, new Holder(entry, raw, isSub, pos));
+                continue;
+            }
+
+            // 優先度: 先発(!isSub) > 交代、 かつ PH/PR は劣後、 それでも決まらなければ rawOrder が小さい方
+            boolean curIsBenchRole = "PH".equals(cur.pos) || "PR".equals(cur.pos);
+            boolean newIsBenchRole = "PH".equals(pos) || "PR".equals(pos);
+
+            boolean takeNew = false;
+            if (cur.isSub && !isSub) {
+                takeNew = true;
+            } else if (curIsBenchRole && !newIsBenchRole) {
+                takeNew = true;
+            } else if (raw < cur.rawOrder) {
+                takeNew = true;
+            }
+
+            if (takeNew) {
+                best.put(slot, new Holder(entry, raw, isSub, pos));
+            }
         }
 
-        return list.stream()
-                .sorted(Comparator.comparingInt(PlayerEntry::order))
+        return best.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(e -> e.getValue().entry)
                 .collect(Collectors.toList());
     }
 
