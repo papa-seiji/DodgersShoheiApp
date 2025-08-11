@@ -8,91 +8,93 @@
 </head>
 <body>
 
-  <h1>先発ピッチャー & スターティングオーダー</h1>
+  <div class="container">
+    <h1>先発ピッチャー & スターティングオーダー</h1>
 
-  <section class="game-meta">
-    <p>
-      試合日:
-      <span th:text="${gameInfo != null && gameInfo.officialDate != null
-                      ? #temporals.format(gameInfo.officialDate, 'yyyy/MM/dd')
-                      : '未定'}"></span>
-      <span th:if="${gameInfo != null && gameInfo.gameDateTimeJST != null}"
-            th:text="${' ' + #temporals.format(gameInfo.gameDateTimeJST, 'HH:mm')}"></span>
-    </p>
+    <section class="game-meta">
+      <p>
+        試合日:
+        <span th:text="${gameInfo != null && gameInfo.officialDate != null
+                        ? #temporals.format(gameInfo.officialDate, 'yyyy/MM/dd')
+                        : '未定'}"></span>
+        <span th:if="${gameInfo != null && gameInfo.gameDateTimeJST != null}"
+              th:text="${' ' + #temporals.format(gameInfo.gameDateTimeJST, 'HH:mm')}"></span>
+      </p>
 
-    <p>
-      球場:
-      <span th:text="${gameInfo != null && gameInfo.venue != null ? gameInfo.venue : '未定'}"></span>
-    </p>
-  </section>
-
-  <!-- スマホでも2カラム維持 -->
-  <div class="wrap lineups-grid">
-    <!-- HOME -->
-    <section class="card team-card">
-      <div class="team team-title" th:text="${home.teamName}">HOME</div>
-
-      <div class="pp probable">
-        <div class="pp-label">予告先発：</div>
-        <div class="pp-name" th:classappend="${home.probablePitcher.japanese} ? 'jp'">
-          <span th:text="${home.probablePitcher.name}">Pitcher</span>
-        </div>
-      </div>
-
-      <div th:if="${#lists.isEmpty(home.lineup)}" class="empty">スタメン未確定</div>
-      <table th:if="${!#lists.isEmpty(home.lineup)}">
-        <thead>
-          <tr>
-            <th class="col-order">#</th>
-            <th class="col-name">選手</th>
-            <th class="col-pos">ポジション</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="p : ${home.lineup}">
-            <td class="col-order" th:text="${p.order}">1</td>
-            <td class="col-name" th:classappend="${p.japanese} ? 'jp'">
-              <span th:text="${p.name}">Name</span>
-            </td>
-            <td class="col-pos" th:text="${p.pos}">CF</td>
-          </tr>
-        </tbody>
-      </table>
+      <p>
+        球場:
+        <span th:text="${gameInfo != null && gameInfo.venue != null ? gameInfo.venue : '未定'}"></span>
+      </p>
     </section>
 
-    <!-- AWAY -->
-    <section class="card team-card">
-      <div class="team team-title" th:text="${away.teamName}">AWAY</div>
+    <!-- スマホでも2カラム維持 -->
+    <div class="wrap lineups-grid">
+      <!-- HOME -->
+      <section class="card team-card">
+        <div class="team team-title" th:text="${home.teamName}">HOME</div>
 
-      <div class="pp probable">
-        <div class="pp-label">予告先発：</div>
-        <div class="pp-name" th:classappend="${away.probablePitcher.japanese} ? 'jp'">
-          <span th:text="${away.probablePitcher.name}">Pitcher</span>
+        <div class="pp probable">
+          <div class="pp-label">予告先発：</div>
+          <div class="pp-name" th:classappend="${home.probablePitcher.japanese} ? 'jp'">
+            <span th:text="${home.probablePitcher.name}">Pitcher</span>
+          </div>
         </div>
-      </div>
 
-      <div th:if="${#lists.isEmpty(away.lineup)}" class="empty">スタメン未確定</div>
-      <table th:if="${!#lists.isEmpty(away.lineup)}">
-        <thead>
-          <tr>
-            <th class="col-order">#</th>
-            <th class="col-name">選手</th>
-            <th class="col-pos">ポジション</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="p : ${away.lineup}">
-            <td class="col-order" th:text="${p.order}">1</td>
-            <td class="col-name" th:classappend="${p.japanese} ? 'jp'">
-              <span th:text="${p.name}">Name</span>
-            </td>
-            <td class="col-pos" th:text="${p.pos}">SS</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+        <div th:if="${#lists.isEmpty(home.lineup)}" class="empty">スタメン未確定</div>
+        <table th:if="${!#lists.isEmpty(home.lineup)}">
+          <thead>
+            <tr>
+              <th class="col-order">#</th>
+              <th class="col-name">選手</th>
+              <th class="col-pos">ポジション</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="p : ${home.lineup}">
+              <td class="col-order" th:text="${p.order}">1</td>
+              <td class="col-name" th:classappend="${p.japanese} ? 'jp'">
+                <span th:text="${p.name}">Name</span>
+              </td>
+              <td class="col-pos" th:text="${p.pos}">CF</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- AWAY -->
+      <section class="card team-card">
+        <div class="team team-title" th:text="${away.teamName}">AWAY</div>
+
+        <div class="pp probable">
+          <div class="pp-label">予告先発：</div>
+          <div class="pp-name" th:classappend="${away.probablePitcher.japanese} ? 'jp'">
+            <span th:text="${away.probablePitcher.name}">Pitcher</span>
+          </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(away.lineup)}" class="empty">スタメン未確定</div>
+        <table th:if="${!#lists.isEmpty(away.lineup)}">
+          <thead>
+            <tr>
+              <th class="col-order">#</th>
+              <th class="col-name">選手</th>
+              <th class="col-pos">ポジション</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="p : ${away.lineup}">
+              <td class="col-order" th:text="${p.order}">1</td>
+              <td class="col-name" th:classappend="${p.japanese} ? 'jp'">
+                <span th:text="${p.name}">Name</span>
+              </td>
+              <td class="col-pos" th:text="${p.pos}">SS</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <a href="/home" class="back-button">← Home画面に戻る</a>
   </div>
-
-  <a href="/home" class="back-button">← Home画面に戻る</a>
 </body>
 </html>

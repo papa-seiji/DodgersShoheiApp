@@ -6,15 +6,24 @@ body {
   background:#0f0f12;
   color:#e9eef5;
   font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
-  margin:24px;
+  margin:0; /* container に任せる */
 }
-h1 { font-size:22px; margin:0 0 16px; }
+
+/* ===== Center container ===== */
+.container{
+  max-width: 1080px;      /* ページの最大幅 */
+  margin: 24px auto 36px; /* 中央寄せ */
+  padding: 0 16px;        /* 端の余白 */
+  text-align: center;     /* 見出し＆メタ情報を中央 */
+}
+
+h1 { font-size:24px; margin:0 0 16px; }
 h1,h2,h3{ margin:12px 0; }
 
 /* ===== Game meta ===== */
 .game-meta p { margin: 6px 0 8px; }
 
-/* ===== Back button ===== */
+/* ===== Back button (center) ===== */
 .back-button {
   display:inline-block;
   padding:12px 24px;
@@ -23,7 +32,7 @@ h1,h2,h3{ margin:12px 0; }
   text-decoration:none;
   border-radius:8px;
   font-weight:700;
-  margin:24px 0 30px;
+  margin:24px auto 0;     /* 中央配置 */
 }
 
 /* ===== 2-column layout (always keep two columns) ===== */
@@ -32,6 +41,9 @@ h1,h2,h3{ margin:12px 0; }
   grid-template-columns:1fr 1fr;
   gap:16px;
   align-items:start;
+  justify-items:stretch;
+  margin-top: 10px;
+  text-align: left;       /* 内側は左寄せに戻す */
 }
 
 /* ===== Cards ===== */
@@ -49,6 +61,7 @@ h1,h2,h3{ margin:12px 0; }
   font-weight:700;
   font-size:18px;
   margin-bottom:10px;
+  text-align:left;
 }
 
 /* Probable pitcher block: label on first line, name on next line */
@@ -102,7 +115,7 @@ h1,h2,h3{ margin:12px 0; }
 
 /* ===== Tighten on small devices ===== */
 @media (max-width: 480px){
-  body { margin:18px; }
+  .container{ padding: 0 12px; }
 
   .lineups-grid{ gap:10px; }
 
