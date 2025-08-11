@@ -1,26 +1,113 @@
 /* src/main/resources/static/css/lineups.css */
+
+/* ===== Page base ===== */
+:root { color-scheme: dark light; }
+body {
+  background:#0f0f12;
+  color:#e9eef5;
+  font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
+  margin:24px;
+}
+h1 { font-size:22px; margin:0 0 16px; }
+h1,h2,h3{ margin:12px 0; }
+
+/* ===== Game meta ===== */
+.game-meta p { margin: 6px 0 8px; }
+
+/* ===== Back button ===== */
 .back-button {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #5f96df;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    margin-top: 24px;
+  display:inline-block;
+  padding:12px 24px;
+  background-color:#5f96df;
+  color:#fff;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:700;
+  margin:24px 0 30px;
 }
 
-body { background:#0f0f12; color:#e9eef5; font-family:system-ui, -apple-system, Segoe UI, Roboto; }
-h1,h2,h3{ margin:12px 0; }
-.pitchers,.lineups{ display:flex; gap:24px; margin:16px 0; }
-.team{ background:#17191f; border-radius:12px; padding:16px; flex:1; }
-ol{ margin:0; padding-left:20px; }
-li{ padding:6px 0; border-bottom:1px solid #252833; }
-li:last-child{ border-bottom:none; }
-.order{ width:20px; display:inline-block; opacity:.7; }
-.pos{ margin-left:8px; opacity:.7; font-variant:all-small-caps; letter-spacing:.04em; }
-.jp{ color:#ffd166; font-weight:700; } /* ←日本人を強調 */
+/* ===== 2-column layout (always) ===== */
+.lineups-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr; /* keep two columns even on mobile */
+  gap:16px;
+  align-items:start;
+}
 
+/* ===== Cards ===== */
+.team-card{
+  background:#17191f;
+  border:1px solid #252833;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 4px 18px rgba(0,0,0,.25);
+}
+.team-title{
+  background:#0f1115;
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:700;
+  font-size:18px;
+  margin-bottom:10px;
+}
 
+/* Probable pitcher row */
+.probable{
+  background:#101217;
+  border-radius:10px;
+  padding:8px 12px;
+  margin:8px 0 12px;
+  font-size:14px;
+}
 
+/* Highlights */
+.jp{ color:#ffd166; font-weight:700; }
+
+/* ===== Tables (compact) ===== */
+.team-card table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed; /* fix column widths */
+  font-size:14px;
+}
+.team-card th,
+.team-card td{
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:6px 8px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-align:left;
+}
+.team-card th{ color:#bfc6d2; font-weight:600; }
+.empty{ color:#9aa4b2; padding:12px 0; }
+
+/* Column widths */
+.col-order{ width:26px; text-align:right; opacity:.85; }
+.col-name { width:auto; }
+.col-pos  { width:42px; text-align:left; opacity:.9; }
+
+/* ===== Tighten on small devices ===== */
+@media (max-width: 480px){
+  body { margin:18px; }
+
+  .lineups-grid{ gap:10px; }
+
+  .team-card{ padding:12px; border-radius:12px; }
+  .team-title{ padding:8px 10px; font-size:16px; margin-bottom:8px; }
+  .probable{ padding:6px 8px; font-size:12px; margin:6px 0 10px; }
+
+  .team-card table{ font-size:12px; }
+  .team-card th, .team-card td{ padding:5px 6px; }
+
+  .col-order{ width:22px; }
+  .col-pos  { width:36px; }
+}
+
+/* Extra small safety (optional) */
+@media (max-width: 360px){
+  .team-card th, .team-card td{ font-size:11px; padding:4px 5px; }
+  .col-order{ width:20px; }
+  .col-pos  { width:32px; }
+}
