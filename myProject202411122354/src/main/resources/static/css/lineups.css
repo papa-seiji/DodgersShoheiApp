@@ -1,4 +1,16 @@
 /* src/main/resources/static/css/lineups.css */
+.back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #5f96df;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-top: 24px;
+}
+
 body { background:#0f0f12; color:#e9eef5; font-family:system-ui, -apple-system, Segoe UI, Roboto; }
 h1,h2,h3{ margin:12px 0; }
 .pitchers,.lineups{ display:flex; gap:24px; margin:16px 0; }
@@ -9,3 +21,6 @@ li:last-child{ border-bottom:none; }
 .order{ width:20px; display:inline-block; opacity:.7; }
 .pos{ margin-left:8px; opacity:.7; font-variant:all-small-caps; letter-spacing:.04em; }
 .jp{ color:#ffd166; font-weight:700; } /* ←日本人を強調 */
+
+
+
