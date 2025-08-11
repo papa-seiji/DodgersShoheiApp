@@ -13,25 +13,20 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalLong;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class MlbLineupService {
 
     private static final String FEED_URL = "https://statsapi.mlb.com/api/v1.1/game/{gamePk}/feed/live";
+
     private static final String SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId={teamId}&date={date}&hydrate=probablePitcher";
+
     private static final String SCHEDULE_RANGE_URL = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId={teamId}&startDate={from}&endDate={to}&hydrate=probablePitcher";
+
     private static final ZoneId JST = ZoneId.of("Asia/Tokyo");
 
-    // Highlighted Japanese players (peopleId)
     private static final Set<Long> JAPANESE_IDS = Set.of(
             660271L, // Shohei Ohtani
             808967L, // Yoshinobu Yamamoto
@@ -58,26 +53,27 @@ public class MlbLineupService {
             List<PlayerEntry> homeLineup = readLineup(root, "home");
             List<PlayerEntry> awayLineup = readLineup(root, "away");
 
-            // Venue
+            // venue
             String venue = root.at("/gameData/venue/name").asText("");
             if (venue.isEmpty()) {
                 venue = root.at("/gameData/venue/venueName").asText("");
             }
 
-            // Start time (UTC -> JST)
-            String dateTimeUtc = root.at("/gameData/datetime/dateTime").asText("");
+            // start time (UTC -> JST)
+            String dateTimeUtc = root.at("/gameData/datetime/dateTime").isMissingNode()
+                    ? ""
+                    : root.at("/gameData/datetime/dateTime").asText("");
             ZonedDateTime jstDateTime = null;
             if (!dateTimeUtc.isEmpty()) {
                 jstDateTime = ZonedDateTime.parse(dateTimeUtc).withZoneSameInstant(JST);
             }
 
-            // Official US date (used for display date)
+            // official US date
             String officialDateStr = root.at("/gameData/datetime/officialDate").asText("");
             LocalDate officialDate = null;
             if (!officialDateStr.isEmpty()) {
                 officialDate = LocalDate.parse(officialDateStr);
             } else if (jstDateTime != null) {
-                // Fallback if officialDate missing
                 officialDate = jstDateTime.toLocalDate();
             }
 
@@ -92,12 +88,13 @@ public class MlbLineupService {
         }
     }
 
-    /** Find gamePk for a team on a specific date. Prefer non-Final. */
+    /**
+     * Find gamePk for a team on a specific date. Prefer non-Final when multiple (DH
+     * etc.).
+     */
     public OptionalLong findGamePkByDate(int teamId, LocalDate date) {
         String json = restTemplate.getForObject(
-                SCHEDULE_URL,
-                String.class,
-                Map.of("teamId", teamId, "date", date.toString()));
+                SCHEDULE_URL, String.class, Map.of("teamId", teamId, "date", date.toString()));
         try {
             JsonNode root = mapper.readTree(json);
             JsonNode dates = root.path("dates");
@@ -122,20 +119,17 @@ public class MlbLineupService {
 
             long first = games.get(0).path("gamePk").asLong(0);
             return (first == 0) ? OptionalLong.empty() : OptionalLong.of(first);
+
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse MLB schedule: " + e.getMessage(), e);
         }
     }
 
-    /** Find the first non-Final gamePk in [from, from+lookaheadDays]. */
+    /** Find first non-Final gamePk in [from, from+lookaheadDays]. */
     public OptionalLong findNextGamePk(int teamId, LocalDate from, int lookaheadDays) {
         String json = restTemplate.getForObject(
-                SCHEDULE_RANGE_URL,
-                String.class,
-                Map.of(
-                        "teamId", teamId,
-                        "from", from.toString(),
-                        "to", from.plusDays(lookaheadDays).toString()));
+                SCHEDULE_RANGE_URL, String.class,
+                Map.of("teamId", teamId, "from", from.toString(), "to", from.plusDays(lookaheadDays).toString()));
         try {
             JsonNode root = mapper.readTree(json);
             JsonNode dates = root.path("dates");
@@ -153,6 +147,37 @@ public class MlbLineupService {
                 }
             }
             return OptionalLong.empty();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse MLB schedule range: " + e.getMessage(), e);
+        }
+    }
+
+    /** Find last gamePk on or before 'toInclusive' (look back up to N days). */
+    public OptionalLong findPrevGamePk(int teamId, LocalDate toInclusive, int lookbackDays) {
+        String json = restTemplate.getForObject(
+                SCHEDULE_RANGE_URL, String.class,
+                Map.of("teamId", teamId,
+                        "from", toInclusive.minusDays(lookbackDays).toString(),
+                        "to", toInclusive.toString()));
+        try {
+            JsonNode root = mapper.readTree(json);
+            JsonNode dates = root.path("dates");
+            if (!dates.isArray() || dates.size() == 0)
+                return OptionalLong.empty();
+
+            for (int i = dates.size() - 1; i >= 0; i--) {
+                JsonNode games = dates.get(i).path("games");
+                for (int j = games.size() - 1; j >= 0; j--) {
+                    JsonNode g = games.get(j);
+                    long pk = g.path("gamePk").asLong(0);
+                    if (pk != 0) {
+                        return OptionalLong.of(pk);
+                    }
+                }
+            }
+            return OptionalLong.empty();
+
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse MLB schedule range: " + e.getMessage(), e);
         }
@@ -172,12 +197,12 @@ public class MlbLineupService {
         if (playersNode.isMissingNode() || !playersNode.isObject())
             return List.of();
 
-        // 打順(1..9) -> 候補を1人に絞る
+        // collapse PH/PR and substitutions: keep one per batting slot (1..9)
         class Holder {
             PlayerEntry entry;
-            int rawOrder; // 例: 101, 402
-            boolean isSub; // 交代選手か
-            String pos; // 例: PH/PR を後回しにする
+            int rawOrder;
+            boolean isSub;
+            String pos;
 
             Holder(PlayerEntry e, int raw, boolean sub, String pos) {
                 this.entry = e;
@@ -199,11 +224,11 @@ public class MlbLineupService {
 
             int raw;
             try {
-                raw = Integer.parseInt(battingOrderStr); // 101, 402, ...
+                raw = Integer.parseInt(battingOrderStr);
             } catch (NumberFormatException ex) {
                 continue;
             }
-            int slot = Math.max(1, raw / 100); // 1..9 想定（DH含む）
+            int slot = Math.max(1, raw / 100);
             if (slot > 9)
                 slot = 9;
 
@@ -220,23 +245,19 @@ public class MlbLineupService {
                 best.put(slot, new Holder(entry, raw, isSub, pos));
                 continue;
             }
-
-            // 優先度: 先発(!isSub) > 交代、 かつ PH/PR は劣後、 それでも決まらなければ rawOrder が小さい方
-            boolean curIsBenchRole = "PH".equals(cur.pos) || "PR".equals(cur.pos);
-            boolean newIsBenchRole = "PH".equals(pos) || "PR".equals(pos);
+            boolean curBench = "PH".equals(cur.pos) || "PR".equals(cur.pos);
+            boolean newBench = "PH".equals(pos) || "PR".equals(pos);
 
             boolean takeNew = false;
-            if (cur.isSub && !isSub) {
+            if (cur.isSub && !isSub)
                 takeNew = true;
-            } else if (curIsBenchRole && !newIsBenchRole) {
+            else if (curBench && !newBench)
                 takeNew = true;
-            } else if (raw < cur.rawOrder) {
+            else if (raw < cur.rawOrder)
                 takeNew = true;
-            }
 
-            if (takeNew) {
+            if (takeNew)
                 best.put(slot, new Holder(entry, raw, isSub, pos));
-            }
         }
 
         return best.entrySet().stream()
@@ -244,14 +265,4 @@ public class MlbLineupService {
                 .map(e -> e.getValue().entry)
                 .collect(Collectors.toList());
     }
-
-    private int normalizeOrder(String raw) {
-        try {
-            int v = Integer.parseInt(raw); // 101, 102, ...
-            return Math.max(1, v / 100);
-        } catch (NumberFormatException e) {
-            return Integer.MAX_VALUE;
-        }
-    }
-
 }

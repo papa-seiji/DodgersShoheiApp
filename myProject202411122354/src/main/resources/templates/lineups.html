@@ -5,27 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>先発＆スタメン</title>
   <link rel="stylesheet" th:href="@{/css/lineups.css}">
+
 </head>
 <body>
 
   <div class="container">
     <h1>先発ピッチャー & スターティングオーダー</h1>
 
-    <section class="game-meta">
-      <p>
-        試合日:
-        <span th:text="${gameInfo != null && gameInfo.officialDate != null
-                        ? #temporals.format(gameInfo.officialDate, 'yyyy/MM/dd')
-                        : '未定'}"></span>
-        <span th:if="${gameInfo != null && gameInfo.gameDateTimeJST != null}"
-              th:text="${' ' + #temporals.format(gameInfo.gameDateTimeJST, 'HH:mm')}"></span>
-      </p>
+<section class="game-meta">
+  <p>
+    試合日:
+    <span th:text="${gameInfo != null && gameInfo.gameDateTimeJST != null
+                    ? #temporals.format(gameInfo.gameDateTimeJST, 'yyyy/MM/dd')
+                    : '未定'}"></span>
+    <span th:if="${gameInfo != null && gameInfo.gameDateTimeJST != null}"
+          th:text="${' ' + #temporals.format(gameInfo.gameDateTimeJST, 'HH:mm')}"></span>
+  </p>
 
-      <p>
-        球場:
-        <span th:text="${gameInfo != null && gameInfo.venue != null ? gameInfo.venue : '未定'}"></span>
-      </p>
-    </section>
+  <p>
+    球場:
+    <span th:text="${gameInfo != null && gameInfo.venue != null ? gameInfo.venue : '未定'}"></span>
+  </p>
+</section>
 
     <!-- スマホでも2カラム維持 -->
     <div class="wrap lineups-grid">
@@ -93,8 +94,12 @@
         </table>
       </section>
     </div>
+    <h5>(注)スタメンは試合2h前くらいに発表される</h5>
 
     <a href="/home" class="back-button">← Home画面に戻る</a>
   </div>
+  <th:block th:replace="fragments/footer-2 :: footer"></th:block>
+
 </body>
+
 </html>

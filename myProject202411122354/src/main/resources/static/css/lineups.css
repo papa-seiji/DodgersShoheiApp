@@ -33,6 +33,7 @@ h1,h2,h3{ margin:12px 0; }
   border-radius:8px;
   font-weight:700;
   margin:24px auto 0;     /* 中央配置 */
+  margin-bottom: 73px;
 }
 
 /* ===== 2-column layout (always keep two columns) ===== */
@@ -115,22 +116,22 @@ h1,h2,h3{ margin:12px 0; }
 
 /* ===== Tighten on small devices ===== */
 @media (max-width: 480px){
-  .container{ padding: 0 12px; }
+  .container{padding: 0 14px 0 4px; }
 
   .lineups-grid{ gap:10px; }
 
   .team-card{ padding:12px; border-radius:12px; }
-  .team-title{ padding:8px 10px; font-size:16px; margin-bottom:8px; }
+  .team-title{ padding:8px 10px; font-size:8px; margin-bottom:8px; }
 
   .probable{ padding:8px 10px; gap:3px; }
   .pp-label{ font-size:11px; }
   .pp-name { font-size:14px; }
 
   .team-card table{ font-size:12px; }
-  .team-card th, .team-card td{ padding:5px 6px; }
+  .team-card th, .team-card td{ padding:5px 0px; }
 
   .col-order{ width:22px; }
-  .col-pos  { width:36px; }
+  .col-pos  { width:18px; }
 }
 
 /* Extra small safety */
