@@ -26,6 +26,22 @@
 <body>
 
   <h1>先発ピッチャー & スターティングオーダー</h1>
+<section class="game-meta">
+  <p>
+    試合日:
+    <span th:text="${gameInfo != null && gameInfo.officialDate != null
+                    ? #temporals.format(gameInfo.officialDate, 'yyyy/MM/dd')
+                    : '未定'}"></span>
+    <span th:if="${gameInfo != null && gameInfo.gameDateTimeJST != null}"
+          th:text="${' ' + #temporals.format(gameInfo.gameDateTimeJST, 'HH:mm')}"></span>
+  </p>
+
+  <p>
+    球場:
+    <span th:text="${gameInfo != null && gameInfo.venue != null ? gameInfo.venue : '未定'}"></span>
+  </p>
+</section>
+
 
   <div class="wrap">
     <!-- HOME -->
