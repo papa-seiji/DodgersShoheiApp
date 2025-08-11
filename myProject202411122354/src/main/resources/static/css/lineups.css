@@ -26,10 +26,10 @@ h1,h2,h3{ margin:12px 0; }
   margin:24px 0 30px;
 }
 
-/* ===== 2-column layout (always) ===== */
+/* ===== 2-column layout (always keep two columns) ===== */
 .lineups-grid{
   display:grid;
-  grid-template-columns:1fr 1fr; /* keep two columns even on mobile */
+  grid-template-columns:1fr 1fr;
   gap:16px;
   align-items:start;
 }
@@ -51,13 +51,25 @@ h1,h2,h3{ margin:12px 0; }
   margin-bottom:10px;
 }
 
-/* Probable pitcher row */
+/* Probable pitcher block: label on first line, name on next line */
 .probable{
   background:#101217;
   border-radius:10px;
-  padding:8px 12px;
+  padding:10px 12px;
   margin:8px 0 12px;
-  font-size:14px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.pp-label{
+  font-size:12px;
+  opacity:.85;
+  line-height:1.2;
+}
+.pp-name{
+  font-size:16px;
+  font-weight:700;
+  line-height:1.25;
 }
 
 /* Highlights */
@@ -67,7 +79,7 @@ h1,h2,h3{ margin:12px 0; }
 .team-card table{
   width:100%;
   border-collapse:collapse;
-  table-layout:fixed; /* fix column widths */
+  table-layout:fixed;
   font-size:14px;
 }
 .team-card th,
@@ -96,7 +108,10 @@ h1,h2,h3{ margin:12px 0; }
 
   .team-card{ padding:12px; border-radius:12px; }
   .team-title{ padding:8px 10px; font-size:16px; margin-bottom:8px; }
-  .probable{ padding:6px 8px; font-size:12px; margin:6px 0 10px; }
+
+  .probable{ padding:8px 10px; gap:3px; }
+  .pp-label{ font-size:11px; }
+  .pp-name { font-size:14px; }
 
   .team-card table{ font-size:12px; }
   .team-card th, .team-card td{ padding:5px 6px; }
@@ -105,7 +120,7 @@ h1,h2,h3{ margin:12px 0; }
   .col-pos  { width:36px; }
 }
 
-/* Extra small safety (optional) */
+/* Extra small safety */
 @media (max-width: 360px){
   .team-card th, .team-card td{ font-size:11px; padding:4px 5px; }
   .col-order{ width:20px; }
