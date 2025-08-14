@@ -500,6 +500,9 @@ window.onload = fetchGameInfo;
 <!--start MLB 地区別順位表 (スワイプ対応) -->
 <!-- MLB 地区別順位表 -->
 <div class="standings-container">
+<!-- ✅ スワイプボタン -->
+<button id="prevBtn" class="standings-nav prev" aria-label="前へ">◀</button>
+<button id="nextBtn" class="standings-nav next" aria-label="次へ">▶</button>
     <div class="standings-wrapper">
         <!-- ✅ NL 西地区 -->
         <div class="standings-slide" id="nl-west">
@@ -515,7 +518,7 @@ window.onload = fetchGameInfo;
             <h3>2025 NL 東地区</h3>
             <table class="styled-table">
                 <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-east-body"></tbody></table></div>
-                
+
         <!-- ✅ AL 西地区 -->
         <div class="standings-slide" id="al-west">
             <h3>2025 AL 西地区</h3>
@@ -529,9 +532,6 @@ window.onload = fetchGameInfo;
             <h3>2025 AL 東地区</h3>
             <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-east-body"></tbody></table></div></div></div>
 
-<!-- ✅ スワイプボタン -->
-<button id="prevBtn">◀</button>
-<button id="nextBtn">▶</button>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
