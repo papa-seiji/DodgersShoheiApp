@@ -91,4 +91,37 @@ public class LineupPageController {
                 ? now.toLocalDate()
                 : now.toLocalDate().plusDays(1);
     }
+
+    // Home 埋め込み用（小型フラグメントを返す）
+    @GetMapping("/widgets/dodgers/lineups")
+    public String lineupWidget(
+            @RequestParam(name = "offset", defaultValue = "-1") int offsetDays,
+            Model model) {
+
+        // /dodgers/lineups/auto と同じロジック
+        var base = decideTargetDateWithCutoff(JST, CUTOFF);
+        var target = base.plusDays(offsetDays);
+
+        var pkOpt = lineupService.findGamePkByDate(DODGERS_ID, target);
+        if (pkOpt.isEmpty()) {
+            pkOpt = (offsetDays < 0)
+                    ? lineupService.findPrevGamePk(DODGERS_ID, target, 10)
+                    : lineupService.findNextGamePk(DODGERS_ID, target, 10);
+        }
+
+        if (pkOpt.isEmpty()) {
+            // 取れなかった場合でもフラグメント自体は返す
+            model.addAttribute("home", null);
+            model.addAttribute("away", null);
+            model.addAttribute("gameInfo", null);
+            return "fragments/lineups_widget :: widget";
+        }
+
+        var res = lineupService.fetchLineups(pkOpt.getAsLong());
+        model.addAttribute("home", res.home());
+        model.addAttribute("away", res.away());
+        model.addAttribute("gameInfo", res.gameInfo());
+        return "fragments/lineups_widget :: widget";
+    }
+
 }
