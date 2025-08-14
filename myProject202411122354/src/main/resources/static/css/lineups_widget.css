@@ -1,7 +1,7 @@
 /* ----- scope root ----- */
 .lineups-widget {
-    color: #e9eef5;
-    font: inherit;
+  color: #e9eef5;
+  font: inherit;
 }
 
 /* ===== Center container ===== */
@@ -30,7 +30,7 @@
   text-decoration:none;
   border-radius:8px;
   font-weight:700;
-  margin:24px auto 0;     /* 中央配置 */
+  margin:24px auto 0;
   margin-bottom: 73px;    /* lineups.css準拠 */
 }
 
@@ -50,9 +50,8 @@
   background:#17191f;
   border:1px solid #252833;
   border-radius:14px;
-  padding:16px;
+  /* padding:16px; */
   box-shadow:0 4px 18px rgba(0,0,0,.25);
-    /* カード配下の文字色はウィジェットのベース色を継承 */
   color:#e9eef5;
 }
 .lineups-widget .team-title{
@@ -65,7 +64,7 @@
   text-align:left;
 }
 
-/* Probable pitcher block: label on first line, name on next line */
+/* Probable pitcher block */
 .lineups-widget .probable{
   background:#464748;
   border-radius:10px;
@@ -120,7 +119,7 @@
 
   .lineups-widget .lineups-grid{ gap:10px; }
 
-  .lineups-widget .team-card{ padding:12px; border-radius:12px; }
+  /* .lineups-widget .team-card{ padding:12px; border-radius:12px; } */
   .lineups-widget .team-title{ padding:8px 10px; font-size:8px; margin-bottom:8px; }
 
   .lineups-widget .probable{ padding:8px 10px; gap:3px; }
@@ -132,10 +131,9 @@
   .lineups-widget .team-card td{ padding:5px 0px; }
 
   .lineups-widget .col-order{ width:22px; }
-  .lineups-widget .col-pos  { width:18px; }  /* lineups.css準拠 */
+  .lineups-widget .col-pos  { width:18px; }
 }
 
-/* Extra small safety */
 @media (max-width: 360px){
   .lineups-widget .team-card th,
   .lineups-widget .team-card td{ font-size:11px; padding:4px 5px; }
@@ -145,3 +143,36 @@
 
 /* --- （不要ならタイトル非表示にできます） --- */
 .lineups-widget .title{ display:none; }
+
+/* ====== 開閉UI（details/summary） ====== */
+.lineups-widget .lw {
+  border: 1px solid #252833;
+  border-radius: 14px;
+  background: #111318;
+  overflow: clip; /* 角丸を維持 */
+  width: 380px;
+}
+
+.lineups-widget .lw__summary {
+  display:flex; align-items:center; gap:10px;
+  padding:12px 14px;
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+  font-weight:700;
+  background:#0f1115;
+  border-bottom:1px solid #252833;
+}
+.lineups-widget .lw__summary::-webkit-details-marker { display:none; }
+
+.lineups-widget .lw__title { font-size:9px; }
+.lineups-widget .lw__meta  { font-size:10px; opacity:.85; margin-left:auto; }
+
+.lineups-widget .lw__chevron {
+  margin-left:10px;
+  transition: transform .2s ease;
+  opacity:.9;
+}
+.lineups-widget .lw[open] .lw__chevron { transform: rotate(180deg); }
+
+/* .lineups-widget .lw__content { padding: 21px; } */
