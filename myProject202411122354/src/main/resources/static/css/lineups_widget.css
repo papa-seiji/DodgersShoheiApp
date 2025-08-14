@@ -1,0 +1,147 @@
+/* ----- scope root ----- */
+.lineups-widget {
+    color: #e9eef5;
+    font: inherit;
+}
+
+/* ===== Center container ===== */
+.lineups-widget .container{
+  max-width: 1080px;      /* ページの最大幅（lineups.css準拠） */
+  margin: 24px auto 36px; /* 中央寄せ */
+  padding: 0 16px;        /* 端の余白 */
+  text-align: center;     /* 見出し＆メタ情報を中央 */
+}
+
+/* 見出し（必要なら使用） */
+.lineups-widget h1 { font-size:24px; margin:0 0 16px; }
+.lineups-widget h1,
+.lineups-widget h2,
+.lineups-widget h3 { margin:12px 0; }
+
+/* ===== Game meta ===== */
+.lineups-widget .game-meta p { margin: 6px 0 8px; }
+
+/* ===== Back button（ウィジェットで使う場合用） ===== */
+.lineups-widget .back-button {
+  display:inline-block;
+  padding:12px 24px;
+  background-color:#5f96df;
+  color:#fff;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:700;
+  margin:24px auto 0;     /* 中央配置 */
+  margin-bottom: 73px;    /* lineups.css準拠 */
+}
+
+/* ===== 2-column layout (always keep two columns) ===== */
+.lineups-widget .lineups-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  align-items:start;
+  justify-items:stretch;
+  margin-top: 10px;
+  text-align: left;       /* 内側は左寄せに戻す */
+}
+
+/* ===== Cards ===== */
+.lineups-widget .team-card{
+  background:#17191f;
+  border:1px solid #252833;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 4px 18px rgba(0,0,0,.25);
+    /* カード配下の文字色はウィジェットのベース色を継承 */
+  color:#e9eef5;
+}
+.lineups-widget .team-title{
+  background:#464748;
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:700;
+  font-size:18px;
+  margin-bottom:10px;
+  text-align:left;
+}
+
+/* Probable pitcher block: label on first line, name on next line */
+.lineups-widget .probable{
+  background:#464748;
+  border-radius:10px;
+  padding:10px 12px;
+  margin:8px 0 12px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.lineups-widget .pp-label{
+  font-size:12px;
+  opacity:.85;
+  line-height:1.2;
+}
+.lineups-widget .pp-name{
+  font-size:16px;
+  font-weight:700;
+  line-height:1.25;
+}
+
+/* Highlights */
+.lineups-widget .jp{ color:#ffd166; font-weight:700; }
+
+/* ===== Tables (compact) ===== */
+.lineups-widget .team-card table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:14px;
+}
+.lineups-widget .team-card th,
+.lineups-widget .team-card td{
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:6px 8px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-align:left;
+}
+.lineups-widget .team-card th{ color:#bfc6d2; font-weight:600; }
+.lineups-widget .empty{ color:#9aa4b2; padding:12px 0; }
+
+/* Column widths */
+.lineups-widget .col-order{ width:26px; text-align:right; opacity:.85; }
+.lineups-widget .col-name { width:auto; }
+.lineups-widget .col-pos  { width:42px; text-align:left; opacity:.9; }
+
+/* ===== Tighten on small devices ===== */
+@media (max-width: 480px){
+  .lineups-widget .container{ padding: 0 5px 0 5px; }
+
+  .lineups-widget .lineups-grid{ gap:10px; }
+
+  .lineups-widget .team-card{ padding:12px; border-radius:12px; }
+  .lineups-widget .team-title{ padding:8px 10px; font-size:8px; margin-bottom:8px; }
+
+  .lineups-widget .probable{ padding:8px 10px; gap:3px; }
+  .lineups-widget .pp-label{ font-size:11px; }
+  .lineups-widget .pp-name { font-size:14px; }
+
+  .lineups-widget .team-card table{ font-size:12px; }
+  .lineups-widget .team-card th,
+  .lineups-widget .team-card td{ padding:5px 0px; }
+
+  .lineups-widget .col-order{ width:22px; }
+  .lineups-widget .col-pos  { width:18px; }  /* lineups.css準拠 */
+}
+
+/* Extra small safety */
+@media (max-width: 360px){
+  .lineups-widget .team-card th,
+  .lineups-widget .team-card td{ font-size:11px; padding:4px 5px; }
+  .lineups-widget .col-order{ width:20px; }
+  .lineups-widget .col-pos  { width:32px; }
+}
+
+/* --- （不要ならタイトル非表示にできます） --- */
+.lineups-widget .title{ display:none; }

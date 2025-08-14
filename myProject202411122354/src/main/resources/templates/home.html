@@ -6,12 +6,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script src="/js/role-check.js"></script>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header-2.css}">
     <link rel="stylesheet" th:href="@{/css/Douga.css}">
+    <link rel="stylesheet" th:href="@{/css/lineups_widget.css}">
+
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script src="/js/home.js"></script> <!-- home.jsを追加 -->
-        <script src="/js/home_2.js"></script> <!-- home.jsを追加 -->
+    <script src="/js/home_2.js"></script> <!-- home.jsを追加 -->
 
     <script src="/js/notifications.js"></script><!-- JavaScriptファイルを読み込む -->
     <script src="/js/news-section.js"></script><!-- JavaScriptファイルを読み込む -->
@@ -198,11 +201,11 @@ async function fetchGameInfo() {
     console.log(`Fetching MLB game data for: ${japanTodayStr}`);
 
     // APIを呼び出す（本番環境用）
-    const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=${japanTodayStr}`);
+    // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=${japanTodayStr}`);
     // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-19`);
     // APIを呼び出す（開発環境用）
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=${japanTodayStr}`);
-    // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-23`);
+    const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-08-13`);
 
     const data = await response.json();
 
@@ -344,6 +347,16 @@ window.onload = fetchGameInfo;
 
 <!-- エンド               MLB試合情報の表示エリア                         -->
 
+
+<!--                     予告先発＆スタメン表示場所                      -->
+<!-- Homeの埋め込み位置 -->
+<div
+  hx-get="/widgets/dodgers/lineups?offset=-1"
+  hx-trigger="load"
+  hx-swap="outerHTML">
+  読み込み中…
+</div>
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
 
 
