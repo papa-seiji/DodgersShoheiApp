@@ -1905,6 +1905,7 @@ body {
     #mlb-game-info {
         max-width: 95%;
         padding: 10px;
+        margin-bottom: 1px;
     }
 
     #mlb-game-title {

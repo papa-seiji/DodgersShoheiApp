@@ -27,42 +27,67 @@ public class LineupPageController {
         this.lineupService = lineupService;
     }
 
-    /** Show page for a fixed gamePk */
+    /** フルページ：gamePk 固定表示（デフォルトは左=AWAY, 右=HOME） */
     @GetMapping("/games/{gamePk}/lineups")
-    public String showLineups(@PathVariable long gamePk, Model model) {
+    public String showLineups(
+            @PathVariable long gamePk,
+            @RequestParam(name = "left", defaultValue = "away") String left,
+            Model model) {
+
         LineupResponse res = lineupService.fetchLineups(gamePk);
-        model.addAttribute("home", res.home());
-        model.addAttribute("away", res.away());
+
+        boolean leftIsAway = "away".equalsIgnoreCase(left);
+        model.addAttribute("left", leftIsAway ? res.away() : res.home());
+        model.addAttribute("right", leftIsAway ? res.home() : res.away());
         model.addAttribute("gameInfo", res.gameInfo());
         return "lineups";
     }
 
     /**
-     * Auto: base date by JST cutoff, then apply offset days (e.g. offset=-1 ->
-     * previous day)
+     * Auto（フルページ向け）:
+     * 1) 基準日(base=JSTカットオフ適用)に試合が無ければ「次の試合」を最優先で表示
+     * 2) 試合がある日は従来どおり offsetDays を反映し、その日が見つからなければ
+     * まず「次」を探し、無ければ「前」を探す
      */
     @GetMapping("/dodgers/lineups/auto")
     public String showDodgersSmart(
             @RequestParam(name = "offset", defaultValue = "-1") int offsetDays) {
 
         LocalDate base = decideTargetDateWithCutoff(JST, CUTOFF);
-        LocalDate target = base.plusDays(offsetDays);
 
-        var pkOpt = lineupService.findGamePkByDate(DODGERS_ID, target);
-        if (pkOpt.isEmpty()) {
-            // fallback depending on direction
-            if (offsetDays < 0) {
-                pkOpt = lineupService.findPrevGamePk(DODGERS_ID, target, 10);
-            } else {
-                pkOpt = lineupService.findNextGamePk(DODGERS_ID, target, 10);
+        // まずは base 当日の試合有無をチェック
+        var todayOpt = lineupService.findGamePkByDate(DODGERS_ID, base);
+
+        java.util.OptionalLong pkOpt;
+        if (todayOpt.isEmpty()) {
+            // 休養日など → 次の試合を最優先
+            pkOpt = lineupService.findNextGamePk(DODGERS_ID, base, 14);
+            if (pkOpt.isEmpty()) {
+                pkOpt = lineupService.findPrevGamePk(DODGERS_ID, base, 14);
+            }
+        } else {
+            // 試合日 → 従来の offset ロジックで探し、無ければ次→前の順でフォールバック
+            LocalDate target = base.plusDays(offsetDays);
+            pkOpt = lineupService.findGamePkByDate(DODGERS_ID, target);
+            if (pkOpt.isEmpty()) {
+                pkOpt = lineupService.findNextGamePk(DODGERS_ID, target, 14);
+                if (pkOpt.isEmpty()) {
+                    pkOpt = lineupService.findPrevGamePk(DODGERS_ID, target, 14);
+                }
             }
         }
+
         return pkOpt.isEmpty()
                 ? "redirect:/games/no-game"
-                : "redirect:/games/" + pkOpt.getAsLong() + "/lineups";
+                : "redirect:/games/" + pkOpt.getAsLong() + "/lineups?left=away";
     }
 
-    /** Manual date: ?date=YYYY-MM-DD plus optional offset=? */
+    /**
+     * Manual date（フルページ向け）:
+     * 指定日+offset をまず探し、無ければ「次→前」の順でフォールバック。
+     * （date 未指定の場合は base=JST カットオフ日からの offset とし、
+     * 最終的なフォールバックは同じく次→前）
+     */
     @GetMapping("/dodgers/lineups")
     public String showDodgersByDate(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -73,18 +98,19 @@ public class LineupPageController {
 
         var pkOpt = lineupService.findGamePkByDate(DODGERS_ID, target);
         if (pkOpt.isEmpty()) {
-            if (offsetDays < 0) {
-                pkOpt = lineupService.findPrevGamePk(DODGERS_ID, target, 10);
-            } else {
-                pkOpt = lineupService.findNextGamePk(DODGERS_ID, target, 10);
+            // まず「次」を優先、無ければ「前」
+            pkOpt = lineupService.findNextGamePk(DODGERS_ID, target, 14);
+            if (pkOpt.isEmpty()) {
+                pkOpt = lineupService.findPrevGamePk(DODGERS_ID, target, 14);
             }
         }
+
         return pkOpt.isEmpty()
                 ? "redirect:/games/no-game"
-                : "redirect:/games/" + pkOpt.getAsLong() + "/lineups";
+                : "redirect:/games/" + pkOpt.getAsLong() + "/lineups?left=away";
     }
 
-    /** JST 18:00 cutoff: before -> today, after -> tomorrow */
+    /** JST 18:00 カットオフ：18時前は当日、以降は翌日を基準日とする */
     private LocalDate decideTargetDateWithCutoff(ZoneId zone, LocalTime cutoff) {
         ZonedDateTime now = ZonedDateTime.now(zone);
         return now.toLocalTime().isBefore(cutoff)
@@ -92,36 +118,52 @@ public class LineupPageController {
                 : now.toLocalDate().plusDays(1);
     }
 
-    // Home 埋め込み用（小型フラグメントを返す）
+    // Home 埋め込み用（小型フラグメント）：オフ日は「次の試合」を優先表示
     @GetMapping("/widgets/dodgers/lineups")
     public String lineupWidget(
             @RequestParam(name = "offset", defaultValue = "-1") int offsetDays,
+            @RequestParam(name = "left", defaultValue = "away") String left,
             Model model) {
 
-        // /dodgers/lineups/auto と同じロジック
-        var base = decideTargetDateWithCutoff(JST, CUTOFF);
-        var target = base.plusDays(offsetDays);
+        // JST基準日（18:00切替）
+        LocalDate base = decideTargetDateWithCutoff(JST, CUTOFF);
 
-        var pkOpt = lineupService.findGamePkByDate(DODGERS_ID, target);
-        if (pkOpt.isEmpty()) {
-            pkOpt = (offsetDays < 0)
-                    ? lineupService.findPrevGamePk(DODGERS_ID, target, 10)
-                    : lineupService.findNextGamePk(DODGERS_ID, target, 10);
+        // まず「今日(base)に試合があるか」を確認
+        var todayOpt = lineupService.findGamePkByDate(DODGERS_ID, base);
+
+        java.util.OptionalLong pkOpt;
+        if (todayOpt.isEmpty()) {
+            // 休養日など：**次の試合**を最優先で表示（見つからなければ前へ）
+            pkOpt = lineupService.findNextGamePk(DODGERS_ID, base, 14);
+            if (pkOpt.isEmpty()) {
+                pkOpt = lineupService.findPrevGamePk(DODGERS_ID, base, 14);
+            }
+        } else {
+            // 試合がある日：従来どおり offset を反映
+            LocalDate target = base.plusDays(offsetDays);
+            pkOpt = lineupService.findGamePkByDate(DODGERS_ID, target);
+            if (pkOpt.isEmpty()) {
+                // 念のためフォールバックは **次→前** の順
+                pkOpt = lineupService.findNextGamePk(DODGERS_ID, target, 14);
+                if (pkOpt.isEmpty()) {
+                    pkOpt = lineupService.findPrevGamePk(DODGERS_ID, target, 14);
+                }
+            }
         }
 
         if (pkOpt.isEmpty()) {
-            // 取れなかった場合でもフラグメント自体は返す
-            model.addAttribute("home", null);
-            model.addAttribute("away", null);
+            model.addAttribute("left", null);
+            model.addAttribute("right", null);
             model.addAttribute("gameInfo", null);
             return "fragments/lineups_widget :: widget";
         }
 
         var res = lineupService.fetchLineups(pkOpt.getAsLong());
-        model.addAttribute("home", res.home());
-        model.addAttribute("away", res.away());
+
+        boolean leftIsAway = "away".equalsIgnoreCase(left);
+        model.addAttribute("left", leftIsAway ? res.away() : res.home());
+        model.addAttribute("right", leftIsAway ? res.home() : res.away());
         model.addAttribute("gameInfo", res.gameInfo());
         return "fragments/lineups_widget :: widget";
     }
-
 }
