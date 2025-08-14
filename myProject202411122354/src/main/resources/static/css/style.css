@@ -1416,7 +1416,7 @@ body {
     width: 36px;
     height: 36px;
     font-size: 18px;
-    top: 47%;                    /* スマホ時の縦位置 */
+    top: 13%;                    /* スマホ時の縦位置 */
   }
 }
 
@@ -2287,7 +2287,7 @@ body {
 /* スマホでは少し小さく＆位置も微調整 */
 @media (max-width: 480px) {
   .standings-nav {
-    top: 47%;                    /* スマホ時の縦位置 */
+    top: 13%;                    /* スマホ時の縦位置 */
     width: 36px;
     height: 36px;
   }
