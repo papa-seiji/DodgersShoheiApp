@@ -1819,9 +1819,9 @@ body {
 .side-menu a {
     display: block;
     color: white;
-    padding: 12px 15px;
+    padding: 8px 15px;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 15px;
     margin-bottom: 8px;
 }
 
@@ -1836,7 +1836,7 @@ body {
     cursor: pointer;
     padding: 10px;
     text-align: center;
-    margin-top: 10px;/* リストと適度な間隔 */
+    margin-top: -18x;/* リストと適度な間隔 */
     margin-right: 59px;
 }
 
@@ -1982,33 +1982,49 @@ body {
     transform: translateX(-50%);
 }
 
+/* ===== 汎用ツールチップ ===== */
+.ui-tip {
+  position: fixed;
+  z-index: 9999;
+  max-width: min(80vw, 320px);
+  color: #fff;
+  background: rgba(255, 0, 0, 0.95);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  padding: 10px 12px 10px 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+  font-size: 14px;
+  line-height: 1.5;
+  pointer-events: auto;
+}
+.ui-tip__text { display: inline-block; margin-right: 22px; }
+.ui-tip__close {
+  position: absolute; top: 6px; right: 8px;
+  width: 24px; height: 24px; border-radius: 12px;
+  background: transparent; color: #b9c3d6;
+  border: 0; cursor: pointer; font-size: 16px; line-height: 24px;
+}
+.ui-tip__close:hover { color: #fff; }
 
-#tooltip-yosou {
-    /* top: 4676px; */
-    /* top: 4664px; */
-    top: 4956px;
-    left: 12em;
+/* 矢印 */
+.ui-tip__arrow {
+  position: absolute; width: 10px; height: 10px;
+  background: rgba(255, 0, 0, 0.95);
+  border-left: 1px solid rgba(255,255,255,.08);
+  border-top: 1px solid rgba(255,255,255,.08);
+  transform: rotate(45deg);
+}
+/* 位置ごとの矢印配置 */
+.ui-tip[data-placement="top"]    .ui-tip__arrow { bottom: -5px; left: calc(50% - 5px); }
+.ui-tip[data-placement="bottom"] .ui-tip__arrow { top: -5px; left: calc(50% - 5px); }
+.ui-tip[data-placement="left"]   .ui-tip__arrow { right: -5px; top: calc(50% - 5px); }
+.ui-tip[data-placement="right"]  .ui-tip__arrow { left: -5px; top: calc(50% - 5px); }
+
+/* 小さめ端末 */
+@media (max-width: 480px){
+  .ui-tip { max-width: 90vw; font-size: 13px; }
 }
 
-#tooltip-proud {
-    /* top: 4968px; */
-    /* top: 4956px; */
-    top: 5267px;
-    left: 12em;
-}
-
-#tooltip-chat {
-    /* top: 5229px; */
-    /* top: 5217px; */
-    top: 5554px;
-    left: 5em;
-}
-#tooltip-link {
-    /* top: 5586px; */
-    /* top: 5574px; */
-    top: 5911px;
-    left: 10em;
-}
 
 /* 閉じるボタン */
 .tooltip-close {
