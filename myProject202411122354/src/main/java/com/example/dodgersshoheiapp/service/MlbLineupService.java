@@ -28,11 +28,18 @@ public class MlbLineupService {
     private static final ZoneId JST = ZoneId.of("Asia/Tokyo");
 
     private static final Set<Long> JAPANESE_IDS = Set.of(
-            660271L, // Shohei Ohtani
-            808967L, // Yoshinobu Yamamoto
-            684007L, // Shota Imanaga
-            673548L, // Seiya Suzuki
-            808963L // Roki Sasaki
+            660271L, // 大谷 翔平
+            808967L, // 山本 由伸
+            684007L, // 今永 昇太
+            673548L, // 鈴木 誠也
+            808963L, // 佐々木 朗希
+            673548L, // 吉田 正尚
+            506433L, // ダルビッシュ 有
+            4142421L, // 千賀 滉大
+            4142423L, // 菅野 智之
+            4872583L, // 青柳 晃洋
+            5264585L, // 小笠原 慎之介
+            829679L // 森井 翔太郎
     );
 
     private final RestTemplate restTemplate = new RestTemplate();
