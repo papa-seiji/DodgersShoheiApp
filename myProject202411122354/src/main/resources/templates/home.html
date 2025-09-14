@@ -6,12 +6,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script src="/js/role-check.js"></script>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header-2.css}">
     <link rel="stylesheet" th:href="@{/css/Douga.css}">
+    <link rel="stylesheet" th:href="@{/css/lineups_widget.css}">
+
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script src="/js/home.js"></script> <!-- home.jsを追加 -->
-        <script src="/js/home_2.js"></script> <!-- home.jsを追加 -->
+    <script src="/js/home_2.js"></script> <!-- home.jsを追加 -->
 
     <script src="/js/notifications.js"></script><!-- JavaScriptファイルを読み込む -->
     <script src="/js/news-section.js"></script><!-- JavaScriptファイルを読み込む -->
@@ -100,6 +103,7 @@
 <div id="side-menu" class="side-menu">
     <nav>
         <!--<a href="/home">Home(TOP)</a>-->
+        <!--<a href="/dodgers/lineups/auto">スタメン</a>-->
         <a href="/ohtani-vs-judge">比較</a>
         <a href="/yosou">予想</a>
         <a href="/proud">Proud</a>
@@ -116,10 +120,121 @@
 <div id="overlay" class="overlay"></div>
 
             <!-- 吹き出しの追加 -->
-            <div id="tooltip-navbar" class="tooltip">
+            <!--<div id="tooltip-navbar" class="tooltip">
                 どのページでもこの部分を押下で<br>  ”サイドメニュー”が開くよ
                 <button class="tooltip-close" data-tooltip-id="navbar">✖</button>
-            </div>
+            </div>-->
+
+<!-- ▼ ナビバー用ツールチップ（Navbar） -->
+<div id="tooltip-navbar" class="tooltip" role="dialog" aria-live="polite">
+  どのページでもこの部分を押下で<br> ”サイドメニュー”が開くよ
+  <button class="tooltip-close" aria-label="閉じる">✖</button>
+</div>
+
+<style>
+  /* --- 見た目：赤いバナー（ページ単体で動かすために inline 定義） --- */
+  #tooltip-navbar{
+    display:none;                 /* 初期は非表示。JSで出す */
+    /* position:fixed; */
+    z-index:9999;
+    background:#ff3b30;
+    color:#fff;
+    font-weight:700;
+    /* padding:14px 16px; */
+    border-radius:12px;
+    box-shadow:0 12px 28px rgba(0,0,0,.35);
+    /* max-width:90vw; */
+    /* line-height:1.5; */
+    margin-left: 111px;
+    margin-top: -11px;
+}
+
+  /* 三角形（上向き） */
+  /* #tooltip-navbar::before{
+    content:"";
+    position:absolute;
+    top:-10px; left:50%;
+    transform:translateX(-50%);
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-bottom:10px solid #ff3b30;
+  } */
+  #tooltip-navbar .tooltip-close{
+    background:none; border:0; color:#fff;
+    font-size:16px; margin-left:8px; cursor:pointer;
+  }
+</style>
+
+<script>
+/* --- Navbar ツールチップ：自動配置＋一度閉じたら記憶 --- */
+(function(){
+  const KEY = 'hideNavbarTooltip';      // ローカルストレージ用キー
+  const TRIGGER_ID = 'menu-toggle';     // ← ハンバーガーの要素ID（違う場合は変更）
+  const MARGIN = 10;                    // 余白
+
+  function placeNavbarTip(){
+    const tip = document.getElementById('tooltip-navbar');
+    const trg = document.getElementById(TRIGGER_ID);
+    if (!tip || !trg || tip.style.display === 'none') return;
+
+    const r = trg.getBoundingClientRect();
+
+    // 幅・高さを測るため一旦表示状態に
+    tip.style.visibility = 'hidden';
+    tip.style.display = 'block';
+
+    const tw = tip.offsetWidth;
+    const th = tip.offsetHeight;
+
+    let top  = r.bottom + MARGIN;
+    let left = r.left + r.width/2 - tw/2;
+
+    // 画面外に出ないようクランプ
+    left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+    top  = Math.max(8, Math.min(top,  window.innerHeight - th - 8));
+
+    tip.style.top  = Math.round(top) + 'px';
+    tip.style.left = Math.round(left) + 'px';
+    tip.style.visibility = 'visible';
+  }
+
+  function showNavbarTipIfNeeded(){
+    const tip = document.getElementById('tooltip-navbar');
+    const trg = document.getElementById(TRIGGER_ID);
+    if (!tip || !trg) return;
+
+    if (localStorage.getItem(KEY) === 'true') {
+      tip.style.display = 'none';
+      return;
+    }
+    tip.style.display = 'block';
+    placeNavbarTip();
+  }
+
+  function closeNavbarTooltip(){
+    const tip = document.getElementById('tooltip-navbar');
+    if (!tip) return;
+    tip.style.display = 'none';
+    localStorage.setItem(KEY, 'true'); // 次回以降非表示
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    showNavbarTipIfNeeded();
+
+    const closeBtn = document.querySelector('#tooltip-navbar .tooltip-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeNavbarTooltip);
+
+    // 追従（リサイズ/スクロール/向き変更）
+    window.addEventListener('resize',  placeNavbarTip);
+    window.addEventListener('scroll',  placeNavbarTip, { passive:true });
+    window.addEventListener('orientationchange', placeNavbarTip);
+  });
+})();
+</script>
+<!-- ▲ ここまで -->
+
+
+
         </div>
     </nav>
 </div>
@@ -201,7 +316,7 @@ async function fetchGameInfo() {
     // const response = await fetch(`https://letsgoohtanifromjapan.click/api/mlb/game?date=2025-03-19`);
     // APIを呼び出す（開発環境用）
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=${japanTodayStr}`);
-    // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-03-23`);
+    // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-08-13`);
 
     const data = await response.json();
 
@@ -344,6 +459,16 @@ window.onload = fetchGameInfo;
 <!-- エンド               MLB試合情報の表示エリア                         -->
 
 
+<!--                     予告先発＆スタメン表示場所                      -->
+<!-- Homeの埋め込み位置 -->
+<div
+  hx-get="/widgets/dodgers/lineups?offset=-1"
+  hx-trigger="load"
+  hx-swap="outerHTML">
+  読み込み中…
+</div>
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
 
 
 <!-- start ニュース/トピック/サイト最新情報 -->
@@ -375,6 +500,9 @@ window.onload = fetchGameInfo;
 <!--start MLB 地区別順位表 (スワイプ対応) -->
 <!-- MLB 地区別順位表 -->
 <div class="standings-container">
+<!-- ✅ スワイプボタン -->
+<button id="prevBtn" class="standings-nav prev" aria-label="前へ">◀</button>
+<button id="nextBtn" class="standings-nav next" aria-label="次へ">▶</button>
     <div class="standings-wrapper">
         <!-- ✅ NL 西地区 -->
         <div class="standings-slide" id="nl-west">
@@ -390,7 +518,7 @@ window.onload = fetchGameInfo;
             <h3>2025 NL 東地区</h3>
             <table class="styled-table">
                 <thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="nl-east-body"></tbody></table></div>
-                
+
         <!-- ✅ AL 西地区 -->
         <div class="standings-slide" id="al-west">
             <h3>2025 AL 西地区</h3>
@@ -404,9 +532,6 @@ window.onload = fetchGameInfo;
             <h3>2025 AL 東地区</h3>
             <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-east-body"></tbody></table></div></div></div>
 
-<!-- ✅ スワイプボタン -->
-<button id="prevBtn">◀</button>
-<button id="nextBtn">▶</button>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -573,32 +698,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!--Start 動画セクション 2025-->
     <div id="hoge-hoge_landing4" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">翔平3年連続の40号HR！</h5>
+    <h5 class="shiny-text-1">菅野から47,48号と2発!</h5>
                              
-    <h5 class="shiny-text-1">2025/8/10</h5>
+    <h5 class="shiny-text-1">2025/9/08</h5>
     <h5 class="shiny-text-1">RGシーズン</h5>
 
         <div class="douga-section_4">
-            <div id="hoge-hoge_4">　TOR 軍 vs  LAD軍 Highlight　</div>
+            <div id="hoge-hoge_4">　LAD 軍 vs  BAL軍 Highlight　</div>
 
             <div id="douga-container-4">
-                <iframe id="douga-video-4" width="560" height="315" src="https://www.youtube.com/embed/mkuIVeMl6us" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="douga-video-4" width="560" height="315" src="https://www.youtube.com/embed/I74-xBPECkY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 <!--End 動画セクション 2025-->
 
 <!--Start 動画セクション 2025-->
     <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">4回1失点8奪三振39号HR</h5>
+    <h5 class="shiny-text-1">49号 3安打3得点の活躍</h5>
                              
-    <h5 class="shiny-text-1">2025/8/07</h5>
+    <h5 class="shiny-text-1">2025/9/14</h5>
     <h5 class="shiny-text-1">RGシーズン</h5>
 
         <div class="douga-section_3">
-            <div id="hoge-hoge_3">　STL 軍 vs  LAD軍 Highlight　</div>
+            <div id="hoge-hoge_3">　LAD 軍 vs   SF軍 Highlight　</div>
                                   
             <div id="douga-container-3">
-                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/pAXtplNK4oM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/sEDJoC0ea6Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 <!--End 動画セクション 2025-->
@@ -714,118 +839,191 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 
 
-<!-- 予想 吹き出し -->
-<div id="tooltip-yosou" class="tooltip">
-    <span><strong>"2025予想"か"画像"</strong>を押すと<br>飛べます</span>
-    <button class="tooltip-close" data-tooltip-id="yosou"> 　　　　         ✖</button>
-</div>
-
+<!-- 予想 吹き出し tooltip -->
 <div class="home-layout5" style="margin-bottom: -30%">
     <div class="home-content5">
-        <a href="/yosou"><h1 id="oomidashi" class="shiny-text">2025予想</h1></a>
-        <div>皆様に各項目を</div>
-        <div>選択し1票入れてもらい</div>
-        <div>今期成績を集計/解析</div>
-        <h4 style="margin-top: -2%">誰でも投票できますょ</h4>
+    <a href="/yosou"
+        id="link-yosou"
+        data-tip='"2025予想"か"画像"を押すと飛べます'
+        data-tip-id="yosou"
+        data-tip-placement="right">         <!-- 表示位置: top/bottom/left/right -->
+        <h1 id="oomidashi" class="shiny-text">2025予想</h1>
+    </a>
+    <div>皆様に各項目を</div>
+    <div>選択し1票入れてもらい</div>
+    <div>今期成績を集計/解析</div>
+    <h4 style="margin-top: -2%">誰でも投票できますょ</h4>
     </div>
+
     <a href="/yosou" class="a5">
-        <img src="/images/予想画面.jpg" alt="背景画像1" class="home-image5">
+    <img src="/images/予想画面.jpg" alt="背景画像1" class="home-image5">
     </a>
 </div>
 
 
 <!-- Proud 吹き出し -->
-<div id="tooltip-proud" class="tooltip">
-    <span><strong>"Proud"か"画像"</strong>を押すと<br>飛べます</span>
-    <button class="tooltip-close" data-tooltip-id="proud"> 　　　　         ✖</button>
-</div>
-
 <div class="home-layout2">
     <div class="home-content2">
-        <a href="/proud"><h1 id="oomidashi" class="shiny-text">Proud</h1></a>
-        <div>応援スタイル</div>
-        <div>自慢の応援グッズ..etc..</div>
-        <h4 style="margin-top: -2%">画像投稿して自慢(PROUD)してください</h4>
+    <a href="/proud"
+        id="link-proud"
+        data-tip='"Proud"か"画像"を押すと飛べます'
+        data-tip-id="proud"
+        data-tip-placement="right">         <!-- 吹き出しの位置: 必要に応じてtop/bottom/left/right -->
+        <h1 id="oomidashi" class="shiny-text">Proud</h1>
+    </a>
+    <div>応援スタイル</div>
+    <div>自慢の応援グッズ..etc..</div>
+    <h4 style="margin-top: -2%">画像投稿して自慢(PROUD)してください</h4>
     </div>
+
     <a href="/proud" class="a1">
-        <img src="/images/trimmin'-ohtani_creats.png" alt="背景画像1" class="home-image2">
+    <img src="/images/trimmin'-ohtani_creats.png" alt="背景画像1" class="home-image2">
     </a>
 </div>
+
 
 <!-- Chat 吹き出し -->
-<div id="tooltip-chat" class="tooltip">
-    <span><strong>"Chat"か"画像"</strong>を押すと<br>飛べます</span>
-    <button class="tooltip-close" data-tooltip-id="chat"> 　　　　         ✖</button>
-</div>
-
 <div class="home-layout3">
-    <a href="/comments" class="a2">
-        <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image3">
+    <a href="/comments" class="a2"
+    data-tip='"Chat"か"画像"を押すと飛べます'
+    data-tip-id="chat-img"
+    data-tip-placement="right">             <!-- 吹き出し位置は調整可 -->
+    <img src="/images/trimmin'-ohtani_swinggin'.png" alt="背景画像1" class="home-image3">
     </a>
+
     <div class="home-content3">
-        <a href="/comments"><h1 id="oomidashi" class="shiny-text">Chat</h1></a>
-        <div>好きな選手,今日の翔平君</div>
-        <div>対戦相手,応援メッセージ..etc..</div>
-        <div>リアルタイムでひとこと言い合える</div>
-        <h4>いずれは応援コメントがたまったら正式にDodgers翔平君に送ります</h4>
+    <a href="/comments" id="link-chat">
+        <h1 id="oomidashi" class="shiny-text">Chat</h1>
+    </a>
+    <div>好きな選手,今日の翔平君</div>
+    <div>対戦相手,応援メッセージ..etc..</div>
+    <div>リアルタイムでひとこと言い合える</div>
+    <h4>いずれは応援コメントがたまったら正式にDodgers翔平君に送ります</h4>
     </div>
 </div>
+
 
 <!-- Link 吹き出し -->
-<div id="tooltip-link" class="tooltip">
-    <span><strong>"Link"か"画像"</strong>を押すと<br>飛べます</span>
-    <button class="tooltip-close" data-tooltip-id="link"> 　　　　         ✖</button>
-</div>
-
 <div class="home-layout4" style="margin-bottom: -30%">
     <div class="home-content4">
-        <a href="/links"><h1 id="oomidashi" class="shiny-text">Link</h1></a>
-            <div>管理人がよく見ている</div>
-            <div>ドジャース関連サイトURL</div>
-            <div>インスタ,ファンクラブ,mlb.com, ..etc..</div>
-            <h4 style="margin-top: -2%">URLリンクまとめ</h4>
+    <a href="/links"
+        id="link-link"
+        data-tip='"Link"か"画像"を押すと飛べます'
+        data-tip-id="link"
+        data-tip-placement="top">
+        <h1 id="oomidashi" class="shiny-text">Link</h1>
+    </a>
+    <div>管理人がよく見ている</div>
+    <div>ドジャース関連サイトURL</div>
+    <div>インスタ,ファンクラブ,mlb.com, ..etc..</div>
+    <h4 style="margin-top: -2%">URLリンクまとめ</h4>
     </div>
+
     <a href="/links" class="a3">
-        <img src="/images/DodgersLogo.png" alt="背景画像1" class="home-image4">
+    <img src="/images/DodgersLogo.png" alt="背景画像1" class="home-image4">
     </a>
 </div>
+
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    function showTooltipIfNeeded(id) {
-        const tooltip = document.getElementById(`tooltip-${id}`);
-        if (tooltip) {
-            // ローカルストレージの値が 'true' でない場合は表示する
-            if (localStorage.getItem(`hideTooltip-${id}`) !== 'true') {
-                tooltip.style.display = 'block';
-            } else {
-                tooltip.style.display = 'none';
-            }
-        }
-    }
+/**
+ * data-tip を持つ要素に追従ツールチップを生成。
+ * localStorage: hideTooltip-<data-tip-id> が 'true' なら表示しない。
+ * スクロール/リサイズで自動追従。閉じるボタンで記憶。
+ */
+(() => {
+  const SELECTOR = '[data-tip]';         // 対象
+  const GAP = 10;                        // 要素との隙間
+  const LS_PREFIX = 'hideTooltip-';      // 保存キーの接頭辞
 
-    function closeTooltip(id) {
-        const tooltip = document.getElementById(`tooltip-${id}`);
-        if (tooltip) {
-            tooltip.style.display = 'none';
-            localStorage.setItem(`hideTooltip-${id}`, 'true');
-        }
-    }
-
-    // 各吹き出しの初期状態をチェック
-    showTooltipIfNeeded('navbar');
-    showTooltipIfNeeded('yosou');
-    showTooltipIfNeeded('proud');
-    showTooltipIfNeeded('chat');
-    showTooltipIfNeeded('link');
-
-    // 吹き出しを閉じるボタンにイベントを追加
-    document.querySelectorAll('.tooltip-close').forEach(button => {
-        button.addEventListener('click', function() {
-            const tooltipId = this.getAttribute('data-tooltip-id');
-            closeTooltip(tooltipId);
-        });
+  function createTip(text, idForLS) {
+    const tip = document.createElement('div');
+    tip.className = 'ui-tip';
+    tip.innerHTML = `
+      <span class="ui-tip__text"></span>
+      <button class="ui-tip__close" type="button" aria-label="閉じる">×</button>
+      <span class="ui-tip__arrow" aria-hidden="true"></span>
+    `;
+    tip.querySelector('.ui-tip__text').textContent = text;
+    tip.querySelector('.ui-tip__close').addEventListener('click', () => {
+      tip.remove();
+      if (idForLS) localStorage.setItem(LS_PREFIX + idForLS, 'true');
     });
-});
+    document.body.appendChild(tip);
+    return tip;
+  }
+
+  function place(tip, target, pref = 'bottom') {
+    const r = target.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const orders = {
+      top:    ['top','bottom','right','left'],
+      bottom: ['bottom','top','right','left'],
+      left:   ['left','right','top','bottom'],
+      right:  ['right','left','top','bottom']
+    };
+    const order = orders[pref] || orders.bottom;
+
+    for (const p of order) {
+      let top, left;
+      if (p === 'top') {
+        top = r.top - th - GAP;
+        left = r.left + (r.width - tw)/2;
+        if (top >= 0) return set(tip, top, clamp(left, 8, vw - tw - 8), p);
+      } else if (p === 'bottom') {
+        top = r.bottom + GAP;
+        left = r.left + (r.width - tw)/2;
+        if (top + th <= vh) return set(tip, top, clamp(left, 8, vw - tw - 8), p);
+      } else if (p === 'left') {
+        top = r.top + (r.height - th)/2;
+        left = r.left - tw - GAP;
+        if (left >= 0) return set(tip, clamp(top, 8, vh - th - 8), left, p);
+      } else if (p === 'right') {
+        top = r.top + (r.height - th)/2;
+        left = r.right + GAP;
+        if (left + tw <= vw) return set(tip, clamp(top, 8, vh - th - 8), left, p);
+      }
+    }
+    // どこにも置けない時のフォールバック（中央）
+    set(tip, (vh - th)/2, (vw - tw)/2, 'bottom');
+
+    function set(el, top, left, placement) {
+      el.style.position = 'fixed';
+      el.style.top = `${Math.round(top)}px`;
+      el.style.left = `${Math.round(left)}px`;
+      el.dataset.placement = placement;
+    }
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+  }
+
+  // 初期生成
+  const pairs = [];
+  document.querySelectorAll(SELECTOR).forEach(target => {
+    const text = target.getAttribute('data-tip');
+    const id   = target.getAttribute('data-tip-id') || '';        // ← localStorage キー
+    const pref = (target.getAttribute('data-tip-placement') || 'bottom').toLowerCase();
+
+    // すでに「非表示」記録があれば作らない
+    if (id && localStorage.getItem(LS_PREFIX + id) === 'true') return;
+
+    const tip = createTip(text, id);
+    pairs.push({ tip, target, pref });
+    // 初回配置（tipはDOMにある必要あり）
+    place(tip, target, pref);
+  });
+
+  // 追従（スクロール/リサイズ）
+  let ticking = false;
+  function updateAll() {
+    pairs.forEach(({tip, target, pref}) => {
+      if (document.body.contains(tip)) place(tip, target, pref);
+    });
+    ticking = false;
+  }
+  ['scroll','resize'].forEach(ev => window.addEventListener(ev, () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(updateAll); }
+  }, { passive: true }));
+})();
 </script>
 
 
