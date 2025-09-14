@@ -1381,35 +1381,50 @@ body {
 }
 
 /* スワイプボタンの位置調整 */
-#prevBtn, #nextBtn {
-    position: absolute;
-    top: 123%; /* ← 中央に配置 */
-    transform: translateY(-50%); /* ← 中央揃え */
-    background-color: rgba(0, 0, 0, 0.6); /* 背景を少し透過 */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10;
-    border-radius: 50%;
+/* ボタンの配置基準にする（重要） */
+.standings-container {
+  position: relative;
 }
 
-/* 左ボタン */
-#prevBtn {
-    left: 10px;
+/* ボタン共通（テーブル中央より少し上） */
+.standings-nav {
+  position: absolute;
+  top: 40%;                 /* ← 中央(50%)より上に。お好みで 42〜38% 調整可 */
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  border: 0;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 4;               /* 順位表より前に */
+  transition: transform 120ms ease;
 }
+.standings-nav:active { transform: translateY(-50%) scale(.96); }
 
-/* 右ボタン */
-#nextBtn {
-    right: 10px;
+/* 左右の寄せ */
+.standings-nav.prev { left: 8px; }
+.standings-nav.next { right: 8px; }
+
+/* モバイル微調整 */
+@media (max-width: 480px){
+  .standings-nav{
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    top: 13%;                    /* スマホ時の縦位置 */
+  }
 }
 
 /* モバイル用の調整 */
 @media (max-width: 768px) {
     #prevBtn, #nextBtn {
         font-size: 20px;
-        padding: 8px 12px;
+        /* padding: 0 2px 0 0; */
     }
 }
 /* end ========  MLB 地区別順位表(max-width: 768px) ======== */
@@ -1819,9 +1834,9 @@ body {
 .side-menu a {
     display: block;
     color: white;
-    padding: 12px 15px;
+    padding: 8px 15px;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 15px;
     margin-bottom: 8px;
 }
 
@@ -1836,7 +1851,7 @@ body {
     cursor: pointer;
     padding: 10px;
     text-align: center;
-    margin-top: 10px;/* リストと適度な間隔 */
+    margin-top: -18x;/* リストと適度な間隔 */
     margin-right: 59px;
 }
 
@@ -1905,6 +1920,7 @@ body {
     #mlb-game-info {
         max-width: 95%;
         padding: 10px;
+        margin-bottom: 1px;
     }
 
     #mlb-game-title {
@@ -1981,33 +1997,49 @@ body {
     transform: translateX(-50%);
 }
 
+/* ===== 汎用ツールチップ ===== */
+.ui-tip {
+  position: fixed;
+  z-index: 9999;
+  max-width: min(80vw, 320px);
+  color: #fff;
+  background: rgba(255, 0, 0, 0.95);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  padding: 10px 12px 10px 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+  font-size: 14px;
+  line-height: 1.5;
+  pointer-events: auto;
+}
+.ui-tip__text { display: inline-block; margin-right: 22px; }
+.ui-tip__close {
+  position: absolute; top: 6px; right: 8px;
+  width: 24px; height: 24px; border-radius: 12px;
+  background: transparent; color: #b9c3d6;
+  border: 0; cursor: pointer; font-size: 16px; line-height: 24px;
+}
+.ui-tip__close:hover { color: #fff; }
 
-#tooltip-yosou {
-    /* top: 4676px; */
-    /* top: 4664px; */
-    top: 4956px;
-    left: 12em;
+/* 矢印 */
+.ui-tip__arrow {
+  position: absolute; width: 10px; height: 10px;
+  background: rgba(255, 0, 0, 0.95);
+  border-left: 1px solid rgba(255,255,255,.08);
+  border-top: 1px solid rgba(255,255,255,.08);
+  transform: rotate(45deg);
+}
+/* 位置ごとの矢印配置 */
+.ui-tip[data-placement="top"]    .ui-tip__arrow { bottom: -5px; left: calc(50% - 5px); }
+.ui-tip[data-placement="bottom"] .ui-tip__arrow { top: -5px; left: calc(50% - 5px); }
+.ui-tip[data-placement="left"]   .ui-tip__arrow { right: -5px; top: calc(50% - 5px); }
+.ui-tip[data-placement="right"]  .ui-tip__arrow { left: -5px; top: calc(50% - 5px); }
+
+/* 小さめ端末 */
+@media (max-width: 480px){
+  .ui-tip { max-width: 90vw; font-size: 13px; }
 }
 
-#tooltip-proud {
-    /* top: 4968px; */
-    /* top: 4956px; */
-    top: 5267px;
-    left: 12em;
-}
-
-#tooltip-chat {
-    /* top: 5229px; */
-    /* top: 5217px; */
-    top: 5554px;
-    left: 5em;
-}
-#tooltip-link {
-    /* top: 5586px; */
-    /* top: 5574px; */
-    top: 5911px;
-    left: 10em;
-}
 
 /* 閉じるボタン */
 .tooltip-close {
@@ -2221,37 +2253,46 @@ body {
 }
 
 /* スワイプボタンの位置調整 */
-#prevBtn, #nextBtn {
-    position: absolute;
-    top: 117%; /* ← 中央に配置 */
-    transform: translateY(-50%); /* ← 中央揃え */
-    background-color: rgba(0, 0, 0, 0.6); /* 背景を少し透過 */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10;
-    border-radius: 50%;
+/* ボタンの配置基準にする（重要） */
+.standings-container {
+  position: relative;
 }
 
-/* 左ボタン */
-#prevBtn {
-    left: 10px;
+/* ボタン共通（テーブル中央より少し上） */
+.standings-nav {
+  position: absolute;
+  top: 22%;                      /* ← ここで“やや上”を微調整（例: 18〜28%） */
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
 }
 
-/* 右ボタン */
-#nextBtn {
-    right: 10px;
+.standings-nav.prev { left: 8px; }
+.standings-nav.next { right: 8px; }
+
+/* ちょい演出とアクセシビリティ */
+.standings-nav:hover { background: rgba(0,0,0,.7); }
+.standings-nav:focus-visible { outline: 3px solid #5f96df; outline-offset: 2px; }
+
+/* モバイル微調整 */
+/* スマホでは少し小さく＆位置も微調整 */
+@media (max-width: 480px) {
+  .standings-nav {
+    top: 13%;                    /* スマホ時の縦位置 */
+    width: 36px;
+    height: 36px;
+  }
 }
 
-/* モバイル用の調整 */
-@media (max-width: 768px) {
-    #prevBtn, #nextBtn {
-        font-size: 20px;
-        padding: 8px 12px;
-    }
-}
 /* end ========  MLB 地区別順位表(max-width: 430px) ======== */
 
 

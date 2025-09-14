@@ -1,0 +1,143 @@
+/* src/main/resources/static/css/lineups.css */
+
+/* ===== Page base ===== */
+:root { color-scheme: dark light; }
+body {
+  /* background:#0f0f12; */
+  background:#ffffff;
+  color:#e9eef5;
+  font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
+  margin:0; /* container に任せる */
+}
+
+/* ===== Center container ===== */
+.container{
+  max-width: 1080px;      /* ページの最大幅 */
+  margin: 24px auto 36px; /* 中央寄せ */
+  padding: 0 16px;        /* 端の余白 */
+  text-align: center;     /* 見出し＆メタ情報を中央 */
+}
+
+h1 { font-size:24px; margin:0 0 16px; }
+h1,h2,h3{ margin:12px 0; }
+
+/* ===== Game meta ===== */
+.game-meta p { margin: 6px 0 8px; }
+
+/* ===== Back button (center) ===== */
+.back-button {
+  display:inline-block;
+  padding:12px 24px;
+  background-color:#5f96df;
+  color:#fff;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:700;
+  margin:24px auto 0;     /* 中央配置 */
+  margin-bottom: 73px;
+}
+
+/* ===== 2-column layout (always keep two columns) ===== */
+.lineups-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  align-items:start;
+  justify-items:stretch;
+  margin-top: 10px;
+  text-align: left;       /* 内側は左寄せに戻す */
+}
+
+/* ===== Cards ===== */
+.team-card{
+  background:#17191f;
+  border:1px solid #252833;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 4px 18px rgba(0,0,0,.25);
+}
+.team-title{
+  background:#0f1115;
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:700;
+  font-size:18px;
+  margin-bottom:10px;
+  text-align:left;
+}
+
+/* Probable pitcher block: label on first line, name on next line */
+.probable{
+  background:#101217;
+  border-radius:10px;
+  padding:10px 12px;
+  margin:8px 0 12px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.pp-label{
+  font-size:12px;
+  opacity:.85;
+  line-height:1.2;
+}
+.pp-name{
+  font-size:16px;
+  font-weight:700;
+  line-height:1.25;
+}
+
+/* Highlights */
+.jp{ color:#ffd166; font-weight:700; }
+
+/* ===== Tables (compact) ===== */
+.team-card table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:14px;
+}
+.team-card th,
+.team-card td{
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:6px 8px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-align:left;
+}
+.team-card th{ color:#bfc6d2; font-weight:600; }
+.empty{ color:#9aa4b2; padding:12px 0; }
+
+/* Column widths */
+.col-order{ width:26px; text-align:right; opacity:.85; }
+.col-name { width:auto; }
+.col-pos  { width:42px; text-align:left; opacity:.9; }
+
+/* ===== Tighten on small devices ===== */
+@media (max-width: 480px){
+  .container{padding: 0 5px 0 5px; }
+
+  .lineups-grid{ gap:10px; }
+
+  .team-card{ padding:12px; border-radius:12px; }
+  .team-title{ padding:8px 10px; font-size:8px; margin-bottom:8px; }
+
+  .probable{ padding:8px 10px; gap:3px; }
+  .pp-label{ font-size:11px; }
+  .pp-name { font-size:14px; }
+
+  .team-card table{ font-size:12px; }
+  .team-card th, .team-card td{ padding:5px 0px; }
+
+  .col-order{ width:22px; }
+  .col-pos  { width:18px; }
+}
+
+/* Extra small safety */
+@media (max-width: 360px){
+  .team-card th, .team-card td{ font-size:11px; padding:4px 5px; }
+  .col-order{ width:20px; }
+  .col-pos  { width:32px; }
+}

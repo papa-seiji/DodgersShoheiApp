@@ -1,0 +1,114 @@
+<!-- templates/fragments/lineups_widget.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<body>
+
+  <!-- フラグメント本体：home からは  fragments/lineups_widget :: widget  で呼び出し -->
+  <div th:fragment="widget" class="lineups-widget">
+    <!-- ウィジェット専用CSS（lineups.cssは読み込まない） -->
+    <link rel="stylesheet" th:href="@{/css/lineups_widget.css}"/>
+
+    <!-- ✅ 開閉トグル（デフォルト開く） -->
+    <details class="lw">
+      <summary class="lw__summary" role="button" aria-controls="lw-content">
+        <span class="lw__title">先発＆スタメン</span>
+
+        <!-- 日時・球場メタ（gameInfo がある時だけ） -->
+        <span class="lw__meta"
+              th:if="${gameInfo != null && gameInfo.gameDateTimeJST != null}"
+              th:text="${#temporals.format(gameInfo.gameDateTimeJST, 'yyyy/MM/dd HH:mm') + ' · ' + (gameInfo.venue != null ? gameInfo.venue : '')}">
+          2025/08/15 10:38 · Dodger Stadium
+        </span>
+
+        <!-- シェブロン -->
+        <svg class="lw__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </summary>
+
+      <div id="lw-content" class="lw__content">
+        <section class="container" style="max-width:1080px; margin:0 auto; text-align:center;">
+
+          <!-- 必要なら試合メタを表示（今は非表示でOKならこのブロックは削除可）
+          <section class="game-meta" style="margin-bottom:10px;">
+            <p>
+              試合日:
+              <span th:text="${gameInfo != null && gameInfo.gameDateTimeJST != null
+                              ? #temporals.format(gameInfo.gameDateTimeJST, 'yyyy/MM/dd HH:mm')
+                              : '未定'}"></span>
+            </p>
+            <p>
+              球場:
+              <span th:text="${gameInfo != null && gameInfo.venue != null ? gameInfo.venue : '未定'}"></span>
+            </p>
+          </section>
+          -->
+
+          <div class="lineups-grid">
+            <!-- LEFT（デフォルト：AWAY） -->
+            <section class="team-card">
+              <div class="team-title" th:text="${left != null ? left.teamName : '—'}">LEFT</div>
+
+              <div class="probable">
+                <div class="pp-label">予告先発：</div>
+                <div class="pp-name" th:classappend="${left != null && left.probablePitcher.japanese} ? 'jp'">
+                  <span th:text="${left != null ? left.probablePitcher.name : '—'}">Pitcher</span>
+                </div>
+              </div>
+
+              <div th:if="${left == null || #lists.isEmpty(left.lineup)}" class="empty">スタメン未確定</div>
+              <table th:if="${left != null && !#lists.isEmpty(left.lineup)}">
+                <thead>
+                  <tr>
+                    <th class="col-order">#</th>
+                    <th class="col-name">選手</th>
+                    <th class="col-pos">ポジ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="p : ${left.lineup}">
+                    <td class="col-order" th:text="${p.order}">1</td>
+                    <td class="col-name" th:classappend="${p.japanese} ? 'jp'" th:text="${p.name}">Name</td>
+                    <td class="col-pos" th:text="${p.pos}">SS</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <!-- RIGHT（デフォルト：HOME） -->
+            <section class="team-card">
+              <div class="team-title" th:text="${right != null ? right.teamName : '—'}">RIGHT</div>
+
+              <div class="probable">
+                <div class="pp-label">予告先発：</div>
+                <div class="pp-name" th:classappend="${right != null && right.probablePitcher.japanese} ? 'jp'">
+                  <span th:text="${right != null ? right.probablePitcher.name : '—'}">Pitcher</span>
+                </div>
+              </div>
+
+              <div th:if="${right == null || #lists.isEmpty(right.lineup)}" class="empty">スタメン未確定</div>
+              <table th:if="${right != null && !#lists.isEmpty(right.lineup)}">
+                <thead>
+                  <tr>
+                    <th class="col-order">#</th>
+                    <th class="col-name">選手</th>
+                    <th class="col-pos">ポジ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="p : ${right.lineup}">
+                    <td class="col-order" th:text="${p.order}">1</td>
+                    <td class="col-name" th:classappend="${p.japanese} ? 'jp'" th:text="${p.name}">Name</td>
+                    <td class="col-pos" th:text="${p.pos}">CF</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </section>
+      </div>
+    </details>
+  </div>
+
+</body>
+</html>
