@@ -1,0 +1,136 @@
+/* === 背景 === */
+.background-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #b62e39 0%, #b62e39 50%, #0b2f75 50%, #0b2f75 100%);
+  z-index: -1;
+}
+
+/* === 全体 === */
+body {
+  margin: 0;
+  font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.container {
+  text-align: center;
+  padding: 40px 10px;
+}
+
+h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+/* === レイアウト === */
+.leagues {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 95%;
+  margin: 0 auto;
+  gap: 30px;
+}
+
+.league,
+.world-series {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.league h2,
+.world-series h2 {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 12px;
+  margin: 10px 0;
+  width: 90%;
+}
+
+section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffd54f;
+  margin-bottom: 10px;
+}
+
+/* === カード === */
+.match-card {
+  background: rgba(255, 255, 255, 0.95);
+  color: #0b1b4e;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  padding: 8px 14px;
+  margin-bottom: 8px;
+  width: 100%;
+  text-align: left;
+}
+
+.team {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin: 3px 0;
+}
+
+/* === 勝者/敗者の色分け === */
+.team.win {
+  color: #0a39c0;
+}
+
+.team.lose {
+  color: #777;
+}
+
+/* === 勝ち星（シリーズ勝利数） === */
+.stars {
+  font-size: 1rem;
+  color: #e6c200;
+  margin-left: 6px;
+  letter-spacing: 1px;
+}
+
+/* === WORLD SERIES の中央カード強調 === */
+.world-series section {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+  padding: 30px 20px;
+}
+
+/* === レスポンシブ対応 === */
+@media (max-width: 900px) {
+  .leagues {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  section {
+    width: 100%;
+  }
+
+  .match-card {
+    text-align: center;
+  }
+
+  .team {
+    justify-content: center;
+    gap: 8px;
+  }
+}

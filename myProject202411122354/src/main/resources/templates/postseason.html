@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLB Postseason 2025</title>
+  <link rel="stylesheet" th:href="@{/css/postseason_simple.css}">
+  <style>
+    /* ▼ 追加CSS：チームごとに独立カード構造 */
+    .matchup {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px 0;
+      align-items: center;
+    }
+
+    .team-card {
+      background: #f8f9fc;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .team-card img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+    }
+
+    .team-card.home {
+      border-left: 4px solid #4caf50; /* home：グリーン */
+      background: radial-gradient(circle at 30% 30%, #ffffff, #f1fff1);
+    }
+
+    .team-card.away {
+      border-left: 4px solid #f44336; /* away：レッド */
+      background: radial-gradient(circle at 30% 30%, #ffffff, #fff1f1);
+    }
+
+    .trophy {
+      position: absolute;
+      bottom: 4px;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-gradient"></div>
+
+  <div class="container">
+    <h1>MLB POSTSEASON 2025</h1>
+
+    <div class="leagues">
+      <!-- AMERICAN LEAGUE -->
+      <div class="league al">
+        <h2>AMERICAN LEAGUE</h2>
+        <section id="al-wcs"><h3>WILD CARD SERIES</h3></section>
+        <section id="al-ds"><h3>DIVISION SERIES</h3></section>
+        <section id="al-lcs"><h3>LEAGUE CHAMPIONSHIP SERIES</h3></section>
+      </div>
+
+      <!-- WORLD SERIES -->
+      <div class="world-series">
+        <h2>WORLD SERIES</h2>
+        <section id="ws"><h3>WORLD SERIES</h3></section>
+      </div>
+
+      <!-- NATIONAL LEAGUE -->
+      <div class="league nl">
+        <h2>NATIONAL LEAGUE</h2>
+        <section id="nl-wcs"><h3>WILD CARD SERIES</h3></section>
+        <section id="nl-ds"><h3>DIVISION SERIES</h3></section>
+        <section id="nl-lcs"><h3>LEAGUE CHAMPIONSHIP SERIES</h3></section>
+      </div>
+    </div>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("/api/mlb/postseason");
+    const data = await res.json();
+
+    const AL_TEAMS = [
+      "Yankees","Red Sox","Blue Jays","Rays","Orioles",
+      "White Sox","Guardians","Tigers","Royals","Twins",
+      "Astros","Rangers","Mariners","Angels","Athletics"
+    ];
+    const NL_TEAMS = [
+      "Dodgers","Padres","Giants","Rockies","Diamondbacks",
+      "Cubs","Cardinals","Pirates","Reds","Brewers",
+      "Braves","Mets","Nationals","Phillies","Marlins"
+    ];
+
+    // 🧩 createCard：ロゴ表示のみ（🏠🚗削除）
+    function createCard(series, team1, team2, wins1, wins2, team1Id, team2Id) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "match-card";
+
+      // ✅ World Series の場合はダミー名を置換
+      if (series.includes("World")) {
+        if (team1 === "Higher WPCT") team1 = "AL CHAMPION";
+        if (team2 === "Lower WPCT") team2 = "NL CHAMPION";
+      }
+
+      const winner = wins1 > wins2 ? team1 : (wins2 > wins1 ? team2 : null);
+
+      // ✅ チームロゴURL
+      const logo1 = team1Id ? `https://www.mlbstatic.com/team-logos/${team1Id}.svg` : "";
+      const logo2 = team2Id ? `https://www.mlbstatic.com/team-logos/${team2Id}.svg` : "";
+
+      // 🟩 Homeチームカード
+      const homeCard = document.createElement("div");
+      homeCard.className = "team-card home";
+      homeCard.innerHTML = `
+        <img src="${logo1}" alt="${team1}">
+        ${winner === team1 ? '<div class="trophy">🏆</div>' : ''}
+      `;
+
+      // 🟥 Awayチームカード
+      const awayCard = document.createElement("div");
+      awayCard.className = "team-card away";
+      awayCard.innerHTML = `
+        <img src="${logo2}" alt="${team2}">
+        ${winner === team2 ? '<div class="trophy">🏆</div>' : ''}
+      `;
+
+      // 両チームまとめ
+      const matchup = document.createElement("div");
+      matchup.className = "matchup";
+      matchup.appendChild(homeCard);
+      matchup.appendChild(awayCard);
+
+      wrapper.innerHTML = `<strong>${series}</strong>`;
+      wrapper.appendChild(matchup);
+      return wrapper;
+    }
+
+    // ✅ 全試合を配列にまとめる
+    const games = [];
+    for (const date of data.dates || []) {
+      for (const game of date.games || []) {
+        games.push(game);
+      }
+    }
+
+    // ✅ 対戦カード単位で集約（home/away順序関係なし）
+    const matchupMap = {};
+
+    for (const game of games) {
+      const series = game.seriesDescription || "Unknown Series";
+      const home = game.teams?.home?.team?.name || "Home Team";
+      const away = game.teams?.away?.team?.name || "Away Team";
+      const homeId = game.teams?.home?.team?.id;
+      const awayId = game.teams?.away?.team?.id;
+      const sortedTeams = [home, away].sort();
+      const key = `${series}_${sortedTeams[0]}_vs_${sortedTeams[1]}`;
+
+      const homeWins = game.teams?.home?.leagueRecord?.wins || 0;
+      const awayWins = game.teams?.away?.leagueRecord?.wins || 0;
+
+      if (!matchupMap[key]) {
+        matchupMap[key] = {
+          series,
+          teams: {
+            [home]: { wins: homeWins, id: homeId },
+            [away]: { wins: awayWins, id: awayId }
+          }
+        };
+      } else {
+        // 勝数を累積（チーム単位）
+        matchupMap[key].teams[home].wins = Math.max(
+          matchupMap[key].teams[home].wins,
+          homeWins
+        );
+        matchupMap[key].teams[away].wins = Math.max(
+          matchupMap[key].teams[away].wins,
+          awayWins
+        );
+      }
+    }
+
+    // ✅ シリーズごとに描画
+    Object.values(matchupMap).forEach(({ series, teams }) => {
+      const teamNames = Object.keys(teams);
+      if (teamNames.length < 2) return;
+
+      const [team1, team2] = teamNames;
+      const wins1 = teams[team1].wins;
+      const wins2 = teams[team2].wins;
+      const id1 = teams[team1].id;
+      const id2 = teams[team2].id;
+
+      const card = createCard(series, team1, team2, wins1, wins2, id1, id2);
+
+      if (series.includes("World")) {
+        document.querySelector("#ws").appendChild(card);
+      } else if (AL_TEAMS.some(t => team1.includes(t) || team2.includes(t))) {
+        if (series.includes("Wild")) document.querySelector("#al-wcs").appendChild(card);
+        else if (series.includes("Division")) document.querySelector("#al-ds").appendChild(card);
+        else if (series.includes("League")) document.querySelector("#al-lcs").appendChild(card);
+      } else if (NL_TEAMS.some(t => team1.includes(t) || team2.includes(t))) {
+        if (series.includes("Wild")) document.querySelector("#nl-wcs").appendChild(card);
+        else if (series.includes("Division")) document.querySelector("#nl-ds").appendChild(card);
+        else if (series.includes("League")) document.querySelector("#nl-lcs").appendChild(card);
+      }
+    });
+
+    console.log("✅ MLB postseason データ反映完了（ロゴ対応・勝者判定維持）");
+  } catch (e) {
+    console.error("データ取得失敗:", e);
+  }
+});
+</script>
+</body>
+</html>
