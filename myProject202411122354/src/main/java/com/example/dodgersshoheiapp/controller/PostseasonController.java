@@ -45,7 +45,7 @@ public class PostseasonController {
             Map<String, Object> body = resp.getBody();
 
             if (body == null || !body.containsKey("dates")) {
-                results.put("series1", "APIからデータを取得できませんでした");
+                results.put("error", "APIからデータを取得できませんでした");
                 return results;
             }
 
@@ -58,65 +58,84 @@ public class PostseasonController {
                 }
             }
 
-            // Reds vs Dodgers のゲームをすべて抽出
-            List<Map<String, Object>> redsDodgersGames = allGames.stream()
-                    .filter(game -> {
-                        Map<String, Object> teams = (Map<String, Object>) game.get("teams");
-                        Map<String, Object> home = (Map<String, Object>) teams.get("home");
-                        Map<String, Object> away = (Map<String, Object>) teams.get("away");
-                        String homeName = (String) ((Map<String, Object>) home.get("team")).get("name");
-                        String awayName = (String) ((Map<String, Object>) away.get("team")).get("name");
-                        return (homeName.equals("Los Angeles Dodgers") && awayName.equals("Cincinnati Reds"))
-                                || (homeName.equals("Cincinnati Reds") && awayName.equals("Los Angeles Dodgers"));
-                    })
-                    .toList();
+            // ✅ Reds vs Dodgers
+            String redsDodgers = summarizeSeries(allGames, "Cincinnati Reds", "Los Angeles Dodgers");
+            results.put("series1", redsDodgers);
 
-            if (redsDodgersGames.isEmpty()) {
-                results.put("series1", "Reds-Dodgers戦が見つかりません");
-            } else {
-                int dodgerWins = 0;
-                int redsWins = 0;
+            // ✅ Cubs vs Padres
+            String cubsPadres = summarizeSeries(allGames, "Chicago Cubs", "San Diego Padres");
+            results.put("series3", cubsPadres);
 
-                for (Map<String, Object> game : redsDodgersGames) {
+        } catch (Exception e) {
+            results.put("error", "APIエラー: " + e.getMessage());
+        }
+        return results;
+    }
+
+    /**
+     * ✅ 指定2チームのシリーズ結果を集計
+     */
+    private String summarizeSeries(List<Map<String, Object>> allGames, String teamA, String teamB) {
+        List<Map<String, Object>> targetGames = allGames.stream()
+                .filter(game -> {
                     Map<String, Object> teams = (Map<String, Object>) game.get("teams");
                     Map<String, Object> home = (Map<String, Object>) teams.get("home");
                     Map<String, Object> away = (Map<String, Object>) teams.get("away");
-
-                    Map<String, Object> homeRec = (Map<String, Object>) home.get("leagueRecord");
-                    Map<String, Object> awayRec = (Map<String, Object>) away.get("leagueRecord");
-
-                    // leagueRecord の wins はシリーズ全体の勝利数ではなく、このチームの勝利試合数を格納している可能性もあるので注意
-                    // だがここでは「leagueRecord.wins」を使う前提で
-                    int homeW = (int) homeRec.getOrDefault("wins", 0);
-                    int awayW = (int) awayRec.getOrDefault("wins", 0);
-
                     String homeName = (String) ((Map<String, Object>) home.get("team")).get("name");
                     String awayName = (String) ((Map<String, Object>) away.get("team")).get("name");
+                    return (homeName.equals(teamA) && awayName.equals(teamB))
+                            || (homeName.equals(teamB) && awayName.equals(teamA));
+                })
+                .toList();
 
-                    // どちらが勝ったか判定
-                    if (homeW > awayW) {
-                        if (homeName.equals("Los Angeles Dodgers")) {
-                            dodgerWins++;
-                        } else {
-                            redsWins++;
-                        }
-                    } else if (awayW > homeW) {
-                        if (awayName.equals("Los Angeles Dodgers")) {
-                            dodgerWins++;
-                        } else {
-                            redsWins++;
-                        }
-                    }
+        if (targetGames.isEmpty()) {
+            return teamA + " vs " + teamB + " 試合なし";
+        }
+
+        int winsA = 0;
+        int winsB = 0;
+        String seriesDesc = (String) targetGames.get(0).get("seriesDescription");
+
+        for (Map<String, Object> game : targetGames) {
+            Map<String, Object> teams = (Map<String, Object>) game.get("teams");
+            Map<String, Object> home = (Map<String, Object>) teams.get("home");
+            Map<String, Object> away = (Map<String, Object>) teams.get("away");
+
+            String homeName = (String) ((Map<String, Object>) home.get("team")).get("name");
+            String awayName = (String) ((Map<String, Object>) away.get("team")).get("name");
+
+            // ✅ まず teams.home.score / teams.away.score を確認
+            Integer homeRuns = (Integer) home.get("score");
+            Integer awayRuns = (Integer) away.get("score");
+
+            // ✅ null の場合は linescore から取得（後方互換）
+            if (homeRuns == null || awayRuns == null) {
+                Map<String, Object> linescore = (Map<String, Object>) game.get("linescore");
+                if (linescore != null && linescore.containsKey("teams")) {
+                    Map<String, Object> scoreTeams = (Map<String, Object>) linescore.get("teams");
+                    Map<String, Object> homeScore = (Map<String, Object>) scoreTeams.get("home");
+                    Map<String, Object> awayScore = (Map<String, Object>) scoreTeams.get("away");
+                    homeRuns = (Integer) homeScore.getOrDefault("runs", 0);
+                    awayRuns = (Integer) awayScore.getOrDefault("runs", 0);
+                } else {
+                    continue; // スコア情報がない試合はスキップ
                 }
-
-                String seriesDesc = (String) ((Map<String, Object>) redsDodgersGames.get(0)).get("seriesDescription");
-                results.put("series1",
-                        "Reds vs Dodgers " + dodgerWins + "-" + redsWins + " (" + seriesDesc + ")");
             }
 
-        } catch (Exception e) {
-            results.put("series1", "APIエラー: " + e.getMessage());
+            // ✅ 勝敗判定
+            if (homeRuns > awayRuns) {
+                if (homeName.equals(teamA))
+                    winsA++;
+                else
+                    winsB++;
+            } else if (awayRuns > homeRuns) {
+                if (awayName.equals(teamA))
+                    winsA++;
+                else
+                    winsB++;
+            }
         }
-        return results;
+
+        return teamA + " vs " + teamB + " " + winsA + "-" + winsB + " (" + seriesDesc + ")";
     }
 }
