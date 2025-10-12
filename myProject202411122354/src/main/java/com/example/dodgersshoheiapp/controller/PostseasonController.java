@@ -58,11 +58,15 @@ public class PostseasonController {
                 }
             }
 
-            // ✅ Reds vs Dodgers
+            // ✅ ① Reds vs Dodgers（Wild Card）
             String redsDodgers = summarizeSeries(allGames, "Cincinnati Reds", "Los Angeles Dodgers");
             results.put("series1", redsDodgers);
 
-            // ✅ Cubs vs Padres
+            // ✅ ② Dodgers vs Phillies（NLDS）
+            String dodgersPhillies = summarizeSeries(allGames, "Los Angeles Dodgers", "Philadelphia Phillies");
+            results.put("series2", dodgersPhillies);
+
+            // ✅ ③ Cubs vs Padres（Wild Card）
             String cubsPadres = summarizeSeries(allGames, "Chicago Cubs", "San Diego Padres");
             results.put("series3", cubsPadres);
 
