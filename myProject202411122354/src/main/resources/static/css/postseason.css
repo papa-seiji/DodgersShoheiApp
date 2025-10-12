@@ -96,6 +96,66 @@ h1 {
 .team-logo.brewers2 { top: calc(390 / 844 * 100%); right: calc(87 / 390 * 100%); }
 
 
+
+/* 各シリーズスコア位置 */
+#series1 {
+    position: absolute;
+    top: 478px;
+    left: 38px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series2 {
+    position: absolute;
+    top: 417px;
+    left: 78px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series3 {
+    position: absolute;
+    top: 478px;
+    left: 246px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series4 {
+    position: absolute;
+    top: 418px;
+    left: 206px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+
+
+
+
+
+
 /* ==========================
    スマホ用微調整
    ========================== */
@@ -106,4 +166,66 @@ h1 {
   h1 {
     font-size: 1.5rem;
   }
+
+
+
+
+/* 各シリーズスコア位置 */
+#series1 {
+    position: absolute;
+    top: 436px;
+    left: 28px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series2 {
+    position: absolute;
+    top: 380px;
+    left: 68px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series3 {
+    position: absolute;
+    top: 436px;
+    left: 220px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series4 {
+    position: absolute;
+    top: 380px;
+    left: 180px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+
+
+
+
+
 }
