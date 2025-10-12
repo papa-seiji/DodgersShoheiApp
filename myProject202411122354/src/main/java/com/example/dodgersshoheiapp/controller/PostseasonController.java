@@ -31,7 +31,7 @@ public class PostseasonController {
                 Map.entry("CUBS", "https://www.mlbstatic.com/team-logos/112.svg"),
                 Map.entry("BREWERS", "https://www.mlbstatic.com/team-logos/158.svg"));
         model.addAttribute("logos", logos);
-        return "postseason"; // ✅ HTMLテンプレートを返す
+        return "postseason";
     }
 
     @GetMapping("/api/mlb/series-results")
@@ -58,21 +58,19 @@ public class PostseasonController {
                 }
             }
 
-            // ✅ ① Reds vs Dodgers（Wild Card）
-            String redsDodgers = summarizeSeries(allGames, "Cincinnati Reds", "Los Angeles Dodgers");
-            results.put("series1", redsDodgers);
+            // ✅ NL側
+            results.put("series1", summarizeSeries(allGames, "Cincinnati Reds", "Los Angeles Dodgers")); // WC
+            results.put("series2", summarizeSeries(allGames, "Los Angeles Dodgers", "Philadelphia Phillies")); // NLDS
+            results.put("series3", summarizeSeries(allGames, "Chicago Cubs", "San Diego Padres")); // WC
+            results.put("series4", summarizeSeries(allGames, "Milwaukee Brewers", "Chicago Cubs")); // NLDS
+            results.put("series5", summarizeSeries(allGames, "Los Angeles Dodgers", "Milwaukee Brewers")); // NLCS
 
-            // ✅ ② Dodgers vs Phillies（NLDS）
-            String dodgersPhillies = summarizeSeries(allGames, "Los Angeles Dodgers", "Philadelphia Phillies");
-            results.put("series2", dodgersPhillies);
-
-            // ✅ ③ Cubs vs Padres（Wild Card）
-            String cubsPadres = summarizeSeries(allGames, "Chicago Cubs", "San Diego Padres");
-            results.put("series3", cubsPadres);
-
-            // ✅ ④ Brewers vs Cubs（NLDS）
-            String brewersCubs = summarizeSeries(allGames, "Milwaukee Brewers", "Chicago Cubs");
-            results.put("series4", brewersCubs);
+            // ✅ AL側
+            results.put("series6", summarizeSeries(allGames, "Detroit Tigers", "Cleveland Guardians")); // AL WC
+            results.put("series7", summarizeSeries(allGames, "Boston Red Sox", "New York Yankees")); // AL WC
+            results.put("series8", summarizeSeries(allGames, "Seattle Mariners", "Detroit Tigers")); // ALDS ①
+            results.put("series9", summarizeSeries(allGames, "Toronto Blue Jays", "New York Yankees")); // ALDS ②
+            results.put("series10", summarizeSeries(allGames, "Seattle Mariners", "Toronto Blue Jays")); // ALCS
 
         } catch (Exception e) {
             results.put("error", "APIエラー: " + e.getMessage());
@@ -97,7 +95,7 @@ public class PostseasonController {
                 .toList();
 
         if (targetGames.isEmpty()) {
-            return teamA + " vs " + teamB + " 試合なし";
+            return teamA + " vs " + teamB + " （試合未開始）";
         }
 
         int winsA = 0;
@@ -112,25 +110,12 @@ public class PostseasonController {
             String homeName = (String) ((Map<String, Object>) home.get("team")).get("name");
             String awayName = (String) ((Map<String, Object>) away.get("team")).get("name");
 
-            // ✅ まず teams.home.score / teams.away.score を確認
             Integer homeRuns = (Integer) home.get("score");
             Integer awayRuns = (Integer) away.get("score");
 
-            // ✅ null の場合は linescore から取得（後方互換）
-            if (homeRuns == null || awayRuns == null) {
-                Map<String, Object> linescore = (Map<String, Object>) game.get("linescore");
-                if (linescore != null && linescore.containsKey("teams")) {
-                    Map<String, Object> scoreTeams = (Map<String, Object>) linescore.get("teams");
-                    Map<String, Object> homeScore = (Map<String, Object>) scoreTeams.get("home");
-                    Map<String, Object> awayScore = (Map<String, Object>) scoreTeams.get("away");
-                    homeRuns = (Integer) homeScore.getOrDefault("runs", 0);
-                    awayRuns = (Integer) awayScore.getOrDefault("runs", 0);
-                } else {
-                    continue; // スコア情報がない試合はスキップ
-                }
-            }
+            if (homeRuns == null || awayRuns == null)
+                continue;
 
-            // ✅ 勝敗判定
             if (homeRuns > awayRuns) {
                 if (homeName.equals(teamA))
                     winsA++;

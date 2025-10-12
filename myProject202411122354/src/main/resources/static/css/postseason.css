@@ -150,10 +150,85 @@ h1 {
     font-size: 8px;
 }
 
+#series5 {
+    position: absolute;
+    top: 352px;
+    left: 142px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
 
 
+#series6 {
+    position: absolute;
+    top: 66px;
+    left: 38px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series7 {
+    position: absolute;
+    top: 67px;
+    left: 250px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
 
 
+#series8 {
+    position: absolute;
+    top: 131px;
+    left: 84px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series9 {
+    position: absolute;
+    top: 134px;
+    left: 201px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series10 {
+    position: absolute;
+    top: 183px;
+    left: 141px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
 
 
 /* ==========================
@@ -173,7 +248,7 @@ h1 {
 /* 各シリーズスコア位置 */
 #series1 {
     position: absolute;
-    top: 436px;
+    top: 430px;
     left: 28px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -186,7 +261,7 @@ h1 {
 
 #series2 {
     position: absolute;
-    top: 380px;
+    top: 376px;
     left: 68px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -199,7 +274,7 @@ h1 {
 
 #series3 {
     position: absolute;
-    top: 436px;
+    top: 431px;
     left: 220px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -212,7 +287,7 @@ h1 {
 
 #series4 {
     position: absolute;
-    top: 380px;
+    top: 376px;
     left: 180px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -223,8 +298,83 @@ h1 {
     font-size: 8px;
 }
 
+#series5 {
+    position: absolute;
+    top: 315px;
+    left: 123px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
 
+#series6 {
+    position: absolute;
+    top: 64px;
+    left: 33px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
 
+#series7 {
+    position: absolute;
+    top: 62px;
+    left: 222px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series8 {
+    position: absolute;
+    top: 115px;
+    left: 70px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series9 {
+    position: absolute;
+    top: 115px;
+    left: 179px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series10 {
+    position: absolute;
+    top: 163px;
+    left: 124px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
 
 
 
