@@ -70,6 +70,10 @@ public class PostseasonController {
             String cubsPadres = summarizeSeries(allGames, "Chicago Cubs", "San Diego Padres");
             results.put("series3", cubsPadres);
 
+            // ✅ ④ Brewers vs Cubs（NLDS）
+            String brewersCubs = summarizeSeries(allGames, "Milwaukee Brewers", "Chicago Cubs");
+            results.put("series4", brewersCubs);
+
         } catch (Exception e) {
             results.put("error", "APIエラー: " + e.getMessage());
         }
