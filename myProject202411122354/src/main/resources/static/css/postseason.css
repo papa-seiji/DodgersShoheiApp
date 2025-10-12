@@ -1,0 +1,109 @@
+body {
+  background-color: #f8fafc;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0b1b4e;
+  margin-bottom: 20px;
+}
+
+/* ==========================
+   トーナメント全体のラッパ
+   ========================== */
+.postseason-container {
+  position: relative;
+  width: 90vw;
+  max-width: 390px;
+  aspect-ratio: 390 / 844; /* 縦横比を完全固定 */
+  margin: 0 auto;
+  background-color: #f8fafc;
+}
+
+/* ==========================
+   背景画像（トーナメント線）
+   ========================== */
+.bracket-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/postseason_bracket.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top center;
+  z-index: 0;
+}
+
+/* ==========================
+   チームロゴ共通設定
+   ========================== */
+.team-logo {
+  position: absolute;
+  width: 10vw;
+  max-width: 70px;
+  z-index: 1;
+}
+
+.team-logo img {
+  width: 78%;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 4px;
+}
+
+/* ==========================
+   AL側（上部）
+   ========================== */
+.team-logo.tigers1  { top: calc(40 / 844 * 100%); left: calc(24 / 390 * 100%); }
+.team-logo.tigers2  { top: calc(110 / 844 * 100%); left: calc(54 / 390 * 100%); }
+.team-logo.guardians { top: calc(40 / 844 * 100%); left: calc(86 / 390 * 100%); }
+
+.team-logo.mariners1 { top: calc(40 / 844 * 100%); left: calc(143 / 390 * 100%); }
+.team-logo.mariners2 { top: calc(165 / 844 * 100%); left: calc(87 / 390 * 100%); }
+
+.team-logo.redsox1 { top: calc(40 / 844 * 100%); right: calc(24 / 390 * 100%); }
+
+.team-logo.yankees1 { top: calc(39 / 844 * 100%); right: calc(86 / 390 * 100%); }
+.team-logo.yankees2 { top: calc(110 / 844 * 100%); right: calc(54 / 390 * 100%); }
+
+.team-logo.bluejays1 { top: calc(42 / 844 * 100%); right: calc(143 / 390 * 100%); }
+.team-logo.bluejays2 { top: calc(163 / 844 * 100%); right: calc(87 / 390 * 100%); }
+
+/* ==========================
+   NL側（下部）
+   ========================== */
+.team-logo.reds1 { top: calc(518 / 844 * 100%); right: calc(297 / 390 * 100%); }
+
+.team-logo.dodgers1 { top: calc(518 / 844 * 100%); right: calc(231 / 390 * 100%); }
+.team-logo.dodgers2 { top: calc(448 / 844 * 100%); right: calc(263 / 390 * 100%); }
+.team-logo.dodgers3 { top: calc(390 / 844 * 100%); right: calc(230 / 390 * 100%); }
+
+.team-logo.phillies1 { top: calc(518 / 844 * 100%); right: calc(178 / 390 * 100%); }
+
+.team-logo.padres1 { top: calc(518 / 844 * 100%); right: calc(24 / 390 * 100%); }
+
+.team-logo.cubs1 { top: calc(518 / 844 * 100%); right: calc(86 / 390 * 100%); }
+.team-logo.cubs2 { top: calc(449 / 844 * 100%); right: calc(56 / 390 * 100%); }
+
+.team-logo.brewers1 { top: calc(518 / 844 * 100%); right: calc(143 / 390 * 100%); }
+.team-logo.brewers2 { top: calc(390 / 844 * 100%); right: calc(87 / 390 * 100%); }
+
+
+/* ==========================
+   スマホ用微調整
+   ========================== */
+@media (max-width: 480px) {
+  .team-logo {
+    width: 12vw; /* スマホでは少し大きく */
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+}

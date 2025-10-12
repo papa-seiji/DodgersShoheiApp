@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLB Postseason 2025</title>
+  <link rel="stylesheet" th:href="@{/css/postseason.css}" />
+</head>
+<body>
+  <h1>MLB POSTSEASON 2025</h1>
+
+  <div class="postseason-container">
+    <!-- トーナメント線の背景 -->
+    <div class="bracket-background"></div>
+
+
+
+    <!-- Tigers -->
+    <div class="team-logo tigers1">
+      <img th:src="${logos['TIGERS']}" alt="Tigers1" />
+    </div>
+    <div class="team-logo tigers2">
+      <img th:src="${logos['TIGERS']}" alt="Tigers2" />
+    </div>
+
+    <!-- Guardians -->
+    <div class="team-logo guardians">
+      <img th:src="${logos['GUARDIANS']}" alt="Guardians" />
+    </div>
+
+    <!-- Mariners -->
+    <div class="team-logo mariners1">
+      <img th:src="${logos['MARINERS']}" alt="Mariners1" />
+    </div>
+        <div class="team-logo mariners2">
+      <img th:src="${logos['MARINERS']}" alt="Mariners2" />
+    </div>
+ <!-- Red Sox -->
+    <div class="team-logo redsox1">
+      <img th:src="${logos['REDSOX']}" alt="Red Sox 1" />
+    </div>
+
+    <!-- Yankees -->
+    <div class="team-logo yankees1">
+      <img th:src="${logos['YANKEES']}" alt="Yankees 1" />
+    </div>
+    <div class="team-logo yankees2">
+      <img th:src="${logos['YANKEES']}" alt="Yankees 2" />
+    </div>
+
+    <!-- Blue Jays -->
+    <div class="team-logo bluejays1">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 1" />
+    </div>
+    <div class="team-logo bluejays2">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 2" />
+    </div>
+
+ <!-- NL 側 -->
+    <!-- Reds -->
+    <div class="team-logo reds1">
+      <img th:src="${logos['REDS']}" alt="Reds 1" />
+    </div>
+
+    <!-- Dodgers -->
+    <div class="team-logo dodgers1">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 1" />
+    </div>
+    <div class="team-logo dodgers2">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 2" />
+    </div>
+    <div class="team-logo dodgers3">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 3" />
+    </div>
+
+    <!-- Phillies -->
+    <div class="team-logo phillies1">
+      <img th:src="${logos['PHILLIES']}" alt="Phillies 1" />
+  </div>
+
+    <!-- Padres -->
+    <div class="team-logo padres1"><img th:src="${logos['PADRES']}" alt="Padres 1" /></div>
+
+    <!-- Cubs -->
+    <div class="team-logo cubs1"><img th:src="${logos['CUBS']}" alt="Cubs 1" /></div>
+    <div class="team-logo cubs2"><img th:src="${logos['CUBS']}" alt="Cubs 2" /></div>
+
+    <!-- Brewers -->
+    <div class="team-logo brewers1"><img th:src="${logos['BREWERS']}" alt="Brewers 1" /></div>
+    <div class="team-logo brewers2"><img th:src="${logos['BREWERS']}" alt="Brewers 2" /></div>
+</body>
+</html>
