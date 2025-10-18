@@ -72,7 +72,7 @@ public class PostseasonController {
             results.put("series9", summarizeSeries(allGames, "Toronto Blue Jays", "New York Yankees")); // ALDS ②
             results.put("series10", summarizeSeries(allGames, "Seattle Mariners", "Toronto Blue Jays")); // ALCS
 
-            // ✅ ⑪ World Series（NLCS勝者 vs ALCS勝者）
+            // ✅ World Series（NLCS勝者 vs ALCS勝者）
             results.put("series11", summarizeSeries(allGames, "Los Angeles Dodgers", "Seattle Mariners"));
 
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class PostseasonController {
     }
 
     /**
-     * ✅ 指定2チームのシリーズ結果を集計
+     * ✅ 指定2チームのシリーズ結果を集計（星表示＋中央配置）
      */
     private String summarizeSeries(List<Map<String, Object>> allGames, String teamA, String teamB) {
         List<Map<String, Object>> targetGames = allGames.stream()
@@ -132,6 +132,26 @@ public class PostseasonController {
             }
         }
 
-        return teamA + " vs " + teamB + " " + winsA + "-" + winsB + " (" + seriesDesc + ")";
+        // // 🌟 星の表示変換（勝数が0のときは「0」、それ以外は🌟を繰り返し）
+        // String displayA = (winsA == 0) ? "0" : "🌟".repeat(winsA);
+        // String displayB = (winsB == 0) ? "0" : "🌟".repeat(winsB);
+
+        // // ✅ HTMLを返す（中央配置用クラス付き）
+        // return "<div class='series-score-block'>" +
+        // displayA + "-" + displayB + "<br>" +
+        // "(" + seriesDesc + ")" +
+        // "</div>";
+
+        // return displayA + "-" + displayB
+        // + "(" + seriesDesc + ")";
+
+        // 🌟 星の表示変換（勝数が0のときは「0」、それ以外は🌟を繰り返し）
+        String displayA = (winsA == 0) ? "0" : "🌟".repeat(winsA);
+        String displayB = (winsB == 0) ? "0" : "🌟".repeat(winsB);
+        // 🌟 星の表示変換（勝数が0のときは「0」、それ以外は🌟を繰り返し）
+
+        return displayA + "-" + displayB;
+        // return displayA + "-" + displayB + "<br>" + seriesDesc;
+
     }
 }

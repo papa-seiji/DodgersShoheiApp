@@ -61,46 +61,47 @@ h1 {
 /* ==========================
    AL側（上部）
    ========================== */
-.team-logo.tigers1  { top: calc(40 / 844 * 100%); left: calc(24 / 390 * 100%); }
-.team-logo.tigers2  { top: calc(110 / 844 * 100%); left: calc(54 / 390 * 100%); }
-.team-logo.guardians { top: calc(40 / 844 * 100%); left: calc(86 / 390 * 100%); }
+.team-logo.tigers1  { top: calc(14 / 844 * 100%); left: calc(56 / 390 * 100%); }
+.team-logo.tigers2  { top: calc(71 / 844 * 100%); left: calc(102 / 390 * 100%); }
+.team-logo.guardians { top: calc(14 / 844 * 100%); left: calc(151 / 390 * 100%); }
 
-.team-logo.mariners1 { top: calc(40 / 844 * 100%); left: calc(143 / 390 * 100%); }
-.team-logo.mariners2 { top: calc(165 / 844 * 100%); left: calc(87 / 390 * 100%); }
+.team-logo.mariners1 { top: calc(71 / 844 * 100%); left: calc(12 / 390 * 100%); }
+.team-logo.mariners2 { top: calc(129 / 844 * 100%); left: calc(57 / 390 * 100%); }
 
-.team-logo.redsox1 { top: calc(40 / 844 * 100%); right: calc(24 / 390 * 100%); }
+.team-logo.redsox1 { top: calc(15 / 844 * 100%); right: calc(97 / 390 * 100%); }
 
-.team-logo.yankees1 { top: calc(39 / 844 * 100%); right: calc(86 / 390 * 100%); }
-.team-logo.yankees2 { top: calc(110 / 844 * 100%); right: calc(54 / 390 * 100%); }
+.team-logo.yankees1 { top: calc(15 / 844 * 100%); right: calc(6 / 390 * 100%); }
+.team-logo.yankees2 { top: calc(71 / 844 * 100%); right: calc(50 / 390 * 100%); }
 
-.team-logo.bluejays1 { top: calc(42 / 844 * 100%); right: calc(143 / 390 * 100%); }
-.team-logo.bluejays2 { top: calc(163 / 844 * 100%); right: calc(87 / 390 * 100%); }
+.team-logo.bluejays1 { top: calc(71 / 844 * 100%); right: calc(143 / 390 * 100%); }
+.team-logo.bluejays2 { top: calc(132 / 844 * 100%); right: calc(98 / 390 * 100%); }
 
 /* ==========================
    NL側（下部）
    ========================== */
-.team-logo.reds1 { top: calc(518 / 844 * 100%); right: calc(297 / 390 * 100%); }
+.team-logo.reds1 { top: calc(530 / 844 * 100%); right: calc(328 / 390 * 100%); }
 
-.team-logo.dodgers1 { top: calc(518 / 844 * 100%); right: calc(231 / 390 * 100%); }
-.team-logo.dodgers2 { top: calc(448 / 844 * 100%); right: calc(263 / 390 * 100%); }
-.team-logo.dodgers3 { top: calc(390 / 844 * 100%); right: calc(230 / 390 * 100%); }
+.team-logo.dodgers1 { top: calc(528 / 844 * 100%); right: calc(231 / 390 * 100%); }
+.team-logo.dodgers2 { top: calc(471 / 844 * 100%); right: calc(279 / 390 * 100%); }
+.team-logo.dodgers3 { top: calc(412 / 844 * 100%); right: calc(233 / 390 * 100%); }
+.team-logo.dodgers4 { top: calc(352 / 844 * 100%); right: calc(164 / 390 * 100%); }
 
-.team-logo.phillies1 { top: calc(518 / 844 * 100%); right: calc(178 / 390 * 100%); }
+.team-logo.phillies1 { top: calc(471 / 844 * 100%); right: calc(191 / 390 * 100%); }
 
-.team-logo.padres1 { top: calc(518 / 844 * 100%); right: calc(24 / 390 * 100%); }
+.team-logo.padres1 { top: calc(528 / 844 * 100%); right: calc(6 / 390 * 100%); }
 
-.team-logo.cubs1 { top: calc(518 / 844 * 100%); right: calc(86 / 390 * 100%); }
-.team-logo.cubs2 { top: calc(449 / 844 * 100%); right: calc(56 / 390 * 100%); }
+.team-logo.cubs1 { top: calc(528 / 844 * 100%); right: calc(98 / 390 * 100%); }
+.team-logo.cubs2 { top: calc(471 / 844 * 100%); right: calc(52 / 390 * 100%); }
 
-.team-logo.brewers1 { top: calc(518 / 844 * 100%); right: calc(143 / 390 * 100%); }
-.team-logo.brewers2 { top: calc(390 / 844 * 100%); right: calc(87 / 390 * 100%); }
+.team-logo.brewers1 { top: calc(471 / 844 * 100%); right: calc(145 / 390 * 100%); }
+.team-logo.brewers2 { top: calc(412 / 844 * 100%); right: calc(101 / 390 * 100%); }
 
 
 
 /* 各シリーズスコア位置 */
 #series1 {
     position: absolute;
-    top: 478px;
+    top: 507px;
     left: 38px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -113,8 +114,8 @@ h1 {
 
 #series2 {
     position: absolute;
-    top: 417px;
-    left: 78px;
+    top: 457px;
+    left: 66px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -126,8 +127,8 @@ h1 {
 
 #series3 {
     position: absolute;
-    top: 478px;
-    left: 246px;
+    top: 508px;
+    left: 255px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -139,7 +140,7 @@ h1 {
 
 #series4 {
     position: absolute;
-    top: 418px;
+    top: 456px;
     left: 206px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -152,8 +153,8 @@ h1 {
 
 #series5 {
     position: absolute;
-    top: 352px;
-    left: 142px;
+    top: 398px;
+    left: 127px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -166,8 +167,8 @@ h1 {
 
 #series6 {
     position: absolute;
-    top: 66px;
-    left: 38px;
+    top: 52px;
+    left: 71px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -179,8 +180,8 @@ h1 {
 
 #series7 {
     position: absolute;
-    top: 67px;
-    left: 250px;
+    top: 52px;
+    left: 265px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -193,8 +194,8 @@ h1 {
 
 #series8 {
     position: absolute;
-    top: 131px;
-    left: 84px;
+    top: 103px;
+    left: 25px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -206,8 +207,8 @@ h1 {
 
 #series9 {
     position: absolute;
-    top: 134px;
-    left: 201px;
+    top: 102px;
+    left: 205px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -219,8 +220,8 @@ h1 {
 
 #series10 {
     position: absolute;
-    top: 183px;
-    left: 141px;
+    top: 161px;
+    left: 117px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -271,8 +272,8 @@ h1 {
 /* 各シリーズスコア位置 */
 #series1 {
     position: absolute;
-    top: 430px;
-    left: 28px;
+    top: 455px;
+    left: 29px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -284,8 +285,8 @@ h1 {
 
 #series2 {
     position: absolute;
-    top: 376px;
-    left: 68px;
+    top: 410px;
+    left: 52px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -297,8 +298,8 @@ h1 {
 
 #series3 {
     position: absolute;
-    top: 431px;
-    left: 220px;
+    top: 454px;
+    left: 223px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -310,8 +311,8 @@ h1 {
 
 #series4 {
     position: absolute;
-    top: 376px;
-    left: 180px;
+    top: 409px;
+    left: 182px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -323,8 +324,8 @@ h1 {
 
 #series5 {
     position: absolute;
-    top: 315px;
-    left: 123px;
+    top: 358px;
+    left: 111px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -336,8 +337,8 @@ h1 {
 
 #series6 {
     position: absolute;
-    top: 64px;
-    left: 33px;
+    top: 46px;
+    left: 59px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -349,8 +350,8 @@ h1 {
 
 #series7 {
     position: absolute;
-    top: 62px;
-    left: 222px;
+    top: 46px;
+    left: 234px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -362,8 +363,8 @@ h1 {
 
 #series8 {
     position: absolute;
-    top: 115px;
-    left: 70px;
+    top: 91px;
+    left: 19px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -375,7 +376,7 @@ h1 {
 
 #series9 {
     position: absolute;
-    top: 115px;
+    top: 91px;
     left: 179px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -388,8 +389,8 @@ h1 {
 
 #series10 {
     position: absolute;
-    top: 163px;
-    left: 124px;
+    top: 161px;
+    left: 100px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -401,7 +402,7 @@ h1 {
 
 #series11 {
     position: absolute;
-    top: 274px;
+    top: 240px;
     left: 219px;
     /* font-weight: bold; */
     /* background: yellow; */
@@ -421,6 +422,19 @@ h1 {
         height: 60px;
         width: 70px;
 }
+
+
+.series-score-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+
 
 
 }

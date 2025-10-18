@@ -8,7 +8,7 @@
 </head>
 <body>
   <h1>MLB POSTSEASON 2025</h1>
-<a href="/home" class="postseason-btn">HOME画面に戻る</a>
+  <a href="/home" class="postseason-btn">HOME画面に戻る</a>
 
   <div class="postseason-container">
     <!-- トーナメント線の背景 -->
@@ -72,6 +72,9 @@
     <div class="team-logo dodgers3">
       <img th:src="${logos['DODGERS']}" alt="Dodgers 3" />
     </div>
+    <div class="team-logo dodgers4">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 4" />
+    </div>
 
     <!-- Phillies -->
     <div class="team-logo phillies1">
@@ -99,28 +102,27 @@
       <img th:src="${logos['BREWERS']}" alt="Brewers 2" />
     </div>
 
-    <!-- ✅ 追加：シリーズ勝敗表示箇所 -->
+    <!-- ✅ シリーズ勝敗表示箇所（全て th:utext） -->
     <!-- NL -->
-    <span class="series-result" id="series1"></span>
-    <span class="series-result" id="series2"></span>
-    <span class="series-result" id="series3"></span>
-    <span class="series-result" id="series4"></span>
-    <span class="series-result" id="series5"></span>
+    <span class="series-result" id="series1" th:utext="${series1}"></span>
+    <span class="series-result" id="series2" th:utext="${series2}"></span>
+    <span class="series-result" id="series3" th:utext="${series3}"></span>
+    <span class="series-result" id="series4" th:utext="${series4}"></span>
+    <span class="series-result" id="series5" th:utext="${series5}"></span>
+
     <!-- AL -->
-    <span class="series-result" id="series6"></span>
-    <span class="series-result" id="series7"></span>
-    <span class="series-result" id="series8"></span>
-    <span class="series-result" id="series9"></span>
-    <span class="series-result" id="series10"></span>
+    <span class="series-result" id="series6" th:utext="${series6}"></span>
+    <span class="series-result" id="series7" th:utext="${series7}"></span>
+    <span class="series-result" id="series8" th:utext="${series8}"></span>
+    <span class="series-result" id="series9" th:utext="${series9}"></span>
+    <span class="series-result" id="series10" th:utext="${series10}"></span>
 
-<!-- World Series Logo -->
-<div class="world-series-logo-container">
-    <img src="/images/worldseries2025.png" alt="World Series 2025 Logo" class="world-series-logo">
-</div>
+    <!-- World Series Logo -->
+    <!--<div class="world-series-logo-container">
+      <img src="/images/worldseries2025.png" alt="World Series 2025 Logo" class="world-series-logo" />
+    </div>-->
 
-    <span class="series-result" id="series11"></span>
-
-
+    <span class="series-result" id="series11" th:utext="${series11}"></span>
   </div>
 
   <script src="/js/postseason.js"></script>
