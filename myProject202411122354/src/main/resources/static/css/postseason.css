@@ -1,0 +1,482 @@
+body {
+  background-color: #f8fafc;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0b1b4e;
+  margin-bottom: 20px;
+}
+
+/* ==========================
+   トーナメント全体のラッパ
+   ========================== */
+.postseason-container {
+  position: relative;
+  width: 90vw;
+  max-width: 390px;
+  aspect-ratio: 390 / 844; /* 縦横比を完全固定 */
+  margin: 0 auto;
+  background-color: #f8fafc;
+  /* margin-bottom: -221px; */
+}
+
+/* ==========================
+   背景画像（トーナメント線）
+   ========================== */
+.bracket-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/postseason_bracket.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top center;
+  z-index: 0;
+}
+
+/* ==========================
+   チームロゴ共通設定
+   ========================== */
+.team-logo {
+  position: absolute;
+  width: 10vw;
+  max-width: 70px;
+  z-index: 1;
+}
+
+.team-logo img {
+  width: 78%;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 4px;
+}
+
+/* ==========================
+   AL側（上部）
+   ========================== */
+.team-logo.tigers1  { top: calc(14 / 844 * 100%); left: calc(56 / 390 * 100%); }
+.team-logo.tigers2  { top: calc(71 / 844 * 100%); left: calc(102 / 390 * 100%); }
+.team-logo.guardians { top: calc(14 / 844 * 100%); left: calc(151 / 390 * 100%); }
+
+.team-logo.mariners1 { top: calc(71 / 844 * 100%); left: calc(12 / 390 * 100%); }
+.team-logo.mariners2 { top: calc(129 / 844 * 100%); left: calc(57 / 390 * 100%); }
+
+.team-logo.redsox1 { top: calc(15 / 844 * 100%); right: calc(97 / 390 * 100%); }
+
+.team-logo.yankees1 { top: calc(15 / 844 * 100%); right: calc(6 / 390 * 100%); }
+.team-logo.yankees2 { top: calc(71 / 844 * 100%); right: calc(50 / 390 * 100%); }
+
+.team-logo.bluejays1 { top: calc(71 / 844 * 100%); right: calc(143 / 390 * 100%); }
+.team-logo.bluejays2 { top: calc(132 / 844 * 100%); right: calc(98 / 390 * 100%); }
+
+/* ==========================
+   NL側（下部）
+   ========================== */
+.team-logo.reds1 { top: calc(530 / 844 * 100%); right: calc(328 / 390 * 100%); }
+
+.team-logo.dodgers1 { top: calc(528 / 844 * 100%); right: calc(231 / 390 * 100%); }
+.team-logo.dodgers2 { top: calc(471 / 844 * 100%); right: calc(279 / 390 * 100%); }
+.team-logo.dodgers3 { top: calc(412 / 844 * 100%); right: calc(233 / 390 * 100%); }
+.team-logo.dodgers4 { top: calc(352 / 844 * 100%); right: calc(164 / 390 * 100%); }
+
+.team-logo.phillies1 { top: calc(471 / 844 * 100%); right: calc(191 / 390 * 100%); }
+
+.team-logo.padres1 { top: calc(528 / 844 * 100%); right: calc(6 / 390 * 100%); }
+
+.team-logo.cubs1 { top: calc(528 / 844 * 100%); right: calc(98 / 390 * 100%); }
+.team-logo.cubs2 { top: calc(471 / 844 * 100%); right: calc(52 / 390 * 100%); }
+
+.team-logo.brewers1 { top: calc(471 / 844 * 100%); right: calc(145 / 390 * 100%); }
+.team-logo.brewers2 { top: calc(412 / 844 * 100%); right: calc(101 / 390 * 100%); }
+
+
+
+/* 各シリーズスコア位置 */
+#series1 {
+    position: absolute;
+    top: 507px;
+    left: 38px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series2 {
+    position: absolute;
+    top: 457px;
+    left: 66px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series3 {
+    position: absolute;
+    top: 508px;
+    left: 255px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series4 {
+    position: absolute;
+    top: 456px;
+    left: 206px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series5 {
+    position: absolute;
+    top: 398px;
+    left: 127px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+
+#series6 {
+    position: absolute;
+    top: 52px;
+    left: 71px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series7 {
+    position: absolute;
+    top: 52px;
+    left: 265px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+
+#series8 {
+    position: absolute;
+    top: 103px;
+    left: 25px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series9 {
+    position: absolute;
+    top: 102px;
+    left: 205px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series10 {
+    position: absolute;
+    top: 161px;
+    left: 117px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series11 {
+    position: absolute;
+    top: 280px;
+    left: 262px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+.world-series-logo {
+        position: absolute;
+        top: 265px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        height: 60px;
+        width: 70px;
+}
+
+
+
+/* 🧭 基本：スマホ用（390px前後） */
+.bracket-background {
+  margin-bottom: -220px; /* スマホで邪魔が入らない値 */
+}
+
+/* 💻 PCサイズ（768px以上）では margin をリセット */
+@media (min-width: 768px) {
+  .bracket-background {
+    margin-bottom: 0; /* PCでは通常通り */
+  }
+}
+
+
+
+
+/* ==========================
+   スマホ用微調整
+   ========================== */
+@media (max-width: 480px) {
+  .team-logo {
+    width: 12vw; /* スマホでは少し大きく */
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+
+
+
+
+/* 各シリーズスコア位置 */
+#series1 {
+    position: absolute;
+    top: 455px;
+    left: 29px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series2 {
+    position: absolute;
+    top: 410px;
+    left: 52px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series3 {
+    position: absolute;
+    top: 454px;
+    left: 223px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series4 {
+    position: absolute;
+    top: 409px;
+    left: 182px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series5 {
+    position: absolute;
+    top: 358px;
+    left: 111px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series6 {
+    position: absolute;
+    top: 46px;
+    left: 59px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series7 {
+    position: absolute;
+    top: 46px;
+    left: 234px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series8 {
+    position: absolute;
+    top: 91px;
+    left: 19px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series9 {
+    position: absolute;
+    top: 91px;
+    left: 179px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series10 {
+    position: absolute;
+    top: 161px;
+    left: 100px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series11 {
+    position: absolute;
+    top: 240px;
+    left: 219px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+.world-series-logo {
+        position: absolute;
+        top: 235px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        height: 60px;
+        width: 70px;
+}
+
+
+.series-score-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+
+.video-preview-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9比率 = 9/16*100 */
+  height: 0;
+  overflow: hidden;
+}
+
+.decorative-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 動画の切り取り方調整 */
+}
+
+
+.douga-section-extra {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    margin-top: 1%;
+    margin-bottom: 30px;
+}
+
+}
