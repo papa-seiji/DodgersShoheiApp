@@ -271,6 +271,44 @@ h1 {
 
 
 
+#douga-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.douga-section_6 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    /* margin-top: 1%;
+    margin-bottom: 30px; */
+    margin: 0 57px 0 57px;
+}
+
+#douga-container-6 {
+    position: relative;
+    width: 159%;
+    height: 5em !important;
+    padding-top: 60%;
+    background-color: #000;
+}
+
+#douga-container-6 iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+}
+
+
+
 
 /* ==========================
    スマホ用微調整
@@ -451,32 +489,41 @@ h1 {
     line-height: 1.5;
 }
 
-
-.video-preview-wrapper {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9比率 = 9/16*100 */
-  height: 0;
-  overflow: hidden;
+#douga-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
 }
 
-.decorative-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* 動画の切り取り方調整 */
-}
-
-
-.douga-section-extra {
+.douga-section_6 {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
     max-width: 600px;
-    margin-top: 1%;
-    margin-bottom: 30px;
+    /* margin-top: 1%;
+    margin-bottom: 30px; */
+    margin: 0 57px 0 57px;
 }
+
+#douga-container-6 {
+    position: relative;
+    width: 159%;
+    height: 5em !important;
+    padding-top: 60%;
+    background-color: #000;
+}
+
+#douga-container-6 iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+}
+
 
 }
