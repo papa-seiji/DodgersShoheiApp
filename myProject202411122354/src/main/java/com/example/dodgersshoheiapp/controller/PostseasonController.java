@@ -73,7 +73,7 @@ public class PostseasonController {
             results.put("series10", summarizeSeries(allGames, "Seattle Mariners", "Toronto Blue Jays")); // ALCS
 
             // ✅ World Series（NLCS勝者 vs ALCS勝者）
-            results.put("series11", summarizeSeries(allGames, "Los Angeles Dodgers", "Seattle Mariners"));
+            results.put("series11", summarizeSeries(allGames, "Los Angeles Dodgers", "Toronto Blue Jays"));
 
         } catch (Exception e) {
             results.put("error", "APIエラー: " + e.getMessage());
