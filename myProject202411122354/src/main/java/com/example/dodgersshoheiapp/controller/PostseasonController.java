@@ -12,18 +12,18 @@ import java.util.*;
 @Controller
 public class PostseasonController {
 
+    /**
+     * ✅ ポストシーズン画面（トーナメント表示）
+     */
     @GetMapping("/postseason")
     public String showBracket(Model model) {
         Map<String, String> logos = Map.ofEntries(
-                // AL
                 Map.entry("TIGERS", "https://www.mlbstatic.com/team-logos/116.svg"),
                 Map.entry("GUARDIANS", "https://www.mlbstatic.com/team-logos/114.svg"),
                 Map.entry("MARINERS", "https://www.mlbstatic.com/team-logos/136.svg"),
                 Map.entry("REDSOX", "https://www.mlbstatic.com/team-logos/111.svg"),
                 Map.entry("YANKEES", "https://www.mlbstatic.com/team-logos/147.svg"),
                 Map.entry("BLUEJAYS", "https://www.mlbstatic.com/team-logos/141.svg"),
-
-                // NL
                 Map.entry("REDS", "https://www.mlbstatic.com/team-logos/113.svg"),
                 Map.entry("DODGERS", "https://www.mlbstatic.com/team-logos/119.svg"),
                 Map.entry("PHILLIES", "https://www.mlbstatic.com/team-logos/143.svg"),
@@ -34,6 +34,49 @@ public class PostseasonController {
         return "postseason";
     }
 
+    /**
+     * ✅ Postseason 成績取得（REST API版）
+     * MLB statsapi から打撃・投球成績を直接取得
+     */
+    @GetMapping("/api/postseason/stats")
+    @ResponseBody
+    public Map<String, Object> getPostseasonStats() {
+        Map<String, Object> results = new HashMap<>();
+        RestTemplate rest = new RestTemplate();
+
+        try {
+            // ✅ 大谷翔平（打撃・投手）
+            Object ohtaniHitting = rest.getForObject(
+                    "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=postseason&season=2025&group=hitting",
+                    Object.class);
+            Object ohtaniPitching = rest.getForObject(
+                    "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=postseason&season=2025&group=pitching",
+                    Object.class);
+            results.put("ohtaniHitting", ohtaniHitting);
+            results.put("ohtaniPitching", ohtaniPitching);
+
+            // ✅ 山本由伸（投手）
+            Object yamamotoPitching = rest.getForObject(
+                    "https://statsapi.mlb.com/api/v1/people/808967/stats?stats=postseason&season=2025&group=pitching",
+                    Object.class);
+            results.put("yamamotoPitching", yamamotoPitching);
+
+            // ✅ 佐々木朗希（投手）
+            Object sasakiPitching = rest.getForObject(
+                    "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=postseason&season=2025&group=pitching",
+                    Object.class);
+            results.put("sasakiPitching", sasakiPitching);
+
+        } catch (Exception e) {
+            results.put("error", "Postseason Stats API error: " + e.getMessage());
+        }
+
+        return results;
+    }
+
+    /**
+     * ✅ シリーズ勝敗集計API
+     */
     @GetMapping("/api/mlb/series-results")
     @ResponseBody
     public Map<String, String> getSeriesResults() {
@@ -58,21 +101,17 @@ public class PostseasonController {
                 }
             }
 
-            // ✅ NL側
-            results.put("series1", summarizeSeries(allGames, "Cincinnati Reds", "Los Angeles Dodgers")); // WC
-            results.put("series2", summarizeSeries(allGames, "Los Angeles Dodgers", "Philadelphia Phillies")); // NLDS
-            results.put("series3", summarizeSeries(allGames, "Chicago Cubs", "San Diego Padres")); // WC
-            results.put("series4", summarizeSeries(allGames, "Milwaukee Brewers", "Chicago Cubs")); // NLDS
-            results.put("series5", summarizeSeries(allGames, "Los Angeles Dodgers", "Milwaukee Brewers")); // NLCS
-
-            // ✅ AL側
-            results.put("series6", summarizeSeries(allGames, "Detroit Tigers", "Cleveland Guardians")); // AL WC
-            results.put("series7", summarizeSeries(allGames, "Boston Red Sox", "New York Yankees")); // AL WC
-            results.put("series8", summarizeSeries(allGames, "Seattle Mariners", "Detroit Tigers")); // ALDS ①
-            results.put("series9", summarizeSeries(allGames, "Toronto Blue Jays", "New York Yankees")); // ALDS ②
-            results.put("series10", summarizeSeries(allGames, "Seattle Mariners", "Toronto Blue Jays")); // ALCS
-
-            // ✅ World Series（NLCS勝者 vs ALCS勝者）
+            // ✅ 各シリーズ結果
+            results.put("series1", summarizeSeries(allGames, "Cincinnati Reds", "Los Angeles Dodgers"));
+            results.put("series2", summarizeSeries(allGames, "Los Angeles Dodgers", "Philadelphia Phillies"));
+            results.put("series3", summarizeSeries(allGames, "Chicago Cubs", "San Diego Padres"));
+            results.put("series4", summarizeSeries(allGames, "Milwaukee Brewers", "Chicago Cubs"));
+            results.put("series5", summarizeSeries(allGames, "Los Angeles Dodgers", "Milwaukee Brewers"));
+            results.put("series6", summarizeSeries(allGames, "Detroit Tigers", "Cleveland Guardians"));
+            results.put("series7", summarizeSeries(allGames, "Boston Red Sox", "New York Yankees"));
+            results.put("series8", summarizeSeries(allGames, "Seattle Mariners", "Detroit Tigers"));
+            results.put("series9", summarizeSeries(allGames, "Toronto Blue Jays", "New York Yankees"));
+            results.put("series10", summarizeSeries(allGames, "Seattle Mariners", "Toronto Blue Jays"));
             results.put("series11", summarizeSeries(allGames, "Los Angeles Dodgers", "Toronto Blue Jays"));
 
         } catch (Exception e) {
@@ -82,7 +121,7 @@ public class PostseasonController {
     }
 
     /**
-     * ✅ 指定2チームのシリーズ結果を集計（星表示＋中央配置）
+     * ✅ チーム別シリーズ結果集計ロジック
      */
     private String summarizeSeries(List<Map<String, Object>> allGames, String teamA, String teamB) {
         List<Map<String, Object>> targetGames = allGames.stream()
@@ -97,34 +136,27 @@ public class PostseasonController {
                 })
                 .toList();
 
-        if (targetGames.isEmpty()) {
-            return teamA + " vs " + teamB + " （試合未開始）";
-        }
+        if (targetGames.isEmpty())
+            return teamA + " vs " + teamB + "（試合未開始）";
 
         int winsA = 0;
         int winsB = 0;
-        String seriesDesc = (String) targetGames.get(0).get("seriesDescription");
-
         for (Map<String, Object> game : targetGames) {
             Map<String, Object> teams = (Map<String, Object>) game.get("teams");
             Map<String, Object> home = (Map<String, Object>) teams.get("home");
             Map<String, Object> away = (Map<String, Object>) teams.get("away");
-
             String homeName = (String) ((Map<String, Object>) home.get("team")).get("name");
             String awayName = (String) ((Map<String, Object>) away.get("team")).get("name");
-
             Integer homeRuns = (Integer) home.get("score");
             Integer awayRuns = (Integer) away.get("score");
-
             if (homeRuns == null || awayRuns == null)
                 continue;
-
             if (homeRuns > awayRuns) {
                 if (homeName.equals(teamA))
                     winsA++;
                 else
                     winsB++;
-            } else if (awayRuns > homeRuns) {
+            } else {
                 if (awayName.equals(teamA))
                     winsA++;
                 else
@@ -132,26 +164,8 @@ public class PostseasonController {
             }
         }
 
-        // // 🌟 星の表示変換（勝数が0のときは「0」、それ以外は🌟を繰り返し）
-        // String displayA = (winsA == 0) ? "0" : "🌟".repeat(winsA);
-        // String displayB = (winsB == 0) ? "0" : "🌟".repeat(winsB);
-
-        // // ✅ HTMLを返す（中央配置用クラス付き）
-        // return "<div class='series-score-block'>" +
-        // displayA + "-" + displayB + "<br>" +
-        // "(" + seriesDesc + ")" +
-        // "</div>";
-
-        // return displayA + "-" + displayB
-        // + "(" + seriesDesc + ")";
-
-        // 🌟 星の表示変換（勝数が0のときは「0」、それ以外は🌟を繰り返し）
         String displayA = (winsA == 0) ? "0" : "🌟".repeat(winsA);
         String displayB = (winsB == 0) ? "0" : "🌟".repeat(winsB);
-        // 🌟 星の表示変換（勝数が0のときは「0」、それ以外は🌟を繰り返し）
-
         return displayA + "-" + displayB;
-        // return displayA + "-" + displayB + "<br>" + seriesDesc;
-
     }
 }
