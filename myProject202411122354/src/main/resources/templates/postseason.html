@@ -5,45 +5,138 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MLB Postseason 2025</title>
   <link rel="stylesheet" th:href="@{/css/postseason.css}" />
-<!--      <link rel="stylesheet" th:href="@{/css/Douga.css}">  -->
+  <!--<link rel="stylesheet" th:href="@{/css/Douga.css}">-->
+
+
 
 </head>
 <body>
 
+
   <h1 id="title">MLB POSTSEASON 2025</h1>
   <a href="/home" class="postseason-btn">HOME画面に戻る</a>
 
-  <!-- ✅ トーナメント部分 -->
   <div class="postseason-container">
+    <!-- トーナメント線の背景 -->
     <div class="bracket-background"></div>
 
-    <!-- Logos -->
-    <div class="team-logo tigers1"><img th:src="${logos['TIGERS']}" alt="Tigers1" /></div>
-    <div class="team-logo guardians"><img th:src="${logos['GUARDIANS']}" alt="Guardians" /></div>
-    <div class="team-logo mariners1"><img th:src="${logos['MARINERS']}" alt="Mariners1" /></div>
-    <div class="team-logo mariners2"><img th:src="${logos['MARINERS']}" alt="Mariners2" /></div>
-    <div class="team-logo redsox1"><img th:src="${logos['REDSOX']}" alt="RedSox1" /></div>
-    <div class="team-logo yankees1"><img th:src="${logos['YANKEES']}" alt="Yankees1" /></div>
-    <div class="team-logo bluejays1"><img th:src="${logos['BLUEJAYS']}" alt="BlueJays1" /></div>
+    <!-- Tigers -->
+    <div class="team-logo tigers1">
+      <img th:src="${logos['TIGERS']}" alt="Tigers1" />
+    </div>
+    <div class="team-logo tigers2">
+      <img th:src="${logos['TIGERS']}" alt="Tigers2" />
+    </div>
 
-    <div class="team-logo reds1"><img th:src="${logos['REDS']}" alt="Reds1" /></div>
-    <div class="team-logo dodgers1"><img th:src="${logos['DODGERS']}" alt="Dodgers1" /></div>
-    <div class="team-logo phillies1"><img th:src="${logos['PHILLIES']}" alt="Phillies1" /></div>
-    <div class="team-logo padres1"><img th:src="${logos['PADRES']}" alt="Padres1" /></div>
-    <div class="team-logo cubs1"><img th:src="${logos['CUBS']}" alt="Cubs1" /></div>
-    <div class="team-logo brewers1"><img th:src="${logos['BREWERS']}" alt="Brewers1" /></div>
+    <!-- Guardians -->
+    <div class="team-logo guardians">
+      <img th:src="${logos['GUARDIANS']}" alt="Guardians" />
+    </div>
 
-    <!-- ✅ シリーズ結果 -->
+    <!-- Mariners -->
+    <div class="team-logo mariners1">
+      <img th:src="${logos['MARINERS']}" alt="Mariners1" />
+    </div>
+    <div class="team-logo mariners2">
+      <img th:src="${logos['MARINERS']}" alt="Mariners2" />
+    </div>
+
+    <!-- Red Sox -->
+    <div class="team-logo redsox1">
+      <img th:src="${logos['REDSOX']}" alt="Red Sox 1" />
+    </div>
+
+    <!-- Yankees -->
+    <div class="team-logo yankees1">
+      <img th:src="${logos['YANKEES']}" alt="Yankees 1" />
+    </div>
+    <div class="team-logo yankees2">
+      <img th:src="${logos['YANKEES']}" alt="Yankees 2" />
+    </div>
+
+    <!-- Blue Jays -->
+    <div class="team-logo bluejays1">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 1" />
+    </div>
+    <div class="team-logo bluejays2">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 2" />
+    </div>
+    <div class="team-logo bluejays3">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 3" />
+    </div>
+    <div class="team-logo bluejays4">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 4" />
+    </div>
+
+    <!-- NL 側 -->
+    <!-- Reds -->
+    <div class="team-logo reds1">
+      <img th:src="${logos['REDS']}" alt="Reds 1" />
+    </div>
+
+    <!-- Dodgers -->
+    <div class="team-logo dodgers1">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 1" />
+    </div>
+    <div class="team-logo dodgers2">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 2" />
+    </div>
+    <div class="team-logo dodgers3">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 3" />
+    </div>
+    <div class="team-logo dodgers4">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 4" />
+    </div>
+    <div class="team-logo dodgers5">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 5" />
+    </div>
+
+    <!-- Phillies -->
+    <div class="team-logo phillies1">
+      <img th:src="${logos['PHILLIES']}" alt="Phillies 1" />
+    </div>
+
+    <!-- Padres -->
+    <div class="team-logo padres1">
+      <img th:src="${logos['PADRES']}" alt="Padres 1" />
+    </div>
+
+    <!-- Cubs -->
+    <div class="team-logo cubs1">
+      <img th:src="${logos['CUBS']}" alt="Cubs 1" />
+    </div>
+    <div class="team-logo cubs2">
+      <img th:src="${logos['CUBS']}" alt="Cubs 2" />
+    </div>
+
+    <!-- Brewers -->
+    <div class="team-logo brewers1">
+      <img th:src="${logos['BREWERS']}" alt="Brewers 1" />
+    </div>
+    <div class="team-logo brewers2">
+      <img th:src="${logos['BREWERS']}" alt="Brewers 2" />
+    </div>
+
+    <!-- ✅ シリーズ勝敗表示箇所（全て th:utext） -->
+    <!-- NL -->
     <span class="series-result" id="series1" th:utext="${series1}"></span>
     <span class="series-result" id="series2" th:utext="${series2}"></span>
     <span class="series-result" id="series3" th:utext="${series3}"></span>
     <span class="series-result" id="series4" th:utext="${series4}"></span>
     <span class="series-result" id="series5" th:utext="${series5}"></span>
+
+    <!-- AL -->
     <span class="series-result" id="series6" th:utext="${series6}"></span>
     <span class="series-result" id="series7" th:utext="${series7}"></span>
     <span class="series-result" id="series8" th:utext="${series8}"></span>
     <span class="series-result" id="series9" th:utext="${series9}"></span>
     <span class="series-result" id="series10" th:utext="${series10}"></span>
+
+    <!-- World Series Logo -->
+    <!--<div class="world-series-logo-container">
+      <img src="/images/worldseries2025.png" alt="World Series 2025 Logo" class="world-series-logo" />
+    </div>-->
+
     <span class="series-result" id="series11" th:utext="${series11}"></span>
   </div>
 
@@ -78,16 +171,16 @@
 
 <!--Start 動画セクション 2025 WS Series_section-->
     ----------------------------------------------------------
-  <h2 class="shiny-text-1">WS Series 2025/10/26</h2>
-  <h3 class="shiny-text-1">第2戦 LAD対TOR</h3>
-  <h5 class="shiny-text-1">“異次元”山本由伸が2戦連続の完投勝利！</h5>
-  <div class="douga-section_6">
-    <iframe width="560" height="315"
-      src="https://www.youtube.com/embed/KRc-m8yA7_g"
-      title="YouTube video player" frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen></iframe>
-  </div>
+    <h2 class="shiny-text-1">WS Series 2025/10/26</h5>
+    <div id="hoge-hoge_landing8" class="shiny-text-1"></div>
+    <h3 class="shiny-text-1">第2戦 LAD対TOR</h3>
+    <h5 class="shiny-text-1">“異次元”山本由伸が2戦連続の完投勝利を飾る！</h5>
+        <div class="douga-section_6">
+            <div id="hoge-hoge_6">　LAD軍 vs TOR軍 Highlight　</div>
+            <div id="douga-container-6">
+            <iframe id="douga-video-6" width="560" height="315" src="https://www.youtube.com/embed/KRc-m8yA7_g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
 
         <div class="douga-section_6">
             <div id="hoge-hoge_6">日本の至宝がまたも歴史的快挙</div>
@@ -216,6 +309,7 @@
 
   <!-- ✅ JS -->
   <script src="/js/postseason.js"></script>
+<!--      <footer th:replace="fragments/footer :: footer"></footer>-->
 
 </body>
 </html>
