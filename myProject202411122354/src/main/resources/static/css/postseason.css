@@ -32,7 +32,7 @@ body {
         font-weight: bold;
         margin-bottom: 20px;
         margin-top: 10px;
-        font-size: 26px;
+        font-size: 24px;
 }
 
 h1 {
@@ -106,7 +106,7 @@ h1 {
 .team-logo.bluejays1 { top: calc(71 / 844 * 100%); right: calc(143 / 390 * 100%); }
 .team-logo.bluejays2 { top: calc(132 / 844 * 100%); right: calc(98 / 390 * 100%); }
 .team-logo.bluejays3 { top: calc(206/ 844 * 100%); right: calc(188 / 390 * 100%); }
-.team-logo.bluejays4 { top: calc(265/ 844 * 100%); right: calc(119 / 390 * 100%); }
+.team-logo.bluejays4 { top: calc(265/ 844 * 100%); right: calc( 81 / 390 * 100%); }
 
 /* ==========================
    NL側（下部）
@@ -117,7 +117,7 @@ h1 {
 .team-logo.dodgers2 { top: calc(471 / 844 * 100%); right: calc(279 / 390 * 100%); }
 .team-logo.dodgers3 { top: calc(412 / 844 * 100%); right: calc(233 / 390 * 100%); }
 .team-logo.dodgers4 { top: calc(336 / 844 * 100%); right: calc(168 / 390 * 100%); }
-.team-logo.dodgers5 { top: calc(265 / 844 * 100%); right: calc(242 / 390 * 100%); }
+.team-logo_dodgers5 { top: calc(265 / 954 * 100%); right: calc(259 / 388 * 100%); }
 
 .team-logo.phillies1 { top: calc(471 / 844 * 100%); right: calc(191 / 390 * 100%); }
 
@@ -185,6 +185,11 @@ h1 {
   color: #222;
 }
 
+.team-logo_dodgers5{
+    width: 62px;
+    z-index: 1;
+    position: absolute;
+}
 
 
 
@@ -323,8 +328,8 @@ h1 {
 
 #series11 {
     position: absolute;
-    top: 286px;
-    left: 137px;
+    top: 271px;
+    left: 162px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;
@@ -459,7 +464,11 @@ h1 {
     font-size: 1.5rem;
   }
 
-
+.team-logo_dodgers5{
+    width: 14vw;
+    z-index: 1;
+    position: absolute;
+}
 
 
 /* 各シリーズスコア位置 */
@@ -596,7 +605,7 @@ h1 {
 #series11 {
     position: absolute;
     top: 247px;
-    left: 113px;
+    left: 143px;
     /* font-weight: bold; */
     /* background: yellow; */
     padding: 2px 6px;

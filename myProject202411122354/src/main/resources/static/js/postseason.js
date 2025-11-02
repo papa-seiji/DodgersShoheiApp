@@ -53,6 +53,8 @@ function handleHashNavigation() {
         "hoge-hoge_landing10": "game4",
         "hoge-hoge_landing11": "game5",
         "hoge-hoge_landing12": "game6",
+        "hoge-hoge_landing13": "game7",
+
         "hoge-hoge_landing6": "nlcs"
     };
 
