@@ -4,6 +4,7 @@ body {
   text-align: center;
   margin: 0;
   padding: 20px;
+  background-color: #fff2c8;
 }
 
 .postseason-btn{
@@ -14,7 +15,7 @@ body {
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
-    margin-bottom: 30px;
+    margin-bottom: -12px;
     margin-top: 4px;
 }
 
@@ -32,7 +33,7 @@ body {
         font-weight: bold;
         margin-bottom: 20px;
         margin-top: 10px;
-        font-size: 24px;
+        font-size: 21px;
 }
 
 h1 {
@@ -49,10 +50,94 @@ h1 {
   position: relative;
   width: 90vw;
   max-width: 390px;
-  aspect-ratio: 390 / 844; /* 縦横比を完全固定 */
+  aspect-ratio: 390 / 580; /* 縦横比を完全固定 */
   margin: 0 auto;
   background-color: #f8fafc;
   /* margin-bottom: -221px; */
+}
+
+/* 🧩 既存の画像スタイル */
+/* 画像サイズの自動フィット */
+.PostSeason01 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 🧩 新規：テキスト＋画像のレスポンシブレイアウト */
+.postseason-commentary {
+  display: flex;
+  flex-direction: column; /* スマホでは縦並び */
+  align-items: center;
+  justify-content: center;
+  background-color: #fff4d0;
+  border-radius: 12px;
+  padding: 0px 20px 20px 20px;
+  /* margin: 20px auto; */
+  width: 90%;
+  max-width: 900px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.postseason-text p {
+  /* line-height: 1.8; */
+  text-align: left;
+  color: #222;
+  font-size: 1rem;
+  /* margin-bottom: 20px; */
+}
+
+/* 画像コンテナ */
+/* ✅ 修正版：画像コンテナ（スマホは幅を自動調整） */
+.postseason-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* フェード切替に必要（重ねて表示） */
+  width: 100%;        /* ← 350px固定をやめる */
+  max-width: 350px;   /* ← 上限だけ指定しておく */
+  height: auto;
+  aspect-ratio: 350 / 193; /* ← 高さ比率を維持 */
+  margin: 0 auto;
+  overflow: hidden;   /* ← はみ出し防止 */
+}
+
+/* 🖥️ PCサイズでは横並びに変更 */
+@media screen and (min-width: 768px) {
+  .postseason-commentary {
+    flex-direction: row; /* 横並び */
+    align-items: flex-start;
+    gap: 30px;
+  }
+
+  .postseason-text {
+    flex: 2;
+  }
+
+  .postseason-image {
+    flex: 1;
+    text-align: right;
+  }
+
+  .PostSeason01 {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+  }
+}
+
+/* ✅ ここからフェードスライド関連の追加CSS */
+.fade-image {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.fade-image.active {
+  opacity: 1;
+  position: relative;
 }
 
 /* ==========================
@@ -88,46 +173,51 @@ h1 {
   margin-right: 4px;
 }
 
+.shiny-text-1{
+  background-color: blue;
+  color: white;
+}
+
 /* ==========================
    AL側（上部）
    ========================== */
 .team-logo.tigers1  { top: calc(14 / 844 * 100%); left: calc(56 / 390 * 100%); }
-.team-logo.tigers2  { top: calc(71 / 844 * 100%); left: calc(102 / 390 * 100%); }
+.team-logo.tigers2  { top: calc(100 / 844 * 100%); left: calc(102 / 390 * 100%); }
 .team-logo.guardians { top: calc(14 / 844 * 100%); left: calc(151 / 390 * 100%); }
 
-.team-logo.mariners1 { top: calc(71 / 844 * 100%); left: calc(12 / 390 * 100%); }
-.team-logo.mariners2 { top: calc(129 / 844 * 100%); left: calc(57 / 390 * 100%); }
+.team-logo.mariners1 { top: calc(100 / 844 * 100%); left: calc(12 / 390 * 100%); }
+.team-logo.mariners2 { top: calc(184 / 844 * 100%); left: calc(57 / 390 * 100%); }
 
 .team-logo.redsox1 { top: calc(15 / 844 * 100%); right: calc(97 / 390 * 100%); }
 
 .team-logo.yankees1 { top: calc(15 / 844 * 100%); right: calc(6 / 390 * 100%); }
-.team-logo.yankees2 { top: calc(71 / 844 * 100%); right: calc(50 / 390 * 100%); }
+.team-logo.yankees2 { top: calc(100 / 844 * 100%); right: calc(50 / 390 * 100%); }
 
-.team-logo.bluejays1 { top: calc(71 / 844 * 100%); right: calc(143 / 390 * 100%); }
-.team-logo.bluejays2 { top: calc(132 / 844 * 100%); right: calc(98 / 390 * 100%); }
-.team-logo.bluejays3 { top: calc(206/ 844 * 100%); right: calc(188 / 390 * 100%); }
-.team-logo.bluejays4 { top: calc(265/ 844 * 100%); right: calc( 81 / 390 * 100%); }
+.team-logo.bluejays1 { top: calc(100 / 844 * 100%); right: calc(143 / 390 * 100%); }
+.team-logo.bluejays2 { top: calc(184 / 844 * 100%); right: calc(98 / 390 * 100%); }
+.team-logo.bluejays3 { top: calc(294/ 844 * 100%); right: calc(188 / 390 * 100%); }
+.team-logo.bluejays4 { top: calc(393/ 844 * 100%); right: calc( 77 / 390 * 100%); }
 
 /* ==========================
    NL側（下部）
    ========================== */
-.team-logo.reds1 { top: calc(530 / 844 * 100%); right: calc(328 / 390 * 100%); }
+.team-logo.reds1 { top: calc(767 / 844 * 100%); right: calc(328 / 390 * 100%); }
 
-.team-logo.dodgers1 { top: calc(528 / 844 * 100%); right: calc(231 / 390 * 100%); }
-.team-logo.dodgers2 { top: calc(471 / 844 * 100%); right: calc(279 / 390 * 100%); }
-.team-logo.dodgers3 { top: calc(412 / 844 * 100%); right: calc(233 / 390 * 100%); }
-.team-logo.dodgers4 { top: calc(336 / 844 * 100%); right: calc(168 / 390 * 100%); }
-.team-logo_dodgers5 { top: calc(265 / 954 * 100%); right: calc(259 / 388 * 100%); }
+.team-logo.dodgers1 { top: calc(767 / 844 * 100%); right: calc(231 / 390 * 100%); }
+.team-logo.dodgers2 { top: calc(686 / 844 * 100%); right: calc(279 / 390 * 100%); }
+.team-logo.dodgers3 { top: calc(599 / 844 * 100%); right: calc(233 / 390 * 100%); }
+.team-logo.dodgers4 { top: calc(485 / 844 * 100%); right: calc(168 / 390 * 100%); }
+.team-logo_dodgers5 { top: calc(388 / 954 * 100%); right: calc(259 / 388 * 100%); }
 
-.team-logo.phillies1 { top: calc(471 / 844 * 100%); right: calc(191 / 390 * 100%); }
+.team-logo.phillies1 { top: calc(686 / 844 * 100%); right: calc(191 / 390 * 100%); }
 
-.team-logo.padres1 { top: calc(528 / 844 * 100%); right: calc(6 / 390 * 100%); }
+.team-logo.padres1 { top: calc(767 / 844 * 100%); right: calc(6 / 390 * 100%); }
 
-.team-logo.cubs1 { top: calc(528 / 844 * 100%); right: calc(98 / 390 * 100%); }
-.team-logo.cubs2 { top: calc(471 / 844 * 100%); right: calc(52 / 390 * 100%); }
+.team-logo.cubs1 { top: calc(767 / 844 * 100%); right: calc(98 / 390 * 100%); }
+.team-logo.cubs2 { top: calc(686 / 844 * 100%); right: calc(52 / 390 * 100%); }
 
-.team-logo.brewers1 { top: calc(471 / 844 * 100%); right: calc(145 / 390 * 100%); }
-.team-logo.brewers2 { top: calc(412 / 844 * 100%); right: calc(101 / 390 * 100%); }
+.team-logo.brewers1 { top: calc(686 / 844 * 100%); right: calc(145 / 390 * 100%); }
+.team-logo.brewers2 { top: calc(599 / 844 * 100%); right: calc(101 / 390 * 100%); }
 
 
 
@@ -412,6 +502,24 @@ h1 {
 }
 
 
+/*   <!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 --> */
+.video-preview-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 27px;
+    flex-wrap: wrap; /* スマホ時の折り返し対応 */
+}
+
+.decorative-video {
+    width: 350px;
+    height: 193px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    margin-bottom: 18px;
+}
+
 
 #douga-grid {
     display: flex;
@@ -463,6 +571,19 @@ h1 {
   h1 {
     font-size: 1.5rem;
   }
+
+
+.PostSeason01{
+  width: 350px;
+  height: 193px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+  margin-bottom: 18px;
+  margin-top: 6px;
+}
+
+
 
 .team-logo_dodgers5{
     width: 14vw;
