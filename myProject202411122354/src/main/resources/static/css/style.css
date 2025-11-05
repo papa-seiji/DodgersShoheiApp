@@ -912,6 +912,56 @@ a:hover {
 
 
 
+/* ======== 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 ======== */
+
+.video-preview-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  margin: 0px auto 15px auto;
+  border-radius: 15px;
+  overflow: hidden;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); */
+}
+
+.decorative-video {
+  width: 100%;
+  /* height: auto; */
+  display: block;
+  border: none;
+  outline: none;
+}
+
+/* iPhoneなどでタップ時にネイティブUIが出るのを防ぐ */
+video::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* 🔇／🔊ボタン */
+/* .mute-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.mute-btn:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+  transform: scale(1.1);
+} */
+
+/* ======== 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 END======== */
+
+
+
 
 
 /* ======== レスポンシブ対応 ======== */
@@ -1438,6 +1488,58 @@ h2, h3 {
     color: #007AFF; /* Apple風のアクセントカラー */
     margin-bottom: 2rem;
     /* margin-bottom: 2rem; */
+
+
+/* ======== 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 ======== */
+
+.video-preview-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  margin: 33px auto 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); */
+}
+
+.decorative-video {
+  width: 100%;
+  /* height: auto; */
+  display: block;
+  border: none;
+  outline: none;
+}
+
+/* iPhoneなどでタップ時にネイティブUIが出るのを防ぐ */
+video::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* 🔇／🔊ボタン */
+.mute-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.mute-btn:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+  transform: scale(1.1);
+}
+
+/* ======== 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 END======== */
+
+
+
 
 
 
@@ -2296,6 +2398,53 @@ body {
 /* end ========  MLB 地区別順位表(max-width: 430px) ======== */
 
 
+/* ======== 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 ======== */
+
+.video-preview-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  margin: 0px auto 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); */
+}
+
+.decorative-video {
+  width: 100%;
+  /* height: auto; */
+  display: block;
+  border: none;
+  outline: none;
+}
+
+/* iPhoneなどでタップ時にネイティブUIが出るのを防ぐ */
+video::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* 🔇／🔊ボタン */
+/* .mute-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.mute-btn:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+  transform: scale(1.1);
+} */
+
+/* ======== 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 END======== */
 
 
 /* ======== 見出しスタイル ======== */

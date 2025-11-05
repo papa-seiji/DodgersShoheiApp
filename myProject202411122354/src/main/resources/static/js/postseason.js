@@ -19,8 +19,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         // ✅ URLハッシュ対応（ニュースリンクからのジャンプ）
         handleHashNavigation();
 
-        // ✅ フェードスライド開始（★ ここを追加 ★）
+        // ✅ フェードスライド開始
         initializeFadeSlideshow();
+
+        // ✅ 🔇／🔊 ミュート + 音量制御（★ 改良版 ★）
+        const video = document.getElementById("postseasonVideo");
+        const muteBtn = document.getElementById("muteToggle");
+
+        if (video && muteBtn) {
+            // 初期音量を30%に設定（0.0〜1.0）
+            video.volume = 0.04;
+            console.log("初期音量を30%に設定しました。");
+
+            muteBtn.addEventListener("click", () => {
+                video.muted = !video.muted;
+                muteBtn.textContent = video.muted ? "🔇" : "🔊";
+            });
+
+            // 🔊 長押しで音量アップ・ダウンを追加（オプション）
+            muteBtn.addEventListener("contextmenu", (e) => {
+                e.preventDefault();
+                video.volume = Math.max(0, video.volume - 0.1);
+                console.log("音量ダウン:", Math.round(video.volume * 100) + "%");
+            });
+
+            muteBtn.addEventListener("dblclick", (e) => {
+                e.preventDefault();
+                video.volume = Math.min(1, video.volume + 0.1);
+                console.log("音量アップ:", Math.round(video.volume * 100) + "%");
+            });
+
+            console.log("ミュートボタン制御＋音量調整を初期化しました。");
+        } else {
+            console.warn("動画またはミュートボタンが見つかりません。");
+        }
 
     } catch (e) {
         console.error("Error fetching series results:", e);
