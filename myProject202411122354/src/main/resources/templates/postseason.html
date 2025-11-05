@@ -16,20 +16,16 @@
   <h1 id="title">MLB POSTSEASON 2025</h1>
   <a href="/home" class="postseason-btn">HOME画面に戻る</a>
 
-  <!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
+<!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
 <section class="video-preview-section">
-    <div class="video-preview-wrapper">
-        <!--<h2 class="profile_font">ファンに愛されるオトコ</h2>
-        <video class="decorative-video" autoplay muted loop playsinline controls>
-            <source src="/videos/kike_1.mp4" type="video/mp4">
-        </video>
-        <video class="decorative-video" autoplay muted loop playsinline controls>
-            <source src="/videos/kike_2.mp4" type="video/mp4">
-        </video>-->
-        <video class="decorative-video" autoplay muted loop playsinline controls>
-            <source src="/videos/world_champion_ceremony.mp4" type="video/mp4">
-        </video>
-    </div>
+  <div class="video-preview-wrapper">
+    <video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>
+      <source src="/videos/world_champion_ceremony.mp4" type="video/mp4">
+      お使いのブラウザは video タグをサポートしていません。
+    </video>
+    <!-- 🔇／🔊 ミュートボタン -->
+    <button id="muteToggle" class="mute-btn">🔇</button>
+  </div>
 </section>
 
 <!-- ✅ Postseason コメント＋集合写真 -->
