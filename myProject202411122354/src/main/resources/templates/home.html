@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/header-2.css}">
-    <link rel="stylesheet" th:href="@{/css/Douga.css}">
+    <!--  <link rel="stylesheet" th:href="@{/css/Douga.css}">  -->
     <link rel="stylesheet" th:href="@{/css/lineups_widget.css}">
 
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
@@ -775,121 +775,337 @@ document.addEventListener("DOMContentLoaded", function () {
         
     <script src="/js/stats.js"></script>
 
-<!--Start 動画セクション 2025-->
+<!-- ===========================
+🎥 DodgersShoheiApp - Video Tabs Section
+=========================== -->
+<div class="video-tabs">
+
+  <!-- 🔘 タブボタン -->
+  <div class="tab-buttons">
+    <button class="tab-btn" onclick="showTab('tab2026', event)">26</button>
+    <button class="tab-btn active" onclick="showTab('tab2025', event)">25ベスト</button>
+    <button class="tab-btn" onclick="showTab('tab2024', event)">24ベスト</button>
+    <button class="tab-btn" onclick="showTab('tabFunny', event)">面白</button>
+  </div>
+
+  <!-- =================== 2026Tab START =================== 
+  <div id="tab2026" class="tab-content">
+
     <div id="hoge-hoge_landing4" class="shiny-text-1"></div>
     <h5 class="shiny-text-1">最終戦で55号HRを放ち</h5>
     <h5 class="shiny-text-1">球団新&自己最多記録!</h5>
     <h5 class="shiny-text-1">2025/9/29</h5>
     <h5 class="shiny-text-1">RGシーズン</h5>
 
-        <div class="douga-section_4">
-            <div id="hoge-hoge_4">　LAD 軍 vs  SEA軍 Highlight　</div>
+    <div class="douga-section_4">
+      <div id="hoge-hoge_4">LAD 軍 vs SEA軍 Highlight</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/8W17mqibyGU?playsinline=1&si=9YhkMqbSvCkd9Kpx"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
 
-            <div id="douga-container-4">
-                <iframe id="douga-video-4" width="560" height="315" src="https://www.youtube.com/embed/8W17mqibyGU?si=9YhkMqbSvCkd9Kpx"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-<!--End 動画セクション 2025-->
-
-<!--Start 動画セクション 2025-->
-    <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
     <h5 class="shiny-text-1">優勝&自己最多タイ54号</h5>
-                             
     <h5 class="shiny-text-1">2025/9/26</h5>
     <h5 class="shiny-text-1">RGシーズン</h5>
 
-        <div class="douga-section_3">
-            <div id="hoge-hoge_3">　LAD 軍 vs  ARI軍 Highlight　</div>
-                                  
-            <div id="douga-container-3">
-                <iframe id="douga-video-3" width="560" height="315" src="https://www.youtube.com/embed/Py_9sJzQsDM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-<!--End 動画セクション 2025-->
+    <div class="douga-section_3">
+      <div id="hoge-hoge_3">LAD 軍 vs ARI軍 Highlight</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/Py_9sJzQsDM?playsinline=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+=================== 2026Tab END =================== -->
 
-<!--Start 動画セクション 2025 Kike-Enrique Hernández_section-->
-    <h5 class="shiny-text-1">愛称は ”キケ”  Enrique Hernándezの</h5>
-    <h5 class="shiny-text-1">メチャクチャおちゃめなピッチングシーン</h5>
-    <h5 class="shiny-text-1">MLBでかっこ悪すぎて全然はやらなかった</h5>
-    <h5 class="shiny-text-1">ピッチャー用のヘッドギアを真顔で着けてきた編</h5>
+  <!-- =================== 2025Tab START =================== -->
+  <div id="tab2025" class="tab-content active">
 
-    <div id="hoge-hoge_landing5" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">過去イチ笑った!</h5>
-                             
-    <h5 class="shiny-text-1">2025/4/30</h5>
+    <div id="hoge-hoge_landing4" class="shiny-text-1"></div>
+    <h5 class="shiny-text-1">最終戦で55号HRを放ち</h5>
+    <h5 class="shiny-text-1">球団新&自己最多記録!</h5>
+    <h5 class="shiny-text-1">2025/9/29</h5>
     <h5 class="shiny-text-1">RGシーズン</h5>
 
-        <div class="douga-section_5">
-            <div id="hoge-hoge_5">　MIA軍 vs LAD軍 Highlight　</div>
-                                  
-            <div id="douga-container-5">
-                <iframe id="douga-video-5" width="560" height="315" src="https://www.youtube.com/embed/uf4YUT5dLcM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-<!--End 動画セクション 2025 Kike-Enrique Hernández_section-->
+    <div class="douga-section_4">
+      <div id="hoge-hoge_4">LAD 軍 vs SEA軍 Highlight</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/8W17mqibyGU?playsinline=1&si=9YhkMqbSvCkd9Kpx"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
 
+    <h5 class="shiny-text-1">優勝&自己最多タイ54号</h5>
+    <h5 class="shiny-text-1">2025/9/26</h5>
+    <h5 class="shiny-text-1">RGシーズン</h5>
 
+    <div class="douga-section_3">
+      <div id="hoge-hoge_3">LAD 軍 vs ARI軍 Highlight</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/Py_9sJzQsDM?playsinline=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
 
-
-<!--Start 動画セクション 2025 League Championship Series_section-->
-    -----------------------------------------------------
-    <div id="hoge-hoge_landing6" class="shiny-text-1"></div>
     <h3 class="shiny-text-1">リーグ優勝をかけた最終戦 伝説の１日</h3>
     <h5 class="shiny-text-1">投げては7回途中１０k、打ってはホームラン3本!</h5>
     <h5 class="shiny-text-1">NLCS大谷伝説の日</h5>
     <h5 class="shiny-text-1">2025/10/18</h5>
     <h5 class="shiny-text-1">NLCS Series</h5>
-                             
-        <div class="douga-section_6">
-            <div id="hoge-hoge_6">　MLW軍 vs LAD軍 Highlight　</div>
-            <div id="douga-container-6">
-            <iframe id="douga-video-6" width="560" height="315" src="https://www.youtube.com/embed/0e7zKPfouj4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-<!--End 動画セクション 2025 League Championship Series_section-->
 
+    <div class="douga-section_6">
+      <div id="hoge-hoge_6">MLW軍 vs LAD軍 Highlight</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/0e7zKPfouj4?playsinline=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+  <!-- =================== 2025Tab END =================== -->
 
+  <!-- =================== 2024Tab START =================== -->
+  <div id="tab2024" class="tab-content">
     <h5 class="shiny-text-1">2024年のお気に入り動画を載せています</h5>
     <h5 class="shiny-text-1">私はマーリンズ戦 6打数6安打,3HR,10打点,２盗塁</h5>
     <h5 class="shiny-text-1">前人未到の50/50達成で沸いたあの1日。</h5>
-    <h5 class="shiny-text-1">とんでもない『絶対打つだろう』の緊張感の中、</h5>
-    <h5 id="h6under_row" class="shiny-text-1">軽々特大アッパーデッキ着弾の51号が大好きです</h5>
 
-        <h5 class="shiny-text-1">前人未到の50/50達成で沸いたあの1日。</h5>
-        <h5 class="shiny-text-1">マーリンズ監督の男気溢れ、最高のスポーツマンシップ</h5>
-        <h5 class="shiny-text-1">を持ち大谷に挑んだ経緯を語っている映像が大好きです</h5>
-        <h5 class="shiny-text-1">間違いなくこの偉業の立役者でこの人なしでは</h5>
-        <h5 id="h6under_row" class="shiny-text-1">野球史上最高の1日は起こらなかったでしょう</h5>
-
-
-    <!-- 動画セクション -->
-    <div id="douga-page">
-        <div id="douga-grid">
-            <!-- 左側の動画 -->
-            <div id="hoge-hoge_landing1" ></div><!-- ベースボール史上最高の１日紹介リンク押下の着地場所 -->
-            <div class="douga-section_1">
-                <!--<h3>2024 World Series メッツ戦 先制HR</h3>-->
-                <div id="hoge-hoge_1">ベースボール史上最高の１日</div>
-                <div id="douga-container-1">
-                    <!--<iframe id="douga-video-1" width="560" height="315" src="https://www.youtube.com/embed/fuOMrPaLRP4?si=Dv03ihOMgv0ovkUj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
-                    <iframe id="douga-video-1" width="560" height="315" src="https://www.youtube.com/embed/gByTMgn6JxI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
-
-
-            <!-- 右側の動画 -->
-            <div id="hoge-hoge_landing2" ></div><!-- 【漢】スキップ・シューマッカー監督紹介リンク押下の着地場所 -->
-            <div class="douga-section_2">
-                <!--<h3>2023年投げてた頃LAA</h3>-->
-                <div id="hoge-hoge_2">【漢】スキップ・シューマッカー監督</div>
-                <div id="douga-container-2">
-                    <!--<iframe id="douga-video-2" width="560" height="315" src="https://www.youtube.com/embed/GVcOeTh6WcY?si=OySizA_xccNE7SOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
-                    <iframe id="douga-video-2" width="560" height="315" src="https://www.youtube.com/embed/yYb-0dn2-Ag" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
+    <div class="douga-section_1">
+      <div id="hoge-hoge_1">ベースボール史上最高の１日</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/gByTMgn6JxI?playsinline=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
     </div>
-    <img src="/images/スキップ・シューマッカー-インタビュー.jpg" alt="背景画像1" class="home-image5" width="400" height="445">
+
+    <div class="douga-section_2">
+      <div id="hoge-hoge_2">【漢】スキップ・シューマッカー監督</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/yYb-0dn2-Ag?playsinline=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+  <!-- =================== 2024Tab END =================== -->
+
+  <!-- =================== 面白Tab START =================== -->
+  <div id="tabFunny" class="tab-content">
+    <h5 class="shiny-text-1">愛称は ”キケ” Enrique Hernándezの</h5>
+    <h5 class="shiny-text-1">メチャクチャおちゃめなピッチングシーン</h5>
+
+    <div class="douga-section_5">
+      <div id="hoge-hoge_5">MIA軍 vs LAD軍 Highlight</div>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/uf4YUT5dLcM?playsinline=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+  <!-- =================== 面白Tab END =================== -->
+</div>
+
+<!-- ===========================
+🎨 CSS（完全安定＋iPhone対応）
+=========================== -->
+<style>
+.video-tabs {
+  margin: 40px auto;
+  text-align: center;
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: static !important;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  background-color: #0047ba;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.tab-btn.active {
+  background-color: #ffd700;
+  color: #0047ba;
+  border: 2px solid #0047ba;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.4s ease-in-out;
+}
+.tab-content.active {
+  display: block;
+}
+
+.video-wrapper {
+  position: relative !important;
+  width: 100%;
+  max-width: 640px;
+  padding-top: 56.25%;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: visible !important;
+  background: #000;
+  transform: translate3d(0, 0, 0);
+  isolation: isolate;
+}
+
+.video-wrapper iframe {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-transform: none !important;
+  transform: none !important;
+  background: transparent !important;
+}
+
+div[class^="douga-section_"] {
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+/* スマホ対応 */
+@media (max-width: 768px) {
+  .tab-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tab-btn {
+    flex: 1 1 auto;
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+  .video-wrapper {
+    max-width: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================
+🎯 DevToolsズーム倍率でもクリックを確実に通す最終パッチ
+============================ */
+.video-wrapper {
+  transform: translate3d(0, 0, 0) scale(1.0001) !important;
+  transform-origin: center center !important;
+  will-change: transform;
+  isolation: isolate;
+  contain: layout paint style;
+}
+
+.video-wrapper iframe {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  border: none;
+  border-radius: 12px;
+
+  /* ✅ Chromeズーム対策 */
+  transform: translate3d(0, 0, 0) scale(1.0002) !important;
+  transform-origin: center center !important;
+  will-change: transform;
+  background-color: transparent !important;
+  contain: layout paint style;
+}
+
+/* 念のためdouga-sectionレイヤーも完全透過化 */
+div[class^="douga-section_"] {
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+.video-tabs *:hover {
+  transform: none !important;
+  animation: none !important;
+}
+
+</style>
+
+<!-- ===========================
+⚙️ JS：タブ切替制御
+=========================== -->
+<script>
+function showTab(tabId, event) {
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.style.display = 'none';
+    tab.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  const targetTab = document.getElementById(tabId);
+  targetTab.style.display = 'block';
+  targetTab.classList.add('active');
+}
+</script>
     <div id="qr-button-section" ></div><!-- QR紹介リンク押下の着地場所 -->
 
 
