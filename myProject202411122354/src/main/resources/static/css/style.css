@@ -2746,7 +2746,7 @@ a:hover {
 
 /* 画像部分のスタイル */
 .home-image5 {
-    width: 40%; /* 画像幅を40%に設定 */
+    width: 100%; /* 画像幅を40%に設定 */
     max-width: 400px; /* 最大幅を設定 */
     border-radius: 10px; /* 角を丸める */
      /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 軽い影 */
