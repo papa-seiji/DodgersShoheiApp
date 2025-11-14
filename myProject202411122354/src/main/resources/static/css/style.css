@@ -24,6 +24,9 @@ body {
 #judgetani {
     color: #ceec07;
     background-color: #13137a;
+    margin-top: 25px;
+    border-radius: 17px;
+    padding: 2px 15px;
 }
 
 
@@ -1831,6 +1834,9 @@ body {
 #judgetani {
     color: #ceec07;
     background-color: #13137a;
+    margin-top: 25px;
+    border-radius: 17px;
+    padding: 2px 15px;
 }
 
 /* start======== ナビゲーションバー全体 ======== */
@@ -2517,7 +2523,7 @@ a {
     color: #007AFF; /* Apple風のアクセントカラー */
     text-decoration: none; /* 下線を消す */
     font-size: 1.1em; /* リンクのフォントサイズ */
-    margin: 2rem 1.5rem 0rem 1.5rem;
+    /* margin: 2rem 1.5rem 0rem 1.5rem; */
     display: inline-block; /* インライン要素として表示 */
     text-align: center;
 }

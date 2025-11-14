@@ -30,6 +30,7 @@
         text-decoration: none;
         color: inherit;
         margin-top:1px;
+        margin-bottom: 13px;
     }
 
     a.tokyo-archive-link img {
@@ -44,14 +45,15 @@
         color: red; */
 
         display: inline-block;
-        padding: 12px 24px;
+        padding: 7px 16px;
         background-color: #001531;
         color: white;
         text-decoration: none;
-        border-radius: 5px;
+        border-radius: 17px;
         font-weight: bold;
         margin-bottom: 1px;
         margin-top: 10px;
+            font-size: 13px;
         }
 
     #MLB-POST-SEASON-2025 {
@@ -60,14 +62,15 @@
         color: red; */
 
         display: inline-block;
-        padding: 12px 24px;
+        padding: 7px 16px;
         background-color: #0d6cec;
         color: yellow;
         text-decoration: none;
-        border-radius: 5px;
+        border-radius: 17px;
         font-weight: bold;
-        margin-bottom: 1px;
+        margin-bottom: 14px;
         margin-top: 10px;
+            font-size: 13px;
         }
 
 
@@ -80,11 +83,11 @@
         color: red; */
 
         display: inline-block;
-        padding: 12px 24px;
+        padding: 7px 16px;
         background-color: #001531;
         color: white;
         text-decoration: none;
-        border-radius: 5px;
+        border-radius: 17px;
         font-weight: bold;
         margin-bottom: 1px;
         margin-top: 10px;
@@ -96,13 +99,13 @@
         color: red; */
 
         display: inline-block;
-        padding: 12px 24px;
+        padding: 7px 16px;
         background-color: #0d6cec;
         color: yellow;
         text-decoration: none;
-        border-radius: 5px;
+        border-radius: 17px;
         font-weight: bold;
-        margin-bottom: 1px;
+        margin-bottom: 14px;
         margin-top: 10px;
         }
 
@@ -335,17 +338,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <th:block th:replace="fragments/header :: header"></th:block>
 
-<!--スタート    MLB東京シリーズ by グッゲンハイム img画像         -->
-    <a href="/archive" class="tokyo-archive-link">
+
+<!--############################################ ここは2026になったら使用する予定 #############################################################-->
+<!--スタート    MLB-2026-開幕戦         -->
+    <!--<a href="/archive" class="tokyo-archive-link">
         <div id="mlb-tokyo-series-2025">#東京開幕１,２戦アーカイブリンク ←← 押</div>
-    </a>
-<!--エンド    MLB東京シリーズ by グッゲンハイム img画像         -->
+    </a>-->
+<!--エンド    MLB-2026-開幕戦         -->
 
 
-<!--スタート   MLB ポストシーズンを見る         -->
-    <a href="/postseason" class="tokyo-archive-link">
-        <div id="MLB-POST-SEASON-2025">#　MLB POSTSEASON 2025　　←← 押</div>
-    </a>
+<!--スタート    MLB-2026-ポストシーズンを見る         -->
+    <!--<a href="/postseason" class="tokyo-archive-link">
+        <div id="MLB-POST-SEASON-2025">#MLB POSTSEASON 2025　　　←← 押</div>
+    </a>-->
+<!--エンド    MLB-2026-ポストシーズンを見る         -->
+<!--############################################ ここは2026になったら使用する予定 #############################################################-->
+
+
+
+    <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
+    <h5 class="shiny-text-1">2024大谷翔平MVP&54-59おめでとう</h5>
+    <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
+    <h5 class="shiny-text-1">2025大谷翔平MVP&55(HR)-50(SO)おめでとう</h5>
+
+  <div>
+    <p>
+      　　　　　遂に、WS連覇達成!<br>
+      　2026年シーズンも待ち遠しいですが<br>
+      　　　活躍を願って応援しましょう<br>
+    </p>
+  </div>
+
+<!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
+<section class="video-preview-section">
+  <div class="video-preview-wrapper">
+    <video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>
+      <source src="/videos/2025_Dogders_WIN-Prade.mp4" type="video/mp4">
+      お使いのブラウザは video タグをサポートしていません。
+    </video>
+    <!-- 🔇／🔊 ミュートボタン
+    <button id="muteToggle" class="mute-btn">🔇</button>
+  </div> -->
+</section>
+
 
 
 
@@ -693,30 +728,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-    <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
-    <h5 class="shiny-text-1">2024大谷翔平MVP&54-59おめでとう</h5>
-    <h1 id="oomidashi" class="shiny-text">♥ワールドチャンピオンおめでとう♥</h1>
-    <h5 class="shiny-text-1">2025大谷翔平MVP&55(HR)-50(SO)おめでとう</h5>
-
-  <div>
-    <p>
-      遂に、WS連覇達成!
-    </p>
-  </div>
-
-<!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
-<section class="video-preview-section">
-  <div class="video-preview-wrapper">
-    <video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>
-      <source src="/videos/2025_Dogders_WIN-Prade.mp4" type="video/mp4">
-      お使いのブラウザは video タグをサポートしていません。
-    </video>
-    <!-- 🔇／🔊 ミュートボタン
-    <button id="muteToggle" class="mute-btn">🔇</button>
-  </div> -->
-</section>
-
 <!--スタート    ジャッジ vs 大谷翔平 成績比較         -->
     <a href="/ohtani-vs-judge">
         <div id="judgetani">ジャッジvs大谷,他 2025打撃比較 ← 押</div>
@@ -780,6 +791,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   <!-- 🔘 タブボタン -->
   <div class="tab-buttons">
+    <button class="tab-btn" onclick="showTab('tab2026', event)">’26</button> <!-- ✅ 追加 -->
     <button class="tab-btn active" onclick="showTab('tab2025', event)">'25</button>
     <button class="tab-btn" onclick="showTab('tab2024', event)">'24</button>
     <button class="tab-btn" onclick="showTab('tab2023', event)">'23</button>
@@ -792,48 +804,73 @@ document.addEventListener("DOMContentLoaded", function () {
     <button class="tab-btn" onclick="showTab('tabFunny', event)">面白</button>
   </div>
 
-  <!-- =================== 2026Tab START ===================
-  <div id="tab2026" class="tab-content">
 
-    <div id="hoge-hoge_landing4" class="shiny-text-1"></div>
-    <h5 class="shiny-text-1">最終戦で55号HRを放ち</h5>
-    <h5 class="shiny-text-1">球団新&自己最多記録!</h5>
-    <h5 class="shiny-text-1">2025/9/29</h5>
-    <h5 class="shiny-text-1">RGシーズン</h5>
+<!-- =================== 2026Tab START =================== -->
+<div id="tab2026" class="tab-content">
+
+  <h5 class="shiny-text-1">2026年シーズンのハイライトをここに掲載予定です</h5>
+  <h5 class="shiny-text-1">大谷翔平・山本由伸・新戦力の活躍動画など</h5>
+
+  <div class="douga-section_26">
+    <div id="hoge-hoge_landing26" class="shiny-text-1">（ここにハイライトタイトルなど）</div>
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+</div>
+<!-- =================== 2026Tab END =================== -->
+
+
+<!-- =================== 2025Tab START =================== -->
+  <div id="tab2025" class="tab-content active">
+
+      <!--スタート    MLB東京シリーズ by グッゲンハイム        -->
+      <a href="/archive" class="tokyo-archive-link">
+          <div id="mlb-tokyo-series-2025">#東京開幕１,２戦アーカイブリンク ←← 押</div>
+      </a>
+      <!--エンド    MLB東京シリーズ by グッゲンハイム              -->
+
+      <!--スタート   MLB ポストシーズンを見る                     -->
+      <a href="/postseason" class="tokyo-archive-link">
+          <div id="MLB-POST-SEASON-2025">#MLB POSTSEASON 2025　　　　←← 押</div>
+      </a>
+      <!--エンド    MLB ポストシーズンを見る                      -->
 
     <div class="douga-section_4">
-      <div id="hoge-hoge_4">LAD 軍 vs SEA軍 Highlight</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/8W17mqibyGU?playsinline=1&si=9YhkMqbSvCkd9Kpx"
+          src="https://www.youtube.com/embed/cvnXULhNA34?si=zNeD9cSY8aNagBzk"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
       </div>
+      <h5 class="shiny-text-1">2025/11/14</h5>
+      <div id="hoge-hoge_ex01">満票で3年連続4度目のMVP受賞</div>
     </div>
 
-    <h5 class="shiny-text-1">優勝&自己最多タイ54号</h5>
-    <h5 class="shiny-text-1">2025/9/26</h5>
-    <h5 class="shiny-text-1">RGシーズン</h5>
-
-    <div class="douga-section_3">
-      <div id="hoge-hoge_3">LAD 軍 vs ARI軍 Highlight</div>
+    <div class="douga-section_4">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/Py_9sJzQsDM?playsinline=1"
+          src="https://www.youtube.com/embed/UEYuTkhv_bU?si=HvOyXChBvv0IeyZq"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
       </div>
+      <h5 class="shiny-text-1">2025/11/14</h5>
+      <div id="hoge-hoge_ex02">ビッグパピ-翔平４度目の満票MVPに絶賛</div>
     </div>
-=================== 2026Tab END =================== -->
 
-  <!-- =================== 2025Tab START =================== -->
-  <div id="tab2025" class="tab-content active">
     <div class="douga-section_4">
       <div class="video-wrapper">
         <iframe
@@ -845,7 +882,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </iframe>
       </div>
       <h5 class="shiny-text-1">RGシーズン2025/9/29</h5>
-      <div id="hoge-hoge_4">LAD 軍 vs SEA軍 Highlight</div>
+      <div id="hoge-hoge_landing4">LAD 軍 vs SEA軍 Highlight</div>
       <h5 class="shiny-text-1">最終戦で55号HRを放ち</h5>
       <h5 class="shiny-text-1">球団新&自己最多記録!</h5>
     </div>
@@ -861,7 +898,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </iframe>
       </div>
       <h5 class="shiny-text-1">NLCSシリーズ2025/10/18</h5>
-      <div id="hoge-hoge_6">MLW軍 vs LAD軍 Highlight</div>
+      <div id="hoge-hoge_landing3">MLW軍 vs LAD軍 Highlight</div>
       <h5 class="shiny-text-1">リーグ優勝をかけた最終戦 伝説の１日</h5>
       <h5 class="shiny-text-1">投げては7回途中１０K、打ってはHR3本!</h5>
     </div>
@@ -891,7 +928,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <h5 class="shiny-text-1">前人未到の50/50達成で沸いたあの1日。</h5>
 
     <div class="douga-section_1">
-      <div id="hoge-hoge_1">ベースボール史上最高の１日</div>
+      <div id="hoge-hoge_landing1">ベースボール史上最高の１日</div>
       <div class="video-wrapper">
         <iframe
           src="https://www.youtube.com/embed/gByTMgn6JxI?playsinline=1"
@@ -904,7 +941,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 
     <div class="douga-section_2">
-      <div id="hoge-hoge_2">【漢】スキップ・シューマッカー監督</div>
+      <div id="hoge-hoge_landing2">【漢】スキップ・シューマッカー監督</div>
       <div class="video-wrapper">
         <iframe
           src="https://www.youtube.com/embed/yYb-0dn2-Ag?playsinline=1"
@@ -1048,7 +1085,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <h5 class="shiny-text-1">愛称は “キケ” Enrique Hernándezの</h5>
     <h5 class="shiny-text-1">メチャクチャおちゃめなピッチングシーン</h5>
     <div class="douga-section_5">
-      <div id="hoge-hoge_5">MIA軍 vs LAD軍 Highlight</div>
+      <div id="hoge-hoge_landing5">MIA軍 vs LAD軍 Highlight</div>
       <div class="video-wrapper">
         <iframe
           src="https://www.youtube.com/embed/uf4YUT5dLcM?playsinline=1"
@@ -1164,71 +1201,83 @@ div[class^="douga-section_"] {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-/* ============================
-🎯 DevToolsズーム倍率でもクリックを確実に通す最終パッチ
-============================ */
-/* 
-.video-wrapper {
-  transform: translate3d(0, 0, 0) scale(1.0001) !important;
-  transform-origin: center center !important;
-  will-change: transform;
-  isolation: isolate;
-  contain: layout paint style;
-}
-
-.video-wrapper iframe {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2147483647 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  border: none;
-  border-radius: 12px;
-*/
-/* ✅ Chromeズーム対策 */
-  /* 
-  transform: translate3d(0, 0, 0) scale(1.0002) !important;
-  transform-origin: center center !important;
-  will-change: transform;
-  background-color: transparent !important;
-  contain: layout paint style;
-}
-*/
-
-/* 念のためdouga-sectionレイヤーも完全透過化 */
-/* 
-div[class^="douga-section_"] {
-  pointer-events: none !important;
-  background: transparent !important;
-}
-
-.video-tabs *:hover {
-  transform: none !important;
-  animation: none !important;
-}
-*/
 </style>
 
 <!-- ===========================
-⚙️ JS：タブ切替制御
+⚙️ JS：タブ切替制御＋ハッシュ遷移対応（home.html対応版）
 =========================== -->
 <script>
+  // 🌟 タブ切替ボタン押下時の処理
   function showTab(tabId, event) {
     document.querySelectorAll('.tab-content').forEach(tab => {
       tab.style.display = 'none';
       tab.classList.remove('active');
     });
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    if (event) event.currentTarget.classList.add('active');
 
     const targetTab = document.getElementById(tabId);
-    targetTab.style.display = 'block';
-    targetTab.classList.add('active');
+    if (targetTab) {
+      targetTab.style.display = 'block';
+      targetTab.classList.add('active');
+    }
   }
+
+  // 🟦 ハッシュ遷移対応
+  const tabMapping = {
+    "#hoge-hoge_landing1": "tab2024",
+    "#hoge-hoge_landing2": "tab2024",
+    "#hoge-hoge_landing3": "tab2025",
+    "#hoge-hoge_landing4": "tab2025",
+    "#hoge-hoge_landing5": "tabFunny",
+    "#hoge-hoge_ex01": "tab2025",
+    "#hoge-hoge_ex02": "tab2025",
+    "#hoge-hoge_landing26": "tab2026" // ✅ 新規追加
+  };
+
+  function handleHashNavigation() {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const targetTabId = tabMapping[hash];
+    if (!targetTabId) return;
+
+    document.querySelectorAll(".tab-content").forEach(tab => {
+      tab.style.display = "none";
+      tab.classList.remove("active");
+    });
+
+    const activeTab = document.getElementById(targetTabId);
+    if (activeTab) {
+      activeTab.style.display = "block";
+      activeTab.classList.add("active");
+
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      const relatedBtn = document.querySelector(`.tab-btn[onclick*="${targetTabId}"]`);
+      if (relatedBtn) relatedBtn.classList.add("active");
+
+      setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 400);
+    }
+  }
+
+  window.addEventListener("load", handleHashNavigation);
+  window.addEventListener("hashchange", handleHashNavigation);
+
+  // 🟦 ニュースリンククリックをSPA風に処理（ページ再読み込みを防ぐ）
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('a[href^="/home#"]').forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault(); // ← サーバーへの再リクエストを阻止
+        const href = link.getAttribute("href");
+        const hash = href.substring(href.indexOf("#"));
+        history.pushState(null, "", hash); // ← URLだけ変える
+        handleHashNavigation(); // ← 即座に反映
+      });
+    });
+  });
 </script>
 
 
@@ -1611,7 +1660,6 @@ div[class^="douga-section_"] {
     }
 </script>
 
-    
     <th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>
