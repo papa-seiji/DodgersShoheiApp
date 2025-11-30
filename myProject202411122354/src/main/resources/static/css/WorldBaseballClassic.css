@@ -1,31 +1,965 @@
 body {
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  background: linear-gradient(180deg, #ffffff, #e8f0ff);
+  background-color: #f8fafc;
+  font-family: "Inter", sans-serif;
   text-align: center;
   margin: 0;
   padding: 20px;
+  background-color: #fff2c8;
 }
 
-.wbc-container {
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 30px;
-  max-width: 800px;
-  margin: 50px auto;
+.postseason-btn{
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #001531;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: -12px;
+    margin-top: 4px;
+}
+
+#title{
+      /* font-weight: 800;
+  color: #0b1b4e;
+  margin-bottom: 20px; */
+
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #0d6cec;
+        color: yellow;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        margin-top: 10px;
+        font-size: 21px;
 }
 
 h1 {
-  color: #0055a5;
-  font-size: 2rem;
+  font-size: 1.8rem;
+  font-weight: 800;
+    color: #df9132;
+    margin-bottom: 20px;
+    margin-top: -34px;
 }
 
-.video-section {
-  margin-top: 20px;
+/* ==========================
+   トーナメント全体のラッパ
+   ========================== */
+.postseason-container {
+  position: relative;
+  width: 90vw;
+  max-width: 390px;
+  aspect-ratio: 390 / 580; /* 縦横比を完全固定 */
+  margin: 0 auto;
+  background-color: #f8fafc;
+  /* margin-bottom: -221px; */
 }
 
-iframe {
+/* 🧩 既存の画像スタイル */
+/* 画像サイズの自動フィット */
+.PostSeason01 {
   width: 100%;
-  height: 360px;
+  height: 100%;
+  object-fit: cover;
   border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 🧩 新規：テキスト＋画像のレスポンシブレイアウト */
+.postseason-commentary {
+  display: flex;
+  flex-direction: column; /* スマホでは縦並び */
+  align-items: center;
+  justify-content: center;
+  background-color: #fff4d0;
+  border-radius: 12px;
+  padding: 0px 20px 20px 20px;
+  /* margin: 20px auto; */
+  width: 90%;
+  max-width: 900px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.postseason-text p {
+  /* line-height: 1.8; */
+  text-align: left;
+  color: #222;
+  font-size: 1rem;
+  /* margin-bottom: 20px; */
+}
+
+/* 画像コンテナ */
+/* ✅ 修正版：画像コンテナ（スマホは幅を自動調整） */
+.postseason-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* フェード切替に必要（重ねて表示） */
+  width: 100%;        /* ← 350px固定をやめる */
+  max-width: 350px;   /* ← 上限だけ指定しておく */
+  height: auto;
+  aspect-ratio: 350 / 193; /* ← 高さ比率を維持 */
+  margin: 0 auto;
+  overflow: hidden;   /* ← はみ出し防止 */
+}
+
+/* 🖥️ PCサイズでは横並びに変更 */
+@media screen and (min-width: 768px) {
+  .postseason-commentary {
+    flex-direction: row; /* 横並び */
+    align-items: flex-start;
+    gap: 30px;
+  }
+
+  .postseason-text {
+    flex: 2;
+  }
+
+  .postseason-image {
+    flex: 1;
+    text-align: right;
+  }
+
+  .PostSeason01 {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+  }
+}
+
+/* ✅ ここからフェードスライド関連の追加CSS */
+.fade-image {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.fade-image.active {
+  opacity: 1;
+  position: relative;
+}
+
+/* ==========================
+   背景画像（トーナメント線）
+   ========================== */
+.bracket-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/2026_WBC/2026WBC_tornament.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top center;
+  z-index: 0;
+}
+
+/* ==========================
+   チームロゴ共通設定
+   ========================== */
+.team-logo {
+  position: absolute;
+  width: 10vw;
+  max-width: 70px;
+  z-index: 1;
+}
+
+.team-logo img {
+  width: 78%;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 4px;
+}
+
+.shiny-text-1{
+  background-color: blue;
+  color: white;
+}
+
+/* ==========================
+   AL側（上部）
+   ========================== */
+.team-logo.tigers1  { top: calc(14 / 844 * 100%); left: calc(56 / 390 * 100%); }
+.team-logo.tigers2  { top: calc(100 / 844 * 100%); left: calc(102 / 390 * 100%); }
+.team-logo.guardians { top: calc(14 / 844 * 100%); left: calc(151 / 390 * 100%); }
+
+.team-logo.mariners1 { top: calc(100 / 844 * 100%); left: calc(12 / 390 * 100%); }
+.team-logo.mariners2 { top: calc(184 / 844 * 100%); left: calc(57 / 390 * 100%); }
+
+.team-logo.redsox1 { top: calc(15 / 844 * 100%); right: calc(97 / 390 * 100%); }
+
+.team-logo.yankees1 { top: calc(15 / 844 * 100%); right: calc(6 / 390 * 100%); }
+.team-logo.yankees2 { top: calc(100 / 844 * 100%); right: calc(50 / 390 * 100%); }
+
+.team-logo.bluejays1 { top: calc(100 / 844 * 100%); right: calc(143 / 390 * 100%); }
+.team-logo.bluejays2 { top: calc(184 / 844 * 100%); right: calc(98 / 390 * 100%); }
+.team-logo.bluejays3 { top: calc(294/ 844 * 100%); right: calc(188 / 390 * 100%); }
+.team-logo.bluejays4 { top: calc(393/ 844 * 100%); right: calc( 77 / 390 * 100%); }
+
+/* ==========================
+   NL側（下部）
+   ========================== */
+.team-logo.reds1 { top: calc(767 / 844 * 100%); right: calc(328 / 390 * 100%); }
+
+.team-logo.dodgers1 { top: calc(767 / 844 * 100%); right: calc(231 / 390 * 100%); }
+.team-logo.dodgers2 { top: calc(686 / 844 * 100%); right: calc(279 / 390 * 100%); }
+.team-logo.dodgers3 { top: calc(599 / 844 * 100%); right: calc(233 / 390 * 100%); }
+.team-logo.dodgers4 { top: calc(485 / 844 * 100%); right: calc(168 / 390 * 100%); }
+.team-logo_dodgers5 { top: calc(388 / 954 * 100%); right: calc(259 / 388 * 100%); }
+
+.team-logo.phillies1 { top: calc(686 / 844 * 100%); right: calc(191 / 390 * 100%); }
+
+.team-logo.padres1 { top: calc(767 / 844 * 100%); right: calc(6 / 390 * 100%); }
+
+.team-logo.cubs1 { top: calc(767 / 844 * 100%); right: calc(98 / 390 * 100%); }
+.team-logo.cubs2 { top: calc(686 / 844 * 100%); right: calc(52 / 390 * 100%); }
+
+.team-logo.brewers1 { top: calc(686 / 844 * 100%); right: calc(145 / 390 * 100%); }
+.team-logo.brewers2 { top: calc(599 / 844 * 100%); right: calc(101 / 390 * 100%); }
+
+
+
+/* 成績カード全体 */
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.player-card {
+  width: 250px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  text-align: center;
+  padding: 1rem;
+  transition: transform 0.2s;
+}
+
+.player-card:hover {
+  transform: scale(1.05);
+}
+
+.player-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-photo {
+  width: 80px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.stats-row span {
+  font-size: 1.2rem;
+  color: #003087; /* Dodgersブルー */
+}
+
+.stat-title {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-top: 1rem;
+  color: #222;
+}
+
+.team-logo_dodgers5{
+    width: 62px;
+    z-index: 1;
+    position: absolute;
+}
+
+
+
+/* 各シリーズスコア位置 */
+#series1 {
+    position: absolute;
+    top: 507px;
+    left: 38px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series2 {
+    position: absolute;
+    top: 457px;
+    left: 66px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series3 {
+    position: absolute;
+    top: 508px;
+    left: 255px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series4 {
+    position: absolute;
+    top: 456px;
+    left: 206px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series5 {
+    position: absolute;
+    top: 398px;
+    left: 127px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+
+#series6 {
+    position: absolute;
+    top: 52px;
+    left: 71px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series7 {
+    position: absolute;
+    top: 52px;
+    left: 265px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+
+#series8 {
+    position: absolute;
+    top: 103px;
+    left: 25px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series9 {
+    position: absolute;
+    top: 102px;
+    left: 205px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series10 {
+    position: absolute;
+    top: 161px;
+    left: 127px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series11 {
+    position: absolute;
+    top: 271px;
+    left: 162px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+.world-series-logo {
+        position: absolute;
+        top: 265px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        height: 60px;
+        width: 70px;
+}
+
+/* === WS動画セクション タブ切替用 === */
+.tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 15px 0;
+}
+
+.tab-button {
+  background-color: #ddd;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.25s ease;
+}
+
+.tab-button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.video-item {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.video-item iframe {
+  width: 100%;
+  max-width: 560px;
+  height: 315px;
+  border-radius: 10px;
+}
+
+
+
+/* 🧭 基本：スマホ用（390px前後） */
+.bracket-background {
+  margin-bottom: -220px; /* スマホで邪魔が入らない値 */
+}
+
+/* 💻 PCサイズ（768px以上）では margin をリセット */
+@media (min-width: 768px) {
+  .bracket-background {
+    margin-bottom: 0; /* PCでは通常通り */
+  }
+}
+
+
+/*   <!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 --> */
+.video-preview-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 27px;
+    flex-wrap: wrap; /* スマホ時の折り返し対応 */
+}
+
+.decorative-video {
+    width: 350px;
+    height: 193px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    margin-bottom: 18px;
+}
+
+
+#douga-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.douga-section_6 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    /* margin-top: 1%;
+    margin-bottom: 30px; */
+    margin: 0 57px 0 57px;
+}
+
+#douga-container-6 {
+    position: relative;
+    width: 159%;
+    height: 5em !important;
+    padding-top: 60%;
+    background-color: #000;
+}
+
+#douga-container-6 iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+}
+
+/* --- ミュートボタン --- */
+.mute-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.mute-btn:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+  transform: scale(1.1);
+}
+
+
+
+/* ==========================
+   スマホ用微調整
+   ========================== */
+@media (max-width: 480px) {
+  .team-logo {
+    width: 12vw; /* スマホでは少し大きく */
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+
+
+.PostSeason01{
+  width: 350px;
+  height: 193px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+  margin-bottom: 18px;
+  margin-top: 6px;
+}
+
+
+
+.team-logo_dodgers5{
+    width: 14vw;
+    z-index: 1;
+    position: absolute;
+}
+
+
+/* 各シリーズスコア位置 */
+#series1 {
+    position: absolute;
+    top: 455px;
+    left: 29px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series2 {
+    position: absolute;
+    top: 410px;
+    left: 52px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series3 {
+    position: absolute;
+    top: 454px;
+    left: 223px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series4 {
+    position: absolute;
+    top: 409px;
+    left: 182px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series5 {
+    position: absolute;
+    top: 358px;
+    left: 111px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series6 {
+    position: absolute;
+    top: 46px;
+    left: 59px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series7 {
+    position: absolute;
+    top: 46px;
+    left: 234px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series8 {
+    position: absolute;
+    top: 91px;
+    left: 19px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series9 {
+    position: absolute;
+    top: 91px;
+    left: 179px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series10 {
+    position: absolute;
+    top: 161px;
+    left: 110px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+#series11 {
+    position: absolute;
+    top: 247px;
+    left: 143px;
+    /* font-weight: bold; */
+    /* background: yellow; */
+    padding: 2px 6px;
+    /* border-radius: 4px; */
+    height: 20px;
+    width: 89px;
+    font-size: 8px;
+}
+
+.world-series-logo {
+        position: absolute;
+        top: 235px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        height: 60px;
+        width: 70px;
+}
+
+
+.series-score-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+#douga-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.douga-section_6 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+    /* margin-top: 1%;
+    margin-bottom: 30px; */
+    margin: 0 57px 0 57px;
+}
+
+
+
+#douga-container-6 {
+    position: relative;
+    width: 159%;
+    height: 5em !important;
+    padding-top: 60%;
+    background-color: #000;
+}
+
+#douga-container-6 iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+}
+
+
+
+/* 成績カード全体 */
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.player-card {
+  width: 250px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  text-align: center;
+  padding: 1rem;
+  transition: transform 0.2s;
+}
+
+.player-card:hover {
+  transform: scale(1.05);
+}
+
+.player-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-photo {
+  width: 80px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.stats-row span {
+  font-size: 1.2rem;
+  color: #003087; /* Dodgersブルー */
+}
+
+.stat-title {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-top: 1rem;
+  color: #222;
+}
+
+/* === WS動画セクション タブ切替用 === */
+.tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 15px 0;
+}
+
+.tab-button {
+  background-color: #ddd;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.25s ease;
+}
+
+.tab-button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.video-item {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.video-item iframe {
+  width: 100%;
+  max-width: 560px;
+  height: 315px;
+  border-radius: 10px;
+}
+
+
+.video-preview-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  margin: 33px auto 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); */
+}
+
+.decorative-video {
+  width: 100%;
+  /* height: auto; */
+  display: block;
+  border: none;
+  outline: none;
+}
+
+/* iPhoneなどでタップ時にネイティブUIが出るのを防ぐ */
+video::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* 🔇／🔊ボタン */
+.mute-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.mute-btn:hover {
+  background-color: rgba(0, 0, 0, 0.75);
+  transform: scale(1.1);
+}
 }
