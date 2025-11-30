@@ -100,7 +100,7 @@ h1 {
   width: 100%;        /* ← 350px固定をやめる */
   max-width: 350px;   /* ← 上限だけ指定しておく */
   height: auto;
-  aspect-ratio: 350 / 193; /* ← 高さ比率を維持 */
+  aspect-ratio: 350 / 500; /* ← 高さ比率を維持 */
   margin: 0 auto;
   overflow: hidden;   /* ← はみ出し防止 */
 }
@@ -594,7 +594,7 @@ h1 {
 
 .PostSeason01{
   width: 350px;
-  height: 193px;
+  height: 500px;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   object-fit: cover;
