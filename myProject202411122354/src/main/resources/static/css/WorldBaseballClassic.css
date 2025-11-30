@@ -1,10 +1,43 @@
-body {
+/* body {
   background-color: #f8fafc;
   font-family: "Inter", sans-serif;
   text-align: center;
   margin: 0;
   padding: 20px;
-  background-color: #fff2c8;
+  background-color: #00aaff26;
+} */
+
+
+
+body {
+  position: relative;
+  background-color: #00aaff26;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  /* overflow: hidden; ← ❌ 削除 */
+}
+
+/* 🌈 背景ロゴ（固定） */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none; /* ← ✅ 背景をクリックできないように（安全） */
+
+  background-image:
+    url("https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"),
+    url("https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg");
+  background-size: 60px 60px;
+  background-repeat: repeat;
+  background-position: 30px 0px, 0 30px;
+  background-attachment: fixed;
+  opacity: 0.25; /* 🔧 透明度調整 */
 }
 
 .postseason-btn{
@@ -18,6 +51,9 @@ body {
     margin-bottom: -12px;
     margin-top: 4px;
 }
+
+
+
 
 #title{
       /* font-weight: 800;
@@ -73,7 +109,7 @@ h1 {
   flex-direction: column; /* スマホでは縦並び */
   align-items: center;
   justify-content: center;
-  background-color: #fff4d0;
+  background-color: #00aaffc9;
   border-radius: 12px;
   padding: 0px 20px 20px 20px;
   /* margin: 20px auto; */
@@ -450,18 +486,19 @@ h1 {
 }
 
 .tab-button {
-  background-color: #ddd;
+  background-color: #0b0b0b;
   border: none;
   padding: 8px 14px;
   cursor: pointer;
   border-radius: 6px;
   font-weight: bold;
   transition: all 0.25s ease;
+  color: #f6f4f4;
 }
 
 .tab-button.active {
-  background-color: #007bff;
-  color: #fff;
+  background-color: #0b0b0b;
+  color: #f6f4f4;
 }
 
 .tab-content {
@@ -470,6 +507,7 @@ h1 {
   border: 2px solid #007bff;
   border-radius: 12px;
   margin-top: 10px;
+  background-color: #00aaffc9;
 }
 
 .tab-content.active {
@@ -880,18 +918,19 @@ h1 {
 }
 
 .tab-button {
-  background-color: #ddd;
+  background-color: #0b0b0b;
   border: none;
   padding: 8px 14px;
   cursor: pointer;
   border-radius: 6px;
   font-weight: bold;
   transition: all 0.25s ease;
+  color: #f6f4f4;
 }
 
 .tab-button.active {
-  background-color: #007bff;
-  color: #fff;
+  background-color: #0b0b0b;
+  color: #f6f4f4;
 }
 
 .tab-content {
