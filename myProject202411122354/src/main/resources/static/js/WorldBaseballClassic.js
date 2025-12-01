@@ -24,10 +24,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // ✅ 🔇／🔊 ミュート + 音量制御（★ 改良版 ★）
         setupMuteControl("videoWBC", "muteWBC");
+        setupMuteControl("videoWBC23", "muteWBC23");
         setupMuteControl("videoChampion", "muteChampion");
 
+// ✅ 🎬 すべての動画を確実に再生（新規追記済み）
+ensureVideoPlayback(["videoWBC", "videoWBC23", "videoChampion"]);
+
         // ✅ 🎬 すべての動画を確実に再生（← ここを新規追記！）
-        ensureVideoPlayback(["videoWBC", "videoChampion"]);
+        ensureVideoPlayback(["videoWBC", "videoChampion","videoWBC23"]);
 
     } catch (e) {
         console.error("Error fetching series results:", e);
