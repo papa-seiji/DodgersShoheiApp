@@ -23,41 +23,95 @@ document.addEventListener("DOMContentLoaded", async () => {
         initializeFadeSlideshow();
 
         // ✅ 🔇／🔊 ミュート + 音量制御（★ 改良版 ★）
-        const video = document.getElementById("postseasonVideo");
-        const muteBtn = document.getElementById("muteToggle");
+        setupMuteControl("videoWBC", "muteWBC");
+        setupMuteControl("videoChampion", "muteChampion");
 
-        if (video && muteBtn) {
-            // 初期音量を30%に設定（0.0〜1.0）
-            video.volume = 0.04;
-            console.log("初期音量を30%に設定しました。");
-
-            muteBtn.addEventListener("click", () => {
-                video.muted = !video.muted;
-                muteBtn.textContent = video.muted ? "🔇" : "🔊";
-            });
-
-            // 🔊 長押しで音量アップ・ダウンを追加（オプション）
-            muteBtn.addEventListener("contextmenu", (e) => {
-                e.preventDefault();
-                video.volume = Math.max(0, video.volume - 0.1);
-                console.log("音量ダウン:", Math.round(video.volume * 100) + "%");
-            });
-
-            muteBtn.addEventListener("dblclick", (e) => {
-                e.preventDefault();
-                video.volume = Math.min(1, video.volume + 0.1);
-                console.log("音量アップ:", Math.round(video.volume * 100) + "%");
-            });
-
-            console.log("ミュートボタン制御＋音量調整を初期化しました。");
-        } else {
-            console.warn("動画またはミュートボタンが見つかりません。");
-        }
+        // ✅ 🎬 すべての動画を確実に再生（← ここを新規追記！）
+        ensureVideoPlayback(["videoWBC", "videoChampion"]);
 
     } catch (e) {
         console.error("Error fetching series results:", e);
     }
 });
+
+// ✅ 改良版：全動画ミュート対応＋ボタン状態同期
+function setupMuteControl(videoId, buttonId, initialVolume = 0.04) {
+  const video = document.getElementById(videoId);
+  const button = document.getElementById(buttonId);
+
+  if (!video || !button) {
+    console.warn(`❌ ${videoId} または ${buttonId} が見つかりません`);
+    return;
+  }
+
+  video.volume = initialVolume;
+  video.muted = true; // 初期状態ミュート
+  button.textContent = "🔇";
+
+  button.addEventListener("click", () => {
+    const allVideos = document.querySelectorAll("video.decorative-video");
+    const allButtons = document.querySelectorAll(".mute-btn");
+
+    // 🧩 もし現在ミュート状態 → ミュート解除（他をミュート）
+    if (video.muted) {
+      allVideos.forEach((v, i) => {
+        v.muted = true;
+        if (allButtons[i]) allButtons[i].textContent = "🔇";
+      });
+      video.muted = false;
+      button.textContent = "🔊";
+      console.log(`🎵 ${videoId} の音声を有効化。他の動画はミュートにしました。`);
+
+    // 🧩 もしすでに解除状態 → 今回クリックでミュートに戻す
+    } else {
+      video.muted = true;
+      button.textContent = "🔇";
+      console.log(`🔇 ${videoId} をミュートに戻しました。`);
+    }
+  });
+
+  // 🔉右クリックで音量DOWN
+  button.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    video.volume = Math.max(0, video.volume - 0.1);
+    console.log(`🔽 ${videoId} 音量: ${Math.round(video.volume * 100)}%`);
+  });
+
+  // 🔊ダブルクリックで音量UP
+  button.addEventListener("dblclick", (e) => {
+    e.preventDefault();
+    video.volume = Math.min(1, video.volume + 0.1);
+    console.log(`🔼 ${videoId} 音量: ${Math.round(video.volume * 100)}%`);
+  });
+}
+
+
+// ✅ 複数動画の自動再生保証（ブラウザのautoplay制限回避）
+function ensureVideoPlayback(videoIds) {
+  videoIds.forEach(id => {
+    const video = document.getElementById(id);
+    if (!video) return;
+
+    // 自動再生がブロックされていた場合にtry-catchで再試行
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => console.log(`▶ ${id} 再生開始`))
+        .catch(err => {
+          console.warn(`⚠ ${id} の自動再生がブロックされました。ユーザー操作で再開します。`);
+          // 初回クリック時に再生開始
+          document.body.addEventListener(
+            "click",
+            () => {
+              video.play().then(() => console.log(`✅ ${id} 再生を手動開始`));
+            },
+            { once: true }
+          );
+        });
+    }
+  });
+}
+
 
 // ✅ フェードスライド関数（新規追加）
 function initializeFadeSlideshow() {
@@ -109,7 +163,6 @@ function handleHashNavigation() {
 
     const tabId = mapping[targetId];
     if (tabId) {
-        // 対応するタブをアクティブ化
         const tabs = document.querySelectorAll(".tab-button");
         const contents = document.querySelectorAll(".tab-content");
 
@@ -122,7 +175,6 @@ function handleHashNavigation() {
         const targetContent = document.getElementById(tabId);
         if (targetContent) targetContent.classList.add("active");
 
-        // スクロール実行（若干遅延を入れる）
         setTimeout(() => {
             const target = document.getElementById(targetId);
             if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -135,7 +187,6 @@ async function loadPostseasonStats() {
     try {
         const response = await fetch("/api/postseason/stats");
 
-        // ✅ ステータスコードチェック
         if (!response.ok) {
             throw new Error(`APIエラー: ${response.status}`);
         }
@@ -143,7 +194,6 @@ async function loadPostseasonStats() {
         const statsData = await response.json();
         console.log("Postseason Stats (REST版):", statsData);
 
-        // ✅ データが空・不正ならフォールバック
         if (!statsData || Object.keys(statsData).length === 0 || !statsData.ohtaniHitting) {
             throw new Error("APIデータが空のためフォールバックを使用します");
         }
@@ -153,7 +203,6 @@ async function loadPostseasonStats() {
     } catch (error) {
         console.warn("API取得失敗、手動データで表示します:", error);
 
-        // ✅ 手動データ（フォールバック）
         const manualStats = {
             ohtaniHitting: { avg: ".265", homeRuns: 8, rbi: 14, ops: "1.096" },
             ohtaniPitching: { era: "4.43", inningsPitched: "20.1", strikeOuts: 28, whip: "1.13" },
@@ -173,7 +222,6 @@ function renderPostseasonStats(statsData) {
         { key: "sasaki", name: "佐々木朗希", img: "/images/PostSeason-Stats_IMG/PostSeason-Sasaki.png" }
     ];
 
-    // ✅ 打撃データ（API形式 or 手動形式 両対応）
     const ohtaniHit =
         statsData.ohtaniHitting?.stats?.[0]?.splits?.[0]?.stat ||
         statsData.ohtaniHitting ||
@@ -194,7 +242,6 @@ function renderPostseasonStats(statsData) {
         </div>
     `;
 
-    // ✅ 投手データ（API形式 or 手動形式 両対応）
     const pitchers = [
         { data: statsData.ohtaniPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.ohtaniPitching || {}, player: players[0] },
         { data: statsData.yamamotoPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.yamamotoPitching || {}, player: players[1] },
