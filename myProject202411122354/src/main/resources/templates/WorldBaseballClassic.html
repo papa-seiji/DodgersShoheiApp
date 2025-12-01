@@ -7,17 +7,128 @@
   <link rel="stylesheet" th:href="@{/css/WorldBaseballClassic.css}">
 
 
-    <style>
+  <style>
+    /* === 🟦 ロゴ設定 === */
     .wbc-logo {
       width: 325px;
       height: auto;
       display: block;
       margin: 0 auto;
     }
-  </style>
 
+/* === 🟣 イントロ演出 === */
+#intro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* ✅ 横方向も中央寄せ */
+  text-align: center;  /* ✅ テキスト中央寄せ */
+  z-index: 9999;
+  overflow: hidden;
+  padding: 0 5vw; /* 画面端ギリギリ防止 */
+}
+
+.fade-text {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: clamp(1.4rem, 3vw, 2.8rem); /* ✅ 自動縮小対応 */
+  letter-spacing: 0.05em; /* 🔧 0.1em → 0.05em：文字間のバランス改善 */
+  opacity: 0;
+  transform: scale(1.1) translateX(-2%); /* ✅ 見た目中央補正（2%左へ） */
+  background: linear-gradient(180deg, #fff, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  white-space: nowrap; /* ✅ 改行禁止 */
+  display: inline-block; /* ✅ バウンディングボックスの中央基準化 */
+}
+
+.fade-text.show {
+  opacity: 1;
+  transform: scale(1) translateX(-7%); /* ✅ show時も補正維持 */
+}
+
+.fade-text.hide {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* 💥 最後の行「ドンッ！」用 */
+.fade-text.final {
+  opacity: 0;
+  transform: scale(0.8);
+  white-space: nowrap;
+}
+
+.fade-text.final.show {
+  opacity: 1;
+  transform: scale(1.3);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* 本編フェードイン */
+#main-content {
+  display: none;
+  animation: fadeInMain 1.5s ease-in forwards;
+}
+
+@keyframes fadeInMain {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-text {
+  white-space: nowrap !important;       /* 改行完全禁止 */
+  word-break: keep-all !important;      /* 文字途中で折り返さない */
+  overflow-wrap: normal !important;     /* 長文でも分割しない */
+  font-size: clamp(1.6rem, 2.5vw, 2.8rem);  /* 横幅が狭いと自動縮小 */
+}
+
+/* 🟡 Skip Intro ボタン */
+#skip-intro-btn {
+  position: absolute;
+  bottom: 4%;
+  right: 70%;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-family: "Inter", sans-serif;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#skip-intro-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.05);
+}
+</style>
 </head>
+
 <body>
+
+  <!-- 🎬 イントロ部分 -->
+  <div id="intro">
+    <!-- <div class="fade-text">そしてついに</div>
+    <div class="fade-text">その時がやってくる</div> -->
+
+    <div class="fade-text">あの感動をもう一度</div>
+    <div class="fade-text">世界が再び一つになる</div>
+    <div class="fade-text">世界よ、かかってこい</div>
+    <div class="fade-text">2026 World Baseball Classic</div>
+      <!-- 🟡 Skip Intro ボタン -->
+      <button id="skip-intro-btn">Skip Intro</button>
+    </div>
+  </div>
+
   <div class="wbc-container">
   <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
      alt="World Baseball Classic Logo"
@@ -406,6 +517,63 @@
   </section>
 
 
+  <!-- 🎞️ JS：イントロ切替制御 -->
+<!-- 🎞️ JS：イントロ切替制御 -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // ✅ DOM読み込み後に全要素取得
+    const texts = document.querySelectorAll(".fade-text");
+    const skipButton = document.getElementById("skip-intro-btn");
+    let index = 0;
+    let skipped = false;
+
+    // ✅ 本編へ切り替える処理
+    function endIntro() {
+      const intro = document.getElementById("intro");
+      intro.style.transition = "opacity 1s ease";
+      intro.style.opacity = "0";
+      setTimeout(() => {
+        intro.style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+      }, 1000);
+    }
+
+    // ✅ 順番にフェード表示
+    function playSequence() {
+      if (skipped) return; // スキップされたら停止
+
+      const current = texts[index];
+      current.classList.add("show");
+
+      // 表示キープ時間
+      setTimeout(() => {
+        current.classList.add("hide");
+      }, 5500);
+
+      // 次の行へ
+      setTimeout(() => {
+        current.classList.remove("show", "hide");
+        index++;
+        if (index < texts.length && !skipped) {
+          playSequence();
+        } else if (!skipped) {
+          setTimeout(endIntro, 2300);
+        }
+      }, 4000);
+    }
+
+    // ✅ Skip Intro ボタンクリック時の動作
+    skipButton.addEventListener("click", () => {
+      skipped = true;
+      endIntro();
+    });
+
+    // ✅ スタート
+    playSequence();
+  });
+</script>
+
+
   <!-- ✅ JS -->
   <script src="/js/WorldBaseballClassic.js"></script>
 <!--      <footer th:replace="fragments/footer :: footer"></footer>-->
@@ -413,5 +581,3 @@
 </body>
 </html>
 
-</body>
-</html>
