@@ -193,9 +193,20 @@
   <img src="/images/2026_WBC/japan_yoshinobu.JPEG" alt="yoshinobu" class="PostSeason01 fade-image">
 </div>
 
-
-
 </section>
+
+<!-- 🎞️ 06,09 WBC プレイ動画 -->
+<section class="video-preview-section">
+  <div class="video-preview-wrapper">
+    <video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>
+      <source src="/videos/06_09 WBC_ハイライト.mp4" type="video/mp4">
+      お使いのブラウザは video タグをサポートしていません。
+    </video>
+    <!-- 🔇／🔊 ミュートボタン -->
+    <button id="muteToggle" class="mute-btn">🔇</button>
+  </div>
+</section>
+
 
   <div class="postseason-container">
     <!-- トーナメント線の背景 -->
@@ -535,7 +546,7 @@
       let v = 0;
       const fadeIn = setInterval(() => {
         if (v < 0.2) {
-          v += 0.02;
+          v += 0.01;
           bgm.volume = v;
         } else {
           clearInterval(fadeIn);
@@ -548,7 +559,7 @@
       let v = bgm.volume;
       const fadeOut = setInterval(() => {
         if (v > 0.02) {
-          v -= 0.02;
+          v -= 0.01;
           bgm.volume = v;
         } else {
           clearInterval(fadeOut);
