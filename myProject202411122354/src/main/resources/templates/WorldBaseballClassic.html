@@ -117,8 +117,7 @@
 
   <!-- 🎬 イントロ部分 -->
   <div id="intro">
-    <!-- <div class="fade-text">そしてついに</div>
-    <div class="fade-text">その時がやってくる</div> -->
+<audio id="intro-bgm" src="/audio/intro_bgm.mp3" preload="auto"></audio>
 
     <div class="fade-text">あの感動をもう一度</div>
     <div class="fade-text">世界が再び一つになる</div>
@@ -524,11 +523,46 @@
     // ✅ DOM読み込み後に全要素取得
     const texts = document.querySelectorAll(".fade-text");
     const skipButton = document.getElementById("skip-intro-btn");
+    const bgm = document.getElementById("intro-bgm"); // 🎵 BGM要素取得
     let index = 0;
     let skipped = false;
 
+
+    // ✅ BGMフェードイン再生
+    function fadeInBGM() {
+      bgm.volume = 0.0; // 開始時は完全無音
+      bgm.play().catch(() => {}); // 自動再生ブロック回避
+      let v = 0;
+      const fadeIn = setInterval(() => {
+        if (v < 0.2) {
+          v += 0.02;
+          bgm.volume = v;
+        } else {
+          clearInterval(fadeIn);
+        }
+      }, 100); // 約2秒でフェードイン完了
+    }
+
+    // ✅ BGMフェードアウト停止
+    function fadeOutBGM() {
+      let v = bgm.volume;
+      const fadeOut = setInterval(() => {
+        if (v > 0.02) {
+          v -= 0.02;
+          bgm.volume = v;
+        } else {
+          clearInterval(fadeOut);
+          bgm.pause();
+          bgm.currentTime = 0;
+        }
+      }, 50); // 約1秒でフェードアウト
+    }
+
+
+
     // ✅ 本編へ切り替える処理
     function endIntro() {
+      fadeOutBGM(); // 🎵 ここでBGM停止
       const intro = document.getElementById("intro");
       intro.style.transition = "opacity 1s ease";
       intro.style.opacity = "0";
@@ -569,6 +603,7 @@
     });
 
     // ✅ スタート
+    fadeInBGM(); // 🎵 BGM開始
     playSequence();
   });
 </script>
