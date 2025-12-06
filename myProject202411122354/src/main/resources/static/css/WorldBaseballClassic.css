@@ -36,8 +36,8 @@ body::before {
   background-size: 60px 60px;
   background-repeat: repeat;
   background-position: 30px 0px, 0 30px;
-  background-attachment: fixed;
-  opacity: 0.25; /* 🔧 透明度調整 */
+  background-attachment: scroll;
+  opacity: 0.24; /* 🔧 透明度調整 */
 }
 
 .postseason-btn{
@@ -80,6 +80,9 @@ h1 {
     margin-top: -34px;
 }
 
+
+
+
 /* ==========================
    トーナメント全体のラッパ
    ========================== */
@@ -106,7 +109,7 @@ h1 {
 /* 🧩 新規：テキスト＋画像のレスポンシブレイアウト */
 .postseason-commentary {
   display: flex;
-  flex-direction: column; /* スマホでは縦並び */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: #00aaffc9;
@@ -596,11 +599,16 @@ h1 {
     height: 100%;
 }
 
+/* ミュートボタンの親を基準にする */
+.video-preview-wrapper {
+  position: relative;
+}
+
 /* --- ミュートボタン --- */
 .mute-btn {
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  right: 69px;
   background-color: rgba(0, 0, 0, 0.55);
   color: white;
   border: none;
@@ -986,7 +994,7 @@ video::-webkit-media-controls {
 .mute-btn {
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  right: 2px;
   background-color: rgba(0, 0, 0, 0.55);
   color: white;
   border: none;

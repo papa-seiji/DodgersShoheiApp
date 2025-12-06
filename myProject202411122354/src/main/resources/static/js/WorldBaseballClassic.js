@@ -221,9 +221,9 @@ async function loadPostseasonStats() {
 // ✅ 共通描画関数（API形式・手動形式どちらにも対応）
 function renderPostseasonStats(statsData) {
     const players = [
-        { key: "ohtani", name: "大谷翔平", img: "/images/PostSeason-Stats_IMG/PostSeason-Ohtani.png" },
-        { key: "yamamoto", name: "山本由伸", img: "/images/PostSeason-Stats_IMG/PostSeason-Yamamoto.png" },
-        { key: "sasaki", name: "佐々木朗希", img: "/images/PostSeason-Stats_IMG/PostSeason-Sasaki.png" }
+        { key: "ohtani", name: "大谷翔平", img: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026WBC_Ohtani.jpg" },
+        { key: "yamamoto", name: "山本由伸", img: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026WBC_Yoshinobu.jpg" },
+        { key: "sasaki", name: "佐々木朗希", img: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026WBC_Rouki.jpg" }
     ];
 
     const ohtaniHit =

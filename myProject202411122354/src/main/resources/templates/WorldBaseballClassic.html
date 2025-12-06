@@ -32,6 +32,7 @@
   z-index: 9999;
   overflow: hidden;
   padding: 0 5vw; /* 画面端ギリギリ防止 */
+  gap: 14px;                /* ← ボタン同士の間隔安定 */
 }
 
 .fade-text {
@@ -90,11 +91,8 @@
   font-size: clamp(1.6rem, 2.5vw, 2.8rem);  /* 横幅が狭いと自動縮小 */
 }
 
-/* 🟡 Skip Intro ボタン */
+/* 🟣 Skip Intro ボタン（位置指定なし → flex中央揃えに任せる） */
 #skip-intro-btn {
-  position: absolute;
-  bottom: 4%;
-  right: 70%;
   background: rgba(255, 255, 255, 0.15);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -104,6 +102,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 12px; /* ← スタートボタンとの間隔 */
 }
 
 #skip-intro-btn:hover {
@@ -117,23 +116,59 @@
   margin-bottom:-30px;
 }
 
+.intro-btn {
+  display: block;
+  padding: 12px 20px;
+  margin: 10px auto;
+  font-size: 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+}
+
+.intro-btn.skip {
+  background: rgba(150,0,0,0.7);
+}
+
+#intro-sound-toggle.intro-btn {
+  position: fixed !important;
+  bottom: 20px;
+  left: 20px;
+  margin: 0 !important;     /* ← これを追加すると完璧に安定する */
+  z-index: 9999;
+  pointer-events: auto;  /* ← flexやoverlayの影響を受けないために追加 */
+}
+
 </style>
 </head>
 
 <body>
 
   <!-- 🎬 イントロ部分 -->
-  <div id="intro">
-<audio id="intro-bgm" src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/intro_bgm.mp3" preload="auto"></audio>
+    <div id="intro">
 
-    <div class="fade-text">あの感動をもう一度</div>
-    <div class="fade-text">世界が再び一つになる</div>
-    <div class="fade-text">世界よ、かかってこい</div>
-    <div class="fade-text">2026 World Baseball Classic</div>
-      <!-- 🟡 Skip Intro ボタン -->
-      <button id="skip-intro-btn">Skip Intro</button>
+      <audio id="intro-bgm" src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/intro_bgm.mp3" preload="auto"></audio>
+
+      <!-- 🎬 映画イントロスタートボタン -->
+      <button id="intro-start-btn" class="intro-btn">🎬 イントロスタート</button>
+
+      <!-- ⏭ スキップボタン -->
+      <button id="intro-skip-btn" class="intro-btn skip">⏭ スキップ</button>
+
+      <!-- 映画風フェードテキスト -->
+      <div class="fade-text">あの感動をもう一度</div>
+      <div class="fade-text">世界が再び一つになる</div>
+      <div class="fade-text">世界よ、かかってこい</div>
+      <div class="fade-text">2026 World Baseball Classic</div>
+
+    <!-- 🔊 音声ON/OFFボタン（★追加部分） -->
+    <button id="intro-sound-toggle" class="intro-btn sound">🔇 音をオフ</button>
+
     </div>
-  </div>
+
+
 
   <div class="wbc-container">
   <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
@@ -549,102 +584,224 @@
   </section>
 
 
-  <!-- 🎞️ JS：イントロ切替制御 -->
+  <!-- ✅ JS -->
+  <script src="/js/WorldBaseballClassic.js"></script>
+
+
 <!-- 🎞️ JS：イントロ切替制御 -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // ✅ DOM読み込み後に全要素取得
-    const texts = document.querySelectorAll(".fade-text");
-    const skipButton = document.getElementById("skip-intro-btn");
-    const bgm = document.getElementById("intro-bgm"); // 🎵 BGM要素取得
-    let index = 0;
-    let skipped = false;
 
+/* ------------------------------------------
+  🔵 iPhone の音声再生許可（安定版）
+   ------------------------------------------ */
+function enableIOSAudio() {
+  const bgm = document.getElementById("intro-bgm");
 
-    // ✅ BGMフェードイン再生
-    function fadeInBGM() {
-      bgm.volume = 0.0; // 開始時は完全無音
-      bgm.play().catch(() => {}); // 自動再生ブロック回避
-      let v = 0;
-      const fadeIn = setInterval(() => {
-        if (v < 0.2) {
-          v += 0.01;
-          bgm.volume = v;
-        } else {
-          clearInterval(fadeIn);
-        }
-      }, 100); // 約2秒でフェードイン完了
-    }
+  const unlock = () => {
+    bgm.play().then(() => {
+      bgm.pause();
+      bgm.currentTime = 0;
+      console.log("iPhone 音声許可 OK");
+    }).catch(err => console.log("iPhone音声許可失敗:", err));
 
-    // ✅ BGMフェードアウト停止
-    function fadeOutBGM() {
-      let v = bgm.volume;
-      const fadeOut = setInterval(() => {
-        if (v > 0.02) {
-          v -= 0.01;
-          bgm.volume = v;
-        } else {
-          clearInterval(fadeOut);
-          bgm.pause();
-          bgm.currentTime = 0;
-        }
-      }, 50); // 約1秒でフェードアウト
-    }
+    window.removeEventListener("touchstart", unlock);
+    window.removeEventListener("click", unlock);
+  };
+
+  window.addEventListener("touchstart", unlock, { once: true });
+  window.addEventListener("click", unlock, { once: true });
+}
 
 
 
-    // ✅ 本編へ切り替える処理
-    function endIntro() {
-      fadeOutBGM(); // 🎵 ここでBGM停止
-      const intro = document.getElementById("intro");
-      intro.style.transition = "opacity 1s ease";
-      intro.style.opacity = "0";
-      setTimeout(() => {
-        intro.style.display = "none";
-        document.getElementById("main-content").style.display = "block";
-      }, 1000);
-    }
+/* ------------------------------------------
+    メイン処理
+   ------------------------------------------ */
+document.addEventListener("DOMContentLoaded", () => {
 
-    // ✅ 順番にフェード表示
-    function playSequence() {
-      if (skipped) return; // スキップされたら停止
+  enableIOSAudio(); // iPhone再生許可
 
-      const current = texts[index];
-      current.classList.add("show");
+  // DOM取得
+  const texts = document.querySelectorAll(".fade-text");
 
-      // 表示キープ時間
-      setTimeout(() => {
-        current.classList.add("hide");
-      }, 5500);
+  const startBtn = document.getElementById("intro-start-btn");
+  const skipBtn  = document.getElementById("intro-skip-btn");
 
-      // 次の行へ
-      setTimeout(() => {
-        current.classList.remove("show", "hide");
-        index++;
-        if (index < texts.length && !skipped) {
-          playSequence();
-        } else if (!skipped) {
-          setTimeout(endIntro, 2300);
-        }
-      }, 4000);
-    }
+  const soundBtn = document.getElementById("intro-sound-toggle");
+  const bgm      = document.getElementById("intro-bgm");
 
-    // ✅ Skip Intro ボタンクリック時の動作
-    skipButton.addEventListener("click", () => {
-      skipped = true;
-      endIntro();
+  const intro = document.getElementById("intro");
+  const main  = document.getElementById("main-content");
+
+  let index = 0;
+  let skipped = false;
+  let soundEnabled = false;
+  let fadeTimer = null;
+
+
+
+  /* ------------------------------------------
+      🎵 安定版 フェードイン
+     ------------------------------------------ */
+  function safeFadeIn() {
+    clearInterval(fadeTimer);
+
+    bgm.volume = 0;
+
+    bgm.play().catch(err => {
+      console.log("再生失敗:", err);
     });
 
-    // ✅ スタート
-    fadeInBGM(); // 🎵 BGM開始
-    playSequence();
+    fadeTimer = setInterval(() => {
+      if (bgm.volume < 0.3) {
+        bgm.volume = Math.min(0.3, bgm.volume + 0.02);
+      } else {
+        clearInterval(fadeTimer);
+      }
+    }, 120);
+  }
+
+
+
+  /* ------------------------------------------
+      🎵 安定版 フェードアウト
+     ------------------------------------------ */
+  function safeFadeOut() {
+    clearInterval(fadeTimer);
+
+    fadeTimer = setInterval(() => {
+      if (bgm.volume > 0.02) {
+        bgm.volume = Math.max(0, bgm.volume - 0.03);
+      } else {
+        clearInterval(fadeTimer);
+        bgm.pause();
+
+        // Safari対策：タイミングをずらす
+        setTimeout(() => {
+          bgm.currentTime = 0;
+        }, 150);
+      }
+    }, 80);
+  }
+
+
+
+  /* ------------------------------------------
+      🔊 ON/OFF トグル
+     ------------------------------------------ */
+  soundBtn.addEventListener("click", () => {
+
+    if (!soundEnabled) {
+      // ON
+      safeFadeIn();
+      soundBtn.textContent = "🔊 音オン（再生中）";
+      soundEnabled = true;
+
+    } else {
+      // OFF
+      safeFadeOut();
+      soundBtn.textContent = "🔇 音をオフ";
+      soundEnabled = false;
+    }
   });
+
+
+
+  /* ------------------------------------------
+      ✨ テキストフェード演出
+     ------------------------------------------ */
+  function playSequence() {
+    if (skipped) return;
+
+    const current = texts[index];
+    current.classList.add("show");
+
+    setTimeout(() => {
+      current.classList.add("hide");
+    }, 5500);
+
+    setTimeout(() => {
+      current.classList.remove("show", "hide");
+      index++;
+
+      if (index < texts.length && !skipped) {
+        playSequence();
+      } else if (!skipped) {
+        setTimeout(endIntro, 2300);
+      }
+    }, 4000);
+  }
+
+
+
+  /* ------------------------------------------
+      🎬 Intro → Main
+     ------------------------------------------ */
+  function endIntro() {
+
+    // BGM停止
+    soundEnabled = false;
+    soundBtn.textContent = "🔇 音をオフ";
+    safeFadeOut();
+
+    intro.style.transition = "opacity 1s ease";
+    intro.style.opacity = "0";
+
+    setTimeout(() => {
+      intro.style.display = "none";
+      main.style.display = "block";
+    }, 1000);
+  }
+
+
+
+/* ------------------------------------------
+   🎬 Startボタン（イントロ開始＋BGM開始）
+   ------------------------------------------ */
+startBtn.addEventListener("click", () => {
+  startBtn.style.display = "none";
+  skipBtn.style.display = "none";
+
+  // 🔊 BGMフェードイン開始
+  soundEnabled = true;
+  soundBtn.textContent = "🔊 音オン（再生中）";
+  safeFadeIn();
+
+  // 🎬 イントロ演出スタート
+  playSequence();
+});
+
+
+
+  /* ------------------------------------------
+      ⏭ Skipボタン
+     ------------------------------------------ */
+  skipBtn.addEventListener("click", () => {
+
+    skipped = true;
+
+    // BGM停止・状態リセット
+    soundEnabled = false;
+    soundBtn.textContent = "🔇 音をオフ";
+    safeFadeOut();
+
+    endIntro();
+  });
+
+
+
+  /* ------------------------------------------
+      🚀 PCだけ自動でBGM ONにしない仕様へ変更
+      （あなたの新要求に合わせて「Start をトリガー」に統一）
+     ------------------------------------------ */
+  // ※ PCでも自動再生しない
+  //   Start した時だけユーザー操作として BGM ON が可能になる
+
+}); // DOMContentLoaded end
+
 </script>
 
 
-  <!-- ✅ JS -->
-  <script src="/js/WorldBaseballClassic.js"></script>
-<!--      <footer th:replace="fragments/footer :: footer"></footer>-->
 
 </body>
 </html>
