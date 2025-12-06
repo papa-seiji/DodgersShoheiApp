@@ -657,8 +657,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     fadeTimer = setInterval(() => {
-      if (bgm.volume < 0.3) {
-        bgm.volume = Math.min(0.3, bgm.volume + 0.02);
+      if (bgm.volume < 0.2) {
+        bgm.volume = Math.min(0.2, bgm.volume + 0.02);
       } else {
         clearInterval(fadeTimer);
       }
