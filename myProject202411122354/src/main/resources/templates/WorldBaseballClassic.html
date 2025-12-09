@@ -196,6 +196,7 @@
     </div>
 
 
+<div id="main-content" style="display:none;">
 
   <div class="wbc-container">
   <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
@@ -688,11 +689,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   enableIOSAudio();
 
+  const bgm      = document.getElementById("intro-bgm");
   const texts   = document.querySelectorAll(".fade-text");
   const startBtn = document.getElementById("intro-start-btn");
   const skipBtn  = document.getElementById("intro-skip-btn");
   const soundBtn = document.getElementById("intro-sound-toggle");
-  const bgm      = document.getElementById("intro-bgm");
 
   const intro = document.getElementById("intro");
   const main  = document.getElementById("main-content");
@@ -752,7 +753,7 @@ function safeFadeOut() {
         } catch(e) {}
       }, 20);   // ← リセットを早くする
     }
-  }, 50);   // ← フェード処理そのものを高速化
+  }, 0);   // ← フェード処理そのものを高速化
 }
 
 
@@ -802,30 +803,28 @@ soundBtn.addEventListener("click", () => {
   /* ------------------------------------------
       🎬 Intro → Main
 ------------------------------------------ */
-  function endIntro() {
+function endIntro() {
 
-    if (introEnded) return;
-    introEnded = true;
+  if (introEnded) return;
+  introEnded = true;
 
-    soundEnabled = false;
-    safeFadeOut();
+  soundEnabled = false;
+  safeFadeOut();
 
-    soundBtn.style.display = "none";
+  soundBtn.style.display = "none";
 
-    // ★iPhoneでは完全停止のため forceStop も追加
-    if (isIOS) {
-      forceStopBGM(bgm);
-    }
-
-    intro.style.transition = "opacity 1s ease";
-    intro.style.opacity = "0";
-
-    setTimeout(() => {
-      intro.style.display = "none";
-      main.style.display = "block";
-    }, 1000);
+  if (isIOS) {
+    forceStopBGM(bgm);
   }
 
+  intro.style.transition = "opacity 1s ease";
+  intro.style.opacity = "0";
+
+  setTimeout(() => {
+    intro.style.display = "none";
+    main.style.display = "block";
+  }, 1000);
+}
 
 
   /* ------------------------------------------
@@ -881,6 +880,7 @@ startBtn.addEventListener("click", () => {
 </script>
 
 
+</div> <!-- main-content END -->
 
 </body>
 </html>
