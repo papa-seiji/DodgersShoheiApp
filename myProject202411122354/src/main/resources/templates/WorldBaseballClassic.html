@@ -615,6 +615,8 @@
     <div id="pitching-stats" class="stats-container"></div>
   </section>
 
+</div> <!-- main-content END -->
+
 
   <!-- ✅ JS -->
   <script src="/js/WorldBaseballClassic.js"></script>
@@ -645,7 +647,6 @@ function enableIOSAudio() {
 }
 
 
-
 /* =====================================================
       🟦 iPhone 安定化：強制停止関数（最強版）
 ===================================================== */
@@ -669,16 +670,14 @@ function forceStopBGM(bgm) {
 }
 
 
-
 /* =====================================================
-      🟦 iPhone 安定化：再生しているか確認する（2回チェック）
+      🟦 iPhone 安定化：再生しているか確認（2回チェック）
 ===================================================== */
 function ensurePlaying(bgm) {
   if (bgm.paused || bgm.currentTime === 0) {
     bgm.play().catch(()=>{});
   }
 }
-
 
 
 
@@ -690,7 +689,7 @@ document.addEventListener("DOMContentLoaded", () => {
   enableIOSAudio();
 
   const bgm      = document.getElementById("intro-bgm");
-  const texts   = document.querySelectorAll(".fade-text");
+  const texts    = document.querySelectorAll(".fade-text");
   const startBtn = document.getElementById("intro-start-btn");
   const skipBtn  = document.getElementById("intro-skip-btn");
   const soundBtn = document.getElementById("intro-sound-toggle");
@@ -709,7 +708,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* ------------------------------------------
-      🎵 フェードイン
+      🎵 フェードイン（超低音量）
 ------------------------------------------ */
   function safeFadeIn() {
     clearInterval(fadeTimer);
@@ -718,8 +717,8 @@ document.addEventListener("DOMContentLoaded", () => {
     bgm.play().catch(err => console.log("再生失敗:", err));
 
     fadeTimer = setInterval(() => {
-      if (bgm.volume < 0.04) {
-        bgm.volume = Math.min(0.04, bgm.volume + 0.01);
+      if (bgm.volume < 0.02) {
+        bgm.volume = Math.min(0.02, bgm.volume + 0.01);
       } else {
         clearInterval(fadeTimer);
       }
@@ -729,41 +728,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* ------------------------------------------
-      🎵 フェードアウト（iPhoneは弱め）
+      🎵 フェードアウト（高速・iPhone対応）
 ------------------------------------------ */
-function safeFadeOut() {
-  clearInterval(fadeTimer);
+  function safeFadeOut() {
+    clearInterval(fadeTimer);
 
-  let step = 0.05;   // ← 減衰スピードUP（超重要）
+    let step = 0.05;  // ← 減衰スピードを高速化
 
-  fadeTimer = setInterval(() => {
-    if (bgm.volume > step) {
-      bgm.volume = Math.max(0, bgm.volume - step);
-    } else {
-      clearInterval(fadeTimer);
+    fadeTimer = setInterval(() => {
+      if (bgm.volume > step) {
+        bgm.volume = Math.max(0, bgm.volume - step);
+      } else {
+        clearInterval(fadeTimer);
 
-      // すぐ完全停止
-      bgm.pause();
-      bgm.volume = 0;
+        bgm.pause();
+        bgm.volume = 0;
 
-      // Safari対策：強制リセット
-      setTimeout(() => {
-        try {
-          bgm.currentTime = 0;
-        } catch(e) {}
-      }, 20);   // ← リセットを早くする
-    }
-  }, 0);   // ← フェード処理そのものを高速化
-}
+        setTimeout(() => {
+          try {
+            bgm.currentTime = 0;
+          } catch(e) {}
+        }, 20);
+      }
+    }, 0);
+  }
 
 
 
 /* ------------------------------------------
-    🔊 ON/OFF トグル（★BGMは再生しない）
+    🔊 ON/OFF トグル（再生しない）
 ------------------------------------------ */
 soundBtn.addEventListener("click", () => {
 
-  // ただ設定フラグを切り替えるだけ
   soundEnabled = !soundEnabled;
 
   if (soundEnabled) {
@@ -775,32 +771,38 @@ soundBtn.addEventListener("click", () => {
 
 
 
-  /* ------------------------------------------
+/* ------------------------------------------
       ✨ テキストフェード演出
 ------------------------------------------ */
-  function playSequence() {
-    if (skipped) return;
+function playSequence() {
+  if (skipped) return;
 
-    const current = texts[index];
-    current.classList.add("show");
+  const current = texts[index];
+  current.classList.add("show");
 
-    setTimeout(() => { current.classList.add("hide"); }, 5500);
+  setTimeout(() => { current.classList.add("hide"); }, 5500);
 
-    setTimeout(() => {
-      current.classList.remove("show", "hide");
-      index++;
+  setTimeout(() => {
+    current.classList.remove("show", "hide");
+    index++;
 
-      if (index < texts.length && !skipped) {
-        playSequence();
-      } else if (!skipped) {
-        setTimeout(endIntro, 2300);
-      }
-    }, 4000);
-  }
+    if (index < texts.length && !skipped) {
+      playSequence();
+    } else if (!skipped) {
+
+      // ★最後のテキストが出た瞬間にフェードアウト
+      safeFadeOut();
+
+      // 本編遷移（高速）
+      setTimeout(endIntro, 1900);
+    }
+
+  }, 4000);
+}
 
 
 
-  /* ------------------------------------------
+/* ------------------------------------------
       🎬 Intro → Main
 ------------------------------------------ */
 function endIntro() {
@@ -823,12 +825,13 @@ function endIntro() {
   setTimeout(() => {
     intro.style.display = "none";
     main.style.display = "block";
-  }, 1000);
+  }, 50);
 }
 
 
-  /* ------------------------------------------
-      🎬 Startボタン
+
+/* ------------------------------------------
+    🎬 Startボタン
 ------------------------------------------ */
 startBtn.addEventListener("click", () => {
 
@@ -839,12 +842,11 @@ startBtn.addEventListener("click", () => {
   const warning = document.getElementById("intro-volume-warning");
   if (warning) warning.style.display = "none";
 
-  // ★設定がONになっている場合だけBGM再生
+  // 🔊 設定がONの時だけ BGM 再生
   if (soundEnabled) {
     soundBtn.textContent = "🔊 音オン（再生中）";
     safeFadeIn();
 
-    // iPhone用 再生確認チェック
     setTimeout(() => ensurePlaying(bgm), 300);
     setTimeout(() => ensurePlaying(bgm), 800);
   }
@@ -854,33 +856,31 @@ startBtn.addEventListener("click", () => {
 
 
 
-  /* ------------------------------------------
-      ⏭ Skip
+/* ------------------------------------------
+    ⏭ Skip
 ------------------------------------------ */
-  skipBtn.addEventListener("click", () => {
+skipBtn.addEventListener("click", () => {
 
-    skipped = true;
-    soundEnabled = false;
+  skipped = true;
+  soundEnabled = false;
 
-    safeFadeOut();
+  safeFadeOut();
 
-    if (isIOS) {
-      forceStopBGM(bgm);
-    }
+  if (isIOS) {
+    forceStopBGM(bgm);
+  }
 
-    startBtn.style.display = "none";
-    skipBtn.style.display = "none";
-    soundBtn.style.display = "none";
+  startBtn.style.display = "none";
+  skipBtn.style.display = "none";
+  soundBtn.style.display = "none";
 
-    endIntro();
-  });
-
+  endIntro();
 });
 
+});
 </script>
 
 
-</div> <!-- main-content END -->
 
 </body>
 </html>
