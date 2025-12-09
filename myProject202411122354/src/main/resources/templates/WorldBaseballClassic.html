@@ -149,13 +149,13 @@
 /* ⚠️ 注意喚起（音量調整メッセージ） */
 .volume-warning {
   color: #ffe066;                 /* 明るい黄色 */
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   margin-bottom: 15px;
   text-align: center;
   font-weight: 600;
   text-shadow: 0 0 4px rgba(0,0,0,0.5);  /* 若干強調 */
     position: fixed !important;
-  bottom: 70px;
+  bottom: 71px;
   left: 20px;
   margin: 0 !important;     /* ← これを追加すると完璧に安定する */
   z-index: 9999;
@@ -619,21 +619,21 @@
   <script src="/js/WorldBaseballClassic.js"></script>
 
 
-<!-- 🎞️ JS：イントロ切替制御 -->
 <script>
 
 /* ------------------------------------------
   🔵 iPhone の音声再生許可（安定版）
-   ------------------------------------------ */
+------------------------------------------ */
 function enableIOSAudio() {
   const bgm = document.getElementById("intro-bgm");
 
   const unlock = () => {
-    bgm.play().then(() => {
-      bgm.pause();
-      bgm.currentTime = 0;
-      console.log("iPhone 音声許可 OK");
-    }).catch(err => console.log("iPhone音声許可失敗:", err));
+    bgm.play()
+      .then(() => {
+        bgm.pause();
+        bgm.currentTime = 0;
+      })
+      .catch(err => console.log("iPhone音声許可失敗:", err));
 
     window.removeEventListener("touchstart", unlock);
     window.removeEventListener("click", unlock);
@@ -645,19 +645,52 @@ function enableIOSAudio() {
 
 
 
+/* =====================================================
+      🟦 iPhone 安定化：強制停止関数（最強版）
+===================================================== */
+function forceStopBGM(bgm) {
+  try {
+    bgm.pause();
+    bgm.volume = 0;
+
+    setTimeout(() => {
+      bgm.currentTime = 0;
+
+      // ★Safari専用：完全停止させる裏技
+      const src = bgm.src;
+      bgm.src = "";
+      bgm.src = src;
+
+    }, 100);
+  } catch(e) {
+    console.log("forceStopBGM error:", e);
+  }
+}
+
+
+
+/* =====================================================
+      🟦 iPhone 安定化：再生しているか確認する（2回チェック）
+===================================================== */
+function ensurePlaying(bgm) {
+  if (bgm.paused || bgm.currentTime === 0) {
+    bgm.play().catch(()=>{});
+  }
+}
+
+
+
+
 /* ------------------------------------------
     メイン処理
-   ------------------------------------------ */
+------------------------------------------ */
 document.addEventListener("DOMContentLoaded", () => {
 
-  enableIOSAudio(); // iPhone再生許可
+  enableIOSAudio();
 
-  // DOM取得
-  const texts = document.querySelectorAll(".fade-text");
-
+  const texts   = document.querySelectorAll(".fade-text");
   const startBtn = document.getElementById("intro-start-btn");
   const skipBtn  = document.getElementById("intro-skip-btn");
-
   const soundBtn = document.getElementById("intro-sound-toggle");
   const bgm      = document.getElementById("intro-bgm");
 
@@ -668,24 +701,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let skipped = false;
   let soundEnabled = false;
   let fadeTimer = null;
+  let introEnded = false;
+
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 
 
   /* ------------------------------------------
-      🎵 安定版 フェードイン
-     ------------------------------------------ */
+      🎵 フェードイン
+------------------------------------------ */
   function safeFadeIn() {
     clearInterval(fadeTimer);
 
     bgm.volume = 0;
-
-    bgm.play().catch(err => {
-      console.log("再生失敗:", err);
-    });
+    bgm.play().catch(err => console.log("再生失敗:", err));
 
     fadeTimer = setInterval(() => {
       if (bgm.volume < 0.2) {
-        bgm.volume = Math.min(0.2, bgm.volume + 0.02);
+        bgm.volume = Math.min(0.12, bgm.volume + 0.02);
       } else {
         clearInterval(fadeTimer);
       }
@@ -695,19 +728,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* ------------------------------------------
-      🎵 安定版 フェードアウト
-     ------------------------------------------ */
+      🎵 フェードアウト（iPhoneは弱め）
+------------------------------------------ */
   function safeFadeOut() {
     clearInterval(fadeTimer);
 
+    const fadeSpeed = isIOS ? 0.015 : 0.03;
+
     fadeTimer = setInterval(() => {
-      if (bgm.volume > 0.02) {
-        bgm.volume = Math.max(0, bgm.volume - 0.03);
+      if (bgm.volume > fadeSpeed) {
+        bgm.volume = Math.max(0, bgm.volume - fadeSpeed);
       } else {
         clearInterval(fadeTimer);
         bgm.pause();
 
-        // Safari対策：タイミングをずらす
         setTimeout(() => {
           bgm.currentTime = 0;
         }, 150);
@@ -717,39 +751,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  /* ------------------------------------------
-      🔊 ON/OFF トグル
-     ------------------------------------------ */
-  soundBtn.addEventListener("click", () => {
+/* ------------------------------------------
+    🔊 ON/OFF トグル（★BGMは再生しない）
+------------------------------------------ */
+soundBtn.addEventListener("click", () => {
 
-    if (!soundEnabled) {
-      // ON
-      safeFadeIn();
-      soundBtn.textContent = "🔊 音オン（再生中）";
-      soundEnabled = true;
+  // ただ設定フラグを切り替えるだけ
+  soundEnabled = !soundEnabled;
 
-    } else {
-      // OFF
-      safeFadeOut();
-      soundBtn.textContent = "🔇 音をオフ";
-      soundEnabled = false;
-    }
-  });
+  if (soundEnabled) {
+    soundBtn.textContent = "🔊 音オン（設定）";
+  } else {
+    soundBtn.textContent = "🔇 音をオフ";
+  }
+});
 
 
 
   /* ------------------------------------------
       ✨ テキストフェード演出
-     ------------------------------------------ */
+------------------------------------------ */
   function playSequence() {
     if (skipped) return;
 
     const current = texts[index];
     current.classList.add("show");
 
-    setTimeout(() => {
-      current.classList.add("hide");
-    }, 5500);
+    setTimeout(() => { current.classList.add("hide"); }, 5500);
 
     setTimeout(() => {
       current.classList.remove("show", "hide");
@@ -767,13 +795,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ------------------------------------------
       🎬 Intro → Main
-     ------------------------------------------ */
+------------------------------------------ */
   function endIntro() {
 
-    // BGM停止
+    if (introEnded) return;
+    introEnded = true;
+
     soundEnabled = false;
-    soundBtn.textContent = "🔇 音をオフ";
     safeFadeOut();
+
+    soundBtn.style.display = "none";
+
+    // ★iPhoneでは完全停止のため forceStop も追加
+    if (isIOS) {
+      forceStopBGM(bgm);
+    }
 
     intro.style.transition = "opacity 1s ease";
     intro.style.opacity = "0";
@@ -786,49 +822,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ------------------------------------------
-   🎬 Startボタン（イントロ開始＋BGM開始）
-   ------------------------------------------ */
+  /* ------------------------------------------
+      🎬 Startボタン
+------------------------------------------ */
 startBtn.addEventListener("click", () => {
+
   startBtn.style.display = "none";
   skipBtn.style.display = "none";
+  soundBtn.style.display = "none";
 
-  // 🔊 BGMフェードイン開始
-  soundEnabled = true;
-  soundBtn.textContent = "🔊 音オン（再生中）";
-  safeFadeIn();
+  const warning = document.getElementById("intro-volume-warning");
+  if (warning) warning.style.display = "none";
 
-  // 🎬 イントロ演出スタート
+  // ★設定がONになっている場合だけBGM再生
+  if (soundEnabled) {
+    soundBtn.textContent = "🔊 音オン（再生中）";
+    safeFadeIn();
+
+    // iPhone用 再生確認チェック
+    setTimeout(() => ensurePlaying(bgm), 300);
+    setTimeout(() => ensurePlaying(bgm), 800);
+  }
+
   playSequence();
 });
 
 
 
   /* ------------------------------------------
-      ⏭ Skipボタン
-     ------------------------------------------ */
+      ⏭ Skip
+------------------------------------------ */
   skipBtn.addEventListener("click", () => {
 
     skipped = true;
-
-    // BGM停止・状態リセット
     soundEnabled = false;
-    soundBtn.textContent = "🔇 音をオフ";
+
     safeFadeOut();
+
+    if (isIOS) {
+      forceStopBGM(bgm);
+    }
+
+    startBtn.style.display = "none";
+    skipBtn.style.display = "none";
+    soundBtn.style.display = "none";
 
     endIntro();
   });
 
-
-
-  /* ------------------------------------------
-      🚀 PCだけ自動でBGM ONにしない仕様へ変更
-      （あなたの新要求に合わせて「Start をトリガー」に統一）
-     ------------------------------------------ */
-  // ※ PCでも自動再生しない
-  //   Start した時だけユーザー操作として BGM ON が可能になる
-
-}); // DOMContentLoaded end
+});
 
 </script>
 
