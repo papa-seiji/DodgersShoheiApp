@@ -91,6 +91,11 @@
   font-size: clamp(1.6rem, 2.5vw, 2.8rem);  /* 横幅が狭いと自動縮小 */
 }
 
+#block01{
+  /* background: rgba(138, 15, 15, 0.85); */
+  margin-right: 10%;
+}
+
 /* 🟣 Skip Intro ボタン（位置指定なし → flex中央揃えに任せる） */
 #skip-intro-btn {
   background: rgba(255, 255, 255, 0.15);
@@ -124,7 +129,7 @@
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  background: rgba(0,0,0,0.7);
+  background: rgb(59 56 56 / 70%);
   color: #fff;
 }
 
@@ -141,6 +146,23 @@
   pointer-events: auto;  /* ← flexやoverlayの影響を受けないために追加 */
 }
 
+/* ⚠️ 注意喚起（音量調整メッセージ） */
+.volume-warning {
+  color: #ffe066;                 /* 明るい黄色 */
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: 600;
+  text-shadow: 0 0 4px rgba(0,0,0,0.5);  /* 若干強調 */
+    position: fixed !important;
+  bottom: 70px;
+  left: 20px;
+  margin: 0 !important;     /* ← これを追加すると完璧に安定する */
+  z-index: 9999;
+  pointer-events: auto;  /* ← flexやoverlayの影響を受けないために追加 */
+}
+
+
 </style>
 </head>
 
@@ -150,18 +172,23 @@
     <div id="intro">
 
       <audio id="intro-bgm" src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/intro_bgm.mp3" preload="auto"></audio>
-
+<div id="block01">
       <!-- 🎬 映画イントロスタートボタン -->
       <button id="intro-start-btn" class="intro-btn">🎬 イントロスタート</button>
 
       <!-- ⏭ スキップボタン -->
       <button id="intro-skip-btn" class="intro-btn skip">⏭ スキップ</button>
-
+</div>
       <!-- 映画風フェードテキスト -->
       <div class="fade-text">あの感動をもう一度</div>
       <div class="fade-text">世界が再び一つになる</div>
       <div class="fade-text">世界よ、かかってこい</div>
       <div class="fade-text">2026 World Baseball Classic</div>
+
+<!-- ⚠️ 注意喚起メッセージ -->
+<div id="intro-volume-warning" class="volume-warning">
+  ⚠️ BGM(音声)を流す事も可能です。<br>再生前に音量を調整してください。
+</div>
 
     <!-- 🔊 音声ON/OFFボタン（★追加部分） -->
     <button id="intro-sound-toggle" class="intro-btn sound">🔇 音をオフ</button>
