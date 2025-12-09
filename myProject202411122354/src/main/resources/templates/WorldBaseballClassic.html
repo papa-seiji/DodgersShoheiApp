@@ -717,8 +717,8 @@ document.addEventListener("DOMContentLoaded", () => {
     bgm.play().catch(err => console.log("再生失敗:", err));
 
     fadeTimer = setInterval(() => {
-      if (bgm.volume < 0.2) {
-        bgm.volume = Math.min(0.12, bgm.volume + 0.02);
+      if (bgm.volume < 0.04) {
+        bgm.volume = Math.min(0.04, bgm.volume + 0.01);
       } else {
         clearInterval(fadeTimer);
       }
@@ -730,24 +730,30 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ------------------------------------------
       🎵 フェードアウト（iPhoneは弱め）
 ------------------------------------------ */
-  function safeFadeOut() {
-    clearInterval(fadeTimer);
+function safeFadeOut() {
+  clearInterval(fadeTimer);
 
-    const fadeSpeed = isIOS ? 0.015 : 0.03;
+  let step = 0.05;   // ← 減衰スピードUP（超重要）
 
-    fadeTimer = setInterval(() => {
-      if (bgm.volume > fadeSpeed) {
-        bgm.volume = Math.max(0, bgm.volume - fadeSpeed);
-      } else {
-        clearInterval(fadeTimer);
-        bgm.pause();
+  fadeTimer = setInterval(() => {
+    if (bgm.volume > step) {
+      bgm.volume = Math.max(0, bgm.volume - step);
+    } else {
+      clearInterval(fadeTimer);
 
-        setTimeout(() => {
+      // すぐ完全停止
+      bgm.pause();
+      bgm.volume = 0;
+
+      // Safari対策：強制リセット
+      setTimeout(() => {
+        try {
           bgm.currentTime = 0;
-        }, 150);
-      }
-    }, 80);
-  }
+        } catch(e) {}
+      }, 20);   // ← リセットを早くする
+    }
+  }, 50);   // ← フェード処理そのものを高速化
+}
 
 
 
