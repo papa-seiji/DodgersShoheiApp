@@ -76,7 +76,7 @@
 /* 本編フェードイン */
 #main-content {
   display: none;
-  animation: fadeInMain 1.5s ease-in forwards;
+  /* animation: fadeInMain 1.5s ease-in forwards; */
 }
 
 @keyframes fadeInMain {
@@ -94,6 +94,7 @@
 #block01{
   /* background: rgba(138, 15, 15, 0.85); */
   margin-right: 10%;
+  margin-top: 35%;
 }
 
 /* 🟣 Skip Intro ボタン（位置指定なし → flex中央揃えに任せる） */
@@ -162,6 +163,11 @@
   pointer-events: auto;  /* ← flexやoverlayの影響を受けないために追加 */
 }
 
+#samuraiLogo{
+  margin-top: 25px;
+    width: 250px;
+    height: 256px;
+}
 
 </style>
 </head>
@@ -204,7 +210,8 @@
     class="wbc-logo">
 
     <h1>　2026</h1>
-    <a href="/home" class="postseason-btn">HOME画面に戻る</a>
+    <a href="/home" class="postseason-btn">
+HOME画面に戻る</a>
 
 
 <!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
@@ -265,6 +272,20 @@
 
 </section>
 
+<img id="samuraiLogo" alt="Samurai Japan Logo">
+
+<script>
+fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_JAPAN_logo.svg&prop=imageinfo&iiprop=url&format=json&origin=*")
+  .then(res => res.json())
+  .then(data => {
+    const pages = data.query.pages;
+    const key = Object.keys(pages)[0];
+    const url = pages[key].imageinfo[0].url;
+
+    document.getElementById("samuraiLogo").src = url;
+  });
+</script>
+
 <h3 class="highlight01">'06,'09 王,原JAPAN ハイライト</h3>
 <!-- 🎞️ 06,09 WBC プレイ動画 -->
 <section class="video-preview-section">
@@ -323,6 +344,7 @@
 
 
 <!-- ✅ 第1戦 -->
+<!-- 
 <div id="game1" class="tab-content active">
 <div id="hoge-hoge_landing7" class="shiny-text-1"></div>
   <h3>2025/10/25　第1戦 LAD対TOR</h3>
@@ -364,8 +386,9 @@
     <p>大谷翔平 初HRマルチアングル</p>
   </div>
 </div>
-
+ -->
 <!-- ✅ 第2戦 -->
+<!-- 
 <div id="game2" class="tab-content">
 <div id="hoge-hoge_landing8" class="shiny-text-1"></div>
   <h3>2025/10/26　第2戦 LAD対TOR</h3>
@@ -395,8 +418,9 @@
     <p>日本の至宝がまたも歴史的快挙</p>
   </div>
 </div>
-
+ -->
 <!-- ✅ 第3戦 -->
+<!--
 <div id="game3" class="tab-content">
 <div id="hoge-hoge_landing9" class="shiny-text-1"></div>
   <h3>2025/10/28　第3戦 LAD対TOR</h3>
@@ -426,8 +450,9 @@
     <p>大谷2HR4安打4敬遠1試合9出塁</p>
   </div>
 </div>
-
+ -->
 <!-- ✅ 第4戦 -->
+<!--
 <div id="game4" class="tab-content">
 <div id="hoge-hoge_landing10" class="shiny-text-1"></div>
   <h3>2025/10/29　第4戦 LAD対TOR</h3>
@@ -457,8 +482,9 @@
     <p>大谷 投球&全打席ダイジェスト</p>
   </div>
 </div>
-
+ -->
 <!-- ✅ 第5戦 -->
+<!-- 
 <div id="game5" class="tab-content">
 <div id="hoge-hoge_landing11" class="shiny-text-1"></div>
   <h3>2025/10/30　第5戦 LAD対TOR</h3>
@@ -476,8 +502,9 @@
     <p>TOR軍 vs LAD軍 Highlight</p>
   </div>
 </div>
-
+ -->
 <!-- ✅ 第6戦 -->
+<!-- 
 <div id="game6" class="tab-content">
 <div id="hoge-hoge_landing12" class="shiny-text-1"></div>
   <h3>2025/11/01　第6戦 LAD対TOR</h3>
@@ -519,8 +546,9 @@
     <p>2BHで追加点のチャンスを演出</p>
   </div>
 </div>
-
+ -->
 <!-- ✅ 第7戦 -->
+<!-- 
 <div id="game7" class="tab-content">
 <div id="hoge-hoge_landing13" class="shiny-text-1"></div>
   <h3>2025/11/02　第7戦 LAD対TOR</h3>
@@ -575,9 +603,10 @@
   </div>
 
 </div>
-
+ -->
 <!-- ✅ 2025 League Championship Series_section -->
 <!-- ✅ NLCS タブコンテンツ -->
+<!--
 <div id="nlcs" class="tab-content">
 <div id="hoge-hoge_landing6" class="shiny-text-1"></div>
   <h3>NLCS Series 2025/10/18</h3>
@@ -597,6 +626,7 @@
     <p>MLW軍 vs LAD軍 Highlight</p>
   </div>
 </div>
+ -->
 <!--End 動画セクション 2025 League Championship Series_section-->
 
 </section>
@@ -717,8 +747,8 @@ document.addEventListener("DOMContentLoaded", () => {
     bgm.play().catch(err => console.log("再生失敗:", err));
 
     fadeTimer = setInterval(() => {
-      if (bgm.volume < 0.02) {
-        bgm.volume = Math.min(0.02, bgm.volume + 0.01);
+      if (bgm.volume < 0.01) {
+        bgm.volume = Math.min(0.01, bgm.volume + 0.01);
       } else {
         clearInterval(fadeTimer);
       }
@@ -750,7 +780,7 @@ document.addEventListener("DOMContentLoaded", () => {
           } catch(e) {}
         }, 20);
       }
-    }, 0);
+    }, 400);
   }
 
 
@@ -791,7 +821,7 @@ function playSequence() {
     } else if (!skipped) {
 
       // ★最後のテキストが出た瞬間にフェードアウト
-      safeFadeOut();
+      // safeFadeOut();
 
       // 本編遷移（高速）
       setTimeout(endIntro, 1900);
