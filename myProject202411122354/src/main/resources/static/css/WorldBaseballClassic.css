@@ -51,6 +51,26 @@ body::before {
     margin-bottom: -12px;
     margin-top: 4px;
 }
+/* HOMEに戻るボタンを中央に固定 */
+.home-btn {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;          /* （すでに入っていると思います） */
+  align-items: center;
+  justify-content: center;
+  width: 193px;
+  gap: 10px;
+}
+
+/* ロゴ画像の標準サイズ */
+.btn-logo {
+  height: 24px;   /* ← お好みで調整可 */
+  width: auto;
+}
+
+.home-text {
+  white-space: nowrap;
+}
 
 
 
