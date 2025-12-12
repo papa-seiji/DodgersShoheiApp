@@ -163,11 +163,47 @@
   pointer-events: auto;  /* ← flexやoverlayの影響を受けないために追加 */
 }
 
-#samuraiLogo{
+/* 侍ジャパンロゴ 3D右回転アニメーション */
+#samuraiLogo {
+  width: 260px;
+  height: 260px;
   margin-top: 25px;
-    width: 250px;
-    height: 256px;
+  animation: samuraiSpin 8s cubic-bezier(0.55, 0.03, 0.35, 0.95) infinite;
+  transform-style: preserve-3d;
 }
+
+/* スムーズで滑らかな右回転 */
+@keyframes samuraiSpin {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  /* 表面から裏面に向かう途中 → ゆっくり */
+  20% {
+    transform: rotateY(70deg);
+  }
+
+  /* 裏側の角度 → 非常に短時間で通過 */
+  30% {
+    transform: rotateY(95deg);
+  }
+
+  /* 裏側を高速で通過（カクつき防止） */
+  50% {
+    transform: rotateY(265deg);
+  }
+
+  /* 表面に戻る直前 → 少しゆっくり */
+  70% {
+    transform: rotateY(300deg);
+  }
+
+  /* 表面へスムーズに着地 */
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
 
 </style>
 </head>
