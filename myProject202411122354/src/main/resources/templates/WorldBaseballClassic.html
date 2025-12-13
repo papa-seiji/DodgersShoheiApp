@@ -80,7 +80,7 @@
 /* 本編フェードイン */
 #main-content {
   display: none;
-  animation: fadeInMain 1.5s ease-in forwards;
+  animation: fadeInMain 1.25s ease-in forwards;
 }
 
 @keyframes fadeInMain {
@@ -719,7 +719,7 @@ function enableIOSAudio() {
         bgm.pause();
         bgm.currentTime = 0;
       })
-      .catch(err => console.log("iPhone音声許可失敗:", err));
+      .catch(() => {});
 
     window.removeEventListener("touchstart", unlock);
     window.removeEventListener("click", unlock);
@@ -728,40 +728,6 @@ function enableIOSAudio() {
   window.addEventListener("touchstart", unlock, { once: true });
   window.addEventListener("click", unlock, { once: true });
 }
-
-
-/* =====================================================
-      🟦 iPhone 安定化：強制停止関数（最強版）
-===================================================== */
-function forceStopBGM(bgm) {
-  try {
-    bgm.pause();
-    bgm.volume = 0;
-
-    setTimeout(() => {
-      bgm.currentTime = 0;
-
-      // ★Safari専用：完全停止させる裏技
-      const src = bgm.src;
-      bgm.src = "";
-      bgm.src = src;
-
-    }, 100);
-  } catch(e) {
-    console.log("forceStopBGM error:", e);
-  }
-}
-
-
-/* =====================================================
-      🟦 iPhone 安定化：再生しているか確認（2回チェック）
-===================================================== */
-function ensurePlaying(bgm) {
-  if (bgm.paused || bgm.currentTime === 0) {
-    bgm.play().catch(()=>{});
-  }
-}
-
 
 
 /* ------------------------------------------
@@ -786,183 +752,137 @@ document.addEventListener("DOMContentLoaded", () => {
   let fadeTimer = null;
   let introEnded = false;
 
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  // ★フェード状態ガード
+  let bgmFading = false;
 
-
+  // ★フェード開始秒（テスト用：10秒）
+  const FADE_START_AT = 18;
 
   /* ------------------------------------------
-      🎵 フェードイン（超低音量）
+      🎵 フェードイン（本物）
 ------------------------------------------ */
-  function safeFadeIn() {
-    clearInterval(fadeTimer);
+/* 🎵 フェードイン */
+function safeFadeIn() {
+  clearInterval(fadeTimer);
+  bgmFading = false;
 
-    bgm.volume = 0;
-    bgm.play().catch(err => console.log("再生失敗:", err));
+  bgm.volume = 0;
+  bgm.play().catch(() => {});
 
-    fadeTimer = setInterval(() => {
-      if (bgm.volume < 0.01) {
-        bgm.volume = Math.min(0.01, bgm.volume + 0.01);
-      } else {
-        clearInterval(fadeTimer);
-      }
-    }, 120);
-  }
-
-
+  fadeTimer = setInterval(() => {
+    if (bgm.volume < 0.2) {
+      bgm.volume = Math.min(0.2, bgm.volume + 0.02);
+    } else {
+      clearInterval(fadeTimer);
+    }
+  }, 80);
+}
 
   /* ------------------------------------------
-      🎵 フェードアウト（高速・iPhone対応）
+      🎵 フェードアウト（本物）
 ------------------------------------------ */
   function safeFadeOut() {
+    if (bgmFading) return;
+    bgmFading = true;
+
     clearInterval(fadeTimer);
 
-    let step = 0.05;  // ← 減衰スピードを高速化
-
     fadeTimer = setInterval(() => {
-      if (bgm.volume > step) {
-        bgm.volume = Math.max(0, bgm.volume - step);
+      if (bgm.volume > 0.02) {
+        bgm.volume = Math.max(0, bgm.volume - 0.02);
       } else {
         clearInterval(fadeTimer);
-
         bgm.pause();
         bgm.volume = 0;
-
-        setTimeout(() => {
-          try {
-            bgm.currentTime = 0;
-          } catch(e) {}
-        }, 20);
       }
-    }, 400);
+    }, 80);
   }
 
-
-
-/* ------------------------------------------
-    🔊 ON/OFF トグル（再生しない）
+  /* ------------------------------------------
+    🔊 ON/OFF トグル
 ------------------------------------------ */
-soundBtn.addEventListener("click", () => {
+  soundBtn.addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    soundBtn.textContent = soundEnabled ? "🔊 音オン（設定）" : "🔇 音をオフ";
+  });
 
-  soundEnabled = !soundEnabled;
+  /* ------------------------------------------
+      ✨ テキストフェード
+------------------------------------------ */
+  function playSequence() {
+    if (skipped) return;
 
-  if (soundEnabled) {
-    soundBtn.textContent = "🔊 音オン（設定）";
-  } else {
-    soundBtn.textContent = "🔇 音をオフ";
+    const current = texts[index];
+    current.classList.add("show");
+
+    setTimeout(() => {
+      current.classList.add("hide");
+    }, 3000);
+
+    setTimeout(() => {
+      current.classList.remove("show", "hide");
+      index++;
+
+      if (index < texts.length && !skipped) {
+        playSequence();
+      } else if (!skipped) {
+        setTimeout(endIntro, 1500);
+      }
+    }, 3500);
   }
-});
 
-
-
-/* ------------------------------------------
-      ✨ テキストフェード演出
------------------------------------------- */
-function playSequence() {
-  if (skipped) return;
-
-  const current = texts[index];
-  current.classList.add("show");
-
-  setTimeout(() => { current.classList.add("hide"); }, 5500);
-
-  setTimeout(() => {
-    current.classList.remove("show", "hide");
-    index++;
-
-    if (index < texts.length && !skipped) {
-      playSequence();
-    } else if (!skipped) {
-
-      // ★最後のテキストが出た瞬間にフェードアウト
-      // safeFadeOut();
-
-      // 本編遷移（高速）
-      setTimeout(endIntro, 1900);
-    }
-
-  }, 4000);
-}
-
-
-
-/* ------------------------------------------
+  /* ------------------------------------------
       🎬 Intro → Main
 ------------------------------------------ */
-function endIntro() {
+  function endIntro() {
+    if (introEnded) return;
+    introEnded = true;
 
-  if (introEnded) return;
-  introEnded = true;
+    intro.style.opacity = "0";
 
-  soundEnabled = false;
-  safeFadeOut();
-
-  soundBtn.style.display = "none";
-
-  if (isIOS) {
-    forceStopBGM(bgm);
+    setTimeout(() => {
+      intro.style.display = "none";
+      main.style.display = "block";
+    }, 1000);
   }
 
-  intro.style.transition = "opacity 1s ease";
-  intro.style.opacity = "0";
-
-  setTimeout(() => {
-    intro.style.display = "none";
-    main.style.display = "block";
-  }, 50);
-}
-
-
-
-/* ------------------------------------------
-    🎬 Startボタン
+  /* ------------------------------------------
+    🎬 Start
 ------------------------------------------ */
-startBtn.addEventListener("click", () => {
+  startBtn.addEventListener("click", () => {
 
-  startBtn.style.display = "none";
-  skipBtn.style.display = "none";
-  soundBtn.style.display = "none";
+    startBtn.style.display = "none";
+    skipBtn.style.display = "none";
+    soundBtn.style.display = "none";
 
-  const warning = document.getElementById("intro-volume-warning");
-  if (warning) warning.style.display = "none";
+    const warning = document.getElementById("intro-volume-warning");
+    if (warning) warning.style.display = "none";
 
-  // 🔊 設定がONの時だけ BGM 再生
-  if (soundEnabled) {
-    soundBtn.textContent = "🔊 音オン（再生中）";
-    safeFadeIn();
+    if (soundEnabled) {
+      safeFadeIn();
 
-    setTimeout(() => ensurePlaying(bgm), 300);
-    setTimeout(() => ensurePlaying(bgm), 800);
-  }
+      // ★BGM時間基準フェードアウト
+      setTimeout(() => {
+        safeFadeOut();
+      }, FADE_START_AT * 1000);
+    }
 
-  playSequence();
-});
+    playSequence();
+  });
 
-
-
-/* ------------------------------------------
+  /* ------------------------------------------
     ⏭ Skip
 ------------------------------------------ */
-skipBtn.addEventListener("click", () => {
-
-  skipped = true;
-  soundEnabled = false;
-
-  safeFadeOut();
-
-  if (isIOS) {
-    forceStopBGM(bgm);
-  }
-
-  startBtn.style.display = "none";
-  skipBtn.style.display = "none";
-  soundBtn.style.display = "none";
-
-  endIntro();
-});
+  skipBtn.addEventListener("click", () => {
+    skipped = true;
+    safeFadeOut();
+    endIntro();
+  });
 
 });
 </script>
 
+  <!-- <th:block th:replace="fragments/footer :: footer"></th:block>-->
 
 
 </body>
