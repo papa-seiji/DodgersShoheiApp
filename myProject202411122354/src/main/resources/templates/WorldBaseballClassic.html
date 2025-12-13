@@ -38,26 +38,30 @@
 .fade-text {
   font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
   font-size: clamp(1.4rem, 3vw, 2.8rem); /* ✅ 自動縮小対応 */
-  letter-spacing: 0.05em; /* 🔧 0.1em → 0.05em：文字間のバランス改善 */
+  letter-spacing: 0.05em;
   opacity: 0;
-  transform: scale(1.1) translateX(-2%); /* ✅ 見た目中央補正（2%左へ） */
+  /* ====== ★ズレ完全防止の核心 ====== */
+  position: absolute;                 /* ← 通常フローから切り離す */
+  left: 45%;
+  transform: translateX(-50%) scale(1.1); /* ← 中央基準＋初期スケール */
+  /* ====== 見た目 ====== */
   background: linear-gradient(180deg, #fff, #aaa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   transition: opacity 1.5s ease, transform 1.5s ease;
-  white-space: nowrap; /* ✅ 改行禁止 */
-  display: inline-block; /* ✅ バウンディングボックスの中央基準化 */
+  white-space: nowrap;
+  /* top: 20px; */
 }
 
 .fade-text.show {
   opacity: 1;
-  transform: scale(1) translateX(-7%); /* ✅ show時も補正維持 */
+  transform: translateX(-50%) scale(1);   /* ← X基準は常に固定 */
 }
 
 .fade-text.hide {
   opacity: 0;
-  transform: scale(0.95);
+  transform: translateX(-50%) scale(0.95);
 }
 
 /* 💥 最後の行「ドンッ！」用 */
@@ -94,7 +98,7 @@
 #block01{
   /* background: rgba(138, 15, 15, 0.85); */
   margin-right: 10%;
-  margin-top: 35%;
+  margin-top: -10%;
 }
 
 /* 🟣 Skip Intro ボタン（位置指定なし → flex中央揃えに任せる） */
@@ -220,13 +224,13 @@
 
       <!-- ⏭ スキップボタン -->
       <button id="intro-skip-btn" class="intro-btn skip">⏭ スキップ</button>
-</div>
+
       <!-- 映画風フェードテキスト -->
       <div class="fade-text">あの感動をもう一度</div>
       <div class="fade-text">世界が再び一つになる</div>
       <div class="fade-text">世界よ、かかってこい</div>
       <div class="fade-text">2026 World Baseball Classic</div>
-
+</div>
 <!-- ⚠️ 注意喚起メッセージ -->
 <div id="intro-volume-warning" class="volume-warning">
   ⚠️ BGM(音声)を流す事も可能です。<br>再生前に音量を調整してください。
