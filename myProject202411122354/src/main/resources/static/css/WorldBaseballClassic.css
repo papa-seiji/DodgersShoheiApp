@@ -53,6 +53,7 @@ body::before {
 }
 /* HOMEに戻るボタンを中央に固定 */
 .home-btn {
+  margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
   display: flex;          /* （すでに入っていると思います） */
@@ -96,15 +97,15 @@ h1 {
   font-size: 1.8rem;
   font-weight: 800;
     color: #df9132;
-    margin-bottom: 20px;
-    margin-top: -34px;
+    margin-bottom: 11px;
+    margin-top: -48px;
 }
 
 
 
 
 /* ==========================
-   トーナメント全体のラッパ
+  トーナメント全体のラッパ
    ========================== */
 .postseason-container {
   position: relative;

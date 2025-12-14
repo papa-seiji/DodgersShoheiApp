@@ -8,12 +8,50 @@
 
 
   <style>
+
+      .flag-marquee {
+      width: 100%;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .flag-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+    }
+
+    .flag-track img {
+      width: 23px;
+      height: auto;
+      /* border-radius: 3px; */
+    }
+
+    .marquee-left .flag-track {
+      animation: scroll-left 40s linear infinite;
+    }
+
+    .marquee-right .flag-track {
+      animation: scroll-right 40s linear infinite;
+    }
+
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes scroll-right {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+
+
     /* === 🟦 ロゴ設定 === */
     .wbc-logo {
       width: 325px;
       height: auto;
       display: block;
-      margin: 0 auto;
+      margin: 6% auto;
     }
 
 
@@ -280,10 +318,66 @@
 <div id="main-content" style="display:none;">
 
   <div class="wbc-container">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
-    alt="World Baseball Classic Logo"
-    class="wbc-logo">
-    <h1>　2026</h1>
+
+  <!-- 上段：左へ流れる -->
+<div class="flag-marquee marquee-left">
+  <div class="flag-track">
+    <!-- 20 flags × 2 -->
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+  </div>
+</div>
+
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
+                  alt="World Baseball Classic Logo"
+                  class="wbc-logo">
+                  <h1>　2026</h1>
+
+<!-- 上段：右へ流れる -->
+<div class="flag-marquee marquee-right">
+  <div class="flag-track">
+    <!-- 20 flags × 2 -->
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+  </div>
+</div>
+
 
 <a href="/home" class="postseason-btn home-btn">
 
