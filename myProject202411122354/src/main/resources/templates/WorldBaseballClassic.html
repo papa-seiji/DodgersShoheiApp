@@ -16,6 +16,41 @@
       margin: 0 auto;
     }
 
+
+    .flags {
+      display: flex;
+      gap: 6px;
+      margin: 6px 0 14px 0;
+    }
+
+    .flags img {
+      width: 24px;
+      height: auto;
+      border-radius: 2px;
+    }
+
+    .country-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      margin: 6px 0 14px;
+    }
+
+    .country-item {
+      display: inline-flex;
+      align-items: center;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .country-item img {
+      width: 18px;
+      height: auto;
+      margin-right: 4px;
+      border-radius: 2px;
+    }
+
+
 /* === 🟣 イントロ演出 === */
 #intro {
   position: fixed;
@@ -248,9 +283,7 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
     alt="World Baseball Classic Logo"
     class="wbc-logo">
-
     <h1>　2026</h1>
-    <!--<a href="/home" class="postseason-btn">HOME画面に戻る</a>-->
 
 <a href="/home" class="postseason-btn home-btn">
 
@@ -283,36 +316,85 @@
 <section class="postseason-commentary">
   <div class="postseason-text">
     <p>
-    2026年の大会では、<br>前回に引き続き20の国と地域が参加。<br>
-    2023年大会の1次ラウンドで4位以内に入った16チームは招待参加となり、2026年の大会に自動的に出場する。<br>
-    ここに、2025年に開催される予選を勝ち抜いた4チームが加わる。<br>
-    1次ラウンドは、5チームごと・4つのグループに分かれて総当たり戦で行われ、各グループのそれぞれ上位2チームがアメリカ・ヒューストンとマイアミで行われる準々決勝ラウンドに進出。準々決勝ラウンドを勝ち上がった4チームが決勝ラウンドへ進出する。<br>
-<span style="color:blue; font-weight:900;">【1次ラウンド】</span><br>
-<strong ><span style="color:red;">　Pool A（サンフアンプール）</span><br></strong>
-　　2026年3月6日（金）～11日（水）	ヒラム・ビソーン・スタジアム（プエルトリコ）<br>
-　　出場国：プエルトリコ、キューバ、カナダ、パナマ、コロンビア<br>
-<strong><span style="color:red;">　Pool B（ヒューストンプール）</span><br></strong>
-　　2026年3月6日（金）～11日（水）	ダイキン・パーク（アメリカ・ヒューストン）<br>
-　　出場国：アメリカ、メキシコ、イタリア、イギリス、ブラジル<br>
-<strong><span style="color:red;">　Pool C（東京プール）</span><br></strong>
-　　2026年3月5日(木) ～ 10日(火)	東京ドーム（日本）<br>
-　　出場国：日本、オーストラリア、韓国、チェコ、チャイニーズ・タイペイ<br>
-<strong><span style="color:red;">　Pool D（マイアミプール）</span><br></strong>
-　　2026年3月6日（金）～11日（水）	ローンデポ・パーク（アメリカ・マイアミ）<br>
-　　出場国：ベネズエラ、ドミニカ共和国、オランダ、イスラエル、ニカラグア<br>
-<span style="color:blue; font-weight:1000;">【準々決勝ラウンド】</span><br>
-<strong>2026年3月13日(金)、14日(土)<br></strong>
-　　ダイキン・パーク（アメリカ・ヒューストン）<br>
-　　ローンデポ・パーク（アメリカ・マイアミ）<br>
-<span style="color:blue; font-weight:1000;">【準決勝】</span><br>
-<strong>2026年3月15日(日)、16日(月)<br></strong>
-　　ローンデポ・パーク（アメリカ・マイアミ）<br>
-<span style="color:blue; font-weight:1000;">【決勝】</span><br>
-<strong>2026年3月17日(火)<br></strong>
-　　ローンデポ・パーク（アメリカ・マイアミ）<br>
+      2026年の大会では、<br>前回に引き続き20の国と地域が参加。<br>
+      2023年大会の1次ラウンドで4位以内に入った16チームは招待参加となり、2026年の大会に自動的に出場する。<br>
+      ここに、2025年に開催される予選を勝ち抜いた4チームが加わる。<br>
+      1次ラウンドは、5チームごと・4つのグループに分かれて総当たり戦で行われ、各グループのそれぞれ上位2チームがアメリカ・ヒューストンとマイアミで行われる準々決勝ラウンドに進出。準々決勝ラウンドを勝ち上がった4チームが決勝ラウンドへ進出する。<br>
 
+      <span style="color:blue; font-weight:900;">【1次ラウンド】</span><br>
+
+      <strong><span style="color:red;">　Pool A（サンフアンプール）</span></strong><br>
+      　　2026年3月6日（金）～11日（水） ヒラム・ビソーン・スタジアム（プエルトリコ）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">プエルトリコ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">キューバ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">カナダ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">パナマ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">コロンビア</span>
+    </div>
+
+    <p>
+      <strong><span style="color:red;">　Pool B（ヒューストンプール）</span></strong><br>
+      　　2026年3月6日（金）～11日（水） ダイキン・パーク（アメリカ・ヒューストン）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">アメリカ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">メキシコ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">イタリア</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">イギリス</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">ブラジル</span>
+    </div>
+
+    <p>
+      <strong><span style="color:red;">　Pool C（東京プール）</span></strong><br>
+      　　2026年3月5日(木) ～ 10日(火) 東京ドーム（日本）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">日本</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">オーストラリア</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">韓国</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">チェコ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">チャイニーズ・タイペイ</span>
+    </div>
+
+    <p>
+      <strong><span style="color:red;">　Pool D（マイアミプール）</span></strong><br>
+      　　2026年3月6日（金）～11日（水） ローンデポ・パーク（アメリカ・マイアミ）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">ベネズエラ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">ドミニカ共和国</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">オランダ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">イスラエル</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">ニカラグア</span>
+    </div>
+
+    <p>
+      <span style="color:blue; font-weight:1000;">【準々決勝ラウンド】</span><br>
+      <strong>2026年3月13日(金)、14日(土)</strong><br>
+      　　ダイキン・パーク（アメリカ・ヒューストン）<br>
+      　　ローンデポ・パーク（アメリカ・マイアミ）<br>
+
+      <span style="color:blue; font-weight:1000;">【準決勝】</span><br>
+      <strong>2026年3月15日(日)、16日(月)</strong><br>
+      　　ローンデポ・パーク（アメリカ・マイアミ）<br>
+
+      <span style="color:blue; font-weight:1000;">【決勝】</span><br>
+      <strong>2026年3月17日(火)</strong><br>
+      　　ローンデポ・パーク（アメリカ・マイアミ）
     </p>
   </div>
+
+
 <div class="postseason-image">
   <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/WBS_365DAYS.JPEG" alt="365DAYS集合写真" class="PostSeason01 fade-image active">
   <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/mexico_arozarena.JPEG" alt="mexico_arozarena" class="PostSeason01 fade-image">
