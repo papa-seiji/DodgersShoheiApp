@@ -822,19 +822,111 @@ document.addEventListener("DOMContentLoaded", function () {
 
   <!-- 🔘 タブボタン -->
   <div class="tab-buttons">
-    <button class="tab-btn" onclick="showTab('tab2026', event)">’26</button> <!-- ✅ 追加 -->
-    <button class="tab-btn" onclick="showTab('tabWBC2026', event)">WBC’26</button> <!-- ✅ 新設 -->
-    <button class="tab-btn active" onclick="showTab('tab2025', event)">'25</button>
-    <button class="tab-btn" onclick="showTab('tab2024', event)">'24</button>
-    <button class="tab-btn" onclick="showTab('tab2023', event)">'23</button>
-    <button class="tab-btn" onclick="showTab('tabWBC', event)">WBC'23</button>
-    <button class="tab-btn" onclick="showTab('tab2022', event)">'22</button>
-    <button class="tab-btn" onclick="showTab('tab2021', event)">'21</button>
-    <button class="tab-btn" onclick="showTab('tab2020', event)">'20</button>
-    <button class="tab-btn" onclick="showTab('tab2019', event)">'19</button>
-    <button class="tab-btn" onclick="showTab('tab2018', event)">'18</button>
-    <button class="tab-btn" onclick="showTab('tabFunny', event)">面白</button>
-  </div>
+
+<button
+  class="tab-btn mlb-team-tab active"
+  onclick="showTab('tab2026', event)"
+>
+  <img
+    src="https://www.mlbstatic.com/team-logos/119.svg"
+    alt="Los Angeles Dodgers"
+    class="btn-logo"
+  >
+  <span class="btn-text">'26</span>
+</button>
+
+
+<button
+  class="tab-btn wbc-tab-btn"
+  onclick="showTab('tabWBC2026', event)"
+>
+  <img
+    src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/SMALL-WorldBaseballClassic.png"
+    alt="WBC Logo"
+    class="btn-logo"
+  >
+  <span class="btn-text">WBC’26</span>
+</button>
+
+
+<button
+  class="tab-btn mlb-team-tab active"
+  onclick="showTab('tab2025', event)"
+>
+  <img
+    src="https://www.mlbstatic.com/team-logos/119.svg"
+    alt="Los Angeles Dodgers"
+    class="btn-logo"
+  >
+  <span class="btn-text">'25</span>
+</button>
+
+
+<button
+  class="tab-btn mlb-team-tab"
+  onclick="showTab('tab2024', event)"
+>
+  <img
+    src="https://www.mlbstatic.com/team-logos/119.svg"
+    alt="Los Angeles Dodgers"
+    class="btn-logo"
+  >
+  <span class="btn-text">'24</span>
+</button>
+
+
+<button class="tab-btn mlb-team-tab" onclick="showTab('tab2023', event)">
+  <img
+    src="https://www.mlbstatic.com/team-logos/108.svg"
+    alt="Los Angeles Angels"
+    class="btn-logo"
+  >
+  <span class="btn-text">'23</span>
+</button>
+
+
+<button
+  class="tab-btn wbc-tab-btn"
+  onclick="showTab('tabWBC', event)"
+>
+  <img
+    src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/SMALL-WorldBaseballClassic.png"
+    alt="WBC Logo"
+    class="btn-logo"
+  >
+  <span class="btn-text">WBC’23</span>
+</button>
+
+
+<button class="tab-btn mlb-team-tab" onclick="showTab('tab2022', event)">
+  <img src="https://www.mlbstatic.com/team-logos/108.svg" alt="Los Angeles Angels" class="btn-logo">
+  <span class="btn-text">'22</span>
+</button>
+
+<button class="tab-btn mlb-team-tab" onclick="showTab('tab2021', event)">
+  <img src="https://www.mlbstatic.com/team-logos/108.svg" alt="Los Angeles Angels" class="btn-logo">
+  <span class="btn-text">'21</span>
+</button>
+
+<button class="tab-btn mlb-team-tab" onclick="showTab('tab2020', event)">
+  <img src="https://www.mlbstatic.com/team-logos/108.svg" alt="Los Angeles Angels" class="btn-logo">
+  <span class="btn-text">'20</span>
+</button>
+
+<button class="tab-btn mlb-team-tab" onclick="showTab('tab2019', event)">
+  <img src="https://www.mlbstatic.com/team-logos/108.svg" alt="Los Angeles Angels" class="btn-logo">
+  <span class="btn-text">'19</span>
+</button>
+
+<button class="tab-btn mlb-team-tab" onclick="showTab('tab2018', event)">
+  <img src="https://www.mlbstatic.com/team-logos/108.svg" alt="Los Angeles Angels" class="btn-logo">
+  <span class="btn-text">'18</span>
+</button>
+
+
+
+<button class="tab-btn" onclick="showTab('tabFunny', event)">面白</button>
+</div>
 
 
 <!-- =================== 2026Tab START =================== -->
@@ -1185,6 +1277,51 @@ document.addEventListener("DOMContentLoaded", function () {
   position: static !important;
 }
 
+/* WBC26 タブだけを flex 化 */
+.wbc-tab-btn {
+  display: inline-flex;          /* ← ここだけ */
+  align-items: center;
+  gap: 6px;                      /* ロゴと文字の間 */
+  background-color: #001531 !important;
+  padding: 6px 5px !important;
+}
+
+
+/* ロゴサイズは「高さを壊さない」値に固定 */
+.wbc-tab-btn .btn-logo {
+  height: 16px;                  /* font-size(14px)+α */
+  width: auto;
+  display: block;
+}
+
+/* テキストは既存 tab-btn に完全依存 */
+.wbc-tab-btn .btn-text {
+  line-height: 1;
+}
+
+
+.mlb-team-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  background-color: #d1e1f5ff !important;
+  padding: 6px 5px !important;
+  color: #0b0d10ff !important;
+}
+
+.mlb-team-tab .btn-logo {
+  height: 16px;
+  width: auto;
+  display: block;
+}
+
+.mlb-team-tab .btn-text {
+  line-height: 1;
+}
+
+
+
+
 .tab-buttons {
   display: flex;
   justify-content: center;
@@ -1216,6 +1353,9 @@ document.addEventListener("DOMContentLoaded", function () {
 .tab-content.active {
   display: block;
 }
+
+
+
 
 .video-wrapper {
   position: relative !important;
