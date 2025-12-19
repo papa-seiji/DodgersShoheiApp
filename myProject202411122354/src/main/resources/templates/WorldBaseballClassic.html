@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026 World Baseball Classic</title>
+  <link rel="stylesheet" th:href="@{/css/WorldBaseballClassic.css}">
+
+
+  <style>
+/* @media (min-width: 1024px) {
+  .flag-marquee {
+    margin: 4px auto;
+  }
+
+  .wbc-logo {
+    max-width: 280px;
+  }
+} */
+
+    .wbc-container {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+    }
+
+    .flag-marquee {
+      max-width: 800px;   /* ← PCで広がりすぎない */
+      margin: 8px auto;
+      overflow: hidden;
+    }
+
+    .flag-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+    }
+
+    .flag-track img {
+      width: 23px;
+      height: auto;
+      /* border-radius: 3px; */
+    }
+
+    .marquee-left .flag-track {
+      animation: scroll-left 40s linear infinite;
+    }
+
+    .marquee-right .flag-track {
+      animation: scroll-right 40s linear infinite;
+    }
+
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes scroll-right {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+
+
+    /* === 🟦 ロゴ設定 === */
+    .wbc-logo {
+      width: 325px;
+      height: auto;
+      display: block;
+      margin: 6% auto;
+    }
+
+
+    .flags {
+      display: flex;
+      gap: 6px;
+      margin: 6px 0 14px 0;
+    }
+
+    .flags img {
+      width: 24px;
+      height: auto;
+      border-radius: 2px;
+    }
+
+    .country-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      margin: 6px 0 14px;
+    }
+
+    .country-item {
+      display: inline-flex;
+      align-items: center;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .country-item img {
+      width: 18px;
+      height: auto;
+      margin-right: 4px;
+      border-radius: 2px;
+    }
+
+
+/* === 🟣 イントロ演出 === */
+#intro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* ✅ 横方向も中央寄せ */
+  text-align: center;  /* ✅ テキスト中央寄せ */
+  z-index: 9999;
+  overflow: hidden;
+  padding: 0 5vw; /* 画面端ギリギリ防止 */
+  gap: 14px;                /* ← ボタン同士の間隔安定 */
+}
+
+.fade-text {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: clamp(1.4rem, 3vw, 2.8rem); /* ✅ 自動縮小対応 */
+  letter-spacing: 0.05em;
+  opacity: 0;
+  /* ====== ★ズレ完全防止の核心 ====== */
+  position: absolute;                 /* ← 通常フローから切り離す */
+  left: 45%;
+  transform: translateX(-50%) scale(1.1); /* ← 中央基準＋初期スケール */
+  /* ====== 見た目 ====== */
+  background: linear-gradient(180deg, #fff, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  white-space: nowrap;
+  /* top: 20px; */
+}
+
+.fade-text.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);   /* ← X基準は常に固定 */
+}
+
+.fade-text.hide {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.95);
+}
+
+/* 💥 最後の行「ドンッ！」用 */
+.fade-text.final {
+  opacity: 0;
+  transform: scale(0.8);
+  white-space: nowrap;
+}
+
+.fade-text.final.show {
+  opacity: 1;
+  transform: scale(1.3);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* 本編フェードイン */
+#main-content {
+  display: none;
+  animation: fadeInMain 1.25s ease-in forwards;
+}
+
+@keyframes fadeInMain {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-text {
+  white-space: nowrap !important;       /* 改行完全禁止 */
+  word-break: keep-all !important;      /* 文字途中で折り返さない */
+  overflow-wrap: normal !important;     /* 長文でも分割しない */
+  font-size: clamp(1.6rem, 2.5vw, 2.8rem);  /* 横幅が狭いと自動縮小 */
+}
+
+#block01{
+  /* background: rgba(138, 15, 15, 0.85); */
+  margin-right: 10%;
+  margin-top: -10%;
+}
+
+/* 🟣 Skip Intro ボタン（位置指定なし → flex中央揃えに任せる） */
+#skip-intro-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-family: "Inter", sans-serif;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 12px; /* ← スタートボタンとの間隔 */
+}
+
+#skip-intro-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.05);
+}
+
+/* h3 文言 */
+.highlight01,
+.highlight02 {
+  margin-bottom:-30px;
+}
+
+.intro-btn {
+  display: block;
+  padding: 12px 20px;
+  margin: 10px auto;
+  font-size: 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: rgb(59 56 56 / 70%);
+  color: #fff;
+}
+
+.intro-btn.skip {
+  background: rgba(150,0,0,0.7);
+}
+
+#intro-sound-toggle.intro-btn {
+  position: fixed !important;
+  bottom: 20px;
+  left: 20px;
+  margin: 0 !important;     /* ← これを追加すると完璧に安定する */
+  z-index: 9999;
+  pointer-events: auto;  /* ← flexやoverlayの影響を受けないために追加 */
+}
+
+/* ⚠️ 注意喚起（音量調整メッセージ） */
+.volume-warning {
+  color: #ffe066;                 /* 明るい黄色 */
+  font-size: 0.7rem;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: 600;
+  text-shadow: 0 0 4px rgba(0,0,0,0.5);  /* 若干強調 */
+    position: fixed !important;
+  bottom: 71px;
+  left: 20px;
+  margin: 0 !important;     /* ← これを追加すると完璧に安定する */
+  z-index: 9999;
+  pointer-events: auto;  /* ← flexやoverlayの影響を受けないために追加 */
+}
+
+/* 侍ジャパンロゴ 3D右回転アニメーション */
+#samuraiLogo {
+  width: 260px;
+  height: 260px;
+  margin-top: 25px;
+  animation: samuraiSpin 8s cubic-bezier(0.55, 0.03, 0.35, 0.95) infinite;
+  transform-style: preserve-3d;
+}
+
+/* スムーズで滑らかな右回転 */
+@keyframes samuraiSpin {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  /* 表面から裏面に向かう途中 → ゆっくり */
+  20% {
+    transform: rotateY(70deg);
+  }
+
+  /* 裏側の角度 → 非常に短時間で通過 */
+  30% {
+    transform: rotateY(95deg);
+  }
+
+  /* 裏側を高速で通過（カクつき防止） */
+  50% {
+    transform: rotateY(265deg);
+  }
+
+  /* 表面に戻る直前 → 少しゆっくり */
+  70% {
+    transform: rotateY(300deg);
+  }
+
+  /* 表面へスムーズに着地 */
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+#backToTopBtn {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  z-index: 9999;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 8px;
+
+  border: none;
+  cursor: pointer;
+
+  display: none; /* 初期は非表示 */
+}
+
+#backToTopBtn.show {
+  display: block;
+}
+
+
+</style>
+</head>
+
+<body>
+
+  <!-- 🎬 イントロ部分 -->
+    <div id="intro">
+
+      <audio id="intro-bgm" src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/intro_bgm.mp3" preload="auto"></audio>
+<div id="block01">
+      <!-- 🎬 映画イントロスタートボタン -->
+      <button id="intro-start-btn" class="intro-btn">🎬 イントロスタート</button>
+
+      <!-- ⏭ スキップボタン -->
+      <button id="intro-skip-btn" class="intro-btn skip">⏭ スキップ</button>
+
+      <!-- 映画風フェードテキスト -->
+      <div class="fade-text">あの感動をもう一度</div>
+      <div class="fade-text">世界が再び一つになる</div>
+      <div class="fade-text">世界よ、かかってこい</div>
+      <div class="fade-text">2026 World Baseball Classic</div>
+</div>
+<!-- ⚠️ 注意喚起メッセージ -->
+<div id="intro-volume-warning" class="volume-warning">
+  ⚠️ BGM(音声)を流す事も可能です。<br>再生前に音量を調整してください。
+</div>
+
+    <!-- 🔊 音声ON/OFFボタン（★追加部分） -->
+    <button id="intro-sound-toggle" class="intro-btn sound">🔇 音をオフ</button>
+
+    </div>
+
+
+<div id="main-content" style="display:none;">
+
+  <div class="wbc-container">
+
+  <!-- 上段：左へ流れる -->
+<div class="flag-marquee marquee-left">
+  <div class="flag-track">
+    <!-- 20 flags × 2 -->
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+  </div>
+</div>
+
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
+                  alt="World Baseball Classic Logo"
+                  class="wbc-logo">
+                  <h1>　2026</h1>
+
+<!-- 上段：右へ流れる -->
+<div class="flag-marquee marquee-right">
+  <div class="flag-track">
+    <!-- 20 flags × 2 -->
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+    <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+  </div>
+</div>
+
+
+<a href="/home" class="postseason-btn home-btn">
+
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/SMALL-WorldBaseballClassic.png"
+       alt="WBC Logo"
+       class="btn-logo left-logo">
+
+  <span class="home-text">HOME画面に戻る</span>
+
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/SMALL-SAMURAI_JAPANロゴ.png"
+       alt="Samurai Japan Logo"
+       class="btn-logo right-logo">
+
+</a>
+
+
+<!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
+<section class="video-preview-section">
+  <div class="video-preview-wrapper">
+    <video id="videoChampion" class="decorative-video" autoplay muted loop playsinline>
+      <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/worldbaseballclassic.mp4" type="video/mp4">
+      お使いのブラウザは video タグをサポートしていません。
+    </video>
+    <!-- 🔇／🔊 ミュートボタン -->
+    <button id="muteChampion" class="mute-btn">🔇</button>
+  </div>
+</section>
+
+<!-- ✅ Postseason コメント＋集合写真 -->
+<section class="postseason-commentary">
+  <div class="postseason-text">
+    <p>
+      2026年の大会では、<br>前回に引き続き20の国と地域が参加。<br>
+      2023年大会の1次ラウンドで4位以内に入った16チームは招待参加となり、2026年の大会に自動的に出場する。<br>
+      ここに、2025年に開催される予選を勝ち抜いた4チームが加わる。<br>
+      1次ラウンドは、5チームごと・4つのグループに分かれて総当たり戦で行われ、各グループのそれぞれ上位2チームがアメリカ・ヒューストンとマイアミで行われる準々決勝ラウンドに進出。準々決勝ラウンドを勝ち上がった4チームが決勝ラウンドへ進出する。<br>
+
+      <span style="color:blue; font-weight:900;">【1次ラウンド】</span><br>
+
+      <strong><span style="color:red;">　Pool A（サンフアンプール）</span></strong><br>
+      　　2026年3月6日（金）～11日（水） ヒラム・ビソーン・スタジアム（プエルトリコ）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">プエルトリコ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">キューバ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">カナダ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">パナマ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">コロンビア</span>
+    </div>
+
+    <p>
+      <strong><span style="color:red;">　Pool B（ヒューストンプール）</span></strong><br>
+      　　2026年3月6日（金）～11日（水） ダイキン・パーク（アメリカ・ヒューストン）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">アメリカ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">メキシコ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">イタリア</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">イギリス</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">ブラジル</span>
+    </div>
+
+    <p>
+      <strong><span style="color:red;">　Pool C（東京プール）</span></strong><br>
+      　　2026年3月5日(木) ～ 10日(火) 東京ドーム（日本）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">日本</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">オーストラリア</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">韓国</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">チェコ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">チャイニーズ・タイペイ</span>
+    </div>
+
+    <p>
+      <strong><span style="color:red;">　Pool D（マイアミプール）</span></strong><br>
+      　　2026年3月6日（金）～11日（水） ローンデポ・パーク（アメリカ・マイアミ）<br>
+      　　出場国：
+    </p>
+
+    <div class="country-list">
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">ベネズエラ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">ドミニカ共和国</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">オランダ</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">イスラエル</span>
+      <span class="country-item"><img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">ニカラグア</span>
+    </div>
+
+    <p>
+      <span style="color:blue; font-weight:1000;">【準々決勝ラウンド】</span><br>
+      <strong>2026年3月13日(金)、14日(土)</strong><br>
+      　　ダイキン・パーク（アメリカ・ヒューストン）<br>
+      　　ローンデポ・パーク（アメリカ・マイアミ）<br>
+
+      <span style="color:blue; font-weight:1000;">【準決勝】</span><br>
+      <strong>2026年3月15日(日)、16日(月)</strong><br>
+      　　ローンデポ・パーク（アメリカ・マイアミ）<br>
+
+      <span style="color:blue; font-weight:1000;">【決勝】</span><br>
+      <strong>2026年3月17日(火)</strong><br>
+      　　ローンデポ・パーク（アメリカ・マイアミ）
+    </p>
+  </div>
+
+
+<div class="postseason-image">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/WBS_365DAYS.JPEG" alt="365DAYS集合写真" class="PostSeason01 fade-image active">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/mexico_arozarena.JPEG" alt="mexico_arozarena" class="PostSeason01 fade-image">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/captain_jadge.JPEG" alt="captain_jadge" class="PostSeason01 fade-image">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/jadge.JPEG" alt="jadge" class="PostSeason01 fade-image">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/japan_ohtani.JPEG" alt="ohtani" class="PostSeason01 fade-image">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/skenes.JPEG" alt="skenes" class="PostSeason01 fade-image">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/japan_yoshinobu.JPEG" alt="yoshinobu" class="PostSeason01 fade-image">
+</div>
+
+</section>
+
+<img id="samuraiLogo" alt="Samurai Japan Logo">
+
+<script>
+fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_JAPAN_logo.svg&prop=imageinfo&iiprop=url&format=json&origin=*")
+  .then(res => res.json())
+  .then(data => {
+    const pages = data.query.pages;
+    const key = Object.keys(pages)[0];
+    const url = pages[key].imageinfo[0].url;
+
+    document.getElementById("samuraiLogo").src = url;
+  });
+</script>
+
+<h3 class="highlight01">'06,'09 王,原JAPAN ハイライト</h3>
+<!-- 🎞️ 06,09 WBC プレイ動画 -->
+<section class="video-preview-section">
+  <div class="video-preview-wrapper">
+    <video id="videoWBC" class="decorative-video" autoplay muted loop playsinline>
+      <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/06_09+WBC_%E3%83%8F%E3%82%A4%E3%83%A9%E3%82%A4%E3%83%88.mp4" type="video/mp4">
+      お使いのブラウザは video タグをサポートしていません。
+    </video>
+    <!-- 🔇／🔊 ミュートボタン -->
+    <button id="muteWBC" class="mute-btn">🔇</button>
+  </div>
+</section>
+<h3 class="highlight02">'23 栗山JAPAN ハイライト</h3>
+<!-- 🎞️ '23 WBC プレイ動画 -->
+<section class="video-preview-section">
+  <div class="video-preview-wrapper">
+    <video id="videoWBC23" class="decorative-video" autoplay muted loop playsinline>
+      <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/2023_WBC_%E3%83%8F%E3%82%A4%E3%83%A9%E3%82%A4%E3%83%88.mp4" type="video/mp4">
+      お使いのブラウザは video タグをサポートしていません。
+    </video>
+    <!-- 🔇／🔊 ミュートボタン -->
+    <button id="muteWBC23" class="mute-btn">🔇</button>
+  </div>
+</section>
+
+
+<p style="font-weight: bold;">2026 WBC トーナメント表</p>
+<div class="link">
+    <a href="https://www.2026wbc.jp/schedule/" target="_blank">公式2026wbc.jp</a>
+</div>
+
+  <div class="postseason-container">
+
+    <!-- トーナメント線の背景 -->
+    <div class="bracket-background"></div>
+ </div>
+
+  <!-- 🎬 WS Series 動画セクション（タブ式） -->
+  <section id="ws-video-section">
+    <h2 class="shiny-text-1">WBC 2026</h2>
+
+    <!-- ✅ タブボタン -->
+    <div class="tabs">
+      <button class="tab-button active" data-tab="game1">第1戦</button>
+      <button class="tab-button" data-tab="game2">第2戦</button>
+      <button class="tab-button" data-tab="game3">第3戦</button>
+      <button class="tab-button" data-tab="game4">第4戦</button>
+      <button class="tab-button" data-tab="game5">第5戦</button>
+      <button class="tab-button" data-tab="game6">第6戦</button>
+      <button class="tab-button" data-tab="game7">第7戦</button>
+
+      <button class="tab-button" data-tab="nlcs">NLCS</button>
+    </div>
+
+
+
+
+<!-- ✅ 第1戦 -->
+<!-- 
+<div id="game1" class="tab-content active">
+<div id="hoge-hoge_landing7" class="shiny-text-1"></div>
+  <h3>2025/10/25　第1戦 LAD対TOR</h3>
+  <h5>大谷がWS初HRも11得点ブルージェイズが先勝！</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/hcH1AkfoZcU"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/FdNFRAW_Wiw"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷翔平 WS初HR！PS6号2ラン</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/EqxD3gTBfVY"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷翔平 初HRマルチアングル</p>
+  </div>
+</div>
+ -->
+<!-- ✅ 第2戦 -->
+<!-- 
+<div id="game2" class="tab-content">
+<div id="hoge-hoge_landing8" class="shiny-text-1"></div>
+  <h3>2025/10/26　第2戦 LAD対TOR</h3>
+  <h5>“異次元”山本由伸が2戦連続の完投勝利を飾る！</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/KRc-m8yA7_g"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/weN78PkBGbw"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>日本の至宝がまたも歴史的快挙</p>
+  </div>
+</div>
+ -->
+<!-- ✅ 第3戦 -->
+<!--
+<div id="game3" class="tab-content">
+<div id="hoge-hoge_landing9" class="shiny-text-1"></div>
+  <h3>2025/10/28　第3戦 LAD対TOR</h3>
+  <h5>球史に残る“延長18回”フリーマンがサヨナラHR!</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/JO1yAHsW-YQ"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>TOR軍 vs LAD軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/y-Y0C0Sn9U8"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷2HR4安打4敬遠1試合9出塁</p>
+  </div>
+</div>
+ -->
+<!-- ✅ 第4戦 -->
+<!--
+<div id="game4" class="tab-content">
+<div id="hoge-hoge_landing10" class="shiny-text-1"></div>
+  <h3>2025/10/29　第4戦 LAD対TOR</h3>
+  <h5>ゲレーロJr.逆転2ランなど6得点で2勝2敗に!</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/BUkp9vtEd2Y"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>TOR軍 vs LAD軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/EiBLcRQ4VA4"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷 投球&全打席ダイジェスト</p>
+  </div>
+</div>
+ -->
+<!-- ✅ 第5戦 -->
+<!-- 
+<div id="game5" class="tab-content">
+<div id="hoge-hoge_landing11" class="shiny-text-1"></div>
+  <h3>2025/10/30　第5戦 LAD対TOR</h3>
+  <h5>ブルージェイズ先王手！ ドジャース崖っぷち!!!</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/cvSAWXU6uZU"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>TOR軍 vs LAD軍 Highlight</p>
+  </div>
+</div>
+ -->
+<!-- ✅ 第6戦 -->
+<!-- 
+<div id="game6" class="tab-content">
+<div id="hoge-hoge_landing12" class="shiny-text-1"></div>
+  <h3>2025/11/01　第6戦 LAD対TOR</h3>
+  <h5>運命の第7戦へ！ エース山本“期待に応える”</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/PQR42dyyDYU?si=833o6ZXgcP_U9HBA"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/pfd2ztNnfMI?si=E8GXjukQAyfap1Qg"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>佐々木朗希８回を踏ん張る！</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/2eHdYZAj5MI?si=8eCdWx_65AxtD8_o"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>2BHで追加点のチャンスを演出</p>
+  </div>
+</div>
+ -->
+<!-- ✅ 第7戦 -->
+<!-- 
+<div id="game7" class="tab-content">
+<div id="hoge-hoge_landing13" class="shiny-text-1"></div>
+  <h3>2025/11/02　第7戦 LAD対TOR</h3>
+  <h5>ドジャースWS連覇！MVP山本が胴上げ投手に</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/bVJXbYih6B8?si=XYauWUW0qWvSmujD"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/i0xuNC5iQcM?si=nEKgX6OsmmFnj0C_"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>ロハスが値千金同点ソロHR！</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/WJk0XGCBXeU?si=97sDIXrogOpoAmFG"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>スミス延長11回 勝越しソロHR</p>
+  </div>
+
+    <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/oLCzlH_OxJo?si=E1XtV7F8MTZHExjv"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>“中0日”胴上げ投手！山本由伸</p>
+  </div>
+
+</div>
+ -->
+<!-- ✅ 2025 League Championship Series_section -->
+<!-- ✅ NLCS タブコンテンツ -->
+<!--
+<div id="nlcs" class="tab-content">
+<div id="hoge-hoge_landing6" class="shiny-text-1"></div>
+  <h3>NLCS Series 2025/10/18</h3>
+  <h5>リーグ優勝をかけた最終戦 伝説の１日</h5>
+  <h5>投げては7回途中10K、打ってはホームラン3本!</h5>
+  <h5>NLCS大谷伝説の日</h5>
+
+  <div class="video-item">
+    <iframe
+      width="560" height="315"
+      src="https://www.youtube.com/embed/0e7zKPfouj4"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>MLW軍 vs LAD軍 Highlight</p>
+  </div>
+</div>
+ -->
+<!--End 動画セクション 2025 League Championship Series_section-->
+
+</section>
+
+    <!-- ✅ Postseason 成績セクション -->
+  <hr>
+  <section id="postseason-stats-section">
+    <h2 class="shiny-text-1">⚾ 2026 WBC 成績</h2>
+
+    <!-- Batting -->
+    <h3 class="stat-title">Batting</h3>
+    <div id="batting-stats" class="stats-container"></div>
+
+    <!-- Pitching -->
+    <h3 class="stat-title">Pitching</h3>
+    <div id="pitching-stats" class="stats-container"></div>
+  </section>
+
+
+  <div class="wbc-container">
+
+  <!-- 上段：左へ流れる -->
+    <div class="flag-marquee marquee-left">
+      <div class="flag-track">
+        <!-- 20 flags × 2 -->
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+      </div>
+    </div>
+
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/WBC_logo.svg"
+                  alt="World Baseball Classic Logo"
+                  class="wbc-logo">
+                  <h1>　2026</h1>
+
+<!-- 上段：右へ流れる -->
+    <div class="flag-marquee marquee-right">
+      <div class="flag-track">
+        <!-- 20 flags × 2 -->
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/mx.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/br.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/it.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pr.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cu.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/co.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/pa.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ve.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/do.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg">
+          <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/us.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/jp.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/kr.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/au.jpg">
+            <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ca.jpg">
+      </div>
+    </div>
+
+<button id="backToTopBtn" aria-label="ページ上部に戻る">
+  ページ<br>
+  上部へ<br>
+  ⬆
+</button>
+
+</div> <!-- main-content END -->
+
+
+  <!-- ✅ JS -->
+  <script src="/js/WorldBaseballClassic.js"></script>
+
+
+<script>
+
+/* ------------------------------------------
+  🔵 iPhone の音声再生許可（安定版）
+------------------------------------------ */
+function enableIOSAudio() {
+  const bgm = document.getElementById("intro-bgm");
+
+  const unlock = () => {
+    bgm.play()
+      .then(() => {
+        bgm.pause();
+        bgm.currentTime = 0;
+      })
+      .catch(() => {});
+
+    window.removeEventListener("touchstart", unlock);
+    window.removeEventListener("click", unlock);
+  };
+
+  window.addEventListener("touchstart", unlock, { once: true });
+  window.addEventListener("click", unlock, { once: true });
+}
+
+
+/* ------------------------------------------
+    メイン処理
+------------------------------------------ */
+document.addEventListener("DOMContentLoaded", () => {
+
+  enableIOSAudio();
+
+  const bgm      = document.getElementById("intro-bgm");
+  const texts    = document.querySelectorAll(".fade-text");
+  const startBtn = document.getElementById("intro-start-btn");
+  const skipBtn  = document.getElementById("intro-skip-btn");
+  const soundBtn = document.getElementById("intro-sound-toggle");
+
+  const intro = document.getElementById("intro");
+  const main  = document.getElementById("main-content");
+
+  let index = 0;
+  let skipped = false;
+  let soundEnabled = false;
+  let fadeTimer = null;
+  let introEnded = false;
+
+  // ★フェード状態ガード
+  let bgmFading = false;
+
+  // ★フェード開始秒（テスト用：10秒）
+  const FADE_START_AT = 18;
+
+  /* ------------------------------------------
+      🎵 フェードイン（本物）
+------------------------------------------ */
+/* 🎵 フェードイン */
+function safeFadeIn() {
+  clearInterval(fadeTimer);
+  bgmFading = false;
+
+  bgm.volume = 0;
+  bgm.play().catch(() => {});
+
+  fadeTimer = setInterval(() => {
+    if (bgm.volume < 0.2) {
+      bgm.volume = Math.min(0.2, bgm.volume + 0.02);
+    } else {
+      clearInterval(fadeTimer);
+    }
+  }, 80);
+}
+
+  /* ------------------------------------------
+      🎵 フェードアウト（本物）
+------------------------------------------ */
+  function safeFadeOut() {
+    if (bgmFading) return;
+    bgmFading = true;
+
+    clearInterval(fadeTimer);
+
+    fadeTimer = setInterval(() => {
+      if (bgm.volume > 0.02) {
+        bgm.volume = Math.max(0, bgm.volume - 0.02);
+      } else {
+        clearInterval(fadeTimer);
+        bgm.pause();
+        bgm.volume = 0;
+      }
+    }, 80);
+  }
+
+  /* ------------------------------------------
+    🔊 ON/OFF トグル
+------------------------------------------ */
+  soundBtn.addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    soundBtn.textContent = soundEnabled ? "🔊 音オン（設定）" : "🔇 音をオフ";
+  });
+
+  /* ------------------------------------------
+      ✨ テキストフェード
+------------------------------------------ */
+  function playSequence() {
+    if (skipped) return;
+
+    const current = texts[index];
+    current.classList.add("show");
+
+    setTimeout(() => {
+      current.classList.add("hide");
+    }, 3000);
+
+    setTimeout(() => {
+      current.classList.remove("show", "hide");
+      index++;
+
+      if (index < texts.length && !skipped) {
+        playSequence();
+      } else if (!skipped) {
+        setTimeout(endIntro, 1500);
+      }
+    }, 3500);
+  }
+
+  /* ------------------------------------------
+      🎬 Intro → Main
+------------------------------------------ */
+  function endIntro() {
+    if (introEnded) return;
+    introEnded = true;
+
+    intro.style.opacity = "0";
+
+    setTimeout(() => {
+      intro.style.display = "none";
+      main.style.display = "block";
+    }, 1000);
+  }
+
+  /* ------------------------------------------
+    🎬 Start
+------------------------------------------ */
+  startBtn.addEventListener("click", () => {
+
+    startBtn.style.display = "none";
+    skipBtn.style.display = "none";
+    soundBtn.style.display = "none";
+
+    const warning = document.getElementById("intro-volume-warning");
+    if (warning) warning.style.display = "none";
+
+    if (soundEnabled) {
+      safeFadeIn();
+
+      // ★BGM時間基準フェードアウト
+      setTimeout(() => {
+        safeFadeOut();
+      }, FADE_START_AT * 1000);
+    }
+
+    playSequence();
+  });
+
+  /* ------------------------------------------
+    ⏭ Skip
+------------------------------------------ */
+  skipBtn.addEventListener("click", () => {
+    skipped = true;
+    safeFadeOut();
+    endIntro();
+  });
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const backToTopBtn = document.getElementById("backToTopBtn");
+
+  // ページ中間地点を動的取得
+  function getMiddlePoint() {
+    const body = document.body;
+    const html = document.documentElement;
+
+    const pageHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+
+    return pageHeight / 2;
+  }
+
+  window.addEventListener("scroll", () => {
+    const middlePoint = getMiddlePoint();
+
+    if (window.scrollY > middlePoint) {
+      backToTopBtn.classList.add("show");
+    } else {
+      backToTopBtn.classList.remove("show");
+    }
+  });
+});
+
+
+backToTopBtn.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
+
+</script>
+
+
+  <!-- <th:block th:replace="fragments/footer :: footer"></th:block>-->
+
+
+</body>
+</html>
+
