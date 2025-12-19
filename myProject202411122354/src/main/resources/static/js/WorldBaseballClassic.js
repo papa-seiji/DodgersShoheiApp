@@ -208,10 +208,10 @@ async function loadPostseasonStats() {
         console.warn("API取得失敗、手動データで表示します:", error);
 
         const manualStats = {
-            ohtaniHitting: { avg: ".265", homeRuns: 8, rbi: 14, ops: "1.096" },
-            ohtaniPitching: { era: "4.43", inningsPitched: "20.1", strikeOuts: 28, whip: "1.13" },
-            yamamotoPitching: { era: "1.45", inningsPitched: "37.1", strikeOuts: 33, whip: "0.78" },
-            sasakiPitching: { era: "0.84", inningsPitched: "10.2", strikeOuts: 6, whip: "1.03" }
+            ohtaniHitting: { avg: ".435", homeRuns: 1, rbi: 8, ops: "1.345" },
+            ohtaniPitching: { era: "1.86", inningsPitched: "9 2/3", strikeOuts: 11, whip: "0.152" },
+            yamamotoPitching: { era: "2.45", inningsPitched: "7 1/3", strikeOuts: 12, whip: "0.160" },
+            sasakiPitching: { era: "3.52", inningsPitched: "7 2/3", strikeOuts: 11, whip: "0.233" }
         };
 
         renderPostseasonStats(manualStats);
