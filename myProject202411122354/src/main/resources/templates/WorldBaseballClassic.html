@@ -297,6 +297,30 @@
   }
 }
 
+#backToTopBtn {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  z-index: 9999;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 8px;
+
+  border: none;
+  cursor: pointer;
+
+  display: none; /* 初期は非表示 */
+}
+
+#backToTopBtn.show {
+  display: block;
+}
+
 
 </style>
 </head>
@@ -1052,6 +1076,11 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
       </div>
     </div>
 
+<button id="backToTopBtn" aria-label="ページ上部に戻る">
+  ページ<br>
+  上部へ<br>
+  ⬆
+</button>
 
 </div> <!-- main-content END -->
 
@@ -1236,6 +1265,48 @@ function safeFadeIn() {
 
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const backToTopBtn = document.getElementById("backToTopBtn");
+
+  // ページ中間地点を動的取得
+  function getMiddlePoint() {
+    const body = document.body;
+    const html = document.documentElement;
+
+    const pageHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+
+    return pageHeight / 2;
+  }
+
+  window.addEventListener("scroll", () => {
+    const middlePoint = getMiddlePoint();
+
+    if (window.scrollY > middlePoint) {
+      backToTopBtn.classList.add("show");
+    } else {
+      backToTopBtn.classList.remove("show");
+    }
+  });
+});
+
+
+backToTopBtn.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
+
+</script>
+
 
   <!-- <th:block th:replace="fragments/footer :: footer"></th:block>-->
 
