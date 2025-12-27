@@ -15,11 +15,12 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.config.Customizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig {
@@ -30,8 +31,8 @@ public class SecurityConfig {
     private final VisitorCounterService visitorCounterService;
     private final LoginLogoutService loginLogoutService;
 
-    // ★ `LoginLogoutService` をコンストラクタで受け取る
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
+    public SecurityConfig(
+            UserDetailsServiceImpl userDetailsService,
             VisitorCounterService visitorCounterService,
             LoginLogoutService loginLogoutService) {
         this.userDetailsService = userDetailsService;
@@ -42,31 +43,78 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF保護を無効化
-                .cors(Customizer.withDefaults()) // CORS設定を有効化
-                .headers(headers -> headers.frameOptions(Customizer.withDefaults())) // X-Frame-Optionsを無効化
+                // --- 基本設定 ---
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .headers(headers -> headers.frameOptions(Customizer.withDefaults()))
+
+                // --- 認可設定 ---
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/auth/signup", "/auth/login", "/css/**", "/js/**", "/images/**",
-                                "/comments", "/links", "/auth/userinfo", "/api/visitorCounter/**", "/api/proud/**",
-                                "/proud", "/stats", "/api/stats", "/notifications/subscribe", "/notifications/send",
-                                "/icon.png", "/sw.js", "/notifications/**", "/subscriptions/**",
-                                "/notifications/comments", "/api/news", "/api/dodgers/standings", "/yosou",
-                                "/api/mlb/**", "/archive", "/api/ohtani-vs-judge/stats", "/kike")
+                        .requestMatchers(
+                                "/", // トップ
+                                "/home", // Home画面
+                                "/auth/login",
+                                "/auth/signup",
+                                "/signup-success",
+
+                                // 静的リソース
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/icon.png",
+                                "/sw.js",
+
+                                // 公開ページ
+                                "/comments",
+                                "/links",
+                                "/proud",
+                                "/archive",
+                                "/yosou",
+                                "/kike",
+                                "/postseason",
+                                "/ohtani-vs-judge",
+                                "/WorldBaseballClassic",
+
+                                // API（公開）
+                                "/auth/userinfo",
+                                "/api/visitorCounter/**",
+                                "/api/proud/**",
+                                "/api/stats",
+                                "/api/news",
+                                "/api/dodgers/standings",
+                                "/api/mlb/**",
+                                "/api/ohtani-vs-judge/stats",
+
+                                // 通知・Push
+                                "/notifications/**",
+                                "/notifications/subscribe",
+                                "/notifications/send",
+                                "/notifications/comments",
+                                "/subscriptions/**")
                         .permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // 管理者専用エンドポイントを保護
+
+                        // 管理者専用
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // その他は認証必須
                         .anyRequest().authenticated())
 
+                // --- ログイン ---
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .successHandler(visitorCounterSuccessHandler())
                         .failureHandler(authenticationFailureHandler())
                         .permitAll())
+
+                // --- ログアウト ---
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .logoutSuccessHandler(logoutSuccessHandler())
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll())
+
+                // --- セッション管理 ---
                 .sessionManagement(session -> session
                         .invalidSessionUrl("/auth/login")
                         .maximumSessions(1)
@@ -76,29 +124,25 @@ public class SecurityConfig {
     }
 
     /**
-     * favicon.icoリクエストを無視する設定を追加
+     * favicon.ico は Spring Security の対象外
      */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/favicon.ico");
+        return web -> web.ignoring().requestMatchers("/favicon.ico");
     }
 
     /**
-     * ログアウト時の処理（ログ記録 & リダイレクト）
+     * ログアウト成功時
      */
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
             if (authentication != null) {
-                String username = authentication.getName();
-                String ipAddress = request.getRemoteAddr();
-                String userAgent = request.getHeader("User-Agent");
-
-                // 🔹 ログアウト情報を記録
-                loginLogoutService.logAction(username, "LOGOUT", ipAddress, userAgent);
-
-                logger.info("✅ ログアウト: ユーザー名={}, IP={}, ユーザーエージェント={}",
-                        username, ipAddress, userAgent);
+                loginLogoutService.logAction(
+                        authentication.getName(),
+                        "LOGOUT",
+                        request.getRemoteAddr(),
+                        request.getHeader("User-Agent"));
             }
             response.sendRedirect("/auth/login?logout=true");
         };
@@ -119,45 +163,35 @@ public class SecurityConfig {
     }
 
     /**
-     * ログイン成功時の処理（カウンター更新 & ログ記録）
+     * ログイン成功時
      */
     @Bean
     public AuthenticationSuccessHandler visitorCounterSuccessHandler() {
         return (request, response, authentication) -> {
             if (authentication != null) {
-                String username = authentication.getName();
-                String ipAddress = request.getRemoteAddr();
-                String userAgent = request.getHeader("User-Agent");
-
-                // 🔹 ログイン情報を記録
-                loginLogoutService.logAction(username, "LOGIN", ipAddress, userAgent);
-
-                logger.info("✅ ログイン成功: ユーザー名={}, IP={}, ユーザーエージェント={}",
-                        username, ipAddress, userAgent);
+                loginLogoutService.logAction(
+                        authentication.getName(),
+                        "LOGIN",
+                        request.getRemoteAddr(),
+                        request.getHeader("User-Agent"));
             }
-
             visitorCounterService.incrementVisitorCounter();
             response.sendRedirect("/home");
         };
     }
 
     /**
-     * ログイン失敗時の処理（ログ記録 & エラーメッセージ表示）
+     * ログイン失敗時
      */
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
-            String username = request.getParameter("username"); // 入力されたユーザー名
-            String ipAddress = request.getRemoteAddr(); // クライアントのIPアドレス
-            String userAgent = request.getHeader("User-Agent"); // ユーザーエージェント
-
-            // 🔹 ログイン失敗の記録
-            loginLogoutService.logAction(username != null ? username : "UNKNOWN", "FAILED_LOGIN", ipAddress, userAgent);
-
-            logger.warn("⚠️ ログイン失敗: ユーザー名={}, IP={}, ユーザーエージェント={}, エラー={}",
-                    username, ipAddress, userAgent, exception.getMessage());
-
-            request.getSession().setAttribute("SPRING_SECURITY_LAST_EXCEPTION", exception.getMessage());
+            loginLogoutService.logAction(
+                    request.getParameter("username") != null ? request.getParameter("username") : "UNKNOWN",
+                    "FAILED_LOGIN",
+                    request.getRemoteAddr(),
+                    request.getHeader("User-Agent"));
+            logger.warn("⚠️ ログイン失敗: {}", exception.getMessage());
             response.sendRedirect("/auth/login?error=true");
         };
     }

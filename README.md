@@ -1,89 +1,180 @@
-🚀DodgersShoheiApp リリースノート
-本アプリは、MLBの試合情報、大谷翔平の個人成績、6地区30球団の順位表、チャット機能、画像投稿機能、訪問者数の記録などを統合したWebアプリケーションです。Spring Boot (Java) をバックエンドに、PostgreSQLをデータベースに使用し、フロントエンドはHTML/CSS/JavaScriptで構築されています。
-また、SSL証明書を取得し、独自ドメイン（https://letsgoohtanifromjapan.click）で運用しています。
+DodgersShoheiApp
 
-📌実装済みの主な機能
-📝 認証 & 記録
-ユーザー認証：Spring Securityを利用したログイン・ログアウト機能
-ログイン・ログアウト記録：login_logout_logs テーブルに記録（1日1回 8時にバッチ処理で保存＆ログファイルに出力）
+本アプリは 個人開発プロジェクトとして、
+設計・実装・インフラ構築・本番運用までを一貫して行っている Web アプリケーションです。
 
-📊 #MLB関連機能
-MLB試合情報の取得・表示
-API経由で当日の試合情報（球場、スコア、試合状況）を取得し表示
-試合状況の表示
-In Progress（進行中） / Final（終了） / 試合なし
-チームロゴ表示：APIから取得したチーム名を元にロゴを表示
-大谷翔平の個人成績の表示
-試合ごとの成績（打率・本塁打・OPS など）をAPI経由で取得し表示
-MLB順位表の表示
-6地区30球団の順位データをAPIから取得し、チームロゴ付きで表示
+🚀 DodgersShoheiApp リリースノート
+本アプリは、MLBの試合情報、大谷翔平の個人成績、
+6地区30球団の順位表、チャット機能、画像投稿機能、訪問者数の記録などを統合した Web アプリケーションです。
 
-💬 チャット機能
-リアルタイムチャット（WebSocket）
-投稿したコメントが即座に全ユーザーに反映される
-基本的な機能
-ユーザー名付きで投稿可能
-
-🏆 Proud画面（画像投稿）
-画像アップロード & 表示
-投稿画像を proud_images テーブルに保存し、Proudページに表示
-投稿機能
-コメント付き画像投稿、一覧表示
-
-いいね機能
-画像に対して「いいね」ができ、ユーザーごとに記録・反映
-
-📰 ニュース更新機能
-管理者専用ニュース更新画面
-news_updates テーブルにニュースを保存
-記事タイトル・本文・画像をアップロード可能
-管理者のみアクセス可能なインターフェースを実装
-
-📈 訪問者数の記録
-訪問者数カウント機能
-visitor_counters テーブルに訪問者数を保存・表示
-管理者のみ 訪問者数を閲覧可能
-
-🔔 通知 & バッチ処理
-APIのヘルスチェック
-1日1回 23時 にAPIの稼働状況をログに記録
-訪問者数ログのリセット
-1日1回 8時 に訪問者数をリセットし、ログに記録
-
-🎨 UI / UX 改善
-ハンバーガーメニュー
-オーバーレイ機能（背景を暗くし、クリックで閉じる）
-スムーズなアニメーション（開閉時のフェードイン・フェードアウト）
-スクロールロック（メニュー展開中はページスクロール無効）
-アクセシビリティ対応（aria-expanded の設定、キーボード操作対応）
-YouTube動画埋め込み
-ホーム画面 に YouTube の埋め込みを追加し、動画コンテンツを提供
-
-🛠️ 使用技術
-バックエンド：Spring Boot 3.3.5 (Java)
+バックエンド：Spring Boot（Java）
 データベース：PostgreSQL
 フロントエンド：HTML / CSS / JavaScript
 リアルタイム通信：WebSocket
-認証：Spring Security + BCrypt
-API連携：MLB API
-ファイル管理：Thymeleaf（テンプレートエンジン）
-デプロイ環境：AWS EC2 + Nginx + Let's Encrypt（SSL証明書取得済み）
-開発ツール：VSCode, Postman
-📌 バージョン管理
-本アプリのソースコードは GitHub で管理しており、ブランチ運用を行いながら開発を進めています。
-リリース時の履歴管理やコードのレビューもGitHub上で実施しています。
+SSL 証明書を取得し、独自ドメイン + HTTPS で本番運用しています。
+
+現在は
+https://letsgoohtanifromjapan.click（本番運用中）
+https://letsgoohtanifromjapan.com（CloudFront
+ 経由で運用開始）
+
+の構成となっています。
+
+
+🏗️ インフラ・運用構成（全体像）
+[ Browser ]
+     ↓
+[ CloudFront ]
+     ↓
+[ Application Load Balancer ]
+     ↓
+[ Nginx ]
+     ↓
+[ Spring Boot Application ]
+     ↓
+[ PostgreSQL ]
+
+
+🌐 ドメイン運用（Route53）
+AWS Route53 にて独自ドメインを管理
+以下ドメインを運用
+letsgoohtanifromjapan.com
+www.letsgoohtanifromjapan.com
+letsgoohtanifromjapan.click
+www.letsgoohtanifromjapan.click
+A レコード（Alias）により CloudFront にルーティング
+
+
+🔐 SSL / 証明書管理（ACM）
+AWS Certificate Manager（ACM）にて証明書を発行
+CloudFront に証明書を集約
+HTTPS を強制（HSTS 有効）
+
+
+☁️ CDN（CloudFront）【実運用中】
+パフォーマンス向上・セキュリティ強化・通信コスト最適化を目的として
+AWS CloudFront を前段に配置した CDN 構成を実運用しています。
+
+構成
+CloudFront → ALB → Nginx → Spring Boot
+オリジンを直接公開せず、CloudFront 経由のアクセスに限定
+www → apex ドメインのリダイレクトは CloudFront Functions で制御
+CloudFront 導入による効果
+静的リソースのエッジキャッシュによる 表示速度向上
+EC2 / ALB へのリクエスト削減による 負荷軽減
+HTTPS / 証明書管理の一元化
+グローバル配信とセキュリティ向上
+
+
+⚠️ キャッシュ設計（CloudFront）
+キャッシュ対象
+HTML
+CSS
+JavaScript
+画像（img）
+キャッシュ非対象
+WebSocket 通信
+認証が必要な API
+セッション依存の動的レスポンス
+リアルタイム性が求められる機能と、
+パフォーマンス重視の静的配信を分離した設計としています。
+
+
+💰 コスト・請求に関する評価
+CloudFront 導入後の AWS 請求を確認した結果、
+月額 USD 5〜6 程度
+主な課金要素は Data Transfer
+CloudFront / ALB / ACM / Route53 は想定通り低コスト
+CloudFront が前段で通信を吸収することで、
+EC2 からの直接インターネット通信量を抑制できており、
+コストパフォーマンスの良い構成であることを確認しています。
+
+
+🗂 メディアファイル管理（Amazon S3）
+画像・動画・音声などのメディアファイルは Amazon S3 に保存しています。
+画像：Proud画面投稿画像、アーカイブ画像
+動画（mp4）：イベント・演出用動画
+音声（mp3）：BGM・効果音
+EC2 にメディアファイルを直接保持せず、
+将来的には S3 + CloudFront 経由での配信を前提とした設計です。
+
+
+🔐 セキュリティ設計
+Spring Security による認証・認可
+エンドポイント単位のアクセス制御
+管理者専用機能の分離
+セッション管理 / ログ記録
+
+
+📌 実装済みの主な機能
+
+📝 認証 & ログ
+ログイン / ログアウト機能
+login_logout_logs テーブルへ記録（1日1回バッチ処理）
+
+🔢 リアルタイムカウンター
+WebSocket による即時反映
+admin 権限ユーザーのみ操作可能
+DB 永続化（再起動後も保持）
+
+📊 MLB 関連機能
+試合情報取得・表示
+大谷翔平の個人成績表示
+6地区30球団の順位表表示
+
+🧩 スタメン / 予告先発表示
+Away / Home の2カラム構成
+日本人選手強調表示
+
+💬 チャット機能
+WebSocket によるリアルタイムチャット
+
+🏆 Proud（画像投稿）
+画像投稿・一覧表示
+
+いいね機能
+📰 ニュース更新（管理者専用）
+記事作成・画像アップロード
+
+📈 訪問者数カウント
+visitor_counter テーブルで管理
+
+📊 MLB順位予想
+ユーザー参加型投票
+リアルタイム集計
+
+🆚 選手成績比較
+MLB Stats API を利用
+
+🗂 アーカイブ機能
+過去イベント・試合のメディア閲覧
+
+🌏 WBC コンテンツ
+World Baseball Classic 専用ページ
+
+
+🛠 使用技術
+Spring Boot 3.3.5
+Java
+PostgreSQL
+HTML / CSS / JavaScript
+WebSocket
+Spring Security + BCrypt
+MLB Stats API
+AWS（EC2 / ALB / CloudFront / Route53 / ACM / S3）
+Nginx
+GitHub
+
 
 🗄️ 運用中のデータベーステーブル
-本アプリでは、以下のPostgreSQLのテーブルを運用中です。
-
-users：ユーザー情報（ID、名前、パスワード、権限 など）
-comments：チャットの投稿データ（ユーザー、メッセージ、タイムスタンプ）
-counters：カウンター機能の管理（管理者用の数値更新機能）
-liked_users：Proudページの「いいね」機能の記録（ユーザーID、画像ID）
-login_logout_logs：ログイン・ログアウトの記録（ユーザー、日時、操作内容）
-mlb_api_logs：MLB APIのデータ取得ログ
-mlb_yosou_datas：MLB順位予想の記録
-news_updates：ニュース記事データ（タイトル、本文、画像パス など）
-proud_image：Proudページの画像投稿データ
-subscriptions：Webプッシュ通知のサブスクリプション情報（現在は未使用）
-visitor_counter：訪問者数の記録
+users
+comments
+counters
+liked_users
+login_logout_logs
+mlb_api_logs
+mlb_yosou_datas
+news_updates
+proud_image
+subscriptions
+visitor_counter
