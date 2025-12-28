@@ -17,16 +17,78 @@
   <a href="/home" class="postseason-btn">HOME画面に戻る</a>
 
 <!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
-<section class="video-preview-section">
+<!-- <section class="video-preview-section">
   <div class="video-preview-wrapper">
     <video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>
       <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/world_champion_ceremony.mp4" type="video/mp4">
       お使いのブラウザは video タグをサポートしていません。
-    </video>
+    </video> -->
     <!-- 🔇／🔊 ミュートボタン -->
-    <button id="muteToggle" class="mute-btn">🔇</button>
+    <!-- <button id="muteToggle" class="mute-btn">🔇</button>
+  </div>
+</section> -->
+
+<section class="video-preview-section">
+  <div class="video-preview-wrapper">
+
+    <div class="video-carousel">
+
+      <div class="video-item">
+        <video class="decorative-video" autoplay muted loop playsinline>
+          <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/world_champion_ceremony.mp4" type="video/mp4">
+        </video>
+        <button class="mute-btn">🔇</button>
+      </div>
+
+      <div class="video-item">
+        <video class="decorative-video" autoplay muted loop playsinline>
+          <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/Exciting+defense%2301.mp4" type="video/mp4">
+        </video>
+        <button class="mute-btn">🔇</button>
+      </div>
+
+    </div>
   </div>
 </section>
+
+<script>
+  const items = document.querySelectorAll(".video-item");
+
+  items.forEach(item => {
+    const video = item.querySelector("video");
+    const button = item.querySelector(".mute-btn");
+
+    video.muted = true;
+    let isMuted = true;
+
+    button.addEventListener("click", () => {
+
+      if (isMuted) {
+        // 🔊 この動画をONにする → 他は全部ミュート
+        items.forEach(other => {
+          const otherVideo = other.querySelector("video");
+          const otherBtn = other.querySelector(".mute-btn");
+
+          otherVideo.muted = true;
+          otherBtn.textContent = "🔇";
+          other.dataset.muted = "true";
+        });
+
+        video.muted = false;
+        button.textContent = "🔊";
+        isMuted = false;
+
+      } else {
+        // 🔇 自分をミュート
+        video.muted = true;
+        button.textContent = "🔇";
+        isMuted = true;
+      }
+    });
+  });
+</script>
+
+
 
 <!-- ✅ Postseason コメント＋集合写真 -->
 <section class="postseason-commentary">
