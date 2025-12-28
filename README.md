@@ -15,6 +15,9 @@ SSL 証明書を取得し、独自ドメイン + HTTPS で本番運用してい�
 
 現在は
 https://letsgoohtanifromjapan.click（本番運用中）
+.click ドメインは CloudFront + Function によりエッジで 301 リダイレクトされ、
+すべてのアクセスは .com ドメインへ安全かつ高速に集約される。
+
 https://letsgoohtanifromjapan.com（CloudFront
  経由で運用開始）
 
@@ -43,6 +46,8 @@ www.letsgoohtanifromjapan.com
 letsgoohtanifromjapan.click
 www.letsgoohtanifromjapan.click
 A レコード（Alias）により CloudFront にルーティング
+Route 53 から CloudFront へ ALIAS ルーティング
+.click ドメインの A レコード（ALIAS）は CloudFront Distribution を指す
 
 
 🔐 SSL / 証明書管理（ACM）
@@ -64,6 +69,9 @@ CloudFront 導入による効果
 EC2 / ALB へのリクエスト削減による 負荷軽減
 HTTPS / 証明書管理の一元化
 グローバル配信とセキュリティ向上
+letsgoohtanifromjapan.click は誘導専用ドメインとして使用し、
+すべてのアクセスを https://letsgoohtanifromjapan.com へ 301 リダイレクトする。
+
 
 
 ⚠️ キャッシュ設計（CloudFront）

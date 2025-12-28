@@ -6,15 +6,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.config.Customizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
@@ -42,6 +45,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 // --- 基本設定 ---
                 .csrf(csrf -> csrf.disable())
@@ -50,9 +54,10 @@ public class SecurityConfig {
 
                 // --- 認可設定 ---
                 .authorizeHttpRequests(auth -> auth
+
+                        // 🔓 認証不要（最小限）
                         .requestMatchers(
-                                "/", // トップ
-                                "/home", // Home画面
+                                "/",
                                 "/auth/login",
                                 "/auth/signup",
                                 "/signup-success",
@@ -64,45 +69,25 @@ public class SecurityConfig {
                                 "/icon.png",
                                 "/sw.js",
 
-                                // 公開ページ
-                                "/comments",
-                                "/links",
-                                "/proud",
-                                "/archive",
-                                "/yosou",
-                                "/kike",
-                                "/postseason",
-                                "/ohtani-vs-judge",
-                                "/WorldBaseballClassic",
-
-                                // API（公開）
+                                // 未ログイン許可API
                                 "/auth/userinfo",
                                 "/api/visitorCounter/**",
-                                "/api/proud/**",
-                                "/api/stats",
                                 "/api/news",
                                 "/api/dodgers/standings",
-                                "/api/mlb/**",
-                                "/api/ohtani-vs-judge/stats",
-
-                                // 通知・Push
-                                "/notifications/**",
-                                "/notifications/subscribe",
-                                "/notifications/send",
-                                "/notifications/comments",
-                                "/subscriptions/**")
+                                "/api/mlb/**")
                         .permitAll()
 
-                        // 管理者専用
+                        // 🔐 管理者専用
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // その他は認証必須
+                        // 🔐 それ以外はすべてログイン必須
                         .anyRequest().authenticated())
 
                 // --- ログイン ---
                 .formLogin(form -> form
                         .loginPage("/auth/login")
-                        .successHandler(visitorCounterSuccessHandler())
+                        .loginProcessingUrl("/auth/login")
+                        .successHandler(loginSuccessHandler())
                         .failureHandler(authenticationFailureHandler())
                         .permitAll())
 
@@ -111,11 +96,11 @@ public class SecurityConfig {
                         .logoutUrl("/auth/logout")
                         .logoutSuccessHandler(logoutSuccessHandler())
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll())
+                        .deleteCookies("JSESSIONID"))
 
-                // --- セッション管理 ---
+                // --- セッション管理（要件②の肝） ---
                 .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .invalidSessionUrl("/auth/login")
                         .maximumSessions(1)
                         .expiredUrl("/auth/login"));
@@ -124,7 +109,7 @@ public class SecurityConfig {
     }
 
     /**
-     * favicon.ico は Spring Security の対象外
+     * favicon.ico は Spring Security 対象外
      */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -132,27 +117,16 @@ public class SecurityConfig {
     }
 
     /**
-     * ログアウト成功時
+     * PasswordEncoder
      */
-    @Bean
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-            if (authentication != null) {
-                loginLogoutService.logAction(
-                        authentication.getName(),
-                        "LOGOUT",
-                        request.getRemoteAddr(),
-                        request.getHeader("User-Agent"));
-            }
-            response.sendRedirect("/auth/login?logout=true");
-        };
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * AuthenticationManager
+     */
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -166,7 +140,7 @@ public class SecurityConfig {
      * ログイン成功時
      */
     @Bean
-    public AuthenticationSuccessHandler visitorCounterSuccessHandler() {
+    public AuthenticationSuccessHandler loginSuccessHandler() {
         return (request, response, authentication) -> {
             if (authentication != null) {
                 loginLogoutService.logAction(
@@ -193,6 +167,23 @@ public class SecurityConfig {
                     request.getHeader("User-Agent"));
             logger.warn("⚠️ ログイン失敗: {}", exception.getMessage());
             response.sendRedirect("/auth/login?error=true");
+        };
+    }
+
+    /**
+     * ログアウト成功時
+     */
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+            if (authentication != null) {
+                loginLogoutService.logAction(
+                        authentication.getName(),
+                        "LOGOUT",
+                        request.getRemoteAddr(),
+                        request.getHeader("User-Agent"));
+            }
+            response.sendRedirect("/auth/login?logout=true");
         };
     }
 }
