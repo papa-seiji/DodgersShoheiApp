@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const username = window.LOGIN_USERNAME;
 
-        message.textContent = username
-            ? `${username}さん、参加ありがとうございます！`
-            : "参加ありがとうございます！";
+message.innerHTML = username
+    ? `${username}さん、<br>参加ありがとうございます！`
+    : "参加ありがとうございます！";
 
         toast.classList.remove("hidden");
         toast.classList.add("show");

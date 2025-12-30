@@ -1,15 +1,18 @@
 .login-toast {
     position: fixed;
-    bottom: 30px;
+    bottom: 109px;
     left: 50%;
     transform: translateX(-50%);
-    background: #333;
-    color: #fff;
+    background: #242222e0;
+    color: #f2f5ef;
     padding: 12px 20px;
     border-radius: 8px;
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 9999;
+    width: 208px;
+    height: 56px;
+    font-weight: bold;
 }
 
 .login-toast.show {
