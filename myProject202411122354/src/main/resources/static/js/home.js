@@ -94,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // WebSocketを初期化して購読
     initializeWebSocket();
+
 });
 
 

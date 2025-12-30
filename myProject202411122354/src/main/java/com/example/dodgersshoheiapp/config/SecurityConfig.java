@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.config.Customizer;
 import org.slf4j.Logger;
@@ -152,7 +153,15 @@ public class SecurityConfig {
      */
     @Bean
     public AuthenticationSuccessHandler loginSuccessHandler() {
+
+        SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
+
+        // ✅ ログイン成功後は必ずここ
+        handler.setDefaultTargetUrl("/home?login=success");
+        handler.setAlwaysUseDefaultTargetUrl(true);
+
         return (request, response, authentication) -> {
+
             if (authentication != null) {
                 loginLogoutService.logAction(
                         authentication.getName(),
@@ -160,8 +169,11 @@ public class SecurityConfig {
                         request.getRemoteAddr(),
                         request.getHeader("User-Agent"));
             }
+
             visitorCounterService.incrementVisitorCounter();
-            response.sendRedirect("/home");
+
+            // ✅ Spring Security に完全委譲
+            handler.onAuthenticationSuccess(request, response, authentication);
         };
     }
 

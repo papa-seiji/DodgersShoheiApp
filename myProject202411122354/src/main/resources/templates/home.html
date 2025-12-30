@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <th:block th:replace="fragments/header :: head ('Home Page')"></th:block>
@@ -19,6 +20,8 @@
     <script src="/js/notifications.js"></script><!-- JavaScriptファイルを読み込む -->
     <script src="/js/news-section.js"></script><!-- JavaScriptファイルを読み込む -->
 
+<link rel="stylesheet" th:href="@{/css/toast.css}">
+<script th:src="@{/js/toast.js}" defer></script>
 
 <style>
 /* 一意なリンクスタイルを明示し、他の a タグと分離 */
@@ -1933,8 +1936,17 @@ backToTopBtn.addEventListener("click", () => {
 
 </script>
 
+<!-- 🔔 ログイン成功トースト -->
+<div id="login-toast" class="login-toast hidden">
+  <span id="login-toast-message"></span>
+</div>
 
+<script th:inline="javascript">
+    window.LOGIN_USERNAME = /*[[${#authentication.name}]]*/ null;
+    console.log("LOGIN_USERNAME =", window.LOGIN_USERNAME);
+</script>
 
+    <th:block th:replace="fragments/toast :: toast"></th:block>
     <th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>
