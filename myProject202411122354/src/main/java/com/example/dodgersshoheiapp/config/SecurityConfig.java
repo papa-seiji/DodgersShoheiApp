@@ -65,6 +65,7 @@ public class SecurityConfig {
                                 "/postseason",
                                 "/WorldBaseballClassic",
                                 "/archive",
+                                "/links",
                                 "/kike",
 
                                 // 認証関連
@@ -85,7 +86,12 @@ public class SecurityConfig {
                                 "/api/news",
                                 "/api/dodgers/standings",
                                 "/api/stats",
-                                "/api/visitorCounter/**")
+                                "/api/visitorCounter/**",
+
+                                // 参加するならログイン必須
+                                "/comments",
+                                "/proud",
+                                "/yosou")
                         .permitAll()
 
                         // 🔐 管理者専用

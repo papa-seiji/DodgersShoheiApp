@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <th:block th:replace="~{fragments/header :: head ('yosou Page')}"></th:block> <!-- ✅ 修正 -->
     <meta charset="UTF-8">
@@ -19,6 +19,7 @@
     <script th:src="@{/js/updateOtaniBavgChart.js}"></script>
     <script th:src="@{/js/updateDodgersWinsChart.js}"></script>
 
+<link rel="stylesheet" th:href="@{/css/login-required.css}">
 
 
 </head>
@@ -73,21 +74,34 @@
 
     <script>
         // ユーザー情報を取得してヘッダーに表示
-        function fetchUserInfo() {
             fetch('/auth/userinfo')
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user info');
+                if (!response.ok) {
+                    // 🔴 未ログイン時は表示を消す
+                    const userInfoElement = document.getElementById('user-info');
+                    if (userInfoElement) {
+                    userInfoElement.textContent = '';
                     }
-                    return response.json();
+                    return;
+                }
+                return response.json();
                 })
                 .then(data => {
-                    const userInfoElement = document.getElementById('user-info');
-                    userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
+                if (!data) return;
+
+                const userInfoElement = document.getElementById('user-info');
+                if (userInfoElement) {
+                    userInfoElement.textContent =
+                    `${data.number}番 ${data.position}_${data.username}さん`;
+                }
                 })
-                .catch(error => console.error('Error fetching user info:', error));
-        }
-    
+                .catch(() => {
+                const userInfoElement = document.getElementById('user-info');
+                if (userInfoElement) {
+                    userInfoElement.textContent = '';
+                }
+                });
+
         // ページロード時にユーザー情報を取得
         document.addEventListener('DOMContentLoaded', fetchUserInfo);
     </script>
@@ -268,6 +282,16 @@
     </div>
 </div>
 
+<!-- 🔒 未ログインの人だけ表示 -->
+<div sec:authorize="isAnonymous()">
+  <div th:replace="~{fragments/login-required :: loginRequired(message='予想に投票するにはログインが必要です。',redirect='/proud')}"></div>
+</div>
+
+<!-- ✅ ログイン済みの人だけ表示 -->
+<div sec:authorize="isAuthenticated()">
+
+
 <th:block th:replace="fragments/footer-2 :: footer"></th:block>
     </body>
+    
 </html>

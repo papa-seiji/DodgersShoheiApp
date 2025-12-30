@@ -106,21 +106,33 @@
 
     <script>
         // ユーザー情報を取得してヘッダーに表示
-        function fetchUserInfo() {
-            fetch('/auth/userinfo')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user info');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const userInfoElement = document.getElementById('user-info');
-                    userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-                })
-                .catch(error => console.error('Error fetching user info:', error));
-        }
-    
+        fetch('/auth/userinfo')
+        .then(response => {
+            if (!response.ok) {
+            // 🔴 未ログイン時は表示を消す
+            const userInfoElement = document.getElementById('user-info');
+            if (userInfoElement) {
+                userInfoElement.textContent = '';
+            }
+            return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data) return;
+
+            const userInfoElement = document.getElementById('user-info');
+            if (userInfoElement) {
+            userInfoElement.textContent =
+                `${data.number}番 ${data.position}_${data.username}さん`;
+            }
+        })
+        .catch(() => {
+            const userInfoElement = document.getElementById('user-info');
+            if (userInfoElement) {
+            userInfoElement.textContent = '';
+            }
+        });
         // ページロード時にユーザー情報を取得
         document.addEventListener('DOMContentLoaded', fetchUserInfo);
     </script>

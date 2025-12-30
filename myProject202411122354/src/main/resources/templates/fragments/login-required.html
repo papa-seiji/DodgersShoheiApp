@@ -1,0 +1,42 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<div sec:authorize="isAnonymous()"
+     class="login-required-box">
+
+  <p class="login-required-message"
+     th:text="${message}">
+    この機能を利用するにはログインが必要です。
+  </p>
+
+  <a th:href="@{/auth/login(redirect=${redirect})}"
+     class="login-required-button">
+    ログインして参加する
+  </a>
+
+</div>
+
+</html>-->
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="loginRequired(message, redirect)"
+     class="login-required-box">
+
+  <p class="login-required-message"
+     th:text="${message}">
+  </p>
+
+  <a th:href="@{/auth/login(redirect=${redirect})}"
+     class="login-required-button">
+    ログインする
+  </a>
+
+</div>
+
+</body>
+</html>
