@@ -1,32 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head th:fragment="head (title)">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title, description)">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <title>みんな日本から応援してるぜッ！</title>
-</head>
-<body>
 
-    <!-- スライドショー -->
-    <header id="header-slideshow">
-        <!-- 左側のスライドショー -->
-        <div id="header-slideshow-left" class="header-slideshow-container">
-            <img src="/images/m_1540402463_4738_1.jpg" alt="背景画像1">
-            <img src="/images/ecnjbt2nbk2casmczthu.jpg" alt="背景画像2">
-            <img src="/images/WorldChampions.jpg" alt="背景画像3">
-            <img src="/images/group_photo.jpg" alt="背景画像4">
-        </div>
-    
-        <!-- 右側のスライドショー（スライドエフェクト） -->
-        <div id="header-slideshow-right" class="header-slideshow-container">
-            <div class="slider">
-                <img src="/images/ohtani_family.jpg" alt="背景画像5">
-                <img src="/images/speach.jpg" alt="背景画像6">
-                <img src="/images/bus.jpg" alt="背景画像7">
-                <img src="/images/dodger-stadium-tours.jpg" alt="背景画像8">
-            </div>
-        </div>
-    </header>
-</body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${title}">
+        みんな日本から応援してるぜッ！
+    </title>
+
+    <meta name="description"
+          th:if="${description != null}"
+          th:content="${description}" />
+
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
 </html>

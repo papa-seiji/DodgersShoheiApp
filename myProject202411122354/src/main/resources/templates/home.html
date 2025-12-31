@@ -2,8 +2,18 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <th:block th:replace="fragments/header :: head ('Home Page')"></th:block>
+    <!-- viewport は home 側で管理（OK） -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- SEO head（title + description） -->
+    <th:block
+        th:replace="fragments/header :: head(
+            'ドジャース最新情報｜大谷翔平・試合速報・スタメン・順位',
+            'MLBロサンゼルス・ドジャースと大谷翔平の最新試合情報、スタメン、順位、ニュースを日本語でリアルタイム掲載。'
+        )">
+    </th:block>
+
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script src="/js/role-check.js"></script>
@@ -150,6 +160,7 @@
 
 </head>
 <body>
+
 <!--Start ナビゲーションバー -->
 <!--<div id="header-navbar">
     <div id="header-left">
@@ -192,6 +203,10 @@
         </div>
     </div>
 </div>
+
+
+<th:block th:replace="fragments/header-slideshow :: slideshow"></th:block>
+
 
 <!-- スライドメニュー -->
 <div id="side-menu" class="side-menu">
@@ -365,8 +380,6 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <!--End ナビゲーションバー -->
 
-
-    <th:block th:replace="fragments/header :: header"></th:block>
 
 
 <!--############################################ ここは2026になったら使用する予定 #############################################################-->
