@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- fragments/headerを利用してhead部分を統一 -->
-    <th:block th:replace="fragments/header :: head ('Signup Page')"></th:block>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup</title>
+    <!-- viewport -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO head（title + description） -->
+    <th:block
+        th:replace="fragments/header :: head(
+            '新規登録｜みんな日本から応援してるぜッ！',
+            'ドジャース・大谷翔平・MLBを応援するファン向けコミュニティサイトの新規登録ページです。'
+        )">
+    </th:block>
+
     <link rel="stylesheet" th:href="@{/css/signup_login_util.css}">
     <link rel="stylesheet" th:href="@{/css/header-2.css}">
 </head>
 <body>
     <!-- fragments/headerを利用してヘッダーを挿入 -->
-    <th:block th:replace="fragments/header :: header"></th:block>
+<th:block th:replace="fragments/header-slideshow :: slideshow"></th:block>
     <div id="kiji">MLB,Dodgers、翔平、由伸、朗希を密かに応援している人の</div>
     <div id="kiji">コミュニケーション場として情報共有できればいいなと</div>
     <div id="kiji">完全個人開発（趣味）で2024/11から隙間時間に作りました。</div>
