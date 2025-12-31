@@ -58,6 +58,7 @@ public class SecurityConfig {
 
                         // 🔓 認証不要（入口ページ・静的リソース）
                         .requestMatchers(
+                                "/widgets/**", // ← ★これを追加
                                 "/",
                                 "/home",
 
