@@ -67,7 +67,7 @@
 
         display: inline-block;
         padding: 7px 16px;
-        background-color: #0d6cec;
+        background-color: #ff004b;
         color: yellow;
         text-decoration: none;
         border-radius: 17px;
@@ -104,7 +104,7 @@
 
         display: inline-block;
         padding: 7px 16px;
-        background-color: #0d6cec;
+        background-color: #ff004b;
         color: yellow;
         text-decoration: none;
         border-radius: 17px;
@@ -826,7 +826,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="tab-buttons">
 
 <button
-  class="tab-btn mlb-team-tab active"
+  class="tab-btn mlb-team-tab"
   onclick="showTab('tab2026', event)"
 >
   <img
@@ -839,7 +839,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <button
-  class="tab-btn wbc-tab-btn"
+  class="tab-btn wbc-tab-btn active"
   onclick="showTab('tabWBC2026', event)"
 >
   <img
@@ -852,7 +852,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <button
-  class="tab-btn mlb-team-tab active"
+  class="tab-btn mlb-team-tab"
   onclick="showTab('tab2025', event)"
 >
   <img
@@ -925,7 +925,9 @@ document.addEventListener("DOMContentLoaded", function () {
   <span class="btn-text">'18</span>
 </button>
 
-
+<button class="tab-btn" onclick="showTab('tabAllStar', event)">
+  ALL STAR
+</button>
 
 <button class="tab-btn" onclick="showTab('tabFunny', event)">面白</button>
 </div>
@@ -955,10 +957,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!-- =================== ’26 WBC Tab START =================== -->
 
-<div id="tabWBC2026" class="tab-content">
+<div id="tabWBC2026" class="tab-content active">
       <!--スタート   WorldBaseballClassic を見る               -->
       <a href="/WorldBaseballClassic" class="tokyo-archive-link">
-          <div id="MLB-POST-SEASON-2025">#WorldBaseballClassic      　←← 押</div>
+          <div id="MLB-POST-SEASON-2025">’26 WBC特設サイトはコチラ     　←← 押</div>
       </a>
       <!--エンド    WorldBaseballClassic                      -->
 
@@ -980,12 +982,27 @@ document.addEventListener("DOMContentLoaded", function () {
       <h5 class="shiny-text-1">2025/11/30</h5>
       <div id="hoge-hoge_ex03">「翔平と戦うために出場するんだ」</div>
     </div>
+
+    <div class="douga-section_4-1">
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/ohaLZjw4He8?si=NUQYsFYvz3b9YW6I"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <h5 class="shiny-text-1">2025/11/16</h5>
+      <div id="hoge-hoge_ex03">2026年WBC 優勝候補6カ国メンバー予想</div>
+    </div>
+
 </div>
 <!-- =================== ’26 WBC Tab END =================== -->
 
 
 <!-- =================== 2025Tab START =================== -->
-  <div id="tab2025" class="tab-content active">
+  <div id="tab2025" class="tab-content">
 
       <!--スタート    MLB東京シリーズ by グッゲンハイム        -->
       <a href="/archive" class="tokyo-archive-link">
@@ -1235,6 +1252,54 @@ document.addEventListener("DOMContentLoaded", function () {
       <h5 class="shiny-text-1">初打席で今季１号３ラン・本拠地（２０１８年４月４日・日本時間）</h5>
     </div>
   </div>
+
+
+<!-- =================== ALL STAR Tab START =================== -->
+<div id="tabAllStar" class="tab-content">
+
+  <div class="douga-section_14">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/2IzD5pzmmuw?si=XQ9E9OmJ4Jx5fEzp"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">2021ホームランダービー</h5>
+  </div>
+
+  <div class="douga-section_15">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/MaNu65kt9Mg?si=ZI8GluJfDJ-bnXKI"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">4年連続4度目のオールスター出場ダイジェスト</h5>
+  </div>
+
+  <div class="douga-section_16">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/BeRXAd5ecWs?si=RF39O5521n7ie8M1"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">ナ・リーグ 大谷翔平 オールスターゲーム初ホームラン！</h5>
+  </div>
+
+  <div class="douga-section_17">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/oQiITBsS0kY?si=fXyuoCWJzUlVAZt-"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">2025MLB オールスター・ゲーム 7.16</h5>
+  </div>
+
+</div>
+<!-- =================== ALL STAR Tab END =================== -->
+
 
   <!-- =================== 面白Tab START =================== -->
 
