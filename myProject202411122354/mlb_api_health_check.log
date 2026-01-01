@@ -28,3 +28,9 @@
 2025-12-27T08:00:05.632974300 ✅ NL Standings → Success (200)
 2025-12-27T08:00:05.649917400 ✅ AL Standings → Success (200)
 2025-12-27T08:00:05.649917400 === MLB API Health Check Completed ===
+2025-12-31T08:00:00.024049800 === MLB API Health Check Started ===
+2025-12-31T08:00:00.042049 ✅ Hitter Stats → Success (200)
+2025-12-31T08:00:00.045054500 ✅ Pitcher Stats → Success (200)
+2025-12-31T08:00:00.049058 ✅ NL Standings → Success (200)
+2025-12-31T08:00:00.054050100 ✅ AL Standings → Success (200)
+2025-12-31T08:00:00.054050100 === MLB API Health Check Completed ===

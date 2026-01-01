@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- 🔒 未ログイン時の参加誘導コンポーネント -->
+<div th:fragment="loginRequired(message, redirect)">
+  <div class="login-required-box">
+    <p class="login-required-message"
+       th:text="${message}">
+      ログインが必要です
+    </p>
+
+    <!-- ログイン画面へ（戻り先を保持） -->
+    <a class="login-required-button"
+       th:href="@{/auth/login(redirect=${redirect})}">
+      ログインする
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -10,7 +10,8 @@
     <link rel="stylesheet" th:href="@{/css/header-2.css}">
     <script src="/js/home_2.js"></script> <!-- home.jsを追加 -->
     <script src="/js/home.js"></script> <!-- 訪問者カウンターを呼び込むためにhome.jsを追加 -->
-    <title>頑張れ翔平君 いつもみんなが応援してるよ!</title>
+    <title>ドジャース関連リンク集｜公式・ファンサイトまとめ</title>
+
 </head>
 <body>
 
@@ -52,9 +53,9 @@
             <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
         </div>
         <div id="header-info-container">
-            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="user-info"></div>
             <div id="visitor-counter-display">
-                <span id="visitor-counter-value">243</span>人目
+                <span id="visitor-counter-value"></span>人目
             </div>
         </div>
     </div>
@@ -106,21 +107,33 @@
 
     <script>
         // ユーザー情報を取得してヘッダーに表示
-        function fetchUserInfo() {
-            fetch('/auth/userinfo')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user info');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const userInfoElement = document.getElementById('user-info');
-                    userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-                })
-                .catch(error => console.error('Error fetching user info:', error));
-        }
-    
+        fetch('/auth/userinfo')
+        .then(response => {
+            if (!response.ok) {
+            // 🔴 未ログイン時は表示を消す
+            const userInfoElement = document.getElementById('user-info');
+            if (userInfoElement) {
+                userInfoElement.textContent = '';
+            }
+            return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data) return;
+
+            const userInfoElement = document.getElementById('user-info');
+            if (userInfoElement) {
+            userInfoElement.textContent =
+                `${data.number}番 ${data.position}_${data.username}さん`;
+            }
+        })
+        .catch(() => {
+            const userInfoElement = document.getElementById('user-info');
+            if (userInfoElement) {
+            userInfoElement.textContent = '';
+            }
+        });
         // ページロード時にユーザー情報を取得
         document.addEventListener('DOMContentLoaded', fetchUserInfo);
     </script>

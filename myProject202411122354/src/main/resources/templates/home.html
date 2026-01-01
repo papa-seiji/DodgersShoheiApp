@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <th:block th:replace="fragments/header :: head ('Home Page')"></th:block>
@@ -19,6 +20,9 @@
     <script src="/js/notifications.js"></script><!-- JavaScriptファイルを読み込む -->
     <script src="/js/news-section.js"></script><!-- JavaScriptファイルを読み込む -->
 
+<link rel="stylesheet" th:href="@{/css/toast.css}">
+<script th:src="@{/js/toast.js}" defer></script>
+<title>ドジャース最新情報｜大谷翔平・試合情報・試合速報・試合まとめ・順位【みんな日本から応援してるぜッ！】</title>
 
 <style>
 /* 一意なリンクスタイルを明示し、他の a タグと分離 */
@@ -63,7 +67,7 @@
 
         display: inline-block;
         padding: 7px 16px;
-        background-color: #0d6cec;
+        background-color: #ff004b;
         color: yellow;
         text-decoration: none;
         border-radius: 17px;
@@ -100,7 +104,7 @@
 
         display: inline-block;
         padding: 7px 16px;
-        background-color: #0d6cec;
+        background-color: #ff004b;
         color: yellow;
         text-decoration: none;
         border-radius: 17px;
@@ -139,8 +143,6 @@
 #backToTopBtn.show {
   display: block;
 }
-
-
 
 </style>
 
@@ -182,9 +184,9 @@
             <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
         </div>
         <div id="header-info-container">
-            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="user-info"></div>
             <div id="visitor-counter-display">
-                <span id="visitor-counter-value">243</span>人目
+                <span id="visitor-counter-value"></span>人目
             </div>
         </div>
     </div>
@@ -824,7 +826,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="tab-buttons">
 
 <button
-  class="tab-btn mlb-team-tab active"
+  class="tab-btn mlb-team-tab"
   onclick="showTab('tab2026', event)"
 >
   <img
@@ -837,7 +839,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <button
-  class="tab-btn wbc-tab-btn"
+  class="tab-btn wbc-tab-btn active"
   onclick="showTab('tabWBC2026', event)"
 >
   <img
@@ -850,7 +852,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <button
-  class="tab-btn mlb-team-tab active"
+  class="tab-btn mlb-team-tab"
   onclick="showTab('tab2025', event)"
 >
   <img
@@ -923,7 +925,9 @@ document.addEventListener("DOMContentLoaded", function () {
   <span class="btn-text">'18</span>
 </button>
 
-
+<button class="tab-btn" onclick="showTab('tabAllStar', event)">
+  ALL STAR
+</button>
 
 <button class="tab-btn" onclick="showTab('tabFunny', event)">面白</button>
 </div>
@@ -953,10 +957,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!-- =================== ’26 WBC Tab START =================== -->
 
-<div id="tabWBC2026" class="tab-content">
+<div id="tabWBC2026" class="tab-content active">
       <!--スタート   WorldBaseballClassic を見る               -->
       <a href="/WorldBaseballClassic" class="tokyo-archive-link">
-          <div id="MLB-POST-SEASON-2025">#WorldBaseballClassic      　←← 押</div>
+          <div id="MLB-POST-SEASON-2025">’26 WBC特設サイトはコチラ     　←← 押</div>
       </a>
       <!--エンド    WorldBaseballClassic                      -->
 
@@ -978,12 +982,27 @@ document.addEventListener("DOMContentLoaded", function () {
       <h5 class="shiny-text-1">2025/11/30</h5>
       <div id="hoge-hoge_ex03">「翔平と戦うために出場するんだ」</div>
     </div>
+
+    <div class="douga-section_4-1">
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/ohaLZjw4He8?si=NUQYsFYvz3b9YW6I"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <h5 class="shiny-text-1">2025/11/16</h5>
+      <div id="hoge-hoge_ex03">2026年WBC 優勝候補6カ国メンバー予想</div>
+    </div>
+
 </div>
 <!-- =================== ’26 WBC Tab END =================== -->
 
 
 <!-- =================== 2025Tab START =================== -->
-  <div id="tab2025" class="tab-content active">
+  <div id="tab2025" class="tab-content">
 
       <!--スタート    MLB東京シリーズ by グッゲンハイム        -->
       <a href="/archive" class="tokyo-archive-link">
@@ -1233,6 +1252,54 @@ document.addEventListener("DOMContentLoaded", function () {
       <h5 class="shiny-text-1">初打席で今季１号３ラン・本拠地（２０１８年４月４日・日本時間）</h5>
     </div>
   </div>
+
+
+<!-- =================== ALL STAR Tab START =================== -->
+<div id="tabAllStar" class="tab-content">
+
+  <div class="douga-section_14">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/2IzD5pzmmuw?si=XQ9E9OmJ4Jx5fEzp"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">2021ホームランダービー</h5>
+  </div>
+
+  <div class="douga-section_15">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/MaNu65kt9Mg?si=ZI8GluJfDJ-bnXKI"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">4年連続4度目のオールスター出場ダイジェスト</h5>
+  </div>
+
+  <div class="douga-section_16">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/BeRXAd5ecWs?si=RF39O5521n7ie8M1"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">ナ・リーグ 大谷翔平 オールスターゲーム初ホームラン！</h5>
+  </div>
+
+  <div class="douga-section_17">
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/oQiITBsS0kY?si=fXyuoCWJzUlVAZt-"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <h5 class="shiny-text-1">2025MLB オールスター・ゲーム 7.16</h5>
+  </div>
+
+</div>
+<!-- =================== ALL STAR Tab END =================== -->
+
 
   <!-- =================== 面白Tab START =================== -->
 
@@ -1817,21 +1884,33 @@ div[class^="douga-section_"] {
 
     <script>
         // ユーザー情報を取得してヘッダーに表示
-        function fetchUserInfo() {
-            fetch('/auth/userinfo')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user info');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const userInfoElement = document.getElementById('user-info');
-                    userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-                })
-                .catch(error => console.error('Error fetching user info:', error));
-        }
-    
+          fetch('/auth/userinfo')
+            .then(response => {
+              if (!response.ok) {
+                // 🔴 未ログイン時は表示を消す
+                const userInfoElement = document.getElementById('user-info');
+                if (userInfoElement) {
+                  userInfoElement.textContent = '';
+                }
+                return;
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (!data) return;
+
+              const userInfoElement = document.getElementById('user-info');
+              if (userInfoElement) {
+                userInfoElement.textContent =
+                  `${data.number}番 ${data.position}_${data.username}さん`;
+              }
+            })
+            .catch(() => {
+              const userInfoElement = document.getElementById('user-info');
+              if (userInfoElement) {
+                userInfoElement.textContent = '';
+              }
+            });
         // ページロード時にユーザー情報を取得
         document.addEventListener('DOMContentLoaded', fetchUserInfo);
     </script>
@@ -1921,8 +2000,17 @@ backToTopBtn.addEventListener("click", () => {
 
 </script>
 
+<!-- 🔔 ログイン成功トースト -->
+<div id="login-toast" class="login-toast hidden">
+  <span id="login-toast-message"></span>
+</div>
 
+<script th:inline="javascript">
+    window.LOGIN_USERNAME = /*[[${#authentication.name}]]*/ null;
+    console.log("LOGIN_USERNAME =", window.LOGIN_USERNAME);
+</script>
 
+    <th:block th:replace="fragments/toast :: toast"></th:block>
     <th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>

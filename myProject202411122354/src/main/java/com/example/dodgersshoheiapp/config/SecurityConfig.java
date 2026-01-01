@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.config.Customizer;
 import org.slf4j.Logger;
@@ -55,9 +56,21 @@ public class SecurityConfig {
                 // --- 認可設定 ---
                 .authorizeHttpRequests(auth -> auth
 
-                        // 🔓 認証不要（最小限）
+                        // 🔓 認証不要（入口ページ・静的リソース）
                         .requestMatchers(
+                                "/widgets/**", // ← ★これを追加
                                 "/",
+                                "/home",
+
+                                // 入口コンテンツ
+                                "/ohtani-vs-judge",
+                                "/postseason",
+                                "/WorldBaseballClassic",
+                                "/archive",
+                                "/links",
+                                "/kike",
+
+                                // 認証関連
                                 "/auth/login",
                                 "/auth/signup",
                                 "/signup-success",
@@ -69,18 +82,24 @@ public class SecurityConfig {
                                 "/icon.png",
                                 "/sw.js",
 
-                                // 未ログイン許可API
-                                "/auth/userinfo",
-                                "/api/visitorCounter/**",
+                                // 参照系API（未ログインOK）
+                                "/api/ohtani-vs-judge/stats",
+                                "/api/mlb/**",
                                 "/api/news",
                                 "/api/dodgers/standings",
-                                "/api/mlb/**")
+                                "/api/stats",
+                                "/api/visitorCounter/**",
+
+                                // 参加するならログイン必須
+                                "/comments",
+                                "/proud",
+                                "/yosou")
                         .permitAll()
 
                         // 🔐 管理者専用
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // 🔐 それ以外はすべてログイン必須
+                        // 🔐 それ以外はログイン必須
                         .anyRequest().authenticated())
 
                 // --- ログイン ---
@@ -98,7 +117,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
 
-                // --- セッション管理（要件②の肝） ---
+                // --- セッション管理 ---
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .invalidSessionUrl("/auth/login")
@@ -116,17 +135,11 @@ public class SecurityConfig {
         return web -> web.ignoring().requestMatchers("/favicon.ico");
     }
 
-    /**
-     * PasswordEncoder
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * AuthenticationManager
-     */
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -141,7 +154,15 @@ public class SecurityConfig {
      */
     @Bean
     public AuthenticationSuccessHandler loginSuccessHandler() {
+
+        SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
+
+        // ✅ ログイン成功後は必ずここ
+        handler.setDefaultTargetUrl("/home?login=success");
+        handler.setAlwaysUseDefaultTargetUrl(true);
+
         return (request, response, authentication) -> {
+
             if (authentication != null) {
                 loginLogoutService.logAction(
                         authentication.getName(),
@@ -149,8 +170,11 @@ public class SecurityConfig {
                         request.getRemoteAddr(),
                         request.getHeader("User-Agent"));
             }
+
             visitorCounterService.incrementVisitorCounter();
-            response.sendRedirect("/home");
+
+            // ✅ Spring Security に完全委譲
+            handler.onAuthenticationSuccess(request, response, authentication);
         };
     }
 

@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <th:block th:replace="~{fragments/header :: head ('Comments Page')}"></th:block>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script src="/js/home.js"></script> <!-- 訪問者カウンターを呼び込むためにhome.jsを追加 -->
-    <script src="/css/comments.js"></script>
+<script src="/js/comments.js"></script>
         <script src="/js/home_2.js"></script> <!-- home_2.jsを追加 -->
 
     <link rel="stylesheet" th:href="@{/css/comment.css}">
-    <title>頑張れ翔平君 いつもみんなが応援してるよ!</title>
+<link rel="stylesheet" th:href="@{/css/login-required.css}">
+
+        <title>Chat｜応援投稿・あいさつ・つぶやき</title>
+
 </head>
 <body>
     <!-- ナビゲーションバー -->
@@ -51,9 +54,9 @@
             <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
         </div>
         <div id="header-info-container">
-            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="user-info"></div>
             <div id="visitor-counter-display">
-                <span id="visitor-counter-value">243</span>人目
+                <span id="visitor-counter-value"></span>人目
             </div>
         </div>
     </div>
@@ -83,6 +86,15 @@
 
     <!-- コメント全体コンテナ -->
     <div class="comment-container">
+
+<!-- 🔒 未ログインの人だけ表示 -->
+<div sec:authorize="isAnonymous()">
+  <div th:replace="~{fragments/login-required :: loginRequired(message='コメントを投稿するにはログインが必要です。',redirect='/comments')}"></div>
+</div>
+
+<!-- ✅ ログイン済みの人だけ表示 -->
+<div sec:authorize="isAuthenticated()">
+
         <!-- コメントリスト -->
         <div id="comment-list-container">
             <ul id="comment-list">
@@ -114,6 +126,12 @@
         </svg>
     </button>
 </div>
+</div>
+
+  <!-- コメント入力フォーム -->
+</div>
+
+
 
 <script>
     let stompClient = null;
@@ -206,20 +224,33 @@
     });
 
     // ユーザー情報を取得してヘッダーに表示
-    function fetchUserInfo() {
-        fetch('/auth/userinfo')
-            .then(response => {
+            fetch('/auth/userinfo')
+                .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to fetch user info');
+                    // 🔴 未ログイン時は表示を消す
+                    const userInfoElement = document.getElementById('user-info');
+                    if (userInfoElement) {
+                    userInfoElement.textContent = '';
+                    }
+                    return;
                 }
                 return response.json();
-            })
-            .then(data => {
+                })
+                .then(data => {
+                if (!data) return;
+
                 const userInfoElement = document.getElementById('user-info');
-                userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-            })
-            .catch(error => console.error('Error fetching user info:', error));
-    }
+                if (userInfoElement) {
+                    userInfoElement.textContent =
+                    `${data.number}番 ${data.position}_${data.username}さん`;
+                }
+                })
+                .catch(() => {
+                const userInfoElement = document.getElementById('user-info');
+                if (userInfoElement) {
+                    userInfoElement.textContent = '';
+                }
+                });
 
     // ページロード時にユーザー情報を取得
     document.addEventListener('DOMContentLoaded', fetchUserInfo);
@@ -244,4 +275,5 @@
 <script src="/js/push-notification.js"></script>
 <th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
+
 </html>

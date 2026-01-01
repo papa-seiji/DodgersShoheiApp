@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>キケ・ヘルナンデス選手 特集</title>
     <link rel="stylesheet" th:href="@{/css/kike_hernandez.css}">
     <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
     <script src="/js/home_2.js"></script>
     <!-- SockJS と StompJS の読み込み -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<title>キケ・ヘルナンデス特集｜ドジャース名脇役の軌跡</title>
 
 </head>
 <body>
@@ -23,9 +23,9 @@
             <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
         </div>
         <div id="header-info-container">
-            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="user-info"></div>
             <div id="visitor-counter-display">
-                <span id="visitor-counter-value">243</span>人目
+                <span id="visitor-counter-value"></span>人目
             </div>
         </div>
     </div>
@@ -47,18 +47,33 @@
 <div id="overlay" class="overlay"></div>
 
 <script>
-    function fetchUserInfo() {
-        fetch('/auth/userinfo')
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to fetch user info');
-                return response.json();
-            })
-            .then(data => {
-                const userInfoElement = document.getElementById('user-info');
-                userInfoElement.textContent = `${data.number}番 ${data.position}_${data.username}さん`;
-            })
-            .catch(error => console.error('Error fetching user info:', error));
-    }
+    fetch('/auth/userinfo')
+    .then(response => {
+        if (!response.ok) {
+        // 🔴 未ログイン時は表示を消す
+        const userInfoElement = document.getElementById('user-info');
+        if (userInfoElement) {
+            userInfoElement.textContent = '';
+        }
+        return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (!data) return;
+
+        const userInfoElement = document.getElementById('user-info');
+        if (userInfoElement) {
+        userInfoElement.textContent =
+            `${data.number}番 ${data.position}_${data.username}さん`;
+        }
+    })
+    .catch(() => {
+        const userInfoElement = document.getElementById('user-info');
+        if (userInfoElement) {
+        userInfoElement.textContent = '';
+        }
+    });
     document.addEventListener('DOMContentLoaded', fetchUserInfo);
 </script>
 
