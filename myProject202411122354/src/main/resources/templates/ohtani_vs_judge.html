@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/ohtani_vs_judge.css" />
     <script src="/js/home_2.js"></script>
     <link rel="stylesheet" th:href="@{/css/header-2.css}">
+　　<link rel="stylesheet" th:href="@{/css/login-required.css}">
 
     <title>大谷翔平 vs アーロン・ジャッジ｜打撃成績徹底比較【2025】｜MLBスター選手比較</title>
 
@@ -30,6 +31,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- スライドメニュー -->
 <div id="side-menu" class="side-menu">
@@ -578,6 +580,14 @@ stompClient.connect({}, () => {
     });
 });
 </script>
+
+<!-- 🔒 未ログインの人だけ表示 -->
+<div sec:authorize="isAnonymous()">
+  <div th:replace="~{fragments/login-required :: loginRequired(message='最新成績を見るにはログインが必要です。',redirect='/ohtani-vs-judge')}"></div>
+</div>
+
+<!-- ✅ ログイン済みの人だけ表示 -->
+<div sec:authorize="isAuthenticated()">
 
 <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
