@@ -4,7 +4,8 @@
     <th:block th:replace="~{fragments/header :: head ('yosou Page')}"></th:block> <!-- ✅ 修正 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>2025 予想ページ</title>
+        <title>Yosou｜投票・気軽に</title>
+
     <link rel="stylesheet" th:href="@{/css/yosou_page.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- ✅ Chart.js 読み込み -->
     <!-- ✅ SockJS と STOMP のライブラリを追加 -->
@@ -44,9 +45,9 @@
             <img src="/images/みんな日本から応援してるぜッ！.jpg" alt="背景画像1" class="home-image11">
         </div>
         <div id="header-info-container">
-            <div id="user-info">2件 P. Seijiさん</div>
+            <div id="user-info"></div>
             <div id="visitor-counter-display">
-                <span id="visitor-counter-value">243</span>人目
+                <span id="visitor-counter-value"></span>人目
             </div>
         </div>
     </div>
