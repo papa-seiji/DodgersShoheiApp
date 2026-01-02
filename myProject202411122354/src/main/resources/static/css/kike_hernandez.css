@@ -187,3 +187,37 @@ ul {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     object-fit: cover;
 }
+
+
+/* ============================
+   HOME SNS Guide（Xのみ）
+============================ */
+
+.home-sns-guide {
+    text-align: center;
+    margin: 36px auto 36px;
+    padding: 10px 24px;
+    color: #f8ff00;
+    font-size: 14px;
+    background-color: #3815cdd6;
+}
+
+.sns-guide-text {
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.sns-icons {
+    display: flex;
+    justify-content: center;
+}
+
+.sns-icons img {
+    width: 28px;
+    height: 28px;
+    opacity: 0.85;
+}
+
+.sns-icons a:hover img {
+    opacity: 1;
+}
