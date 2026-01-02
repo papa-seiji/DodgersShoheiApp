@@ -267,6 +267,39 @@
     height: 100%;
 }
 
+
+/* ============================
+   HOME SNS Guide（Xのみ）
+============================ */
+
+.home-sns-guide {
+    text-align: center;
+    margin: 36px auto 36px;
+    padding: 10px 24px;
+    color: #f8ff00;
+    font-size: 14px;
+    background-color: #3815cdd6;
+}
+
+.sns-guide-text {
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.sns-icons {
+    display: flex;
+    justify-content: center;
+}
+
+.sns-icons img {
+    width: 28px;
+    height: 28px;
+    opacity: 0.85;
+}
+
+.sns-icons a:hover img {
+    opacity: 1;
+}
 </style>
 
 </head>
@@ -490,6 +523,23 @@ function unescapeHtml(escapedHtml) {
     return textArea.value;
 }
 </script>
+
+<!-- 🔗 Official X (Twitter) -->
+<div class="home-sns-guide">
+  <p class="sns-guide-text">
+    最新情報は公式Xでも発信しています<br>"DodgersShoheiApp｜大谷翔平・ドジャース情報"
+  </p>
+
+  <div class="sns-icons">
+    <a href="https://x.com/shoheiapp?s=21&t=p3l851wPWCpZE0RfyrbDBw"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="公式Xアカウント">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/SNS_icon/icons8-%E3%83%84%E3%82%A4%E3%83%83%E3%82%BF%E3%83%BCx-50.png" alt="公式Xアカウント">
+    </a>
+
+  </div>
+</div>
 
 
 </body>
