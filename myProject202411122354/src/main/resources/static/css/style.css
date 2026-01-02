@@ -2890,6 +2890,26 @@ a:hover {
 /* =========================
    data-tip 用 吹き出し
 ========================= */
+
+/* ===== tooltip はスマホ縦のみ ===== */
+@media (max-width: 767px) {
+  .ui-tip {
+    position: fixed;
+    top: 72px;        /* ヘッダー直下 */
+    left: 12px;
+    max-width: calc(100vw - 24px);
+    z-index: 9999;
+  }
+}
+
+/* タブレット・PCでは完全に消す */
+@media (min-width: 768px) {
+  .ui-tip {
+    display: none !important;
+  }
+}
+
+
 .ui-tip {
   position: absolute;
   background: rgba(238, 64, 53, 0.95);
