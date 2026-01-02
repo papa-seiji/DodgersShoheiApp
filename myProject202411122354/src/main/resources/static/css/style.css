@@ -581,89 +581,6 @@ a:hover {
 
 
 
-
-/* start========  吹き出しのスタイル  (max-width: 430px)======== */ 
-/* 吹き出しのスタイル */
-.tooltip {
-    position: absolute;
-    background-color: #fd0101;
-    color: #ffffff;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    display: none; /* 初期状態で非表示にする */
-}
-
-/* 吹き出しの三角形（上に表示） Navbarの吹き出し用 */
-.tooltip#tooltip-navbar::after {
-    content: "";
-    position: absolute;
-    top: -18px;
-    left: 76%;
-    transform: translateX(-50%);
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent transparent #fd0101 transparent;
-}
-
-/* 吹き出しの三角形（下に表示）紹介部分の吹き出し用 */
-#tooltip-proud::after,
-#tooltip-chat::after,
-#tooltip-link::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 10px;
-    border-style: solid;
-    border-color: #fd0101 transparent transparent transparent;
-}
-
-/* 吹き出しを適切な位置に配置 */
-#tooltip-navbar {
-    top: 43px;
-    left: 69%;
-    transform: translateX(-50%);
-}
-
-#tooltip-yosou {
-    top: 3801px;
-    left: 12em;
-}
-
-#tooltip-proud {
-    top: 4095px;
-    left: 12em;
-}
-
-#tooltip-chat {
-    top: 4350px;
-    left: 5em;
-}
-#tooltip-link {
-    top: 4710px;
-    left: 10em;
-}
-
-/* 閉じるボタン */
-.tooltip-close {
-    background: none;
-    border: none;
-    font-weight: bold;
-    color: #333;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-/* End========  吹き出しのスタイル  (max-width: 430px)======== */
-
-
-
 /* start======== ニュース/トピック/サイト最新情報 ======== */
 
 #news-section {
@@ -1186,87 +1103,6 @@ body {
 .navbar-dropdown.open .navbar-dropdown-content {
     display: block;
 }
-
-/* start========  吹き出しのスタイル  (max-width: 430px)======== */ 
-/* 吹き出しのスタイル */
-.tooltip {
-    position: absolute;
-    background-color: #fd0101;
-    color: #ffffff;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    display: none; /* 初期状態で非表示にする */
-}
-
-/* 吹き出しの三角形（上に表示） Navbarの吹き出し用 */
-.tooltip#tooltip-navbar::after {
-    content: "";
-    position: absolute;
-    top: -18px;
-    left: 76%;
-    transform: translateX(-50%);
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent transparent #fd0101 transparent;
-}
-
-/* 吹き出しの三角形（下に表示）紹介部分の吹き出し用 */
-#tooltip-proud::after,
-#tooltip-chat::after,
-#tooltip-link::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 10px;
-    border-style: solid;
-    border-color: #fd0101 transparent transparent transparent;
-}
-
-/* 吹き出しを適切な位置に配置 ブラウザでのちょうどいい位置はスマホだと150px程下ににずれる！！から開発中は＋150pxするといい */
-#tooltip-navbar {
-    top: 43px;
-    left: 69%;
-    transform: translateX(-50%);
-}
-
-#tooltip-yosou {
-    top: 3801px;
-    left: 12em;
-}
-
-#tooltip-proud {
-    top: 4095px;
-    left: 12em;
-}
-
-#tooltip-chat {
-    top: 4350px;
-    left: 5em;
-}
-#tooltip-link {
-    top: 4710px;
-    left: 10em;
-}
-
-/* 閉じるボタン */
-.tooltip-close {
-    background: none;
-    border: none;
-    font-weight: bold;
-    color: #333;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-/* End========  吹き出しのスタイル  (max-width: 430px)======== */
-
 
 /* start======== ニュース/トピック/サイト最新情報 ========768px */
 
@@ -2052,114 +1888,6 @@ body {
 
 
 
-
-
-
-/* start========  吹き出しのスタイル  (max-width: 430px)======== */
-/* 吹き出しのスタイル */
-.tooltip {
-    position: absolute;
-    background-color: #fd0101;
-    color: #ffffff;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    display: none; /* 初期状態で非表示にする */
-}
-
-/* 吹き出しの三角形（上に表示） Navbarの吹き出し用 */
-.tooltip#tooltip-navbar::after {
-    content: "";
-    position: absolute;
-    top: -18px;
-    left: 18%;
-    transform: translateX(-50%);
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent transparent #fd0101 transparent;
-}
-
-/* 吹き出しの三角形（下に表示）紹介部分の吹き出し用 */
-#tooltip-yosou::after,
-#tooltip-proud::after,
-#tooltip-chat::after,
-#tooltip-link::after {
-    content: "";
-    position: absolute;
-    bottom: -19px;
-    left: 30%;
-    transform: translateX(-50%);
-    border-width: 10px;
-    border-style: solid;
-    border-color: #fd0101 transparent transparent transparent;
-}
-
-/* 吹き出しを適切な位置に配置 */
-#tooltip-navbar {
-    top: 52px;
-    left: 29%;
-    transform: translateX(-50%);
-}
-
-/* ===== 汎用ツールチップ ===== */
-.ui-tip {
-  position: fixed;
-  z-index: 9999;
-  max-width: min(80vw, 320px);
-  color: #fff;
-  background: rgba(255, 0, 0, 0.95);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 10px;
-  padding: 10px 12px 10px 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.35);
-  font-size: 14px;
-  line-height: 1.5;
-  pointer-events: auto;
-}
-.ui-tip__text { display: inline-block; margin-right: 22px; }
-.ui-tip__close {
-  position: absolute; top: 6px; right: 8px;
-  width: 24px; height: 24px; border-radius: 12px;
-  background: transparent; color: #b9c3d6;
-  border: 0; cursor: pointer; font-size: 16px; line-height: 24px;
-}
-.ui-tip__close:hover { color: #fff; }
-
-/* 矢印 */
-.ui-tip__arrow {
-  position: absolute; width: 10px; height: 10px;
-  background: rgba(255, 0, 0, 0.95);
-  border-left: 1px solid rgba(255,255,255,.08);
-  border-top: 1px solid rgba(255,255,255,.08);
-  transform: rotate(45deg);
-}
-/* 位置ごとの矢印配置 */
-.ui-tip[data-placement="top"]    .ui-tip__arrow { bottom: -5px; left: calc(50% - 5px); }
-.ui-tip[data-placement="bottom"] .ui-tip__arrow { top: -5px; left: calc(50% - 5px); }
-.ui-tip[data-placement="left"]   .ui-tip__arrow { right: -5px; top: calc(50% - 5px); }
-.ui-tip[data-placement="right"]  .ui-tip__arrow { left: -5px; top: calc(50% - 5px); }
-
-/* 小さめ端末 */
-@media (max-width: 480px){
-  .ui-tip { max-width: 90vw; font-size: 13px; }
-}
-
-
-/* 閉じるボタン */
-.tooltip-close {
-    background: none;
-    border: none;
-    font-weight: bold;
-    color: #333;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-/* End========  吹き出しのスタイル  (max-width: 430px)======== */
 
 
 /* start======== ニュース/トピック/サイト最新情報 (max-width: 430px)======== */
@@ -3097,3 +2825,102 @@ a:hover {
   }
   
 /* end======== QR (max-width: 768px)======== */
+
+
+
+/* start========  吹き出しのスタイル  (PC,タブレット,スマホ)======== */
+/* 吹き出しのスタイル */
+/* ===== 汎用ツールチップ ===== */
+/* ===== 汎用ツールチップ（ui-tip専用） ===== */
+.ui-tip {
+  position: fixed;
+  z-index: 9999;
+  max-width: min(80vw, 320px);
+  color: #fff;
+  background: rgba(255, 0, 0, 0.95);
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.ui-tip__close {
+  position: absolute;
+  top: 29px;
+  right: -2px;
+  background: none;
+  border: 0;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* 矢印（DOM要素） */
+.ui-tip__arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 0, 0, 0.95);
+  transform: rotate(45deg);
+}
+
+.ui-tip[data-placement="top"] .ui-tip__arrow {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}
+.ui-tip[data-placement="bottom"] .ui-tip__arrow {
+  top: -5px;
+  left: 15%;
+  transform: translateX(-50%) rotate(45deg);
+}
+.ui-tip[data-placement="left"] .ui-tip__arrow {
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+.ui-tip[data-placement="right"] .ui-tip__arrow {
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+/* End========  吹き出しのスタイル  (max-width: 430px)======== */
+/* =========================
+   data-tip 用 吹き出し
+========================= */
+.ui-tip {
+  position: absolute;
+  background: rgba(238, 64, 53, 0.95);
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  z-index: 9999;
+  max-width: 260px;
+  line-height: 1.4;
+}
+
+
+.ui-tip__close {
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+/* 吹き出しの三角 */
+.ui-tip[data-placement="bottom"]::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 15%;
+  transform: translateX(-50%);
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent rgba(238, 64, 53, 0.95) transparent;
+}
