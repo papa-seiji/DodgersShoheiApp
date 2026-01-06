@@ -22,6 +22,27 @@ body {
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
     /* background-image: url('/images/みんな日本から応援してるぜッ！LOGO.jpg'); */
 
+
+        position: relative;   /* ★追加 */
+    z-index: 1;           /* ★追加 */
+}
+
+/* 🧢 Dodgers Auth Background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+
+  background-image: url(
+    "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/BackGround/skull%26dodgers.png"
+  );
+
+  background-repeat: repeat;
+  background-size: 120px 120px;   /* ← SVG の 1タイルと一致させる */
+  opacity: 0.50;
+  background-color: #f5f7fa;    /* タイルの隙間保険 */
 }
 
 
@@ -60,6 +81,7 @@ body {
 .home-image10{
     height: 36px;
     margin: 7px 0px 2px 0px;
+    width: 22rem;
 }
 .home-image11{
     height: 36px;
@@ -174,6 +196,8 @@ body {
 
 .home-image10{
     margin-top: 5%;
+        width: 22rem;
+
 }
 
 
@@ -605,7 +629,7 @@ body {
     background-color: #ffffff; /* 背景色を薄いグレーに */
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
-    margin: 2rem 0em 0em 0em; /* 上下の余白と中央配置 */
+    margin: 2rem 0em 1em 0em; /* 上下の余白と中央配置 */
     max-width: 100%; /* 最大幅を設定 */
     color: black;
 }
@@ -634,6 +658,7 @@ body {
     max-width: 400px; /* 最大幅を設定 */
     border-radius: 10px; /* 角を丸める */
     animation: moveSideToSide 4s ease-in-out infinite; /* アニメーションを適用 */
+    background-color: #ffffff00;
 }
 
 /* 左右に動くアニメーション */
@@ -881,7 +906,7 @@ body {
     background-color: #ffffff; /* 背景色を薄いグレーに */
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
-    margin: 20px auto; /* 上下の余白と中央配置 */
+    margin: -1px auto; /* 上下の余白と中央配置 */
     max-width: 100%; /* 最大幅を設定 */
     color: black;
 }
@@ -980,6 +1005,7 @@ body {
 
 .home-image10{
     margin-top: 5%;
+    width: 22rem;
 }
 
 
