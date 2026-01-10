@@ -448,7 +448,7 @@ a:hover {
     font-weight: 500;
     position: absolute;
     left: 10px;  /* 左に寄せる */
-    top: 10px;   /* 上の位置を適切に調整 */
+    top: 0px;   /* 上の位置を適切に調整 */
     z-index: 20; /* ロゴより前面に表示 */
 }
 
@@ -942,6 +942,7 @@ body {
     align-items: center;
     gap: 15px;
     /* margin-right: 9em; */
+    margin: 0 0 0 440px;
 }
 
 
@@ -966,7 +967,7 @@ body {
     display: flex;
     flex-direction: column;
     /* gap: 5px; */
-    margin: 0 -66px 0 58px;
+    margin: 0 -66px 0 0;
 
 
 #user-info {
@@ -1697,6 +1698,7 @@ body {
     background-color: white;
     max-height: 50px;
     width: 100%;
+    margin: 0 0 0 0 ;
 }
 
 /* ロゴの位置調整 */
