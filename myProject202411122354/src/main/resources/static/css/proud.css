@@ -46,7 +46,7 @@ body{
 /* home-image10 のマージン調整 */
 .home-image10 {
     height: 37px;
-    margin: 0px -2px 1px 70px; /* ハンバーガーメニューとの干渉を避ける */
+    margin: 7px 0px 1px 0;
 }
 
 /* home-image10 のマージン調整 */
@@ -90,7 +90,7 @@ body{
     font-weight: 500;
     position: absolute;
     left: 10px;  /* 左に寄せる */
-    top: 10px;   /* 上の位置を適切に調整 */
+    top: -4px;   /* 上の位置を適切に調整 */
     z-index: 20; /* ロゴより前面に表示 */
 }
 
@@ -421,7 +421,7 @@ body{
     display: flex;
     align-items: center;
     gap: 15px;
-    margin: 0 0 0 -16px;
+    margin: 0 0 0 200px;
 }
 
 #header-logo {
@@ -430,7 +430,7 @@ body{
 
 .home-image10{
     height: 36px;
-    margin: 3px -6px 2px 0px;
+    margin: 3px 0px 2px 0px;
 }
 .home-image11{
     height: 28px;
@@ -470,6 +470,12 @@ body{
     /* gap: 15px; */
     /* position: fixed; */
     margin: 9px 93px 0 0;
+}
+
+
+#black{
+    background-color: #000000d9;
+    margin-top: 24px;
 }
 
 
@@ -645,6 +651,7 @@ body{
     background-color: white;
     max-height: 50px;
     width: 100%;
+    margin: 0 0 0 0px;
 }
 
 /* ロゴの位置調整 */
@@ -701,7 +708,7 @@ body{
     font-weight: 500;
     position: absolute;
     left: 10px;  /* 左に寄せる */
-    top: 10px;   /* 上の位置を適切に調整 */
+    top: 7px;   /* 上の位置を適切に調整 */
     z-index: 20; /* ロゴより前面に表示 */
 }
 
@@ -759,6 +766,12 @@ body{
     display: none;
     z-index: 10;
     pointer-events: none; /* クリックを通す */
+}
+
+
+#black{
+    background-color: #000000d9;
+    margin-top: 3px;
 }
 
 }

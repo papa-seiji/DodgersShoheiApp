@@ -104,7 +104,7 @@ html, body {
     font-weight: 500;
     position: absolute;
     left: 10px;  /* 左に寄せる */
-    top: 10px;   /* 上の位置を適切に調整 */
+    top: 7px;   /* 上の位置を適切に調整 */
     z-index: 20; /* ロゴより前面に表示 */
 }
 
@@ -401,6 +401,7 @@ html, body {
     align-items: center;
     gap: 15px;
     /* margin-right: 9em; */
+    margin: 0 0 0 200px;
 }
 
 
@@ -550,6 +551,7 @@ html, body {
     background-color: white;
     max-height: 50px;
     width: 100%;
+    margin: 0px 0px 0px 0px;
 }
 
 /* ロゴの位置調整 */
