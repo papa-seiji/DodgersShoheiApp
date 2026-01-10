@@ -626,7 +626,8 @@ body {
     justify-content: space-between; /* 均等配置 */
     padding: 20px;
     /*gap: 20px;  画像とテキストの間隔 */
-    background-color: #ffffff; /* 背景色を薄いグレーに */
+    /* background-color: #ffffff; */
+    background-color: #ffffff00;
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
     margin: 2rem 0em 1em 0em; /* 上下の余白と中央配置 */
@@ -703,7 +704,8 @@ body {
     justify-content: space-between; /* 均等配置 */
     padding: 20px;
     /*gap: 20px;  画像とテキストの間隔 */
-    background-color: #ffffff; /* 背景色を薄いグレーに */
+    /* background-color: #ffffff; */
+    background-color: #ffffff00;
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
     margin: 0px auto; /* 上下の余白と中央配置 */
@@ -765,7 +767,7 @@ body {
     justify-content: space-between; /* 均等配置 */
     padding: 20px;
     /*gap: 20px;  画像とテキストの間隔 */
-    background-color: #ffffff; /* 背景色を薄いグレーに */
+    background-color: #ffffff00; /* 背景色を薄いグレーに */
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
     margin: 0px auto; /* 上下の余白と中央配置 */
@@ -779,6 +781,7 @@ body {
     max-width: 400px; /* 最大幅を設定 */
     border-radius: 10px; /* 角を丸める */
      /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 軽い影 */
+     background-color: #ffffff00;
 }
 
 /* テキストコンテンツ部分 */
@@ -825,7 +828,7 @@ body {
     align-items: center; /* 垂直方向のセンタリング */
     justify-content: space-between; /* 均等配置 */
     padding: 20px;
-    background-color: #ffffff; /* 背景色 */
+    background-color: #ffffff00; /* 背景色 */
     border-radius: 12px; /* 角を丸める */
     margin: 20px auto; /* 上下の余白と中央配置 */
     max-width: 100%; /* 最大幅 */
@@ -903,7 +906,7 @@ body {
     justify-content: space-between; /* 均等配置 */
     padding: 20px;
     /*gap: 20px;  画像とテキストの間隔 */
-    background-color: #ffffff; /* 背景色を薄いグレーに */
+    background-color: #ffffff00; /* 背景色を薄いグレーに */
     border-radius: 12px; /* 角を丸める */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  軽い影で立体感 */
     margin: -1px auto; /* 上下の余白と中央配置 */

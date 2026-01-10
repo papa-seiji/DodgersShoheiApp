@@ -182,8 +182,8 @@ h5 {
     display: flex;
     align-items: end;
     gap: 27px;
-    margin-left: 118px;
-    margin-right: 0px;
+    /* margin-left: 118px; */
+    margin-right: -11px;
 }
 
 #SeasonStats-1 {
