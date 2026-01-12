@@ -8,6 +8,7 @@ import com.example.dodgersshoheiapp.service.WbcPoolStandingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.example.dodgersshoheiapp.service.WbcTeamService;
 
 import java.util.*;
 
@@ -16,12 +17,15 @@ public class WorldBaseballClassicController {
 
     private final WbcPoolMatchService matchService;
     private final WbcPoolStandingService standingService;
+    private final WbcTeamService teamService; // ★追加
 
     public WorldBaseballClassicController(
             WbcPoolMatchService matchService,
-            WbcPoolStandingService standingService) {
+            WbcPoolStandingService standingService,
+            WbcTeamService teamService) { // ★追加
         this.matchService = matchService;
         this.standingService = standingService;
+        this.teamService = teamService;
     }
 
     @GetMapping("/WorldBaseballClassic")
@@ -29,12 +33,8 @@ public class WorldBaseballClassicController {
 
         int year = 2026;
 
-        // 🔹 POOLごとの参加チーム（固定）
-        Map<String, List<String>> poolTeams = new LinkedHashMap<>();
-        poolTeams.put("A", List.of("CANADA", "PANAMA", "COLOMBIA", "CUBA"));
-        poolTeams.put("B", List.of("USA", "MEXICO", "ITALY", "UK"));
-        poolTeams.put("C", List.of("JAPAN", "AUSTRALIA", "KOREA", "CHINA"));
-        poolTeams.put("D", List.of("VENEZUELA", "DOMINICAN", "PUERTO RICO", "NETHERLANDS"));
+        // ✅ DBから POOL別チーム取得
+        Map<String, List<String>> poolTeams = teamService.getPoolTeamsByYear(year);
 
         Map<String, List<WbcPoolStandingDto>> poolStandings = new LinkedHashMap<>();
 
