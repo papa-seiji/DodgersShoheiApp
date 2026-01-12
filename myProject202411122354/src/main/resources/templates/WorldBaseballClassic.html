@@ -322,6 +322,26 @@
 }
 
 
+/* WBC 全体表示 確認 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 6px 10px;
+            text-align: center;
+        }
+        th {
+            background: #e0ffe0;
+        }
+        .pool-title {
+            font-size: 20px;
+            margin: 30px 0 10px;
+            font-weight: bold;
+        }
+
 </style>
 </head>
 
@@ -608,6 +628,40 @@
 </div>
 
 </section>
+
+
+<h3>🌍 WBC 全体表示（確認用）</h3>
+<p>YEAR: <span th:text="${year}"></span></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>POOL</th>
+            <th>日付</th>
+            <th>HOME</th>
+            <th>SCORE</th>
+            <th>AWAY</th>
+            <th>会場</th>
+            <th>状態</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="m : ${matches}">
+            <td th:text="${m.pool}"></td>
+            <td th:text="${m.matchDate}"></td>
+            <td th:text="${m.homeTeam}"></td>
+            <td>
+                <span th:text="${m.homeScore}"></span>
+                -
+                <span th:text="${m.awayScore}"></span>
+            </td>
+            <td th:text="${m.awayTeam}"></td>
+            <td th:text="${m.stadium}"></td>
+            <td th:text="${m.status}"></td>
+        </tr>
+    </tbody>
+</table>
+
 
 <img id="samuraiLogo" alt="Samurai Japan Logo">
 
