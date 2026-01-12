@@ -5,78 +5,67 @@ import com.example.dodgersshoheiapp.model.WbcPoolMatch;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class WbcPoolStandingService {
 
-    /**
-     * POOL順位を計算する
-     *
-     * @param matches 試合一覧（同一年・同POOLを想定）
-     * @return 順位付き standings
-     */
-    public List<WbcPoolStandingDto> calculateStandings(List<WbcPoolMatch> matches) {
+    public List<WbcPoolStandingDto> calculateStandings(
+            int year,
+            String pool,
+            List<String> teams,
+            List<WbcPoolMatch> matches) {
 
-        Map<String, WbcPoolStandingDto> standingsMap = new HashMap<>();
+        Map<String, WbcPoolStandingDto> standingsMap = new LinkedHashMap<>();
 
+        // ① 全チーム初期化
+        for (String team : teams) {
+            standingsMap.put(
+                    team,
+                    new WbcPoolStandingDto(year, pool, team));
+        }
+
+        // ② 試合反映
         for (WbcPoolMatch match : matches) {
 
-            // 未試合は除外（SCHEDULED 等）
             if (!"FINISHED".equals(match.getStatus())) {
                 continue;
             }
 
-            String home = match.getHomeTeam();
-            String away = match.getAwayTeam();
+            WbcPoolStandingDto home = standingsMap.get(match.getHomeTeam());
+            WbcPoolStandingDto away = standingsMap.get(match.getAwayTeam());
+
+            if (home == null || away == null) {
+                continue;
+            }
 
             int homeScore = match.getHomeScore();
             int awayScore = match.getAwayScore();
 
-            Integer year = match.getYear();
-            String pool = match.getPool();
+            home.addScore(homeScore, awayScore);
+            away.addScore(awayScore, homeScore);
 
-            // DTO 初期化
-            standingsMap.putIfAbsent(
-                    home,
-                    new WbcPoolStandingDto(year, pool, home));
-            standingsMap.putIfAbsent(
-                    away,
-                    new WbcPoolStandingDto(year, pool, away));
-
-            WbcPoolStandingDto homeDto = standingsMap.get(home);
-            WbcPoolStandingDto awayDto = standingsMap.get(away);
-
-            // 得点・失点
-            homeDto.addScore(homeScore, awayScore);
-            awayDto.addScore(awayScore, homeScore);
-
-            // 勝敗
             if (homeScore > awayScore) {
-                homeDto.win();
-                awayDto.lose();
+                home.win();
+                away.lose();
             } else {
-                awayDto.win();
-                homeDto.lose();
+                away.win();
+                home.lose();
             }
         }
 
-        // 並び替え（勝数 → 得失点差）
-        List<WbcPoolStandingDto> standings = standingsMap.values()
-                .stream()
-                .sorted(
-                        Comparator
-                                .comparingInt(WbcPoolStandingDto::getWins).reversed()
-                                .thenComparing(
-                                        Comparator.comparingInt(WbcPoolStandingDto::getRunDiff).reversed()))
-                .collect(Collectors.toList());
+        // ③ 並び替え（★修正ポイント）
+        List<WbcPoolStandingDto> standings = new ArrayList<>(standingsMap.values());
 
-        // 順位付与 ＋ 通過フラグ
+        standings.sort(
+                Comparator
+                        .comparingInt(WbcPoolStandingDto::getWins)
+                        .thenComparingInt(WbcPoolStandingDto::getRunDiff)
+                        .reversed());
+
+        // ④ 順位付与
         int rank = 1;
         for (WbcPoolStandingDto dto : standings) {
-            dto.setRank(rank);
-            dto.setQualified(rank <= 2); // ⭐ 1位・2位通過
-            rank++;
+            dto.setRank(rank++);
         }
 
         return standings;

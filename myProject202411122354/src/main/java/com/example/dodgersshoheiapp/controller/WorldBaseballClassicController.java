@@ -1,7 +1,7 @@
 package com.example.dodgersshoheiapp.controller;
 
-import com.example.dodgersshoheiapp.model.WbcPoolMatch;
 import com.example.dodgersshoheiapp.dto.WbcPoolStandingDto;
+import com.example.dodgersshoheiapp.model.WbcPoolMatch;
 import com.example.dodgersshoheiapp.service.WbcPoolMatchService;
 import com.example.dodgersshoheiapp.service.WbcPoolStandingService;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class WorldBaseballClassicController {
@@ -27,21 +27,32 @@ public class WorldBaseballClassicController {
     @GetMapping("/WorldBaseballClassic")
     public String showWBCPage(Model model) {
 
-        // 🔹 確認用固定値（あとで動的にする）
         int year = 2026;
-        String pool = "C"; // 全体表示だが、順位はPOOL単位で計算
 
-        // 🔹 試合一覧（表①）
-        List<WbcPoolMatch> matches = matchService.getMatchesByYearAndPool(year, pool);
+        // 🔹 POOLごとの参加チーム（固定）
+        Map<String, List<String>> poolTeams = new LinkedHashMap<>();
+        poolTeams.put("A", List.of("CANADA", "PANAMA", "COLOMBIA", "CUBA"));
+        poolTeams.put("B", List.of("USA", "MEXICO", "ITALY", "UK"));
+        poolTeams.put("C", List.of("JAPAN", "AUSTRALIA", "KOREA", "CHINA"));
+        poolTeams.put("D", List.of("VENEZUELA", "DOMINICAN", "PUERTO RICO", "NETHERLANDS"));
 
-        // 🔹 順位一覧（表②）
-        List<WbcPoolStandingDto> standings = standingService.calculateStandings(matches);
+        Map<String, List<WbcPoolStandingDto>> poolStandings = new LinkedHashMap<>();
 
-        // 🔹 Model に詰める
+        for (String pool : poolTeams.keySet()) {
+
+            List<WbcPoolMatch> matches = matchService.getMatchesByYearAndPool(year, pool);
+
+            List<WbcPoolStandingDto> standings = standingService.calculateStandings(
+                    year,
+                    pool,
+                    poolTeams.get(pool),
+                    matches);
+
+            poolStandings.put(pool, standings);
+        }
+
         model.addAttribute("year", year);
-        model.addAttribute("pool", pool);
-        model.addAttribute("matches", matches);
-        model.addAttribute("standings", standings);
+        model.addAttribute("poolStandings", poolStandings);
 
         return "WorldBaseballClassic";
     }

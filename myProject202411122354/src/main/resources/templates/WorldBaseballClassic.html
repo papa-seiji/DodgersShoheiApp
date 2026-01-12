@@ -322,27 +322,46 @@
 }
 
 
-/* WBC 全体表示 確認 */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 40px;
-        }
-        th, td {
-            border: 1px solid #333;
-            padding: 6px 10px;
-            text-align: center;
-        }
-        th {
-            background: #e0ffe0;
-        }
-        .pool-title {
-            font-size: 20px;
-            margin: 30px 0 10px;
-            font-weight: bold;
-        }
 
+/* ===== POOL 全体グリッド ===== */
+.pool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* PC：2列×2行 */
+    gap: 30px;
+    margin: 40px 0;
+}
 
+@media (max-width: 768px) {
+    .pool-grid {
+        grid-template-columns: 1fr; /* スマホ：縦 */
+    }
+}
+
+/* ===== テーブル共通 ===== */
+.pool-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.pool-table th,
+.pool-table td {
+    border: 1px solid #333;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.pool-table th {
+    background: #e0ffe0;
+}
+
+.pool-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* ===== 順位ハイライト ===== */
 .rank-gold {
     background: linear-gradient(135deg, #FFD700, #FFF4B0);
     font-weight: bold;
@@ -352,8 +371,8 @@
     background: linear-gradient(135deg, #C0C0C0, #F2F2F2);
     font-weight: bold;
 }
-
 </style>
+
 </head>
 
 <body>
@@ -644,70 +663,85 @@
 <h3>🌍 WBC 全体表示（確認用）</h3>
 <p>YEAR: <span th:text="${year}"></span></p>
 
+<!-- ================================================= -->
+<!-- 表①：試合一覧（既存・POOL C 確認用） -->
+<!-- ================================================= -->
 <table>
     <thead>
-        <tr>
-            <th>POOL</th>
-            <th>日付</th>
-            <th>HOME</th>
-            <th>SCORE</th>
-            <th>AWAY</th>
-            <th>会場</th>
-            <th>状態</th>
-        </tr>
+    <tr>
+        <th>POOL</th>
+        <th>日付</th>
+        <th>HOME</th>
+        <th>SCORE</th>
+        <th>AWAY</th>
+        <th>会場</th>
+        <th>状態</th>
+    </tr>
     </thead>
     <tbody>
-        <tr th:each="m : ${matches}">
-            <td th:text="${m.pool}"></td>
-            <td th:text="${m.matchDate}"></td>
-            <td th:text="${m.homeTeam}"></td>
-            <td>
-                <span th:text="${m.homeScore}"></span>
-                -
-                <span th:text="${m.awayScore}"></span>
-            </td>
-            <td th:text="${m.awayTeam}"></td>
-            <td th:text="${m.stadium}"></td>
-            <td th:text="${m.status}"></td>
-        </tr>
+    <tr th:each="m : ${matches}">
+        <td th:text="${m.pool}"></td>
+        <td th:text="${m.matchDate}"></td>
+        <td th:text="${m.homeTeam}"></td>
+        <td>
+            <span th:text="${m.homeScore}"></span>
+            -
+            <span th:text="${m.awayScore}"></span>
+        </td>
+        <td th:text="${m.awayTeam}"></td>
+        <td th:text="${m.stadium}"></td>
+        <td th:text="${m.status}"></td>
+    </tr>
     </tbody>
 </table>
 
-
 <hr style="margin: 40px 0;">
 
-<h3>🏆 POOL 順位（確認用）</h3>
+<!-- ================================================= -->
+<!-- 表②：POOL別順位（横展開・本命） -->
+<!-- ================================================= -->
+<h3>🏆 POOL 順位（全体表示）</h3>
 
-<table class="wbc-standing-table">
-    <thead>
-        <tr>
-            <th>順位</th>
-            <th>チーム</th>
-            <th>勝</th>
-            <th>敗</th>
-            <th>得点</th>
-            <th>失点</th>
-            <th>得失点差</th>
-        </tr>
-    </thead>
-<tbody>
-        <tr th:each="team : ${standings}"
-            th:classappend="
-                ${team.rank == 1} ? 'rank-gold' :
-                (${team.rank == 2} ? 'rank-silver' : '')
-            ">
+<div class="pool-grid">
 
-            <td th:text="${team.rank}"></td>
-            <td th:text="${team.team}"></td>
-            <td th:text="${team.wins}"></td>
-            <td th:text="${team.losses}"></td>
-            <td th:text="${team.scoredRuns}"></td>
-            <td th:text="${team.allowedRuns}"></td>
-            <td th:text="${team.runDiff}"></td>
+    <div th:each="entry : ${poolStandings}">
+        <!-- POOL タイトル -->
+        <div class="pool-title">
+            POOL <span th:text="${entry.key}"></span>
+        </div>
 
-        </tr>
-</tbody>
-</table>
+        <!-- 順位テーブル -->
+        <table class="pool-table">
+            <thead>
+                <tr>
+                    <th>順位</th>
+                    <th>チーム</th>
+                    <th>勝</th>
+                    <th>敗</th>
+                    <th>得点</th>
+                    <th>失点</th>
+                    <th>得失点差</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="team : ${entry.value}"
+                    th:classappend="
+                        ${team.rank == 1} ? 'rank-gold' :
+                        (${team.rank == 2} ? 'rank-silver' : '')
+                    ">
+                    <td th:text="${team.rank}"></td>
+                    <td th:text="${team.team}"></td>
+                    <td th:text="${team.wins}"></td>
+                    <td th:text="${team.losses}"></td>
+                    <td th:text="${team.scoredRuns}"></td>
+                    <td th:text="${team.allowedRuns}"></td>
+                    <td th:text="${team.runDiff}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
 
 
 <img id="samuraiLogo" alt="Samurai Japan Logo">
