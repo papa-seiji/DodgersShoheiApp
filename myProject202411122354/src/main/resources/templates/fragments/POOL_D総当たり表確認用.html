@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>WBC2026 POOL D Round Robin</title>
+
+<style>
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: #f7f7f7;
+}
+
+.wrapper {
+  max-width: 960px;
+  margin: 40px auto;
+}
+
+.pool-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.mode-switch {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mode-switch button {
+  padding: 6px 14px;
+  margin: 0 4px;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.mode-switch button.active {
+  background: #000;
+  color: #fff;
+}
+
+.round-robin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  table-layout: fixed;
+}
+
+.round-robin-table th,
+.round-robin-table td {
+  border: 1.5px solid #000;
+  text-align: center;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.round-robin-table th {
+  background: #eee;
+  font-weight: 700;
+}
+
+.team-name {
+  text-align: left;
+  padding-left: 8px;
+  font-weight: 700;
+  background: #fafafa;
+}
+
+.no-game {
+  background: #ddd;
+}
+
+.win { font-weight: 800; }
+.lose { opacity: 0.6; }
+
+.note {
+  font-size: 12px;
+  color: #555;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div class="pool-title">WBC 2026｜POOL D 総当たり表</div>
+
+  <div class="mode-switch">
+    <button id="normalBtn" class="active">🌍 通常</button>
+    <button id="japanBtn">🇯🇵 JAPAN 応援</button>
+  </div>
+
+  <table class="round-robin-table" data-pool="D">
+    <tr>
+      <th></th>
+      <th>🇻🇪 VEN</th>
+      <th>🇩🇴 DOM</th>
+      <th>🇵🇷 PUR</th>
+      <th>🇳🇱 NED</th>
+      <th>🇮🇱 ISR</th>
+    </tr>
+
+    <tr data-team="VEN">
+      <th class="team-name">🇻🇪 ベネズエラ</th>
+      <td class="no-game">—</td>
+      <td data-vs="DOM">◯<br>6-4</td>
+      <td data-vs="PUR">●<br>3-5</td>
+      <td data-vs="NED">◯<br>7-2</td>
+      <td data-vs="ISR">◯<br>8-1</td>
+    </tr>
+
+    <tr data-team="DOM">
+      <th class="team-name">🇩🇴 ドミニカ共和国</th>
+      <td data-vs="VEN">●<br>4-6</td>
+      <td class="no-game">—</td>
+      <td data-vs="PUR">◯<br>6-3</td>
+      <td data-vs="NED">◯<br>5-2</td>
+      <td data-vs="ISR">◯<br>9-0</td>
+    </tr>
+
+    <tr data-team="PUR">
+      <th class="team-name">🇵🇷 プエルトリコ</th>
+      <td data-vs="VEN">◯<br>5-3</td>
+      <td data-vs="DOM">●<br>3-6</td>
+      <td class="no-game">—</td>
+      <td data-vs="NED">◯<br>4-2</td>
+      <td data-vs="ISR">◯<br>6-1</td>
+    </tr>
+
+    <tr data-team="NED">
+      <th class="team-name">🇳🇱 オランダ</th>
+      <td data-vs="VEN">●<br>2-7</td>
+      <td data-vs="DOM">●<br>2-5</td>
+      <td data-vs="PUR">●<br>2-4</td>
+      <td class="no-game">—</td>
+      <td data-vs="ISR">◯<br>5-3</td>
+    </tr>
+
+    <tr data-team="ISR">
+      <th class="team-name">🇮🇱 イスラエル</th>
+      <td data-vs="VEN">●<br>1-8</td>
+      <td data-vs="DOM">●<br>0-9</td>
+      <td data-vs="PUR">●<br>1-6</td>
+      <td data-vs="NED">●<br>3-5</td>
+      <td class="no-game">—</td>
+    </tr>
+  </table>
+
+  <div class="note">
+    ※ スコア・勝敗は仮データ（UI確認用）
+  </div>
+
+</div>
+
+<script>
+const table = document.querySelector(".round-robin-table");
+const normalBtn = document.getElementById("normalBtn");
+const japanBtn = document.getElementById("japanBtn");
+
+normalBtn.onclick = () => {
+  table.classList.remove("japan-mode");
+  normalBtn.classList.add("active");
+  japanBtn.classList.remove("active");
+};
+
+japanBtn.onclick = () => {
+  table.classList.add("japan-mode");
+  japanBtn.classList.add("active");
+  normalBtn.classList.remove("active");
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>WBC2026 Round Robin</title>
+
+<style>
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: #f7f7f7;
+}
+
+.wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+}
+
+/* ===== タブ ===== */
+.pool-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pool-tabs button {
+  padding: 8px 16px;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.pool-tabs button.active {
+  background: #000;
+  color: #fff;
+}
+
+/* ===== POOL表示制御 ===== */
+.pool-panel {
+  display: none;
+}
+
+.pool-panel.active {
+  display: block;
+}
+
+/* ===== 既存テーブルCSS（共通） ===== */
+.round-robin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  table-layout: fixed;
+}
+
+.round-robin-table th,
+.round-robin-table td {
+  border: 1.5px solid #000;
+  text-align: center;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.round-robin-table th {
+  background: #eee;
+  font-weight: 700;
+}
+
+.team-name {
+  text-align: left;
+  padding-left: 8px;
+  font-weight: 700;
+  background: #fafafa;
+}
+
+.no-game { background: #ddd; }
+.win { font-weight: 800; }
+.lose { opacity: 0.6; }
+
+.note {
+  font-size: 12px;
+  color: #555;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <!-- タブ -->
+  <div class="pool-tabs">
+    <button class="active" data-target="poolA">POOL A</button>
+    <button data-target="poolB">POOL B</button>
+    <button data-target="poolC">POOL C</button>
+    <button data-target="poolD">POOL D</button>
+  </div>
+
+  <!-- POOL A -->
+  <div id="poolA" class="pool-panel active">
+    <h2>POOL A</h2>
+    <!-- ★ここに POOL A の table を丸ごと貼る -->
+      <table class="round-robin-table" data-pool="A">
+    <tr>
+      <th></th>
+      <th>🇵🇷 PUR</th>
+      <th>🇨🇺 CUB</th>
+      <th>🇨🇦 CAN</th>
+      <th>🇵🇦 PAN</th>
+      <th>🇨🇴 COL</th>
+    </tr>
+
+    <tr data-team="PUR">
+      <th class="team-name">🇵🇷 プエルトリコ</th>
+      <td class="no-game">—</td>
+      <td data-vs="CUB">◯<br>6-3</td>
+      <td data-vs="CAN">◯<br>5-2</td>
+      <td data-vs="PAN">●<br>2-4</td>
+      <td data-vs="COL">◯<br>7-1</td>
+    </tr>
+
+    <tr data-team="CUB">
+      <th class="team-name">🇨🇺 キューバ</th>
+      <td data-vs="PUR">●<br>3-6</td>
+      <td class="no-game">—</td>
+      <td data-vs="CAN">◯<br>4-2</td>
+      <td data-vs="PAN">◯<br>6-5</td>
+      <td data-vs="COL">◯<br>8-1</td>
+    </tr>
+
+    <tr data-team="CAN">
+      <th class="team-name">🇨🇦 カナダ</th>
+      <td data-vs="PUR">●<br>2-5</td>
+      <td data-vs="CUB">●<br>2-4</td>
+      <td class="no-game">—</td>
+      <td data-vs="PAN">◯<br>5-3</td>
+      <td data-vs="COL">◯<br>6-4</td>
+    </tr>
+
+    <tr data-team="PAN">
+      <th class="team-name">🇵🇦 パナマ</th>
+      <td data-vs="PUR">◯<br>4-2</td>
+      <td data-vs="CUB">●<br>5-6</td>
+      <td data-vs="CAN">●<br>3-5</td>
+      <td class="no-game">—</td>
+      <td data-vs="COL">◯<br>6-3</td>
+    </tr>
+
+    <tr data-team="COL">
+      <th class="team-name">🇨🇴 コロンビア</th>
+      <td data-vs="PUR">●<br>1-7</td>
+      <td data-vs="CUB">●<br>1-8</td>
+      <td data-vs="CAN">●<br>4-6</td>
+      <td data-vs="PAN">●<br>3-6</td>
+      <td class="no-game">—</td>
+    </tr>
+  </table>
+
+  </div>
+
+  <!-- POOL B -->
+  <div id="poolB" class="pool-panel">
+    <h2>POOL B</h2>
+    <!-- ★ここに POOL B の table を丸ごと貼る -->
+      <table class="round-robin-table" data-pool="B">
+    <tr>
+      <th></th>
+      <th>🇺🇸 USA</th>
+      <th>🇲🇽 MEX</th>
+      <th>🇨🇦 CAN</th>
+      <th>🇨🇴 COL</th>
+      <th>🇬🇧 GBR</th>
+    </tr>
+
+    <tr data-team="USA">
+      <th class="team-name">🇺🇸 アメリカ</th>
+      <td class="no-game">—</td>
+      <td data-vs="MEX">◯<br>5-3</td>
+      <td data-vs="CAN">◯<br>6-2</td>
+      <td data-vs="COL">◯<br>7-4</td>
+      <td data-vs="GBR">◯<br>9-1</td>
+    </tr>
+
+    <tr data-team="MEX">
+      <th class="team-name">🇲🇽 メキシコ</th>
+      <td data-vs="USA">●<br>3-5</td>
+      <td class="no-game">—</td>
+      <td data-vs="CAN">◯<br>4-2</td>
+      <td data-vs="COL">◯<br>6-5</td>
+      <td data-vs="GBR">◯<br>8-2</td>
+    </tr>
+
+    <tr data-team="CAN">
+      <th class="team-name">🇨🇦 カナダ</th>
+      <td data-vs="USA">●<br>2-6</td>
+      <td data-vs="MEX">●<br>2-4</td>
+      <td class="no-game">—</td>
+      <td data-vs="COL">◯<br>5-3</td>
+      <td data-vs="GBR">◯<br>6-4</td>
+    </tr>
+
+    <tr data-team="COL">
+      <th class="team-name">🇨🇴 コロンビア</th>
+      <td data-vs="USA">●<br>4-7</td>
+      <td data-vs="MEX">●<br>5-6</td>
+      <td data-vs="CAN">●<br>3-5</td>
+      <td class="no-game">—</td>
+      <td data-vs="GBR">◯<br>7-2</td>
+    </tr>
+
+    <tr data-team="GBR">
+      <th class="team-name">🇬🇧 イギリス</th>
+      <td data-vs="USA">●<br>1-9</td>
+      <td data-vs="MEX">●<br>2-8</td>
+      <td data-vs="CAN">●<br>4-6</td>
+      <td data-vs="COL">●<br>2-7</td>
+      <td class="no-game">—</td>
+    </tr>
+  </table>
+
+  </div>
+
+  <!-- POOL C -->
+  <div id="poolC" class="pool-panel">
+    <h2>POOL C</h2>
+    <!-- ★ここに POOL C の table を丸ごと貼る -->
+      <table class="round-robin-table" data-pool="C">
+    <tr>
+      <th></th>
+      <th>🇯🇵 JPN</th>
+      <th>🇦🇺 AUS</th>
+      <th>🇰🇷 KOR</th>
+      <th>🇨🇿 CZE</th>
+      <th>🇨🇳 CHN</th>
+    </tr>
+
+    <tr data-team="JPN">
+      <th class="team-name">🇯🇵 日本</th>
+      <td class="no-game">—</td>
+      <td data-vs="AUS"><span class="win">◯</span><br>5-2</td>
+      <td data-vs="KOR"><span class="lose">●</span><br>3-4</td>
+      <td data-vs="CZE"><span class="win">◯</span><br>8-1</td>
+      <td data-vs="CHN"><span class="win">◯</span><br>10-0</td>
+    </tr>
+
+    <tr data-team="AUS">
+      <th class="team-name">🇦🇺 オーストラリア</th>
+      <td data-vs="JPN"><span class="lose">●</span><br>2-5</td>
+      <td class="no-game">—</td>
+      <td data-vs="KOR"><span class="win">◯</span><br>6-4</td>
+      <td data-vs="CZE"><span class="win">◯</span><br>7-3</td>
+      <td data-vs="CHN"><span class="win">◯</span><br>9-1</td>
+    </tr>
+
+    <tr data-team="KOR">
+      <th class="team-name">🇰🇷 韓国</th>
+      <td data-vs="JPN"><span class="win">◯</span><br>4-3</td>
+      <td data-vs="AUS"><span class="lose">●</span><br>4-6</td>
+      <td class="no-game">—</td>
+      <td data-vs="CZE"><span class="win">◯</span><br>5-2</td>
+      <td data-vs="CHN"><span class="win">◯</span><br>8-0</td>
+    </tr>
+
+    <tr data-team="CZE">
+      <th class="team-name">🇨🇿 チェコ</th>
+      <td data-vs="JPN"><span class="lose">●</span><br>1-8</td>
+      <td data-vs="AUS"><span class="lose">●</span><br>3-7</td>
+      <td data-vs="KOR"><span class="lose">●</span><br>2-5</td>
+      <td class="no-game">—</td>
+      <td data-vs="CHN"><span class="win">◯</span><br>6-4</td>
+    </tr>
+
+    <tr data-team="CHN">
+      <th class="team-name">🇨🇳 中国</th>
+      <td data-vs="JPN"><span class="lose">●</span><br>0-10</td>
+      <td data-vs="AUS"><span class="lose">●</span><br>1-9</td>
+      <td data-vs="KOR"><span class="lose">●</span><br>0-8</td>
+      <td data-vs="CZE"><span class="lose">●</span><br>4-6</td>
+      <td class="no-game">—</td>
+    </tr>
+  </table>
+
+  </div>
+
+  <!-- POOL D -->
+  <div id="poolD" class="pool-panel">
+    <h2>POOL D</h2>
+    <!-- ★ここに POOL D の table を丸ごと貼る -->
+      <table class="round-robin-table" data-pool="D">
+    <tr>
+      <th></th>
+      <th>🇻🇪 VEN</th>
+      <th>🇩🇴 DOM</th>
+      <th>🇵🇷 PUR</th>
+      <th>🇳🇱 NED</th>
+      <th>🇮🇱 ISR</th>
+    </tr>
+
+    <tr data-team="VEN">
+      <th class="team-name">🇻🇪 ベネズエラ</th>
+      <td class="no-game">—</td>
+      <td data-vs="DOM">◯<br>6-4</td>
+      <td data-vs="PUR">●<br>3-5</td>
+      <td data-vs="NED">◯<br>7-2</td>
+      <td data-vs="ISR">◯<br>8-1</td>
+    </tr>
+
+    <tr data-team="DOM">
+      <th class="team-name">🇩🇴 ドミニカ共和国</th>
+      <td data-vs="VEN">●<br>4-6</td>
+      <td class="no-game">—</td>
+      <td data-vs="PUR">◯<br>6-3</td>
+      <td data-vs="NED">◯<br>5-2</td>
+      <td data-vs="ISR">◯<br>9-0</td>
+    </tr>
+
+    <tr data-team="PUR">
+      <th class="team-name">🇵🇷 プエルトリコ</th>
+      <td data-vs="VEN">◯<br>5-3</td>
+      <td data-vs="DOM">●<br>3-6</td>
+      <td class="no-game">—</td>
+      <td data-vs="NED">◯<br>4-2</td>
+      <td data-vs="ISR">◯<br>6-1</td>
+    </tr>
+
+    <tr data-team="NED">
+      <th class="team-name">🇳🇱 オランダ</th>
+      <td data-vs="VEN">●<br>2-7</td>
+      <td data-vs="DOM">●<br>2-5</td>
+      <td data-vs="PUR">●<br>2-4</td>
+      <td class="no-game">—</td>
+      <td data-vs="ISR">◯<br>5-3</td>
+    </tr>
+
+    <tr data-team="ISR">
+      <th class="team-name">🇮🇱 イスラエル</th>
+      <td data-vs="VEN">●<br>1-8</td>
+      <td data-vs="DOM">●<br>0-9</td>
+      <td data-vs="PUR">●<br>1-6</td>
+      <td data-vs="NED">●<br>3-5</td>
+      <td class="no-game">—</td>
+    </tr>
+  </table>
+
+  </div>
+
+</div>
+
+<script>
+const tabs = document.querySelectorAll(".pool-tabs button");
+const panels = document.querySelectorAll(".pool-panel");
+
+tabs.forEach(btn => {
+  btn.onclick = () => {
+    tabs.forEach(b => b.classList.remove("active"));
+    panels.forEach(p => p.classList.remove("active"));
+
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.target).classList.add("active");
+  };
+});
+</script>
+</body>
+</html>
