@@ -1439,6 +1439,21 @@ function enableIOSAudio() {
 ------------------------------------------ */
 document.addEventListener("DOMContentLoaded", () => {
 
+  /* ===============================
+    🔴 hash付き遷移はイントロ無効
+  =============================== */
+  if (location.hash) {
+    console.log("hash付き遷移のためイントロをスキップ:", location.hash);
+
+    const intro = document.getElementById("intro");
+    const main  = document.getElementById("main-content");
+
+    if (intro) intro.style.display = "none";
+    if (main)  main.style.display  = "block";
+
+    return; // ← ここが超重要（下のイントロ処理を全部止める）
+  }
+
   enableIOSAudio();
 
   const bgm      = document.getElementById("intro-bgm");
