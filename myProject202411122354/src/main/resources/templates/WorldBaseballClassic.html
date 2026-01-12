@@ -663,6 +663,36 @@
 </table>
 
 
+<hr style="margin: 40px 0;">
+
+<h3>🏆 POOL 順位（確認用）</h3>
+
+<table class="wbc-standing-table">
+    <thead>
+        <tr>
+            <th>順位</th>
+            <th>チーム</th>
+            <th>勝</th>
+            <th>敗</th>
+            <th>得点</th>
+            <th>失点</th>
+            <th>得失点差</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="row : ${standings}">
+            <td th:text="${row.rank}"></td>
+            <td th:text="${row.team}"></td>
+            <td th:text="${row.wins}"></td>
+            <td th:text="${row.losses}"></td>
+            <td th:text="${row.scoredRuns}"></td>
+            <td th:text="${row.allowedRuns}"></td>
+            <td th:text="${row.runDiff}"></td>
+        </tr>
+    </tbody>
+</table>
+
+
 <img id="samuraiLogo" alt="Samurai Japan Logo">
 
 <script>

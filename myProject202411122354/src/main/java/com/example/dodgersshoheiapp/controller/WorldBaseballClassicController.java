@@ -1,41 +1,48 @@
 package com.example.dodgersshoheiapp.controller;
 
-import java.util.List;
+import com.example.dodgersshoheiapp.model.WbcPoolMatch;
+import com.example.dodgersshoheiapp.dto.WbcPoolStandingDto;
+import com.example.dodgersshoheiapp.service.WbcPoolMatchService;
+import com.example.dodgersshoheiapp.service.WbcPoolStandingService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.dodgersshoheiapp.model.WbcPoolMatch;
-import com.example.dodgersshoheiapp.service.WbcPoolMatchService;
+import java.util.List;
 
 @Controller
 public class WorldBaseballClassicController {
 
-    @Autowired
-    private WbcPoolMatchService wbcPoolMatchService;
+    private final WbcPoolMatchService matchService;
+    private final WbcPoolStandingService standingService;
 
-    /**
-     * 🌍 World Baseball Classic 全体表示
-     * 既存HTML（WorldBaseballClassic.html）を使用
-     *
-     * URL例:
-     * /WorldBaseballClassic
-     * /WorldBaseballClassic?year=2026
-     */
+    public WorldBaseballClassicController(
+            WbcPoolMatchService matchService,
+            WbcPoolStandingService standingService) {
+        this.matchService = matchService;
+        this.standingService = standingService;
+    }
+
     @GetMapping("/WorldBaseballClassic")
-    public String showWBCPage(
-            @RequestParam(name = "year", required = false, defaultValue = "2026") Integer year,
-            Model model) {
+    public String showWBCPage(Model model) {
 
-        // 全POOL（A〜D）分の試合データを取得
-        List<WbcPoolMatch> matches = wbcPoolMatchService.getAllMatchesByYear(year);
+        // 🔹 確認用固定値（あとで動的にする）
+        int year = 2026;
+        String pool = "C"; // 全体表示だが、順位はPOOL単位で計算
 
+        // 🔹 試合一覧（表①）
+        List<WbcPoolMatch> matches = matchService.getMatchesByYearAndPool(year, pool);
+
+        // 🔹 順位一覧（表②）
+        List<WbcPoolStandingDto> standings = standingService.calculateStandings(matches);
+
+        // 🔹 Model に詰める
         model.addAttribute("year", year);
+        model.addAttribute("pool", pool);
         model.addAttribute("matches", matches);
+        model.addAttribute("standings", standings);
 
-        return "WorldBaseballClassic"; // ← 既存HTML
+        return "WorldBaseballClassic";
     }
 }
