@@ -322,22 +322,106 @@
 }
 
 
+/*
+=====================================
+WBC POOL 表示切替 / 順位表示 CSS
+=====================================
+*/
 
-/* ===== POOL 全体グリッド ===== */
+/* ===============================
+  表示モード切替ボタン
+=============================== */
+.mode-switch {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.mode-btn {
+    padding: 8px 16px;
+    margin: 3px 1px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+
+    border-radius: 20px;
+    border: 1px solid #999;
+    background: #f5f5f5;
+    color: #333;
+
+    transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+    background: #eaeaea;
+}
+
+/* アクティブ（共通） */
+.mode-btn.active {
+    background: linear-gradient(135deg, #1e90ff, #00bfff);
+    color: #fff;
+    border-color: #1e90ff;
+    box-shadow: 0 0 0 2px rgba(30,144,255,0.25);
+}
+
+/* 🇯🇵 JAPAN応援モード（赤は抑えめ） */
+#btn-japan.active {
+    background: linear-gradient(135deg, #c62828, #ef5350);
+    border-color: #c62828;
+    box-shadow: 0 0 0 2px rgba(198,40,40,0.25);
+}
+
+/* ===============================
+  モード背景（画像①の要）
+=============================== */
+#pool-mode-wrapper {
+    padding: 30px 15px;
+    transition: background 0.3s ease;
+}
+
+/* JAPAN応援モード */
+#pool-mode-wrapper.mode-japan {
+    background: linear-gradient(135deg, #e98199e6, #ffecec);
+}
+
+/* 全体表示モード */
+#pool-mode-wrapper.mode-all {
+    background: linear-gradient(135deg, #87c7ff, #e3f2fd);
+}
+
+/* ===============================
+  POOL 全体グリッド
+=============================== */
 .pool-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* PC：2列×2行 */
+    grid-template-columns: repeat(2, 1fr);
     gap: 30px;
     margin: 40px 0;
 }
 
 @media (max-width: 768px) {
     .pool-grid {
-        grid-template-columns: 1fr; /* スマホ：縦 */
+        grid-template-columns: 1fr;
     }
 }
 
-/* ===== テーブル共通 ===== */
+/* ===============================
+  POOLブロック表示制御
+=============================== */
+.pool-block {
+    display: none;
+}
+
+.pool-block.active {
+    display: block;
+}
+
+.mode-all .pool-block {
+    display: block;
+}
+
+/* ===============================
+  テーブル共通
+=============================== */
 .pool-table {
     border-collapse: collapse;
     width: 100%;
@@ -360,8 +444,9 @@
     margin-bottom: 10px;
     text-align: center;
 }
-
-/* ===== 順位ハイライト ===== */
+/* ===============================
+  順位ハイライト
+=============================== */
 .rank-gold {
     background: linear-gradient(135deg, #FFD700, #FFF4B0);
     font-weight: bold;
@@ -372,6 +457,8 @@
     font-weight: bold;
 }
 </style>
+
+
 
 </head>
 
@@ -659,89 +746,124 @@
 
 </section>
 
-
-<h3>🌍 WBC 全体表示（確認用）</h3>
-<p>YEAR: <span th:text="${year}"></span></p>
-
-<!-- ================================================= -->
-<!-- 表①：試合一覧（既存・POOL C 確認用） -->
-<!-- ================================================= -->
-<table>
-    <thead>
-    <tr>
-        <th>POOL</th>
-        <th>日付</th>
-        <th>HOME</th>
-        <th>SCORE</th>
-        <th>AWAY</th>
-        <th>会場</th>
-        <th>状態</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="m : ${matches}">
-        <td th:text="${m.pool}"></td>
-        <td th:text="${m.matchDate}"></td>
-        <td th:text="${m.homeTeam}"></td>
-        <td>
-            <span th:text="${m.homeScore}"></span>
-            -
-            <span th:text="${m.awayScore}"></span>
-        </td>
-        <td th:text="${m.awayTeam}"></td>
-        <td th:text="${m.stadium}"></td>
-        <td th:text="${m.status}"></td>
-    </tr>
-    </tbody>
-</table>
-
-<hr style="margin: 40px 0;">
-
-<!-- ================================================= -->
-<!-- 表②：POOL別順位（横展開・本命） -->
-<!-- ================================================= -->
-<h3>🏆 POOL 順位（全体表示）</h3>
-
-<div class="pool-grid">
-
-    <div th:each="entry : ${poolStandings}">
-        <!-- POOL タイトル -->
-        <div class="pool-title">
-            POOL <span th:text="${entry.key}"></span>
-        </div>
-
-        <!-- 順位テーブル -->
-        <table class="pool-table">
-            <thead>
-                <tr>
-                    <th>順位</th>
-                    <th>チーム</th>
-                    <th>勝</th>
-                    <th>敗</th>
-                    <th>得点</th>
-                    <th>失点</th>
-                    <th>得失点差</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="team : ${entry.value}"
-                    th:classappend="
-                        ${team.rank == 1} ? 'rank-gold' :
-                        (${team.rank == 2} ? 'rank-silver' : '')
-                    ">
-                    <td th:text="${team.rank}"></td>
-                    <td th:text="${team.team}"></td>
-                    <td th:text="${team.wins}"></td>
-                    <td th:text="${team.losses}"></td>
-                    <td th:text="${team.scoredRuns}"></td>
-                    <td th:text="${team.allowedRuns}"></td>
-                    <td th:text="${team.runDiff}"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
+<!-- =============================== -->
+<!-- 表示モード切り替え -->
+<!-- =============================== -->
+<div class="mode-switch">
+    <button id="btn-japan" class="mode-btn active">
+        🇯🇵 JAPAN応援モード
+    </button>
+    <button id="btn-all" class="mode-btn">
+        🌍 全体表示モード
+    </button>
 </div>
+
+<!-- 見出し -->
+<h4 id="pool-title">
+    🏆 JAPAN応援モード：POOL Cのみ
+</h4>
+
+<!-- ★ 重要：背景切替ラッパー ★ -->
+<div id="pool-mode-wrapper" class="mode-japan">
+
+    <div class="pool-grid">
+
+        <div th:each="entry : ${poolStandings}"
+             th:attr="data-pool=${entry.key}"
+             class="pool-block">
+
+            <div class="pool-title">
+                POOL <span th:text="${entry.key}"></span>
+            </div>
+
+            <table class="pool-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>チーム</th>
+                        <th>勝</th>
+                        <th>敗</th>
+                        <th>得点</th>
+                        <th>失点</th>
+                        <th>得失点差</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="team : ${entry.value}"
+                        th:classappend="
+                          ${team.wins > 0} ?
+                          (${team.rank == 1} ? 'rank-gold' :
+                          (${team.rank == 2} ? 'rank-silver' : '')) : ''
+                        ">
+                        <td th:text="${team.rank}"></td>
+                        <td th:text="${team.team}"></td>
+                        <td th:text="${team.wins}"></td>
+                        <td th:text="${team.losses}"></td>
+                        <td th:text="${team.scoredRuns}"></td>
+                        <td th:text="${team.allowedRuns}"></td>
+                        <td th:text="${team.runDiff}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+/*
+=====================================
+ WBC 表示モード切替 JS（安全版）
+=====================================
+*/
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btnJapan = document.getElementById("btn-japan");
+    const btnAll = document.getElementById("btn-all");
+
+    const wrapper = document.getElementById("pool-mode-wrapper");
+    const poolBlocks = document.querySelectorAll(".pool-block");
+    const title = document.getElementById("pool-title");
+
+    function setActiveButton(activeBtn) {
+        [btnJapan, btnAll].forEach(btn => btn.classList.remove("active"));
+        activeBtn.classList.add("active");
+    }
+
+    function showJapanPool() {
+        wrapper.classList.remove("mode-all");
+        wrapper.classList.add("mode-japan");
+
+        poolBlocks.forEach(block => {
+            block.classList.toggle("active", block.dataset.pool === "C");
+        });
+
+        title.textContent = "🏆 POOL 順位（JAPAN応援モード：POOL C）";
+        setActiveButton(btnJapan);
+    }
+
+    function showAllPools() {
+        wrapper.classList.remove("mode-japan");
+        wrapper.classList.add("mode-all");
+
+        poolBlocks.forEach(block => block.classList.add("active"));
+
+        title.textContent = "🏆 POOL 順位（全体表示）";
+        setActiveButton(btnAll);
+    }
+
+    btnJapan.addEventListener("click", showJapanPool);
+    btnAll.addEventListener("click", showAllPools);
+
+    /* 初期表示 */
+    showJapanPool();
+});
+</script>
+
+
+
 
 
 <img id="samuraiLogo" alt="Samurai Japan Logo">
