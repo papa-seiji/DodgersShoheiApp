@@ -357,7 +357,7 @@ body {
 </div>
 
 <div class="back-area">
-  <a href="/WorldBaseballClassic#pool-title" class="back-button">
+  <a href="#" id="backToStanding" class="back-button">
     ← POOL順位一覧へ戻る
   </a>
 </div>
@@ -413,6 +413,38 @@ document.querySelectorAll(".round-robin-table").forEach(table => {
     .forEach((t, i) => {
       t.row.querySelector(".rank").textContent = i + 1;
     });
+});
+</script>
+
+<script>
+/*
+=====================================
+ RoundRobin 詳細 → 元画面へ戻る制御（修正版）
+=====================================
+*/
+document.addEventListener("DOMContentLoaded", () => {
+
+  const backBtn = document.getElementById("backToStanding");
+  if (!backBtn) return;
+
+  backBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+
+    let target = "/WorldBaseballClassic";
+
+    if (mode === "japan" || mode === "all") {
+      target += "?mode=" + mode;
+    }
+
+    // ★ hash は必ずこれだけ
+    target += "#pool-title";
+
+    window.location.href = target;
+  });
+
 });
 </script>
 

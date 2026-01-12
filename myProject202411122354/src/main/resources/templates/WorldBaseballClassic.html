@@ -826,8 +826,9 @@ WBC POOL 表示切替 / 順位表示 CSS
         </div>
     </div>
 
+    <!-- ▼▼ モード別 詳細リンク（重要） ▼▼ -->
     <div class="roundrobin-detail-link">
-      <a href="/wbc/roundrobin" class="detail-button">
+      <a id="roundRobinDetailLink" class="detail-button">
         ▶ POOL別 総当たり表（詳細を見る）
       </a>
     </div>
@@ -839,6 +840,7 @@ WBC POOL 表示切替 / 順位表示 CSS
 /*
 =====================================
  WBC 表示モード切替 JS（安全版）
+ + URL同期 + スクロール補正
 =====================================
 */
 
@@ -850,6 +852,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const wrapper = document.getElementById("pool-mode-wrapper");
     const poolBlocks = document.querySelectorAll(".pool-block");
     const title = document.getElementById("pool-title");
+    const detailLink = document.getElementById("roundRobinDetailLink");
 
     function setActiveButton(activeBtn) {
         [btnJapan, btnAll].forEach(btn => btn.classList.remove("active"));
@@ -864,8 +867,12 @@ document.addEventListener("DOMContentLoaded", () => {
             block.classList.toggle("active", block.dataset.pool === "C");
         });
 
-        title.textContent = "🏆 POOL 順位（JAPAN応援モード：POOL C）";
+        title.textContent = "🏆 JAPAN応援モード：POOL Cのみ";
         setActiveButton(btnJapan);
+
+        if (detailLink) {
+            detailLink.href = "/wbc/roundrobin?mode=japan";
+        }
     }
 
     function showAllPools() {
@@ -874,15 +881,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
         poolBlocks.forEach(block => block.classList.add("active"));
 
-        title.textContent = "🏆 POOL 順位（全体表示）";
+        title.textContent = "🏆 POOL 順位（POOL全部）";
         setActiveButton(btnAll);
+
+        if (detailLink) {
+            detailLink.href = "/wbc/roundrobin?mode=all";
+        }
     }
+
+    /* ============================
+      URL からモード復元
+    ============================ */
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+
+    if (mode === "all") {
+        showAllPools();
+    } else {
+        showJapanPool(); // default
+    }
+
+/* ============================
+  ★ スクロール補正（完成版）
+============================ */
+if (window.location.hash.startsWith("#pool-title")) {
+    setTimeout(() => {
+        const target = document.getElementById("pool-title");
+        if (target) {
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    }, 100);
+}
 
     btnJapan.addEventListener("click", showJapanPool);
     btnAll.addEventListener("click", showAllPools);
-
-    /* 初期表示 */
-    showJapanPool();
 });
 </script>
 
