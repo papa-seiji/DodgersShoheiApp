@@ -71,10 +71,12 @@ public class WbcPoolStandingService {
                                         Comparator.comparingInt(WbcPoolStandingDto::getRunDiff).reversed()))
                 .collect(Collectors.toList());
 
-        // 順位付与
+        // 順位付与 ＋ 通過フラグ
         int rank = 1;
         for (WbcPoolStandingDto dto : standings) {
-            dto.setRank(rank++);
+            dto.setRank(rank);
+            dto.setQualified(rank <= 2); // ⭐ 1位・2位通過
+            rank++;
         }
 
         return standings;

@@ -342,6 +342,17 @@
             font-weight: bold;
         }
 
+
+.rank-gold {
+    background: linear-gradient(135deg, #FFD700, #FFF4B0);
+    font-weight: bold;
+}
+
+.rank-silver {
+    background: linear-gradient(135deg, #C0C0C0, #F2F2F2);
+    font-weight: bold;
+}
+
 </style>
 </head>
 
@@ -679,17 +690,23 @@
             <th>得失点差</th>
         </tr>
     </thead>
-    <tbody>
-        <tr th:each="row : ${standings}">
-            <td th:text="${row.rank}"></td>
-            <td th:text="${row.team}"></td>
-            <td th:text="${row.wins}"></td>
-            <td th:text="${row.losses}"></td>
-            <td th:text="${row.scoredRuns}"></td>
-            <td th:text="${row.allowedRuns}"></td>
-            <td th:text="${row.runDiff}"></td>
+<tbody>
+        <tr th:each="team : ${standings}"
+            th:classappend="
+                ${team.rank == 1} ? 'rank-gold' :
+                (${team.rank == 2} ? 'rank-silver' : '')
+            ">
+
+            <td th:text="${team.rank}"></td>
+            <td th:text="${team.team}"></td>
+            <td th:text="${team.wins}"></td>
+            <td th:text="${team.losses}"></td>
+            <td th:text="${team.scoredRuns}"></td>
+            <td th:text="${team.allowedRuns}"></td>
+            <td th:text="${team.runDiff}"></td>
+
         </tr>
-    </tbody>
+</tbody>
 </table>
 
 

@@ -13,15 +13,20 @@ public class WbcPoolStandingDto {
 
     private int rank;
 
+    // ⭐ 通過フラグ（追加）
+    private boolean qualified = false;
+
     public WbcPoolStandingDto(Integer year, String pool, String team) {
         this.year = year;
         this.pool = pool;
         this.team = team;
     }
 
-    /* =====================
-       試合結果の集計
-       ===================== */
+    /*
+     * =====================
+     * 試合結果の集計
+     * =====================
+     */
 
     public void addScore(int scored, int allowed) {
         this.scoredRuns += scored;
@@ -36,9 +41,11 @@ public class WbcPoolStandingDto {
         this.losses++;
     }
 
-    /* =====================
-       Getter
-       ===================== */
+    /*
+     * =====================
+     * Getter
+     * =====================
+     */
 
     public Integer getYear() {
         return year;
@@ -77,11 +84,21 @@ public class WbcPoolStandingDto {
         return rank;
     }
 
-    /* =====================
-       Setter
-       ===================== */
+    public boolean isQualified() {
+        return qualified;
+    }
+
+    /*
+     * =====================
+     * Setter
+     * =====================
+     */
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    public void setQualified(boolean qualified) {
+        this.qualified = qualified;
     }
 }
