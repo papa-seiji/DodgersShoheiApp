@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>WBC2026 Round Robin</title>
+
+<style>
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: #f7f7f7;
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+/* ===== タブ ===== */
+.pool-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pool-tabs button {
+  padding: 8px 16px;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.pool-tabs button.active {
+  background: #000;
+  color: #fff;
+}
+
+/* ===== POOL表示制御 ===== */
+.pool-panel { display: none; }
+.pool-panel.active { display: block; }
+
+/* ===== テーブル ===== */
+.round-robin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  table-layout: fixed;
+}
+
+.round-robin-table th,
+.round-robin-table td {
+  border: 1.5px solid #000;
+  text-align: center;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.round-robin-table th {
+  background: #eee;
+  font-weight: 700;
+}
+
+.team-name {
+  text-align: left;
+  padding-left: 8px;
+  font-weight: 700;
+  background: #fafafa;
+}
+
+.no-game { background: #ddd; }
+.win { font-weight: 800; }
+.lose { opacity: 0.6; }
+
+.rank-col {
+  background: #f2f2f2;
+  font-weight: 700;
+}
+
+/* ===============================
+   戻るボタン
+================================ */
+.back-area {
+  margin: 40px auto 60px;
+  text-align: center;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 32px 48px;
+    background: #fb0000;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: opacity 0.2s ease;
+}
+
+.back-button:hover {
+  opacity: 0.8;
+}
+
+
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<!-- ===== タブ ===== -->
+<div class="pool-tabs">
+  <button class="active" data-target="poolA">POOL A</button>
+  <button data-target="poolB">POOL B</button>
+  <button data-target="poolC">POOL C</button>
+  <button data-target="poolD">POOL D</button>
+</div>
+
+<!-- ================= POOL A ================= -->
+<div id="poolA" class="pool-panel active">
+<h2>POOL A</h2>
+<table class="round-robin-table">
+<tr>
+  <th></th>
+  <th>PUR</th><th>CUB</th><th>CAN</th><th>PAN</th><th>COL</th>
+  <th class="rank-col">勝</th>
+  <th class="rank-col">敗</th>
+  <th class="rank-col">得失</th>
+  <th class="rank-col">順位</th>
+</tr>
+
+<tr>
+  <th class="team-name">🇵🇷 プエルトリコ</th>
+  <td class="no-game">—</td><td>◯<br>6-3</td><td>◯<br>5-2</td><td>●<br>2-4</td><td>◯<br>7-1</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇨🇺 キューバ</th>
+  <td>●<br>3-6</td><td class="no-game">—</td><td>◯<br>4-2</td><td>◯<br>6-5</td><td>◯<br>8-1</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇨🇦 カナダ</th>
+  <td>●<br>2-5</td><td>●<br>2-4</td><td class="no-game">—</td><td>◯<br>5-3</td><td>◯<br>6-4</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇵🇦 パナマ</th>
+  <td>◯<br>4-2</td><td>●<br>5-6</td><td>●<br>3-5</td><td class="no-game">—</td><td>◯<br>6-3</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇨🇴 コロンビア</th>
+  <td>●<br>1-7</td><td>●<br>1-8</td><td>●<br>4-6</td><td>●<br>3-6</td><td class="no-game">—</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+</table>
+</div>
+
+<!-- ================= POOL B ================= -->
+<div id="poolB" class="pool-panel">
+<h2>POOL B</h2>
+<table class="round-robin-table">
+<tr>
+  <th></th>
+  <th>USA</th><th>MEX</th><th>CAN</th><th>COL</th><th>GBR</th>
+  <th class="rank-col">勝</th>
+  <th class="rank-col">敗</th>
+  <th class="rank-col">得失</th>
+  <th class="rank-col">順位</th>
+</tr>
+
+<tr>
+  <th class="team-name">🇺🇸 アメリカ</th>
+  <td class="no-game">—</td><td>◯<br>5-3</td><td>◯<br>6-2</td><td>◯<br>7-4</td><td>◯<br>9-1</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇲🇽 メキシコ</th>
+  <td>●<br>3-5</td><td class="no-game">—</td><td>◯<br>4-2</td><td>◯<br>6-5</td><td>◯<br>8-2</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇨🇦 カナダ</th>
+  <td>●<br>2-6</td><td>●<br>2-4</td><td class="no-game">—</td><td>◯<br>5-3</td><td>◯<br>6-4</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇨🇴 コロンビア</th>
+  <td>●<br>4-7</td><td>●<br>5-6</td><td>●<br>3-5</td><td class="no-game">—</td><td>◯<br>7-2</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇬🇧 イギリス</th>
+  <td>●<br>1-9</td><td>●<br>2-8</td><td>●<br>4-6</td><td>●<br>2-7</td><td class="no-game">—</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+</table>
+</div>
+
+<!-- ================= POOL C ================= -->
+<div id="poolC" class="pool-panel active">
+
+  <!-- ★ 動作確認用（teams がバインドされていれば 5 teams と出る） -->
+  <h2 th:text="'POOL C (' + ${teams.size()} + ' teams)'">POOL C</h2>
+
+  <table class="round-robin-table">
+    <tr>
+      <th></th>
+
+      <th th:each="away : ${teams}"
+          th:text="${away}">TEAM</th>
+
+      <th class="rank-col">勝</th>
+      <th class="rank-col">敗</th>
+      <th class="rank-col">得失</th>
+      <th class="rank-col">順位</th>
+    </tr>
+
+    <tr th:each="home : ${teams}">
+      <th class="team-name" th:text="${home}">HOME</th>
+
+<td th:each="away : ${teams}"
+    th:with="row=${matrix.get(home)},
+             cell=${row != null ? row.get(away) : null}"
+    th:classappend="${cell != null and cell.self} ? 'no-game' : ''">
+
+    <span th:utext="${cell != null ? cell.display : '—'}">—</span>
+
+
+</td>
+
+      <td class="rank-col win-count"></td>
+      <td class="rank-col lose-count"></td>
+      <td class="rank-col run-diff"></td>
+      <td class="rank-col rank"></td>
+    </tr>
+  </table>
+</div>
+
+<!-- ================= POOL D ================= -->
+<div id="poolD" class="pool-panel">
+<h2>POOL D</h2>
+<table class="round-robin-table">
+<tr>
+  <th></th>
+  <th>VEN</th><th>DOM</th><th>PUR</th><th>NED</th><th>ISR</th>
+  <th class="rank-col">勝</th>
+  <th class="rank-col">敗</th>
+  <th class="rank-col">得失</th>
+  <th class="rank-col">順位</th>
+</tr>
+
+<tr>
+  <th class="team-name">🇻🇪 ベネズエラ</th>
+  <td class="no-game">—</td><td>◯<br>6-4</td><td>●<br>3-5</td><td>◯<br>7-2</td><td>◯<br>8-1</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇩🇴 ドミニカ共和国</th>
+  <td>●<br>4-6</td><td class="no-game">—</td><td>◯<br>6-3</td><td>◯<br>5-2</td><td>◯<br>9-0</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇵🇷 プエルトリコ</th>
+  <td>◯<br>5-3</td><td>●<br>3-6</td><td class="no-game">—</td><td>◯<br>4-2</td><td>◯<br>6-1</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇳🇱 オランダ</th>
+  <td>●<br>2-7</td><td>●<br>2-5</td><td>●<br>2-4</td><td class="no-game">—</td><td>◯<br>5-3</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+
+<tr>
+  <th class="team-name">🇮🇱 イスラエル</th>
+  <td>●<br>1-8</td><td>●<br>0-9</td><td>●<br>1-6</td><td>●<br>3-5</td><td class="no-game">—</td>
+  <td class="rank-col win-count"></td>
+  <td class="rank-col lose-count"></td>
+  <td class="rank-col run-diff"></td>
+  <td class="rank-col rank"></td>
+</tr>
+</table>
+</div>
+
+</div>
+
+<div class="back-area">
+  <a href="#" id="backToStanding" class="back-button">
+    ← POOL順位一覧へ戻る
+  </a>
+</div>
+
+
+<script>
+/* ===== タブ切替 ===== */
+const tabs = document.querySelectorAll(".pool-tabs button");
+const panels = document.querySelectorAll(".pool-panel");
+
+tabs.forEach(btn => {
+  btn.onclick = () => {
+    tabs.forEach(b => b.classList.remove("active"));
+    panels.forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.target).classList.add("active");
+  };
+});
+
+/* ===== 勝敗・得失点・順位 自動計算 =====
+   ※ POOL C は Thymeleaf 描画のため除外
+=========================================== */
+document.querySelectorAll(".round-robin-table").forEach(table => {
+
+  // ★★★ ここが唯一の追加ポイント ★★★
+  // POOL C（Thymeleaf描画）は JS 集計しない
+  if (table.closest("#poolC")) {
+    return;
+  }
+
+  const rows = Array.from(table.querySelectorAll("tr")).slice(1);
+
+  const teams = rows.map(row => {
+    const tds = Array.from(row.querySelectorAll("td"));
+    let win = 0;
+    let lose = 0;
+    let scored = 0;
+    let allowed = 0;
+
+    tds.forEach(td => {
+      const text = td.textContent;
+
+      if (text.includes("◯")) win++;
+      if (text.includes("●")) lose++;
+
+      const match = text.match(/(\d+)\s*-\s*(\d+)/);
+      if (match) {
+        scored += parseInt(match[1], 10);
+        allowed += parseInt(match[2], 10);
+      }
+    });
+
+    const diff = scored - allowed;
+    row.querySelector(".win-count").textContent = win;
+    row.querySelector(".lose-count").textContent = lose;
+    row.querySelector(".run-diff").textContent =
+      diff > 0 ? `+${diff}` : diff;
+
+    return { row, win, lose, diff };
+  });
+
+  teams
+    .sort((a, b) => b.win - a.win || b.diff - a.diff)
+    .forEach((t, i) => {
+      t.row.querySelector(".rank").textContent = i + 1;
+    });
+});
+</script>
+
+<script>
+/*
+=====================================
+ RoundRobin 詳細 → 元画面へ戻る制御（修正版）
+=====================================
+*/
+document.addEventListener("DOMContentLoaded", () => {
+
+  const backBtn = document.getElementById("backToStanding");
+  if (!backBtn) return;
+
+  backBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+
+    let target = "/WorldBaseballClassic";
+
+    if (mode === "japan" || mode === "all") {
+      target += "?mode=" + mode;
+    }
+
+    // ★ hash は必ずこれだけ
+    target += "#pool-title";
+
+    window.location.href = target;
+  });
+
+});
+</script>
+
+</body>
+</html>

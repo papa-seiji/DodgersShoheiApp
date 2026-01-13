@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>WBC2026 Round Robin 検証</title>
+
+<style>
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: #f7f7f7;
+}
+
+.wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+/* ===== テーブル（検証用） ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+th {
+  background: #eee;
+  font-weight: 700;
+}
+
+.finished {
+  background: #e6f4ea;
+  font-weight: 700;
+}
+
+.scheduled {
+  background: #f2f2f2;
+  color: #666;
+}
+
+/* ===== 戻る ===== */
+.back-area {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #fb0000;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <!-- ===== 見出し ===== -->
+  <h2>
+    POOL <span th:text="${pool}"></span>  
+    総当たり（DB検証）
+  </h2>
+
+  <!-- ===== 検証用テーブル ===== -->
+  <table>
+    <tr>
+      <th>HOME</th>
+      <th>AWAY</th>
+      <th>スコア</th>
+      <th>試合日</th>
+      <th>球場</th>
+      <th>ステータス</th>
+    </tr>
+
+    <tr th:each="m : ${matches}"
+        th:classappend="${m.status} == 'FINISHED' ? 'finished' : 'scheduled'">
+
+      <td th:text="${m.homeTeam}"></td>
+      <td th:text="${m.awayTeam}"></td>
+
+      <td>
+        <span th:if="${m.homeScore != null}"
+              th:text="${m.homeScore}"></span>
+        <span th:if="${m.homeScore == null}">-</span>
+        -
+        <span th:if="${m.awayScore != null}"
+              th:text="${m.awayScore}"></span>
+        <span th:if="${m.awayScore == null}">-</span>
+      </td>
+
+      <td th:text="${m.matchDate} ?: '-'"></td>
+      <td th:text="${m.stadium} ?: '-'"></td>
+      <td th:text="${m.status}"></td>
+    </tr>
+
+  </table>
+
+  <!-- ===== 戻る ===== -->
+  <div class="back-area">
+    <a href="/WorldBaseballClassic" class="back-button">
+      ← POOL順位一覧へ戻る
+    </a>
+  </div>
+
+</div>
+</body>
+</html>
