@@ -1,12 +1,14 @@
 package com.example.dodgersshoheiapp.service;
 
 import com.example.dodgersshoheiapp.dto.CellDto;
+import com.example.dodgersshoheiapp.dto.TeamStatDto;
 import com.example.dodgersshoheiapp.model.WbcPoolMatch;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
 
 @Service
 public class WbcRoundRobinService {
@@ -135,4 +137,64 @@ public class WbcRoundRobinService {
             });
         });
     }
+
+    public Map<String, TeamStatDto> calculateTeamStats(
+            List<String> teams,
+            Map<String, Map<String, CellDto>> matrix) {
+
+        Map<String, TeamStatDto> statsMap = new HashMap<>();
+
+        // ===============================
+        // 勝・敗・得失点 集計
+        // ===============================
+        for (String team : teams) {
+
+            TeamStatDto stat = new TeamStatDto();
+            Map<String, CellDto> row = matrix.get(team);
+
+            if (row == null) {
+                statsMap.put(team, stat);
+                continue;
+            }
+
+            for (CellDto cell : row.values()) {
+
+                if (!cell.isFinished() || cell.isSelf()) {
+                    continue;
+                }
+
+                int diff = cell.getHomeScore() - cell.getAwayScore();
+                stat.addRunDiff(diff);
+
+                if (diff > 0) {
+                    stat.addWin();
+                } else {
+                    stat.addLose();
+                }
+            }
+
+            statsMap.put(team, stat);
+        }
+
+        // ===============================
+        // ★ 順位決定ロジック
+        // ===============================
+        List<Map.Entry<String, TeamStatDto>> sorted = statsMap.entrySet().stream()
+                .sorted(
+                        Comparator
+                                .comparing((Map.Entry<String, TeamStatDto> e) -> e.getValue().getWin())
+                                .reversed()
+                                .thenComparing(
+                                        e -> e.getValue().getRunDiff(),
+                                        Comparator.reverseOrder()))
+                .toList();
+
+        int rank = 1;
+        for (Map.Entry<String, TeamStatDto> entry : sorted) {
+            entry.getValue().setRank(rank++);
+        }
+
+        return statsMap;
+    }
+
 }

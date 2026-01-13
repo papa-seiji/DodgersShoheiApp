@@ -1,6 +1,7 @@
 package com.example.dodgersshoheiapp.controller;
 
 import com.example.dodgersshoheiapp.dto.CellDto;
+import com.example.dodgersshoheiapp.dto.TeamStatDto;
 import com.example.dodgersshoheiapp.model.WbcPoolMatch;
 import com.example.dodgersshoheiapp.service.WbcPoolMatchService;
 import com.example.dodgersshoheiapp.service.WbcRoundRobinService;
@@ -47,6 +48,10 @@ public class WbcRoundRobinController {
 
         model.addAttribute("teams", teams);
         model.addAttribute("matrix", matrix);
+
+        Map<String, TeamStatDto> stats = roundRobinService.calculateTeamStats(teams, matrix);
+
+        model.addAttribute("stats", stats);
 
         return "wbc2026_roundrobin_all";
     }

@@ -257,20 +257,43 @@ body {
     <tr th:each="home : ${teams}">
       <th class="team-name" th:text="${home}">HOME</th>
 
-<td th:each="away : ${teams}"
-    th:with="row=${matrix.get(home)},
-             cell=${row != null ? row.get(away) : null}"
-    th:classappend="${cell != null and cell.self} ? 'no-game' : ''">
+        <td th:each="away : ${teams}"
+            th:with="row=${matrix.get(home)},
+                    cell=${row != null ? row.get(away) : null}"
+            th:classappend="${cell != null and cell.self} ? 'no-game' : ''">
 
-    <span th:utext="${cell != null ? cell.display : '—'}">—</span>
+            <span th:utext="${cell != null ? cell.display : '—'}">—</span>
 
+        </td>
 
+       <!-- <td class="rank-col win-count"></td>
+        <td class="rank-col lose-count"></td>
+        <td class="rank-col run-diff"></td>
+        <td class="rank-col rank"></td> -->
+
+<td class="rank-col win-count"
+    th:with="stat=${stats.get(home)}"
+    th:text="${stat != null ? stat.win : 0}">
+    0
 </td>
 
-      <td class="rank-col win-count"></td>
-      <td class="rank-col lose-count"></td>
-      <td class="rank-col run-diff"></td>
-      <td class="rank-col rank"></td>
+<td class="rank-col lose-count"
+    th:with="stat=${stats.get(home)}"
+    th:text="${stat != null ? stat.lose : 0}">
+    0
+</td>
+
+<td class="rank-col run-diff"
+    th:with="stat=${stats.get(home)}"
+    th:text="${stat != null ? stat.runDiff : 0}">
+    0
+</td>
+
+<td class="rank-col rank"
+    th:with="stat=${stats.get(home)}"
+    th:text="${stat != null && stat.rank != null ? stat.rank : '-'}">-</td>
+
+
     </tr>
   </table>
 </div>
