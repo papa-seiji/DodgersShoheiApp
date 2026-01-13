@@ -26,6 +26,24 @@ public class WbcRoundRobinService {
      */
     public List<String> getFixedTeams(String pool) {
 
+        if ("A".equalsIgnoreCase(pool)) {
+            return List.of(
+                    "CUBA",
+                    "PANAMA",
+                    "PUERTO RICO",
+                    "COLOMBIA",
+                    "CANADA");
+        }
+
+        if ("B".equalsIgnoreCase(pool)) {
+            return List.of(
+                    "MEXICO",
+                    "UNITED KINGDOM",
+                    "USA",
+                    "BRAZIL",
+                    "ITALY");
+        }
+
         if ("C".equalsIgnoreCase(pool)) {
             return List.of(
                     "AUSTRALIA",
@@ -35,7 +53,15 @@ public class WbcRoundRobinService {
                     "KOREA");
         }
 
-        // A / B / D は後で拡張
+        if ("D".equalsIgnoreCase(pool)) {
+            return List.of(
+                    "NETHERLANDS",
+                    "VENEZUELA",
+                    "NICARAGUA",
+                    "DOMINICAN REPUBLIC",
+                    "ISRAEL");
+        }
+
         return List.of();
     }
 

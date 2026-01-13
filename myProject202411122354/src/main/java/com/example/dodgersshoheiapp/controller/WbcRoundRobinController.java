@@ -29,7 +29,7 @@ public class WbcRoundRobinController {
 
     @GetMapping("/wbc/roundrobin")
     public String showRoundRobin(
-            @RequestParam(required = false, defaultValue = "C") String pool,
+            @RequestParam(required = false, defaultValue = "A") String pool,
             Model model) {
 
         int year = 2026;
