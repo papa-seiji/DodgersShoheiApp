@@ -322,7 +322,161 @@
 }
 
 
+/*
+=====================================
+WBC POOL 表示切替 / 順位表示 CSS
+=====================================
+*/
+
+/* ===============================
+  表示モード切替ボタン
+=============================== */
+.mode-switch {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.mode-btn {
+    padding: 8px 16px;
+    margin: 3px 1px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+
+    border-radius: 20px;
+    border: 1px solid #999;
+    background: #f5f5f5;
+    color: #333;
+
+    transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+    background: #eaeaea;
+}
+
+/* アクティブ（共通） */
+.mode-btn.active {
+    background: linear-gradient(135deg, #1e90ff, #00bfff);
+    color: #fff;
+    border-color: #1e90ff;
+    box-shadow: 0 0 0 2px rgba(30,144,255,0.25);
+}
+
+/* 🇯🇵 JAPAN応援モード（赤は抑えめ） */
+#btn-japan.active {
+    background: linear-gradient(135deg, #c62828, #ef5350);
+    border-color: #c62828;
+    box-shadow: 0 0 0 2px rgba(198,40,40,0.25);
+}
+
+/* ===============================
+  モード背景（画像①の要）
+=============================== */
+#pool-mode-wrapper {
+    padding: 30px 15px;
+    transition: background 0.3s ease;
+}
+
+/* JAPAN応援モード */
+#pool-mode-wrapper.mode-japan {
+    background: linear-gradient(135deg, #e98199e6, #ffecec);
+}
+
+/* 全体表示モード */
+#pool-mode-wrapper.mode-all {
+    background: linear-gradient(135deg, #87c7ff, #e3f2fd);
+}
+
+/* ===============================
+  POOL 全体グリッド
+=============================== */
+.pool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin: 40px 0;
+}
+
+@media (max-width: 768px) {
+    .pool-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===============================
+  POOLブロック表示制御
+=============================== */
+.pool-block {
+    display: none;
+}
+
+.pool-block.active {
+    display: block;
+}
+
+.mode-all .pool-block {
+    display: block;
+}
+
+/* ===============================
+  テーブル共通
+=============================== */
+.pool-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.pool-table th,
+.pool-table td {
+    border: 1px solid #333;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.pool-table th {
+    background: #e0ffe0;
+}
+
+.pool-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+/* ===============================
+  順位ハイライト
+=============================== */
+.rank-gold {
+    background: linear-gradient(135deg, #FFD700, #FFF4B0);
+    font-weight: bold;
+}
+
+.rank-silver {
+    background: linear-gradient(135deg, #C0C0C0, #F2F2F2);
+    font-weight: bold;
+}
+
+
+.roundrobin-detail-link {
+  margin: 24px auto;
+  text-align: center;
+}
+
+.detail-button {
+  display: inline-block;
+  padding: 10px 18px;
+  background: #000;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
 </style>
+
+
+
 </head>
 
 <body>
@@ -608,6 +762,168 @@
 </div>
 
 </section>
+
+<!-- =============================== -->
+<!-- 表示モード切り替え -->
+<!-- =============================== -->
+<div class="mode-switch">
+    <button id="btn-japan" class="mode-btn active">
+        🇯🇵 JAPAN応援モード
+    </button>
+    <button id="btn-all" class="mode-btn">
+        🌍 全体表示モード
+    </button>
+</div>
+
+<!-- 見出し -->
+<h4 id="pool-title">
+    🏆 JAPAN応援モード：POOL Cのみ
+</h4>
+
+<!-- ★ 重要：背景切替ラッパー ★ -->
+<div id="pool-mode-wrapper" class="mode-japan">
+
+    <div class="pool-grid">
+
+        <div th:each="entry : ${poolStandings}"
+             th:attr="data-pool=${entry.key}"
+             class="pool-block">
+
+            <div class="pool-title">
+                POOL <span th:text="${entry.key}"></span>
+            </div>
+
+            <table class="pool-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>チーム</th>
+                        <th>勝</th>
+                        <th>敗</th>
+                        <th>得点</th>
+                        <th>失点</th>
+                        <th>得失点差</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="team : ${entry.value}"
+                        th:classappend="
+                          ${team.wins > 0} ?
+                          (${team.rank == 1} ? 'rank-gold' :
+                          (${team.rank == 2} ? 'rank-silver' : '')) : ''
+                        ">
+                        <td th:text="${team.rank}"></td>
+                        <td th:text="${team.team}"></td>
+                        <td th:text="${team.wins}"></td>
+                        <td th:text="${team.losses}"></td>
+                        <td th:text="${team.scoredRuns}"></td>
+                        <td th:text="${team.allowedRuns}"></td>
+                        <td th:text="${team.runDiff}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- ▼▼ モード別 詳細リンク（重要） ▼▼ -->
+    <div class="roundrobin-detail-link">
+      <a id="roundRobinDetailLink" class="detail-button">
+        ▶ POOL別 総当たり表（詳細を見る）
+      </a>
+    </div>
+
+</div>
+
+
+<script>
+/*
+=====================================
+ WBC 表示モード切替 JS（安全版）
+ + URL同期 + スクロール補正
+=====================================
+*/
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btnJapan = document.getElementById("btn-japan");
+    const btnAll = document.getElementById("btn-all");
+
+    const wrapper = document.getElementById("pool-mode-wrapper");
+    const poolBlocks = document.querySelectorAll(".pool-block");
+    const title = document.getElementById("pool-title");
+    const detailLink = document.getElementById("roundRobinDetailLink");
+
+    function setActiveButton(activeBtn) {
+        [btnJapan, btnAll].forEach(btn => btn.classList.remove("active"));
+        activeBtn.classList.add("active");
+    }
+
+    function showJapanPool() {
+        wrapper.classList.remove("mode-all");
+        wrapper.classList.add("mode-japan");
+
+        poolBlocks.forEach(block => {
+            block.classList.toggle("active", block.dataset.pool === "C");
+        });
+
+        title.textContent = "🏆 JAPAN応援モード：POOL Cのみ";
+        setActiveButton(btnJapan);
+
+        if (detailLink) {
+            detailLink.href = "/wbc/roundrobin?mode=japan";
+        }
+    }
+
+    function showAllPools() {
+        wrapper.classList.remove("mode-japan");
+        wrapper.classList.add("mode-all");
+
+        poolBlocks.forEach(block => block.classList.add("active"));
+
+        title.textContent = "🏆 POOL 順位（POOL全部）";
+        setActiveButton(btnAll);
+
+        if (detailLink) {
+            detailLink.href = "/wbc/roundrobin?mode=all";
+        }
+    }
+
+    /* ============================
+      URL からモード復元
+    ============================ */
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+
+    if (mode === "all") {
+        showAllPools();
+    } else {
+        showJapanPool(); // default
+    }
+
+/* ============================
+  ★ スクロール補正（完成版）
+============================ */
+if (window.location.hash.startsWith("#pool-title")) {
+    setTimeout(() => {
+        const target = document.getElementById("pool-title");
+        if (target) {
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    }, 100);
+}
+
+    btnJapan.addEventListener("click", showJapanPool);
+    btnAll.addEventListener("click", showAllPools);
+});
+</script>
+
+
+
+
 
 <img id="samuraiLogo" alt="Samurai Japan Logo">
 
@@ -1157,6 +1473,21 @@ function enableIOSAudio() {
     メイン処理
 ------------------------------------------ */
 document.addEventListener("DOMContentLoaded", () => {
+
+  /* ===============================
+    🔴 hash付き遷移はイントロ無効
+  =============================== */
+  if (location.hash) {
+    console.log("hash付き遷移のためイントロをスキップ:", location.hash);
+
+    const intro = document.getElementById("intro");
+    const main  = document.getElementById("main-content");
+
+    if (intro) intro.style.display = "none";
+    if (main)  main.style.display  = "block";
+
+    return; // ← ここが超重要（下のイントロ処理を全部止める）
+  }
 
   enableIOSAudio();
 
