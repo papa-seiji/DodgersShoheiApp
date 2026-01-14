@@ -223,4 +223,30 @@ public class WbcRoundRobinService {
         return statsMap;
     }
 
+    public String teamShort(String team) {
+        return switch (team) {
+            case "JAPAN" -> "JPN";
+            case "KOREA" -> "KOR";
+            case "AUSTRALIA" -> "AUS";
+            case "CANADA" -> "CAN";
+            case "CUBA" -> "CUB";
+            case "PANAMA" -> "PAN";
+            case "PUERTO RICO" -> "PUR";
+            case "COLOMBIA" -> "COL";
+            case "USA" -> "USA";
+            case "MEXICO" -> "MEX";
+            case "BRAZIL" -> "BRA";
+            case "ITALY" -> "ITA";
+            case "UNITED KINGDOM" -> "GBR";
+            case "NETHERLANDS" -> "NED";
+            case "ISRAEL" -> "ISR";
+            case "NICARAGUA" -> "NIC";
+            case "DOMINICAN REPUBLIC" -> "DOM";
+            case "VENEZUELA" -> "VEN";
+            case "CHINESE TAIPEI" -> "TPE";
+            case "CZECH REPUBLIC" -> "CZE";
+            default -> team.substring(0, Math.min(3, team.length()));
+        };
+    }
+
 }

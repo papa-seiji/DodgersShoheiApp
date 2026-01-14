@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
-    <meta name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!--<meta name="viewport">-->
 <title>WBC2026 Round Robin</title>
 
 <style>
@@ -102,6 +102,64 @@ body {
 }
 
 
+
+
+.team-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.team-flag {
+  width: 26px;
+  border: 1px solid #ccc;
+}
+
+.team-name-short {
+  font-weight: 700;
+}
+
+/* スマホは国旗のみ */
+@media (max-width: 430px) {
+  .team-name-full,
+  .team-name-short {
+    display: none;
+  }
+
+  .team-cell {
+    justify-content: center;
+  }
+}
+
+
+/* =========================
+   チーム名 表示制御（確定版）
+========================= */
+
+/* デフォルト（430px超） */
+.team-name-full {
+  display: none;        /* フル名は使わない */
+}
+
+.team-name-short {
+  display: inline;      /* 3文字表示 */
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* スマホ（430px以下） */
+@media screen and (max-width: 430px) {
+  .team-name-short {
+    display: none;      /* 国旗のみ */
+  }
+
+  .team-flag {
+    width: 26px;
+    height: auto;
+  }
+}
+
+
 </style>
 </head>
 
@@ -142,15 +200,46 @@ body {
 <!-- ================= POOL ABCD ================= -->
 <div id="poolC" class="pool-panel active">
 
-  <!-- ★ 動作確認用（teams がバインドされていれば 5 teams と出る） -->
   <h2 th:text="' (' + ${teams.size()} + ' teams)'"></h2>
 
   <table class="round-robin-table">
     <tr>
       <th></th>
 
-      <th th:each="away : ${teams}"
-          th:text="${away}">TEAM</th>
+      <!-- ===== 列ヘッダ（AWAY） ===== -->
+<th th:each="away : ${teams}">
+  <div class="team-cell">
+<img class="team-flag"
+     th:src="${
+       'https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/' +
+       (away == 'JAPAN' ? 'jp' :
+        away == 'KOREA' ? 'kr' :
+        away == 'AUSTRALIA' ? 'au' :
+        away == 'CHINESE TAIPEI' ? 'tw' :
+        away == 'CZECH REPUBLIC' ? 'cz' :
+        away == 'CUBA' ? 'cu' :
+        away == 'PANAMA' ? 'pa' :
+        away == 'PUERTO RICO' ? 'pr' :
+        away == 'COLOMBIA' ? 'co' :
+        away == 'CANADA' ? 'ca' :
+        away == 'MEXICO' ? 'mx' :
+        away == 'UNITED KINGDOM' ? 'gb' :
+        away == 'USA' ? 'us' :
+        away == 'BRAZIL' ? 'br' :
+        away == 'ITALY' ? 'it' :
+        away == 'NETHERLANDS' ? 'nl' :
+        away == 'VENEZUELA' ? 've' :
+        away == 'NICARAGUA' ? 'ni' :
+        away == 'DOMINICAN REPUBLIC' ? 'do' :
+        away == 'ISRAEL' ? 'il' : 'xx')
+       + '.jpg'
+     }"
+     alt="flag">
+         <span class="team-name-full" th:text="${away}">TEAM</span>
+    <span class="team-name-short"
+          th:text="${#strings.substring(away,0,3)}">AAA</span>
+  </div>
+</th>
 
       <th class="rank-col">勝</th>
       <th class="rank-col">敗</th>
@@ -158,52 +247,63 @@ body {
       <th class="rank-col">順位</th>
     </tr>
 
+    <!-- ===== 行（HOME） ===== -->
     <tr th:each="home : ${teams}">
-      <th class="team-name" th:text="${home}">HOME</th>
+<th class="team-name">
+  <div class="team-cell">
+<img class="team-flag"
+     th:src="${
+       'https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/' +
+       (home == 'JAPAN' ? 'jp' :
+        home == 'KOREA' ? 'kr' :
+        home == 'AUSTRALIA' ? 'au' :
+        home == 'CHINESE TAIPEI' ? 'tw' :
+        home == 'CZECH REPUBLIC' ? 'cz' :
+        home == 'CUBA' ? 'cu' :
+        home == 'PANAMA' ? 'pa' :
+        home == 'PUERTO RICO' ? 'pr' :
+        home == 'COLOMBIA' ? 'co' :
+        home == 'CANADA' ? 'ca' :
+        home == 'MEXICO' ? 'mx' :
+        home == 'UNITED KINGDOM' ? 'gb' :
+        home == 'USA' ? 'us' :
+        home == 'BRAZIL' ? 'br' :
+        home == 'ITALY' ? 'it' :
+        home == 'NETHERLANDS' ? 'nl' :
+        home == 'VENEZUELA' ? 've' :
+        home == 'NICARAGUA' ? 'ni' :
+        home == 'DOMINICAN REPUBLIC' ? 'do' :
+        home == 'ISRAEL' ? 'il' : 'xx')
+       + '.jpg'
+     }"
+     alt="flag">
+         <span class="team-name-full" th:text="${home}">HOME</span>
+    <span class="team-name-short"
+          th:text="${#strings.substring(home,0,3)}">AAA</span>
+  </div>
+</th>
 
-        <td th:each="away : ${teams}"
-            th:with="row=${matrix.get(home)},
-                    cell=${row != null ? row.get(away) : null}"
-            th:classappend="${cell != null and cell.self} ? 'no-game' : ''">
+      <td th:each="away : ${teams}"
+          th:with="row=${matrix.get(home)},
+                   cell=${row != null ? row.get(away) : null}"
+          th:classappend="${cell != null and cell.self} ? 'no-game' : ''">
+        <span th:utext="${cell != null ? cell.display : '—'}">—</span>
+      </td>
 
-            <span th:utext="${cell != null ? cell.display : '—'}">—</span>
-
-        </td>
-
-
-<td class="rank-col win-count"
-    th:with="stat=${stats.get(home)}"
-    th:text="${stat != null ? stat.win : 0}">
-    0
-</td>
-
-<td class="rank-col lose-count"
-    th:with="stat=${stats.get(home)}"
-    th:text="${stat != null ? stat.lose : 0}">
-    0
-</td>
-
-<td class="rank-col run-diff"
-    th:with="stat=${stats.get(home)}"
-    th:text="${stat != null ? stat.runDiff : 0}">
-    0
-</td>
-
-<td class="rank-col rank"
-    th:with="stat=${stats.get(home)}"
-    th:text="${stat != null && stat.rank != null ? stat.rank : '-'}">-</td>
-
-
+      <td class="rank-col" th:text="${stats.get(home)?.win ?: 0}">0</td>
+      <td class="rank-col" th:text="${stats.get(home)?.lose ?: 0}">0</td>
+      <td class="rank-col" th:text="${stats.get(home)?.runDiff ?: 0}">0</td>
+      <td class="rank-col" th:text="${stats.get(home)?.rank ?: '-'}">-</td>
     </tr>
   </table>
 </div>
-
 
 <div class="back-area">
   <a href="#" id="backToStanding" class="back-button">
     ← POOL順位一覧へ戻る
   </a>
 </div>
+
 
 
 <script>
