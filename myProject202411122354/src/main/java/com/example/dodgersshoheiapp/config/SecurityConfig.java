@@ -62,6 +62,9 @@ public class SecurityConfig {
                                 "/",
                                 "/home",
 
+                                // WBC（閲覧専用）
+                                "/wbc/**",
+
                                 // 入口コンテンツ
                                 "/ohtani-vs-judge",
                                 "/postseason",
