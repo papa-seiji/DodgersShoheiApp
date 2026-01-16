@@ -475,6 +475,28 @@ WBC POOL 表示切替 / 順位表示 CSS
   text-decoration: none;
 }
 
+
+
+/* ===============================
+  決勝トーナメント表
+=============================== */
+
+.wbc-tournament-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  text-align: center;
+}
+
+#wbc-tournament-canvas {
+  width: 100%;
+  max-width: 1100px;
+  aspect-ratio: 11 / 9;
+  display: block;
+  margin: 0 auto;
+  background-color: rgba(255,255,255,0.85);
+  border-radius: 12px;
+}
+
 </style>
 
 
@@ -977,6 +999,33 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
     <!-- トーナメント線の背景 -->
     <div class="bracket-background"></div>
  </div>
+
+
+
+
+<section id="wbc-tournament" style="margin:60px 0; text-align:center;">
+  <h2>WBC 2026 決勝トーナメント</h2>
+
+<div class="wbc-tournament-wrapper">
+  <canvas id="wbc-tournament-canvas"></canvas>
+</div>
+</section>
+
+<!--<script src="/js/wbc_tournament_canvas.js"></script>-->
+
+    <script th:src="@{/js/wbc_tournament_canvas.js}"></script>
+
+
+
+
+
+
+
+
+
+
+
+
 
   <!-- 🎬 WS Series 動画セクション（タブ式） -->
   <section id="ws-video-section">
