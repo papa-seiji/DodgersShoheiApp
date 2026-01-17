@@ -3,6 +3,8 @@ package com.example.dodgersshoheiapp.controller;
 import com.example.dodgersshoheiapp.service.WbcTournamentService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import java.util.Map;
 
 @RestController
@@ -35,6 +37,7 @@ public class WbcTournamentController {
         return Map.of("status", "ok", "round", "QF");
     }
 
+    // @GetMapping("/init/sf")
     @PostMapping("/init/sf")
     public Map<String, String> initSemiFinal(@RequestParam int year) {
         service.initSemiFinal(year);
@@ -54,4 +57,11 @@ public class WbcTournamentController {
         service.decideChampion(year, winnerTeam);
         return Map.of("status", "ok", "champion", winnerTeam);
     }
+
+    @GetMapping
+    public List<com.example.dodgersshoheiapp.model.WbcTournamentMatch> getTournament(
+            @RequestParam int year) {
+        return service.getTournamentMatches(year);
+    }
+
 }

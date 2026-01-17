@@ -11,6 +11,9 @@ public interface WbcTournamentMatchRepository
     // round別取得（match_no順）
     List<WbcTournamentMatch> findByYearAndRoundOrderByMatchNo(int year, String round);
 
+    // 年度の全試合を取得（Canvas / View 用）
+    List<WbcTournamentMatch> findByYearOrderByRoundAscMatchNoAsc(int year);
+
     // round初期化用（切り戻し安全）
     void deleteByYearAndRound(int year, String round);
 }

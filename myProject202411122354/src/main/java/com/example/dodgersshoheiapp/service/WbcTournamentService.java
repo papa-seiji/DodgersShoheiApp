@@ -48,13 +48,21 @@ public class WbcTournamentService {
             throw new IllegalStateException("QF winners are not ready");
         }
 
+        // 準決勝①：①準々決勝 vs ②準々決勝
+        WbcTournamentMatch qf1 = qf.get(0); // matchNo = 1
+        WbcTournamentMatch qf2 = qf.get(1); // matchNo = 2
+
+        // 準決勝②：③準々決勝 vs ④準々決勝
+        WbcTournamentMatch qf3 = qf.get(2); // matchNo = 3
+        WbcTournamentMatch qf4 = qf.get(3); // matchNo = 4
+
         repository.save(create(year, "SF", 1,
-                qf.get(0).getWinnerTeam(),
-                qf.get(1).getWinnerTeam()));
+                qf1.getWinnerTeam(),
+                qf2.getWinnerTeam()));
 
         repository.save(create(year, "SF", 2,
-                qf.get(2).getWinnerTeam(),
-                qf.get(3).getWinnerTeam()));
+                qf3.getWinnerTeam(),
+                qf4.getWinnerTeam()));
     }
 
     /**
@@ -106,4 +114,10 @@ public class WbcTournamentService {
         m.setAwayTeam(away);
         return m;
     }
+
+    @Transactional(readOnly = true)
+    public List<WbcTournamentMatch> getTournamentMatches(int year) {
+        return repository.findByYearOrderByRoundAscMatchNoAsc(year);
+    }
+
 }
