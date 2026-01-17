@@ -151,6 +151,48 @@ function drawTeamWithFlagLeft(x, y, teamText) {
   }
 }
 
+
+
+// ==============================
+// 国旗＋チーム名（中央揃え）
+// ==============================
+function drawTeamWithFlagCentered(cx, y, teamText) {
+  if (!teamText) return;
+
+  ctx.font = "12px sans-serif";
+  ctx.textAlign = "left"; // ★手動配置するので left 固定
+
+  // teamText: "USA 7" / "PUERTO RICO 3" など
+  const parts = teamText.split(" ");
+  const team = parts.slice(0, -1).join(" "); // 複数単語対応
+  const score = parts[parts.length - 1];
+
+  const text = `${team} ${score}`;
+
+  const flag = FLAGS[team];
+  const FLAG_W = flag ? 26 : 0;
+  const FLAG_H = 18;
+  const GAP = flag ? 6 : 0;
+
+  // テキスト幅
+  const textWidth = ctx.measureText(text).width;
+
+  // 全体幅（国旗 + gap + テキスト）
+  const totalWidth = FLAG_W + GAP + textWidth;
+
+  // 左端X（中央から逆算）
+  const startX = cx - totalWidth / 2;
+
+  // 国旗
+  if (flag && flag.complete && flag.naturalWidth > 0) {
+    ctx.drawImage(flag, startX, y - FLAG_H / 2, FLAG_W, FLAG_H);
+  }
+
+  // テキスト
+  ctx.fillText(text, startX + FLAG_W + GAP, y);
+}
+
+
   // ==============================
   // レイアウト
   // ==============================
@@ -233,6 +275,10 @@ function drawTeamWithFlagLeft(x, y, teamText) {
 // 準々決勝（QF①〜④ 国旗付き・統一方式）
 // ==============================
 
+// ==============================
+// 準々決勝（QF①〜④ 国旗付き・中央揃え統一）
+// ==============================
+
 const qf1 = tournament.QF?.[1];
 drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "① 準々決勝", [
   "",
@@ -241,22 +287,17 @@ drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "① 準々決勝", [
   qf1?.winnerTeam ? `勝者：${qf1.winnerTeam}` : null
 ]);
 if (qf1) {
-  // home（上段）
-  drawTeamWithFlagLeft(
-    QF_L1_X + 20,
+  drawTeamWithFlagCentered(
+    QF_L1_X + BOX_W / 2,
     Y_QF + 45,
     `${qf1.homeTeam} ${qf1.homeScore ?? ""}`
   );
-
-  // away（下段）★追加
-  drawTeamWithFlagLeft(
-    QF_L1_X + 20,
+  drawTeamWithFlagCentered(
+    QF_L1_X + BOX_W / 2,
     Y_QF + 81,
     `${qf1.awayTeam} ${qf1.awayScore ?? ""}`
   );
-
 }
-
 
 const qf2 = tournament.QF?.[2];
 drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "② 準々決勝", [
@@ -266,18 +307,17 @@ drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "② 準々決勝", [
   qf2?.winnerTeam ? `勝者：${qf2.winnerTeam}` : null
 ]);
 if (qf2) {
-  drawTeamWithFlagLeft(
-    QF_L2_X + 20,
+  drawTeamWithFlagCentered(
+    QF_L2_X + BOX_W / 2,
     Y_QF + 45,
     `${qf2.homeTeam} ${qf2.homeScore ?? ""}`
   );
-  drawTeamWithFlagLeft(
-    QF_L2_X + 20,
+  drawTeamWithFlagCentered(
+    QF_L2_X + BOX_W / 2,
     Y_QF + 81,
     `${qf2.awayTeam} ${qf2.awayScore ?? ""}`
   );
 }
-
 
 const qf3 = tournament.QF?.[3];
 drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "③ 準々決勝", [
@@ -287,18 +327,17 @@ drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "③ 準々決勝", [
   qf3?.winnerTeam ? `勝者：${qf3.winnerTeam}` : null
 ]);
 if (qf3) {
-  drawTeamWithFlagLeft(
-    QF_R1_X + 20,
+  drawTeamWithFlagCentered(
+    QF_R1_X + BOX_W / 2,
     Y_QF + 45,
     `${qf3.homeTeam} ${qf3.homeScore ?? ""}`
   );
-  drawTeamWithFlagLeft(
-    QF_R1_X + 20,
+  drawTeamWithFlagCentered(
+    QF_R1_X + BOX_W / 2,
     Y_QF + 81,
     `${qf3.awayTeam} ${qf3.awayScore ?? ""}`
   );
 }
-
 
 const qf4 = tournament.QF?.[4];
 drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "④ 準々決勝", [
@@ -308,13 +347,13 @@ drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "④ 準々決勝", [
   qf4?.winnerTeam ? `勝者：${qf4.winnerTeam}` : null
 ]);
 if (qf4) {
-  drawTeamWithFlagLeft(
-    QF_R2_X + 20,
+  drawTeamWithFlagCentered(
+    QF_R2_X + BOX_W / 2,
     Y_QF + 45,
     `${qf4.homeTeam} ${qf4.homeScore ?? ""}`
   );
-  drawTeamWithFlagLeft(
-    QF_R2_X + 20,
+  drawTeamWithFlagCentered(
+    QF_R2_X + BOX_W / 2,
     Y_QF + 81,
     `${qf4.awayTeam} ${qf4.awayScore ?? ""}`
   );
