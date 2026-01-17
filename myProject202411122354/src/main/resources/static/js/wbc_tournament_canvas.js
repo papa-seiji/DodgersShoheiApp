@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   ctx.strokeStyle = "#000";
   ctx.lineWidth = 2;
-  ctx.font = "14px sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     ctx.font = "12px sans-serif";
     lines.forEach((t, i) => {
-      if (t) ctx.fillText(t, x + w / 2, y + 45 + i * 18);
+      if (t != null) ctx.fillText(t, x + w / 2, y + 45 + i * 18);
     });
   }
 
@@ -58,7 +57,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ==============================
-  // レイアウト定義（確定）
+  // 試合表示行生成（★今回の肝）
+  // ==============================
+  function matchLines(m) {
+    if (!m) {
+      return ["未定", "vs", "未定"];
+    }
+
+    const homeScore = m.homeScore != null ? m.homeScore : "";
+    const awayScore = m.awayScore != null ? m.awayScore : "";
+
+    return [
+      `${m.homeTeam}　${homeScore}`,
+      "vs",
+      `${m.awayTeam}　${awayScore}`,
+      m.winnerTeam ? `勝者：${m.winnerTeam}` : null
+    ];
+  }
+
+  // ==============================
+  // レイアウト
   // ==============================
   const CENTER_X = 550;
   const BOX_W = 210;
@@ -98,91 +116,106 @@ document.addEventListener("DOMContentLoaded", async () => {
     "決勝",
     [
       "'26/3/17(火)",
-      final?.homeTeam ?? "未定",
-      "vs",
-      final?.awayTeam ?? "未定"
+      ...matchLines(final)
     ]
   );
 
   vLine(CENTER_X, Y_CHAMP + BOX_H, Y_FINAL);
 
-// ==============================
-// 準決勝
-// ==============================
-const SF_LEFT_X  = CENTER_X - GAP_X - BOX_W / 2;
-const SF_RIGHT_X = CENTER_X + GAP_X - BOX_W / 2;
+  // ==============================
+  // 準決勝
+  // ==============================
+  const SF_LEFT_X  = CENTER_X - GAP_X - BOX_W / 2;
+  const SF_RIGHT_X = CENTER_X + GAP_X - BOX_W / 2;
 
-// 🔽 BOXは常に描画する（データが無くても）
-drawBox(
-  SF_LEFT_X,
-  Y_SF,
-  BOX_W,
-  BOX_H,
-  "① 準決勝",
-  [
-    "'26/3/15(日)",
-    tournament.SF?.[1]?.homeTeam ?? "未定",
-    "vs",
-    tournament.SF?.[1]?.awayTeam ?? "未定"
-  ]
-);
+  drawBox(
+    SF_LEFT_X,
+    Y_SF,
+    BOX_W,
+    BOX_H,
+    "① 準決勝",
+    [
+      "'26/3/15(日)",
+      ...matchLines(tournament.SF?.[1])
+    ]
+  );
 
-drawBox(
-  SF_RIGHT_X,
-  Y_SF,
-  BOX_W,
-  BOX_H,
-  "② 準決勝",
-  [
-    "'26/3/16(月)",
-    tournament.SF?.[2]?.homeTeam ?? "未定",
-    "vs",
-    tournament.SF?.[2]?.awayTeam ?? "未定"
-  ]
-);
+  drawBox(
+    SF_RIGHT_X,
+    Y_SF,
+    BOX_W,
+    BOX_H,
+    "② 準決勝",
+    [
+      "'26/3/16(月)",
+      ...matchLines(tournament.SF?.[2])
+    ]
+  );
 
-// ==============================
-// 決勝 → 準決勝 接続線
-// ==============================
-vLine(CENTER_X, Y_FINAL + BOX_H, Y_FINAL + BOX_H + CONNECT);
-hLine(
-  SF_LEFT_X + BOX_W / 2,
-  SF_RIGHT_X + BOX_W / 2,
-  Y_FINAL + BOX_H + CONNECT
-);
-vLine(SF_LEFT_X + BOX_W / 2,  Y_FINAL + BOX_H + CONNECT, Y_SF);
-vLine(SF_RIGHT_X + BOX_W / 2, Y_FINAL + BOX_H + CONNECT, Y_SF);
+  vLine(CENTER_X, Y_FINAL + BOX_H, Y_FINAL + BOX_H + CONNECT);
+  hLine(
+    SF_LEFT_X + BOX_W / 2,
+    SF_RIGHT_X + BOX_W / 2,
+    Y_FINAL + BOX_H + CONNECT
+  );
+  vLine(SF_LEFT_X + BOX_W / 2,  Y_FINAL + BOX_H + CONNECT, Y_SF);
+  vLine(SF_RIGHT_X + BOX_W / 2, Y_FINAL + BOX_H + CONNECT, Y_SF);
 
   // ==============================
-  // 準々決勝（DB反映）
+  // 準々決勝
   // ==============================
   const QF_L1_X = SF_LEFT_X  - BOX_W / 2;
   const QF_L2_X = SF_LEFT_X  + BOX_W / 2;
   const QF_R1_X = SF_RIGHT_X - BOX_W / 2;
   const QF_R2_X = SF_RIGHT_X + BOX_W / 2;
 
-  function qfLines(no) {
-    const m = tournament.QF?.[no];
-    return [
-      m?.homeTeam ?? "未定",
-      "vs",
-      m?.awayTeam ?? "未定",
-      m?.winnerTeam ? `勝者：${m.winnerTeam}` : ""
-    ];
-  }
+  drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "① 準々決勝", matchLines(tournament.QF?.[1]));
+  drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "② 準々決勝", matchLines(tournament.QF?.[2]));
+  drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "③ 準々決勝", matchLines(tournament.QF?.[3]));
+  drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "④ 準々決勝", matchLines(tournament.QF?.[4]));
 
-  drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "① 準々決勝", qfLines(1));
-  drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "② 準々決勝", qfLines(2));
-  drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "③ 準々決勝", qfLines(3));
-  drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "④ 準々決勝", qfLines(4));
 
-  vLine(SF_LEFT_X + BOX_W / 2, Y_SF + BOX_H, Y_SF + BOX_H + CONNECT);
-  hLine(QF_L1_X + BOX_W / 2, QF_L2_X + BOX_W / 2, Y_SF + BOX_H + CONNECT);
-  vLine(QF_L1_X + BOX_W / 2, Y_SF + BOX_H + CONNECT, Y_QF);
-  vLine(QF_L2_X + BOX_W / 2, Y_SF + BOX_H + CONNECT, Y_QF);
+// ==============================
+// 準々決勝 → 準決勝 接続線（★復活）
+// ==============================
 
-  vLine(SF_RIGHT_X + BOX_W / 2, Y_SF + BOX_H, Y_SF + BOX_H + CONNECT);
-  hLine(QF_R1_X + BOX_W / 2, QF_R2_X + BOX_W / 2, Y_SF + BOX_H + CONNECT);
-  vLine(QF_R1_X + BOX_W / 2, Y_SF + BOX_H + CONNECT, Y_QF);
-  vLine(QF_R2_X + BOX_W / 2, Y_SF + BOX_H + CONNECT, Y_QF);
+// 左側（QF①・② → SF①）
+const QF_LEFT_CENTER_1 = QF_L1_X + BOX_W / 2;
+const QF_LEFT_CENTER_2 = QF_L2_X + BOX_W / 2;
+const SF_LEFT_CENTER  = SF_LEFT_X + BOX_W / 2;
+
+// 縦線（QF → 中間）
+vLine(QF_LEFT_CENTER_1, Y_QF, Y_QF - CONNECT);
+vLine(QF_LEFT_CENTER_2, Y_QF, Y_QF - CONNECT);
+
+// 横線（合流）
+hLine(QF_LEFT_CENTER_1, QF_LEFT_CENTER_2, Y_QF - CONNECT);
+
+// 縦線（中間 → SF）
+vLine(SF_LEFT_CENTER, Y_QF - CONNECT, Y_SF + BOX_H);
+
+// 横線（SF接続）
+hLine(QF_LEFT_CENTER_1, SF_LEFT_CENTER, Y_QF - CONNECT);
+
+
+// 右側（QF③・④ → SF②）
+const QF_RIGHT_CENTER_1 = QF_R1_X + BOX_W / 2;
+const QF_RIGHT_CENTER_2 = QF_R2_X + BOX_W / 2;
+const SF_RIGHT_CENTER  = SF_RIGHT_X + BOX_W / 2;
+
+// 縦線（QF → 中間）
+vLine(QF_RIGHT_CENTER_1, Y_QF, Y_QF - CONNECT);
+vLine(QF_RIGHT_CENTER_2, Y_QF, Y_QF - CONNECT);
+
+// 横線（合流）
+hLine(QF_RIGHT_CENTER_1, QF_RIGHT_CENTER_2, Y_QF - CONNECT);
+
+// 縦線（中間 → SF）
+vLine(SF_RIGHT_CENTER, Y_QF - CONNECT, Y_SF + BOX_H);
+
+// 横線（SF接続）
+hLine(QF_RIGHT_CENTER_2, SF_RIGHT_CENTER, Y_QF - CONNECT);
+
+
+
 });
