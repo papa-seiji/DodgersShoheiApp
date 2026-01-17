@@ -77,7 +77,43 @@ const FLAGS = (() => {
   function drawBox(x, y, w, h, title, lines = []) {
     ctx.strokeRect(x, y, w, h);
 
+
+    //枠線の色を変える（超基本）
+    ctx.strokeRect(x, y, w, h);
+
+    //④ BOX を塗りつぶす（背景色）
+    ctx.fillStyle = "#d1d1d1"; // 薄い黄色
+    ctx.fillRect(x, y, w, h);
+
+    ctx.strokeStyle = "#000";
+    ctx.strokeRect(x, y, w, h);
+
+
+//⑤ 影付き BOX（おすすめ・高級感）
+ctx.save();
+
+ctx.shadowColor = "rgba(9, 9, 9, 0.51)";
+ctx.shadowBlur = 10;
+ctx.shadowOffsetX = 14;
+ctx.shadowOffsetY = 9;
+
+    ctx.fillStyle = "#d1d1d1"; // 薄い黄色
+ctx.fillRect(x, y, w, h);
+
+ctx.shadowColor = "transparent"; // 枠に影をつけない
+ctx.strokeStyle = "#000";
+ctx.strokeRect(x, y, w, h);
+
+ctx.restore();
+
+
+
+
+
     ctx.font = "bold 14px sans-serif";
+        ctx.fillStyle = "#000000"; // 赤
+    // ctx.strokeStyle = "#ffffff"; // 赤
+
     ctx.fillText(title, x + w / 2, y + 18);
 
     ctx.font = "12px sans-serif";
