@@ -315,23 +315,79 @@ function drawWinnerWithFlagCentered(cx, y, winnerText) {
     const SF_LEFT_X  = CENTER_X - GAP_X - BOX_W / 2;
     const SF_RIGHT_X = CENTER_X + GAP_X - BOX_W / 2;
 
-    drawBox(
-      SF_LEFT_X,
-      Y_SF,
-      BOX_W,
-      BOX_H,
-      "① 準決勝",
-      ["'26/3/15(日)", ...matchLines(tournament.SF?.[1])]
-    );
+// ---------- 準決勝① ----------
+const sf1 = tournament.SF?.[1];
 
-    drawBox(
-      SF_RIGHT_X,
-      Y_SF,
-      BOX_W,
-      BOX_H,
-      "② 準決勝",
-      ["'26/3/16(月)", ...matchLines(tournament.SF?.[2])]
-    );
+drawBox(SF_LEFT_X, Y_SF, BOX_W, BOX_H, "", [
+  "",
+  "vs",
+  "",
+  null
+]);
+
+drawRoundTitleCentered(
+  SF_LEFT_X + BOX_W / 2,
+  Y_SF + 18,
+  "① 準決勝 '26/3/15(日)"
+);
+
+if (sf1) {
+  drawTeamWithFlagCentered(
+    SF_LEFT_X + BOX_W / 2,
+    Y_SF + 45,
+    `${sf1.homeTeam} ${sf1.homeScore ?? ""}`
+  );
+  drawTeamWithFlagCentered(
+    SF_LEFT_X + BOX_W / 2,
+    Y_SF + 80,
+    `${sf1.awayTeam} ${sf1.awayScore ?? ""}`
+  );
+}
+
+if (sf1?.winnerTeam) {
+  drawWinnerWithFlagCentered(
+    SF_LEFT_X + BOX_W / 2,
+    Y_SF + 110,
+    `Win：${sf1.winnerTeam}`
+  );
+}
+
+// ---------- 準決勝② ----------
+const sf2 = tournament.SF?.[2];
+
+drawBox(SF_RIGHT_X, Y_SF, BOX_W, BOX_H, "", [
+  "",
+  "vs",
+  "",
+  null
+]);
+
+drawRoundTitleCentered(
+  SF_RIGHT_X + BOX_W / 2,
+  Y_SF + 18,
+  "② 準決勝 '26/3/16(月)"
+);
+
+if (sf2) {
+  drawTeamWithFlagCentered(
+    SF_RIGHT_X + BOX_W / 2,
+    Y_SF + 45,
+    `${sf2.homeTeam} ${sf2.homeScore ?? ""}`
+  );
+  drawTeamWithFlagCentered(
+    SF_RIGHT_X + BOX_W / 2,
+    Y_SF + 80,
+    `${sf2.awayTeam} ${sf2.awayScore ?? ""}`
+  );
+}
+
+if (sf2?.winnerTeam) {
+  drawWinnerWithFlagCentered(
+    SF_RIGHT_X + BOX_W / 2,
+    Y_SF + 110,
+    `Win：${sf2.winnerTeam}`
+  );
+}
 
     vLine(CENTER_X, Y_FINAL + BOX_H, Y_FINAL + BOX_H + CONNECT);
     hLine(SF_LEFT_X + BOX_W / 2, SF_RIGHT_X + BOX_W / 2, Y_FINAL + BOX_H + CONNECT);
@@ -377,7 +433,7 @@ if (qf1) {
 if (qf1?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_L1_X + BOX_W / 2,
-    Y_QF + 108,
+    Y_QF + 111,
     `Win：${qf1.winnerTeam}`
   );
 }
@@ -410,7 +466,7 @@ if (qf2) {
 if (qf2?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_L2_X + BOX_W / 2,
-    Y_QF + 108,
+    Y_QF + 111,
     `Win：${qf2.winnerTeam}`
   );
 }
@@ -443,7 +499,7 @@ if (qf3) {
 if (qf3?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_R1_X + BOX_W / 2,
-    Y_QF + 108,
+    Y_QF + 111,
     `Win：${qf3.winnerTeam}`
   );
 }
@@ -476,7 +532,7 @@ if (qf4) {
 if (qf4?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_R2_X + BOX_W / 2,
-    Y_QF + 108,
+    Y_QF + 111,
     `Win：${qf4.winnerTeam}`
   );
 }
