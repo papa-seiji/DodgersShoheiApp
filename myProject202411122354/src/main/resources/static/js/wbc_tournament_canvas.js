@@ -360,7 +360,7 @@ drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "", [
 drawRoundTitleCentered(
   QF_L1_X + BOX_W / 2,
   Y_QF + 18,
-  "① 準々決勝"
+  "① 準々決勝 '26/3/13(金)"
 );
 if (qf1) {
   drawTeamWithFlagCentered(
@@ -393,7 +393,7 @@ drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "", [
 drawRoundTitleCentered(
   QF_L2_X + BOX_W / 2,
   Y_QF + 18,
-  "② 準々決勝"
+  "② 準々決勝 '26/3/14(土)"
 );
 if (qf2) {
   drawTeamWithFlagCentered(
@@ -426,7 +426,7 @@ drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "", [
 drawRoundTitleCentered(
   QF_R1_X + BOX_W / 2,
   Y_QF + 18,
-  "③ 準々決勝"
+  "③ 準々決勝 '26/3/13(金)"
 );
 if (qf3) {
   drawTeamWithFlagCentered(
@@ -459,7 +459,7 @@ drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "", [
 drawRoundTitleCentered(
   QF_R2_X + BOX_W / 2,
   Y_QF + 18,
-  "④ 準々決勝"
+  "④ 準々決勝 '26/3/14(土)"
 );
 if (qf4) {
   drawTeamWithFlagCentered(
