@@ -222,6 +222,11 @@ function drawWinnerWithFlagCentered(cx, y, winnerText) {
   ctx.font = "bold 12px sans-serif";
   ctx.textAlign = "left";
 
+//     ctx.save();                 // ★ 追加
+//   ctx.textAlign = "center";   // font は外から渡す
+//   ctx.fillText(text, cx, y);
+//   ctx.restore();              // ★ 追加
+
   // "Win：COLOMBIA" / "Win: COLOMBIA" 両対応
   const normalized = winnerText
     .replace("Win：", "")
@@ -289,27 +294,108 @@ function drawWinnerWithFlagCentered(cx, y, winnerText) {
   function redraw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 優勝
-    drawBox(
-      CENTER_X - BOX_W / 2,
-      Y_CHAMP,
-      BOX_W,
-      BOX_H,
-      "優勝",
-      [tournament.FINAL?.[1]?.winnerTeam ?? "未定"]
-    );
 
-    // 決勝
-    drawBox(
-      CENTER_X - BOX_W / 2,
-      Y_FINAL,
-      BOX_W,
-      BOX_H,
-      "決勝",
-      ["'26/3/17(火)", ...matchLines(tournament.FINAL?.[1])]
-    );
 
-    vLine(CENTER_X, Y_CHAMP + BOX_H, Y_FINAL);
+// ==============================
+// 優勝（CHAMPION）※ FINAL と同一思想
+// ==============================
+const champion = tournament.FINAL?.[1]?.winnerTeam;
+
+// 枠のみ描画（文字は描かない）
+drawBox(
+  CENTER_X - BOX_W / 2,
+  Y_CHAMP,
+  BOX_W,
+  BOX_H,
+  "",
+  [
+    "",
+    "",
+    "",
+    null
+  ]
+);
+
+// タイトル（中央寄せ）
+drawRoundTitleCentered(
+  CENTER_X,
+  Y_CHAMP + 18,
+  "優勝"
+);
+
+// 勝者表示（国旗付き・中央寄せ・強調）
+if (champion) {
+  ctx.save(); // ★ 他への影響防止
+
+  ctx.font = "bold 100px sans-serif"; // ← 太字＋少し大きく
+  drawWinnerWithFlagCentered(
+    CENTER_X,
+    Y_CHAMP + 72, // ★ 少し下げてバランス調整
+    champion
+  );
+
+  ctx.restore();
+} else {
+  ctx.font = "12px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("未定", CENTER_X, Y_CHAMP + 70);
+}
+
+// ==============================
+// 決勝（FINAL）※ 準決勝と同一思想
+// ==============================
+const final = tournament.FINAL?.[1];
+
+// 枠だけ描画（中身は描かない）
+drawBox(
+  CENTER_X - BOX_W / 2,
+  Y_FINAL,
+  BOX_W,
+  BOX_H,
+  "",
+  [
+    "",
+    "vs",
+    "",
+    null
+  ]
+);
+
+// タイトル＋日付（中央寄せ・一体表記）
+drawRoundTitleCentered(
+  CENTER_X,
+  Y_FINAL + 18,
+  "決勝 '26/3/17(火)"
+);
+
+// チーム表示
+if (final) {
+  drawTeamWithFlagCentered(
+    CENTER_X,
+    Y_FINAL + 45,
+    `${final.homeTeam} ${final.homeScore ?? ""}`
+  );
+
+  drawTeamWithFlagCentered(
+    CENTER_X,
+    Y_FINAL + 80,
+    `${final.awayTeam} ${final.awayScore ?? ""}`
+  );
+}
+
+// 勝者表示
+if (final?.winnerTeam) {
+  drawWinnerWithFlagCentered(
+    CENTER_X,
+    Y_FINAL + 110,
+    `Win：${final.winnerTeam}`
+  );
+}
+
+// 上位（優勝）との接続線は既存を維持
+vLine(CENTER_X, Y_CHAMP + BOX_H, Y_FINAL);
+
+
 
     // 準決勝
     const SF_LEFT_X  = CENTER_X - GAP_X - BOX_W / 2;
