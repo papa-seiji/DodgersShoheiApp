@@ -193,6 +193,17 @@ function drawTeamWithFlagCentered(cx, y, teamText) {
 }
 
 
+// ==============================
+// ラウンドタイトル（中央寄せ）
+// ==============================
+function drawRoundTitleCentered(cx, y, text) {
+  if (!text) return;
+
+  ctx.font = "bold 14px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(text, cx, y);
+}
+
 
 // ==============================
 // 勝者（国旗＋中央揃え）
@@ -340,12 +351,17 @@ function drawWinnerWithFlagCentered(cx, y, winnerText) {
 
 // ---------- QF① ----------
 const qf1 = tournament.QF?.[1];
-drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "① 準々決勝", [
+drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   "vs",
   "",
   null
 ]);
+drawRoundTitleCentered(
+  QF_L1_X + BOX_W / 2,
+  Y_QF + 18,
+  "① 準々決勝"
+);
 if (qf1) {
   drawTeamWithFlagCentered(
     QF_L1_X + BOX_W / 2,
@@ -368,12 +384,17 @@ if (qf1?.winnerTeam) {
 
 // ---------- QF② ----------
 const qf2 = tournament.QF?.[2];
-drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "② 準々決勝", [
+drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   "vs",
   "",
   null
 ]);
+drawRoundTitleCentered(
+  QF_L2_X + BOX_W / 2,
+  Y_QF + 18,
+  "② 準々決勝"
+);
 if (qf2) {
   drawTeamWithFlagCentered(
     QF_L2_X + BOX_W / 2,
@@ -396,12 +417,17 @@ if (qf2?.winnerTeam) {
 
 // ---------- QF③ ----------
 const qf3 = tournament.QF?.[3];
-drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "③ 準々決勝", [
+drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   "vs",
   "",
   null
 ]);
+drawRoundTitleCentered(
+  QF_R1_X + BOX_W / 2,
+  Y_QF + 18,
+  "③ 準々決勝"
+);
 if (qf3) {
   drawTeamWithFlagCentered(
     QF_R1_X + BOX_W / 2,
@@ -424,12 +450,17 @@ if (qf3?.winnerTeam) {
 
 // ---------- QF④ ----------
 const qf4 = tournament.QF?.[4];
-drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "④ 準々決勝", [
+drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   "vs",
   "",
   null
 ]);
+drawRoundTitleCentered(
+  QF_R2_X + BOX_W / 2,
+  Y_QF + 18,
+  "④ 準々決勝"
+);
 if (qf4) {
   drawTeamWithFlagCentered(
     QF_R2_X + BOX_W / 2,
@@ -449,6 +480,7 @@ if (qf4?.winnerTeam) {
     `Win：${qf4.winnerTeam}`
   );
 }
+
 
     // 接続線
     const QF_LEFT_CENTER_1 = QF_L1_X + BOX_W / 2;
