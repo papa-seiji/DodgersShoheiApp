@@ -153,6 +153,24 @@ ctx.restore();
     ];
   }
 
+
+  // ==============================
+// 表示用チーム文字列生成（非表示対応・確定版）
+// ==============================
+function buildTeamText(team, score) {
+  // チーム未確定
+  if (!team) return "未定";
+
+  // スコア未入力（null / undefined）の場合は表示しない
+  if (score === null || score === undefined) {
+    return team;
+  }
+
+  // 0 も含めて表示する
+  return `${team} ${score}`;
+}
+
+
 // ==============================
 // 国旗＋チーム名（左寄せ）【最終安定版】
 // ==============================
@@ -406,17 +424,17 @@ drawRoundTitleCentered(
 
 // チーム表示
 if (final) {
-  drawTeamWithFlagCentered(
+    drawTeamWithFlagCentered(
     CENTER_X,
     Y_FINAL + 45,
-    `${final.homeTeam} ${final.homeScore ?? ""}`
-  );
+    buildTeamText(final.homeTeam, final.homeScore)
+    );
 
-  drawTeamWithFlagCentered(
+    drawTeamWithFlagCentered(
     CENTER_X,
     Y_FINAL + 80,
-    `${final.awayTeam} ${final.awayScore ?? ""}`
-  );
+    buildTeamText(final.awayTeam, final.awayScore)
+    );
 }
 
 // 勝者表示
@@ -454,16 +472,17 @@ drawRoundTitleCentered(
 );
 
 if (sf1) {
-  drawTeamWithFlagCentered(
+    drawTeamWithFlagCentered(
     SF_LEFT_X + BOX_W / 2,
     Y_SF + 45,
-    `${sf1.homeTeam} ${sf1.homeScore ?? ""}`
-  );
-  drawTeamWithFlagCentered(
+    buildTeamText(sf1.homeTeam, sf1.homeScore)
+    );
+
+    drawTeamWithFlagCentered(
     SF_LEFT_X + BOX_W / 2,
     Y_SF + 80,
-    `${sf1.awayTeam} ${sf1.awayScore ?? ""}`
-  );
+    buildTeamText(sf1.awayTeam, sf1.awayScore)
+    );
 }
 
 if (sf1?.winnerTeam) {
@@ -491,16 +510,17 @@ drawRoundTitleCentered(
 );
 
 if (sf2) {
-  drawTeamWithFlagCentered(
-    SF_RIGHT_X + BOX_W / 2,
-    Y_SF + 45,
-    `${sf2.homeTeam} ${sf2.homeScore ?? ""}`
-  );
-  drawTeamWithFlagCentered(
-    SF_RIGHT_X + BOX_W / 2,
-    Y_SF + 80,
-    `${sf2.awayTeam} ${sf2.awayScore ?? ""}`
-  );
+drawTeamWithFlagCentered(
+  SF_RIGHT_X + BOX_W / 2,
+  Y_SF + 45,
+  buildTeamText(sf2.homeTeam, sf2.homeScore)
+);
+
+drawTeamWithFlagCentered(
+  SF_RIGHT_X + BOX_W / 2,
+  Y_SF + 80,
+  buildTeamText(sf2.awayTeam, sf2.awayScore)
+);
 }
 
 if (sf2?.winnerTeam) {
@@ -544,13 +564,12 @@ if (qf1) {
   drawTeamWithFlagCentered(
     QF_L1_X + BOX_W / 2,
     Y_QF + 45,
-    `${qf1.homeTeam} ${qf1.homeScore ?? ""}`
+    buildTeamText(qf1.homeTeam, qf1.homeScore)
   );
   drawTeamWithFlagCentered(
     QF_L1_X + BOX_W / 2,
     Y_QF + 81,
-    `${qf1.awayTeam} ${qf1.awayScore ?? ""}`
-  );
+    buildTeamText(qf1.awayTeam, qf1.awayScore)  );
 }
 if (qf1?.winnerTeam) {
   drawWinnerWithFlagCentered(
@@ -577,13 +596,12 @@ if (qf2) {
   drawTeamWithFlagCentered(
     QF_L2_X + BOX_W / 2,
     Y_QF + 45,
-    `${qf2.homeTeam} ${qf2.homeScore ?? ""}`
+    buildTeamText(qf2.homeTeam, qf2.homeScore)
   );
   drawTeamWithFlagCentered(
     QF_L2_X + BOX_W / 2,
     Y_QF + 81,
-    `${qf2.awayTeam} ${qf2.awayScore ?? ""}`
-  );
+    buildTeamText(qf2.awayTeam, qf2.awayScore)  );
 }
 if (qf2?.winnerTeam) {
   drawWinnerWithFlagCentered(
@@ -610,13 +628,12 @@ if (qf3) {
   drawTeamWithFlagCentered(
     QF_R1_X + BOX_W / 2,
     Y_QF + 45,
-    `${qf3.homeTeam} ${qf3.homeScore ?? ""}`
+    buildTeamText(qf3.homeTeam, qf3.homeScore)
   );
   drawTeamWithFlagCentered(
     QF_R1_X + BOX_W / 2,
     Y_QF + 81,
-    `${qf3.awayTeam} ${qf3.awayScore ?? ""}`
-  );
+    buildTeamText(qf3.awayTeam, qf3.awayScore)  );
 }
 if (qf3?.winnerTeam) {
   drawWinnerWithFlagCentered(
@@ -643,13 +660,12 @@ if (qf4) {
   drawTeamWithFlagCentered(
     QF_R2_X + BOX_W / 2,
     Y_QF + 45,
-    `${qf4.homeTeam} ${qf4.homeScore ?? ""}`
+    buildTeamText(qf4.homeTeam, qf4.homeScore)
   );
   drawTeamWithFlagCentered(
     QF_R2_X + BOX_W / 2,
     Y_QF + 81,
-    `${qf4.awayTeam} ${qf4.awayScore ?? ""}`
-  );
+    buildTeamText(qf4.awayTeam, qf4.awayScore));
 }
 if (qf4?.winnerTeam) {
   drawWinnerWithFlagCentered(
