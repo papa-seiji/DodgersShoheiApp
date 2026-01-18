@@ -167,7 +167,7 @@ function buildTeamText(team, score) {
   }
 
   // 0 も含めて表示する
-  return `${team} ${score}`;
+    return `${team} ${score}`;
 }
 
 
