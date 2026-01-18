@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const ctx = canvas.getContext("2d");
 
+
   // ==============================
   // DBデータ取得
   // ==============================
@@ -345,8 +346,38 @@ function drawWinnerWithFlagCentered(cx, y, winnerText) {
   // ==============================
   // 再描画本体（★唯一の追加構造）
   // ==============================
+
+  // ★ 追加（1回だけ）
+const BOX_HIT_AREAS = [];
+
+canvas.addEventListener("click", (e) => {
+  const rect = canvas.getBoundingClientRect();
+
+  const scaleX = canvas.width  / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  const x = (e.clientX - rect.left) * scaleX;
+  const y = (e.clientY - rect.top)  * scaleY;
+
+  const hit = BOX_HIT_AREAS.find(b =>
+    x >= b.x &&
+    x <= b.x + b.w &&
+    y >= b.y &&
+    y <= b.y + b.h
+  );
+
+  if (!hit) return;
+
+  console.log("HIT:", hit.title, hit.data);
+  alert(hit.title);
+});
+
+
   function redraw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // ★ 必須：当たり判定を毎回リセット
+  BOX_HIT_AREAS.length = 0;
 
 
 
@@ -369,6 +400,16 @@ drawBox(
     null
   ]
 );
+
+BOX_HIT_AREAS.push({
+  x: CENTER_X - BOX_W / 2,
+  y: Y_CHAMP,
+  w: BOX_W,
+  h: BOX_H,
+  title: "優勝",
+  data: null
+});
+
 
 // タイトル（中央寄せ）
 drawRoundTitleCentered(
@@ -414,6 +455,15 @@ drawBox(
     null
   ]
 );
+
+BOX_HIT_AREAS.push({
+  x: CENTER_X - BOX_W / 2,
+  y: Y_FINAL,
+  w: BOX_W,
+  h: BOX_H,
+  title: "決勝",
+  data: tournament.FINAL?.[1]
+});
 
 // タイトル＋日付（中央寄せ・一体表記）
 drawRoundTitleCentered(
@@ -465,6 +515,15 @@ drawBox(SF_LEFT_X, Y_SF, BOX_W, BOX_H, "", [
   null
 ]);
 
+BOX_HIT_AREAS.push({
+  x: SF_LEFT_X,
+  y: Y_SF,
+  w: BOX_W,
+  h: BOX_H,
+  title: "① 準決勝",
+  data: sf1
+});
+
 drawRoundTitleCentered(
   SF_LEFT_X + BOX_W / 2,
   Y_SF + 18,
@@ -502,6 +561,15 @@ drawBox(SF_RIGHT_X, Y_SF, BOX_W, BOX_H, "", [
   "",
   null
 ]);
+
+BOX_HIT_AREAS.push({
+  x: SF_RIGHT_X,
+  y: Y_SF,
+  w: BOX_W,
+  h: BOX_H,
+  title: "② 準決勝",
+  data: sf2
+});
 
 drawRoundTitleCentered(
   SF_RIGHT_X + BOX_W / 2,
@@ -555,6 +623,17 @@ drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   null
 ]);
+
+
+BOX_HIT_AREAS.push({
+  x: QF_L1_X,
+  y: Y_QF,
+  w: BOX_W,
+  h: BOX_H,
+  title: "① 準々決勝",
+  data: qf1
+});
+
 drawRoundTitleCentered(
   QF_L1_X + BOX_W / 2,
   Y_QF + 18,
@@ -587,6 +666,16 @@ drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   null
 ]);
+
+BOX_HIT_AREAS.push({
+  x: QF_L2_X,
+  y: Y_QF,
+  w: BOX_W,
+  h: BOX_H,
+  title: "② 準々決勝",
+  data: qf2
+});
+
 drawRoundTitleCentered(
   QF_L2_X + BOX_W / 2,
   Y_QF + 18,
@@ -619,6 +708,16 @@ drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   null
 ]);
+
+BOX_HIT_AREAS.push({
+  x: QF_R1_X,
+  y: Y_QF,
+  w: BOX_W,
+  h: BOX_H,
+  title: "③ 準々決勝",
+  data: qf3
+});
+
 drawRoundTitleCentered(
   QF_R1_X + BOX_W / 2,
   Y_QF + 18,
@@ -651,6 +750,16 @@ drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "", [
   "",
   null
 ]);
+
+BOX_HIT_AREAS.push({
+  x: QF_R2_X,
+  y: Y_QF,
+  w: BOX_W,
+  h: BOX_H,
+  title: "④ 準々決勝",
+  data: qf4
+});
+
 drawRoundTitleCentered(
   QF_R2_X + BOX_W / 2,
   Y_QF + 18,
