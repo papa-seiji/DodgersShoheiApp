@@ -497,6 +497,91 @@ WBC POOL 表示切替 / 順位表示 CSS
   border-radius: 12px;
 }
 
+/* ===============================
+  拡大表示モーダル
+=============================== */
+
+.hidden {
+  display: none;
+}
+
+#box-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* ★ 中央モーダル本体 */
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+
+  /* ★ 追加：Canvasがはみ出さない安全サイズ */
+  width: 720px;
+  height: 520px;
+  box-sizing: border-box;
+}
+
+/* ★ 拡大表示用Canvas（モーダル内に必須） */
+#box-preview-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 閉じるボタン */
+#modal-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+
+@media screen and (max-width: 890px) {
+  /* モーダルのサイズを縮小 */
+  .modal-content {
+    width: 70%; /* 横幅を80%に調整 */
+    height: auto;
+    max-width: 100%; /* 最大幅を100%に */
+  }
+
+  /* 拡大Canvasのサイズ調整 */
+  #box-preview-canvas {
+    width: 70%; /* 横幅を100%に */
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  /* モーダルのサイズを縮小 */
+  .modal-content {
+    width: 90%; /* 横幅を80%に調整 */
+    height: auto;
+    max-width: 100%; /* 最大幅を100%に */
+  }
+
+  /* 拡大Canvasのサイズ調整 */
+  #box-preview-canvas {
+    width: 90%; /* 横幅を100%に */
+    height: auto;
+  }
+}
+
 </style>
 
 
@@ -1012,7 +1097,17 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
 </div>
 </section>
 
-<!--<script src="/js/wbc_tournament_canvas.js"></script>-->
+<!-- ===== BOX 拡大表示用モーダル ===== -->
+<div id="box-modal" class="hidden">
+<div class="modal-overlay" id="modal-overlay"></div>
+
+  <div class="modal-content">
+    <button id="modal-close">✕</button>
+
+    <!--<canvas id="box-preview-canvas" width="500" height="350"></canvas>-->
+    <canvas id="box-preview-canvas"></canvas>
+  </div>
+</div>
 
     <script th:src="@{/js/wbc_tournament_canvas.js}"></script>
 

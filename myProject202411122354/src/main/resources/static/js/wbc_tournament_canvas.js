@@ -2,8 +2,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const canvas = document.getElementById("wbc-tournament-canvas");
   if (!canvas) return;
 
-  const ctx = canvas.getContext("2d");
+// ===== 拡大表示用 Canvas =====
+const previewCanvas = document.getElementById("box-preview-canvas");
+const previewCtx = previewCanvas.getContext("2d");
 
+const ctx = canvas.getContext("2d"); // ★ 必須
 
   // ==============================
   // DBデータ取得
@@ -21,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Canvas設定
   // ==============================
   canvas.width = 1100;
-  canvas.height = 900;
+  canvas.height = 1200;
 
   ctx.strokeStyle = "#000";
   ctx.lineWidth = 2;
@@ -72,70 +75,65 @@ const FLAGS = (() => {
   return images;
 })();
 
-  // ==============================
-  // 共通描画関数
-  // ==============================
-  function drawBox(x, y, w, h, title, lines = []) {
-    ctx.strokeRect(x, y, w, h);
+// ==============================
+// 共通描画関数（影なし・安定版）
+// ==============================
+function drawBox(ctx, x, y, w, h, title, lines = []) {
 
 
-    //枠線の色を変える（超基本）
-    ctx.strokeRect(x, y, w, h);
+  // ② 枠線
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, w, h);
 
-    //④ BOX を塗りつぶす（背景色）
-    ctx.fillStyle = "#d1d1d1"; // 薄い黄色
-    ctx.fillRect(x, y, w, h);
+  //⑤ 影付き BOX（おすすめ・高級感）
+  ctx.save();
 
-    ctx.strokeStyle = "#000";
-    ctx.strokeRect(x, y, w, h);
+  ctx.shadowColor = "rgba(9, 9, 9, 0.51)";
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetX = 14;
+  ctx.shadowOffsetY = 9;
+
+  // BOX 背景
+  ctx.fillStyle = "#d1d1d1";
+  ctx.fillRect(x, y, w, h);
+
+  ctx.shadowColor = "transparent"; // 枠に影をつけない
+  ctx.strokeStyle = "#000";
+  ctx.strokeRect(x, y, w, h);
+
+  ctx.restore();  
+
+  // ③ タイトル
+  ctx.font = "bold 14px sans-serif";
+  ctx.fillStyle = "#000";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(title, x + w / 2, y + 18);
+
+  // ④ 中身テキスト
+  ctx.font = "12px sans-serif";
+  lines.forEach((t, i) => {
+    if (t != null) {
+      ctx.fillText(t, x + w / 2, y + 45 + i * 18);
+    }
+  });
+}
 
 
-//⑤ 影付き BOX（おすすめ・高級感）
-ctx.save();
+function vLine(x, y1, y2) {
+  ctx.beginPath();
+  ctx.moveTo(x, y1);
+  ctx.lineTo(x, y2);
+  ctx.stroke();
+}
 
-ctx.shadowColor = "rgba(9, 9, 9, 0.51)";
-ctx.shadowBlur = 10;
-ctx.shadowOffsetX = 14;
-ctx.shadowOffsetY = 9;
-
-    ctx.fillStyle = "#d1d1d1"; // 薄い黄色
-ctx.fillRect(x, y, w, h);
-
-ctx.shadowColor = "transparent"; // 枠に影をつけない
-ctx.strokeStyle = "#000";
-ctx.strokeRect(x, y, w, h);
-
-ctx.restore();
-
-
-
-
-
-    ctx.font = "bold 14px sans-serif";
-        ctx.fillStyle = "#000000"; // 赤
-    // ctx.strokeStyle = "#ffffff"; // 赤
-
-    ctx.fillText(title, x + w / 2, y + 18);
-
-    ctx.font = "12px sans-serif";
-    lines.forEach((t, i) => {
-      if (t != null) ctx.fillText(t, x + w / 2, y + 45 + i * 18);
-    });
-  }
-
-  function vLine(x, y1, y2) {
-    ctx.beginPath();
-    ctx.moveTo(x, y1);
-    ctx.lineTo(x, y2);
-    ctx.stroke();
-  }
-
-  function hLine(x1, x2, y) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y);
-    ctx.lineTo(x2, y);
-    ctx.stroke();
-  }
+function hLine(x1, x2, y) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y);
+  ctx.lineTo(x2, y);
+  ctx.stroke();
+}
 
   // ==============================
   // 試合表示行生成
@@ -170,6 +168,33 @@ function buildTeamText(team, score) {
   // 0 も含めて表示する
     return `${team} ${score}`;
 }
+
+
+
+
+function buildPreviewLines(data) {
+  if (!data) return ["未定"];
+
+  const lines = [];
+
+  if (data.homeTeam) {
+    lines.push(buildTeamText(data.homeTeam, data.homeScore));
+  }
+
+  lines.push("vs");
+
+  if (data.awayTeam) {
+    lines.push(buildTeamText(data.awayTeam, data.awayScore));
+  }
+
+  if (data.winnerTeam) {
+    lines.push(`Win : ${data.winnerTeam}`);
+  }
+
+  return lines;
+}
+
+
 
 
 // ==============================
@@ -332,7 +357,7 @@ function drawWinnerWithFlagCentered(cx, y, winnerText) {
   // ==============================
   const CENTER_X = 550;
   const BOX_W = 210;
-  const BOX_H = 130;
+  const BOX_H = 135;
   const TOP_MARGIN = 60;
 
   const Y_CHAMP = TOP_MARGIN + 60;
@@ -369,9 +394,60 @@ canvas.addEventListener("click", (e) => {
   if (!hit) return;
 
   console.log("HIT:", hit.title, hit.data);
-  alert(hit.title);
+  openModal(hit);
 });
 
+
+
+function drawBoxPreview(hit, canvas, ctx) { //////////////////////////////////////////調整箇所
+  const scale = 1.3;
+
+  const w = BOX_W * scale;
+  const h = BOX_H * scale;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawBox(
+    ctx,
+    (canvas.width - w) / 2,
+    (canvas.height - h) / 2,
+    w,
+    h,
+    hit.title,
+    buildPreviewLines(hit.data)
+  );
+}
+
+
+
+function openModal(hit) {
+  const modal = document.getElementById("box-modal");
+  modal.classList.remove("hidden");
+
+  const previewCanvas = document.getElementById("box-preview-canvas");
+  if (!previewCanvas) return;
+
+  const previewCtx = previewCanvas.getContext("2d");
+
+  // ★ Canvasサイズを明示（重要）
+  previewCanvas.width = 300   //////////////////////////////////////////調整箇所
+  previewCanvas.height = 250; //////////////////////////////////////////調整箇所
+
+  drawBoxPreview(hit, previewCanvas, previewCtx); // ← ★ 呼ぶ！！
+}
+
+
+document.getElementById("modal-close").onclick = () => {
+  document.getElementById("box-modal").classList.add("hidden");
+};
+
+/* 👇 ここに追加するのが正解 */
+const overlay = document.getElementById("modal-overlay");
+if (overlay) {
+  overlay.onclick = () => {
+    document.getElementById("box-modal").classList.add("hidden");
+  };
+}
 
   function redraw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -388,6 +464,7 @@ const champion = tournament.FINAL?.[1]?.winnerTeam;
 
 // 枠のみ描画（文字は描かない）
 drawBox(
+    ctx,
   CENTER_X - BOX_W / 2,
   Y_CHAMP,
   BOX_W,
@@ -407,7 +484,7 @@ BOX_HIT_AREAS.push({
   w: BOX_W,
   h: BOX_H,
   title: "優勝",
-  data: null
+  data: { winnerTeam: champion }  // 修正
 });
 
 
@@ -443,6 +520,7 @@ const final = tournament.FINAL?.[1];
 
 // 枠だけ描画（中身は描かない）
 drawBox(
+    ctx,
   CENTER_X - BOX_W / 2,
   Y_FINAL,
   BOX_W,
@@ -508,12 +586,20 @@ vLine(CENTER_X, Y_CHAMP + BOX_H, Y_FINAL);
 // ---------- 準決勝① ----------
 const sf1 = tournament.SF?.[1];
 
-drawBox(SF_LEFT_X, Y_SF, BOX_W, BOX_H, "", [
+drawBox(
+  ctx,
+  SF_LEFT_X,
+  Y_SF,
+  BOX_W,
+  BOX_H,
   "",
-  "vs",
-  "",
-  null
-]);
+  [
+    "",
+    "vs",
+    "",
+    null
+  ]
+);
 
 BOX_HIT_AREAS.push({
   x: SF_LEFT_X,
@@ -555,12 +641,20 @@ if (sf1?.winnerTeam) {
 // ---------- 準決勝② ----------
 const sf2 = tournament.SF?.[2];
 
-drawBox(SF_RIGHT_X, Y_SF, BOX_W, BOX_H, "", [
+drawBox(
+  ctx,
+  SF_RIGHT_X,
+  Y_SF,
+  BOX_W,
+  BOX_H,
   "",
-  "vs",
-  "",
-  null
-]);
+  [
+    "",
+    "vs",
+    "",
+    null
+  ]
+);
 
 BOX_HIT_AREAS.push({
   x: SF_RIGHT_X,
@@ -610,6 +704,7 @@ if (sf2?.winnerTeam) {
     const QF_R1_X = SF_RIGHT_X - BOX_W / 2;
     const QF_R2_X = SF_RIGHT_X + BOX_W / 2;
 
+    
 
 // ==============================
 // 準々決勝（QF①〜④ 国旗付き・中央揃え統一）
@@ -617,12 +712,20 @@ if (sf2?.winnerTeam) {
 
 // ---------- QF① ----------
 const qf1 = tournament.QF?.[1];
-drawBox(QF_L1_X, Y_QF, BOX_W, BOX_H, "", [
+drawBox(
+  ctx,
+  QF_L1_X,
+  Y_QF,
+  BOX_W,
+  BOX_H,
   "",
-  "vs",
-  "",
-  null
-]);
+  [
+    "",
+    "vs",
+    "",
+    null
+  ]
+);
 
 
 BOX_HIT_AREAS.push({
@@ -660,12 +763,20 @@ if (qf1?.winnerTeam) {
 
 // ---------- QF② ----------
 const qf2 = tournament.QF?.[2];
-drawBox(QF_L2_X, Y_QF, BOX_W, BOX_H, "", [
+drawBox(
+  ctx,
+  QF_L2_X,
+  Y_QF,
+  BOX_W,
+  BOX_H,
   "",
-  "vs",
-  "",
-  null
-]);
+  [
+    "",
+    "vs",
+    "",
+    null
+  ]
+);
 
 BOX_HIT_AREAS.push({
   x: QF_L2_X,
@@ -702,12 +813,20 @@ if (qf2?.winnerTeam) {
 
 // ---------- QF③ ----------
 const qf3 = tournament.QF?.[3];
-drawBox(QF_R1_X, Y_QF, BOX_W, BOX_H, "", [
+drawBox(
+  ctx,
+  QF_R1_X,
+  Y_QF,
+  BOX_W,
+  BOX_H,
   "",
-  "vs",
-  "",
-  null
-]);
+  [
+    "",
+    "vs",
+    "",
+    null
+  ]
+);
 
 BOX_HIT_AREAS.push({
   x: QF_R1_X,
@@ -744,12 +863,20 @@ if (qf3?.winnerTeam) {
 
 // ---------- QF④ ----------
 const qf4 = tournament.QF?.[4];
-drawBox(QF_R2_X, Y_QF, BOX_W, BOX_H, "", [
+drawBox(
+  ctx,
+  QF_R2_X,
+  Y_QF,
+  BOX_W,
+  BOX_H,
   "",
-  "vs",
-  "",
-  null
-]);
+  [
+    "",
+    "vs",
+    "",
+    null
+  ]
+);
 
 BOX_HIT_AREAS.push({
   x: QF_R2_X,
