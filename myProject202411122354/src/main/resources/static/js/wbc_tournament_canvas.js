@@ -124,10 +124,20 @@ function drawBox(ctx, x, y, w, h, title, lines = []) {
   ctx.textBaseline = "middle";
   ctx.fillText(title, x + w / 2, y + 18);
 
-  // ④ 中身テキスト
-  ctx.font = `bold ${FONT_LG}px sans-serif`;
+  // ④ 中身テキスト（★プレビュー時は小さく）
+  const fontLg = ctx.__PREVIEW_FONT_LG || FONT_LG;
+  const fontMd = ctx.__PREVIEW_FONT_MD || FONT_MD;
+
   lines.forEach((t, i) => {
     if (t != null) {
+
+      // vs / Win 行は少し小さく
+      if (t === "vs" || t.startsWith("Win")) {
+        ctx.font = `bold ${fontMd}px sans-serif`;
+      } else {
+        ctx.font = `bold ${fontLg}px sans-serif`;
+      }
+
       ctx.fillText(t, x + w / 2, y + 45 + i * 18);
     }
   });
@@ -442,12 +452,22 @@ canvas.addEventListener("click", (e) => {
 
 
 function drawBoxPreview(hit, canvas, ctx) { //////////////////////////////////////////調整箇所
-  const scale = 1.3;
+  const scale = 1.0;
 
   const w = BOX_W * scale;
   const h = BOX_H * scale;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.save(); // ★ ここ重要
+
+  // ★ プレビュー用にフォントを小さく
+  const PREVIEW_FONT_LG = FONT_LG * 0.75;
+  const PREVIEW_FONT_MD = FONT_MD * 0.75;
+
+  // 一時的に差し替え
+  ctx.__PREVIEW_FONT_LG = PREVIEW_FONT_LG;
+  ctx.__PREVIEW_FONT_MD = PREVIEW_FONT_MD;
 
   drawBox(
     ctx,
@@ -458,8 +478,9 @@ function drawBoxPreview(hit, canvas, ctx) { ////////////////////////////////////
     hit.title,
     buildPreviewLines(hit.data)
   );
-}
 
+  ctx.restore(); // ★ 戻す
+}
 
 
 function openModal(hit) {
