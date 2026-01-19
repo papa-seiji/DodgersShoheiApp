@@ -1033,6 +1033,33 @@ if (window.location.hash.startsWith("#pool-title")) {
 
 
 
+    <!--決勝トーナメント表-->
+
+<section id="wbc-tournament" style="margin:60px 0; text-align:center;">
+<p style="font-weight: bold;">2026 WBC トーナメント表</p>
+  <h2>今入っているデータは表示確認テスト用のダミーデータ</h2>
+
+<div class="wbc-tournament-wrapper">
+<span>【各カードをタップすると拡大表示できます】</span>
+  <canvas id="wbc-tournament-canvas"></canvas>
+</div>
+</section>
+
+<!-- ===== BOX 拡大表示用モーダル ===== -->
+<div id="box-modal" class="hidden">
+<div class="modal-overlay" id="modal-overlay"></div>
+
+  <div class="modal-content">
+    <button id="modal-close">✕</button>
+
+    <canvas id="box-preview-canvas"></canvas>
+  </div>
+</div>
+
+    <script th:src="@{/js/wbc_tournament_canvas.js}"></script>
+
+
+
 
 <img id="samuraiLogo" alt="Samurai Japan Logo">
 
@@ -1074,42 +1101,12 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
 </section>
 
 
-<p style="font-weight: bold;">2026 WBC トーナメント表</p>
-<div class="link">
-    <a href="https://www.2026wbc.jp/schedule/" target="_blank">公式2026wbc.jp</a>
-</div>
 
-  <div class="postseason-container">
+ <!-- <div class="postseason-container"> -->
 
     <!-- トーナメント線の背景 -->
-    <div class="bracket-background"></div>
- </div>
-
-
-
-
-<section id="wbc-tournament" style="margin:60px 0; text-align:center;">
-  <h2>2026 WBC トーナメント表</h2>
-  <h2>今入っているデータは表示確認テスト用のダミーデータ</h2>
-
-<div class="wbc-tournament-wrapper">
-  <canvas id="wbc-tournament-canvas"></canvas>
-</div>
-</section>
-
-<!-- ===== BOX 拡大表示用モーダル ===== -->
-<div id="box-modal" class="hidden">
-<div class="modal-overlay" id="modal-overlay"></div>
-
-  <div class="modal-content">
-    <button id="modal-close">✕</button>
-
-    <!--<canvas id="box-preview-canvas" width="500" height="350"></canvas>-->
-    <canvas id="box-preview-canvas"></canvas>
-  </div>
-</div>
-
-    <script th:src="@{/js/wbc_tournament_canvas.js}"></script>
+    <!-- <div class="bracket-background"></div>
+ </div> -->
 
 
 
@@ -1445,8 +1442,16 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
     <div id="pitching-stats" class="stats-container"></div>
   </section>
 
+<div class="link">
+    <a href="https://www.2026wbc.jp/schedule/" target="_blank">公式2026wbc.jp</a>
+</div>
+
 
   <div class="wbc-container">
+
+
+
+
 
   <!-- 🔗 Official X (Twitter) -->
 <div class="home-sns-guide">
