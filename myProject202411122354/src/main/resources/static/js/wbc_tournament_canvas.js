@@ -8,6 +8,18 @@ const previewCtx = previewCanvas.getContext("2d");
 
 const ctx = canvas.getContext("2d"); // ★ 必須
 
+
+
+// ==============================
+// フォント基準サイズ
+// ==============================
+const FONT_TITLE_BASE  = 14;
+const FONT_TEXT_BASE   = 12;
+const FONT_WIN_BASE    = 12;
+const FONT_CHAMP_BASE  = 16;
+
+
+
   // ==============================
   // DBデータ取得
   // ==============================
@@ -105,14 +117,15 @@ function drawBox(ctx, x, y, w, h, title, lines = []) {
   ctx.restore();  
 
   // ③ タイトル
-  ctx.font = "bold 14px sans-serif";
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+
   ctx.fillStyle = "#000";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(title, x + w / 2, y + 18);
 
   // ④ 中身テキスト
-  ctx.font = "12px sans-serif";
+  ctx.font = `bold ${FONT_LG}px sans-serif`;
   lines.forEach((t, i) => {
     if (t != null) {
       ctx.fillText(t, x + w / 2, y + 45 + i * 18);
@@ -203,7 +216,7 @@ function buildPreviewLines(data) {
 function drawTeamWithFlagLeft(x, y, teamText) {
   if (!teamText) return;
 
-  ctx.font = "12px sans-serif";
+  ctx.font = `bold ${FONT_LG}px sans-serif`;
   ctx.textAlign = "left";
 
   // ★ 空白・全角・NBSP をすべて正規化
@@ -239,7 +252,7 @@ function drawTeamWithFlagLeft(x, y, teamText) {
 function drawTeamWithFlagCentered(cx, y, teamText) {
   if (!teamText) return;
 
-  ctx.font = "12px sans-serif";
+  ctx.font = `bold ${FONT_LG}px sans-serif`;
   ctx.textAlign = "left"; // ★手動配置するので left 固定
 
   // teamText: "USA 7" / "PUERTO RICO 3" など
@@ -279,7 +292,8 @@ function drawTeamWithFlagCentered(cx, y, teamText) {
 function drawRoundTitleCentered(cx, y, text) {
   if (!text) return;
 
-  ctx.font = "bold 14px sans-serif";
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+
   ctx.textAlign = "center";
   ctx.fillText(text, cx, y);
 }
@@ -288,10 +302,10 @@ function drawRoundTitleCentered(cx, y, text) {
 // ==============================
 // 勝者（国旗＋中央揃え）
 // ==============================
-function drawWinnerWithFlagCentered(cx, y, winnerTeam) {
-  if (!winnerTeam) return;
-  drawTeamWithFlagCentered(cx, y, winnerTeam);
-}
+// function drawWinnerWithFlagCentered(cx, y, winnerTeam) {
+//   if (!winnerTeam) return;
+//   drawTeamWithFlagCentered(cx, y, winnerTeam);
+// }
 
 // ==============================
 // 勝者（国旗＋Win表記・中央揃え）
@@ -351,22 +365,51 @@ function drawWinnerWithFlagCentered(cx, y, winnerText) {
   );
 }
 
+// ==============================
+// ★ 全体表示スケール（ここだけ触る）
+// ==============================
+const UI_SCALE = 1.3; // ← 1.2 / 1.4 / 1.5 で全体サイズ調整
 
-  // ==============================
-  // レイアウト
-  // ==============================
-  const CENTER_X = 550;
-  const BOX_W = 210;
-  const BOX_H = 135;
-  const TOP_MARGIN = 60;
+// ==============================
+// レイアウト（★UI_SCALE 完全対応版）
+// ==============================
 
-  const Y_CHAMP = TOP_MARGIN + 60;
-  const Y_FINAL = TOP_MARGIN + 200;
-  const Y_SF    = TOP_MARGIN + 400;
-  const Y_QF    = TOP_MARGIN + 590;
+// X 方向
+// const CENTER_X = 550 * UI_SCALE;
+const CENTER_X = canvas.width / 2;
 
-  const GAP_X = 280;
-  const CONNECT = 30;
+const GAP_X    = 213 * UI_SCALE;
+
+// BOX サイズ
+const BOX_W_BASE = 210;
+const BOX_H_BASE = 135;
+
+const BOX_W = BOX_W_BASE * UI_SCALE;
+const BOX_H = BOX_H_BASE * UI_SCALE;
+
+// Y 方向（★BASE → SCALE）
+const TOP_MARGIN_BASE = 60;
+
+const Y_CHAMP_BASE = TOP_MARGIN_BASE + 60;
+const Y_FINAL_BASE = TOP_MARGIN_BASE + 200;
+const Y_SF_BASE    = TOP_MARGIN_BASE + 400;
+const Y_QF_BASE    = TOP_MARGIN_BASE + 590;
+
+const Y_CHAMP = Y_CHAMP_BASE * UI_SCALE;
+const Y_FINAL = Y_FINAL_BASE * UI_SCALE;
+const Y_SF    = Y_SF_BASE    * UI_SCALE;
+const Y_QF    = Y_QF_BASE    * UI_SCALE;
+
+// 接続線
+const CONNECT = 30 * UI_SCALE;
+
+// ==============================
+// フォントサイズ（等倍対応）
+// ==============================
+const FONT_SM = 12 * UI_SCALE;
+const FONT_MD = 14 * UI_SCALE;
+const FONT_LG = 15.5 * UI_SCALE;
+
 
   // ==============================
   // 再描画本体（★唯一の追加構造）
@@ -499,16 +542,16 @@ drawRoundTitleCentered(
 if (champion) {
   ctx.save(); // ★ 他への影響防止
 
-  ctx.font = "bold 100px sans-serif"; // ← 太字＋少し大きく
+  ctx.font = `bold ${FONT_LG}px sans-serif`; // ← 太字＋少し大きく
   drawWinnerWithFlagCentered(
     CENTER_X,
-    Y_CHAMP + 72, // ★ 少し下げてバランス調整
+    Y_CHAMP + 100, // ★ 少し下げてバランス調整
     champion
   );
 
   ctx.restore();
 } else {
-  ctx.font = "12px sans-serif";
+  ctx.font = `bold ${FONT_LG}px sans-serif`;
   ctx.textAlign = "center";
   ctx.fillText("未定", CENTER_X, Y_CHAMP + 70);
 }
@@ -528,7 +571,7 @@ drawBox(
   "",
   [
     "",
-    "vs",
+    "",
     "",
     null
   ]
@@ -546,33 +589,37 @@ BOX_HIT_AREAS.push({
 // タイトル＋日付（中央寄せ・一体表記）
 drawRoundTitleCentered(
   CENTER_X,
-  Y_FINAL + 18,
+  Y_FINAL + 20,
   "決勝 '26/3/17(火)"
 );
 
-// チーム表示
-if (final) {
-    drawTeamWithFlagCentered(
-    CENTER_X,
-    Y_FINAL + 45,
-    buildTeamText(final.homeTeam, final.homeScore)
-    );
+// 上チーム
+drawTeamWithFlagCentered(
+  CENTER_X,
+  Y_FINAL + 60,
+  buildTeamText(final.homeTeam, final.homeScore)
+);
 
-    drawTeamWithFlagCentered(
-    CENTER_X,
-    Y_FINAL + 80,
-    buildTeamText(final.awayTeam, final.awayScore)
-    );
-}
+// ★ vs を明示的に描画（ここが今まで無かった）
+ctx.save();
+ctx.font = `bold ${FONT_MD}px sans-serif`;
+ctx.textAlign = "center";
+ctx.fillText("vs", CENTER_X, Y_FINAL + 85);
+ctx.restore();
 
-// 勝者表示
-if (final?.winnerTeam) {
-  drawWinnerWithFlagCentered(
-    CENTER_X,
-    Y_FINAL + 110,
-    `Win：${final.winnerTeam}`
-  );
-}
+// 下チーム
+drawTeamWithFlagCentered(
+  CENTER_X,
+  Y_FINAL + 110,
+  buildTeamText(final.awayTeam, final.awayScore)
+);
+
+// 勝者
+drawWinnerWithFlagCentered(
+  CENTER_X,
+  Y_FINAL + 145,
+  `Win：${final.winnerTeam}`
+);
 
 // 上位（優勝）との接続線は既存を維持
 vLine(CENTER_X, Y_CHAMP + BOX_H, Y_FINAL);
@@ -595,7 +642,7 @@ drawBox(
   "",
   [
     "",
-    "vs",
+    "",
     "",
     null
   ]
@@ -610,30 +657,45 @@ BOX_HIT_AREAS.push({
   data: sf1
 });
 
+// タイトル
 drawRoundTitleCentered(
   SF_LEFT_X + BOX_W / 2,
-  Y_SF + 18,
+  Y_SF + 20,
   "① 準決勝 '26/3/15(日)"
 );
 
 if (sf1) {
-    drawTeamWithFlagCentered(
+  // 上チーム
+  drawTeamWithFlagCentered(
     SF_LEFT_X + BOX_W / 2,
-    Y_SF + 45,
+    Y_SF + 60,
     buildTeamText(sf1.homeTeam, sf1.homeScore)
-    );
+  );
 
-    drawTeamWithFlagCentered(
+  // ★ vs を明示的に描画（準決勝①用）
+  ctx.save();
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "vs",
+    SF_LEFT_X + BOX_W / 2, // ← CENTER_X ではない
+    Y_SF + 85               // ← 上下間の中央
+  );
+  ctx.restore();
+
+  // 下チーム
+  drawTeamWithFlagCentered(
     SF_LEFT_X + BOX_W / 2,
-    Y_SF + 80,
+    Y_SF + 110,
     buildTeamText(sf1.awayTeam, sf1.awayScore)
-    );
+  );
 }
 
+// 勝者
 if (sf1?.winnerTeam) {
   drawWinnerWithFlagCentered(
     SF_LEFT_X + BOX_W / 2,
-    Y_SF + 110,
+    Y_SF + 145,
     `Win：${sf1.winnerTeam}`
   );
 }
@@ -650,7 +712,7 @@ drawBox(
   "",
   [
     "",
-    "vs",
+    "",
     "",
     null
   ]
@@ -665,30 +727,45 @@ BOX_HIT_AREAS.push({
   data: sf2
 });
 
+// ---------- 準決勝② ----------
 drawRoundTitleCentered(
   SF_RIGHT_X + BOX_W / 2,
-  Y_SF + 18,
+  Y_SF + 20,
   "② 準決勝 '26/3/16(月)"
 );
 
 if (sf2) {
-drawTeamWithFlagCentered(
-  SF_RIGHT_X + BOX_W / 2,
-  Y_SF + 45,
-  buildTeamText(sf2.homeTeam, sf2.homeScore)
-);
+  // 上チーム
+  drawTeamWithFlagCentered(
+    SF_RIGHT_X + BOX_W / 2,
+    Y_SF + 60,
+    buildTeamText(sf2.homeTeam, sf2.homeScore)
+  );
 
-drawTeamWithFlagCentered(
-  SF_RIGHT_X + BOX_W / 2,
-  Y_SF + 80,
-  buildTeamText(sf2.awayTeam, sf2.awayScore)
-);
+  // ★ vs を明示的に描画（準決勝②）
+  ctx.save();
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "vs",
+    SF_RIGHT_X + BOX_W / 2, // ← 準決勝②のBOX中央
+    Y_SF + 85               // ← 上下の中間
+  );
+  ctx.restore();
+
+  // 下チーム
+  drawTeamWithFlagCentered(
+    SF_RIGHT_X + BOX_W / 2,
+    Y_SF + 110,
+    buildTeamText(sf2.awayTeam, sf2.awayScore)
+  );
 }
 
+// 勝者表示
 if (sf2?.winnerTeam) {
   drawWinnerWithFlagCentered(
     SF_RIGHT_X + BOX_W / 2,
-    Y_SF + 110,
+    Y_SF + 145,
     `Win：${sf2.winnerTeam}`
   );
 }
@@ -721,7 +798,7 @@ drawBox(
   "",
   [
     "",
-    "vs",
+    "",
     "",
     null
   ]
@@ -739,24 +816,35 @@ BOX_HIT_AREAS.push({
 
 drawRoundTitleCentered(
   QF_L1_X + BOX_W / 2,
-  Y_QF + 18,
+  Y_QF + 20,
   "① 準々決勝 '26/3/13(金)"
 );
+
 if (qf1) {
   drawTeamWithFlagCentered(
     QF_L1_X + BOX_W / 2,
-    Y_QF + 45,
+    Y_QF + 60,
     buildTeamText(qf1.homeTeam, qf1.homeScore)
   );
+
+  // ★ vs（明示描画）
+  ctx.save();
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+  ctx.textAlign = "center";
+  ctx.fillText("vs", QF_L1_X + BOX_W / 2, Y_QF + 85);
+  ctx.restore();
+
   drawTeamWithFlagCentered(
     QF_L1_X + BOX_W / 2,
-    Y_QF + 81,
-    buildTeamText(qf1.awayTeam, qf1.awayScore)  );
+    Y_QF + 110,
+    buildTeamText(qf1.awayTeam, qf1.awayScore)
+  );
 }
+
 if (qf1?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_L1_X + BOX_W / 2,
-    Y_QF + 111,
+    Y_QF + 145,
     `Win：${qf1.winnerTeam}`
   );
 }
@@ -772,7 +860,7 @@ drawBox(
   "",
   [
     "",
-    "vs",
+    "",
     "",
     null
   ]
@@ -789,24 +877,34 @@ BOX_HIT_AREAS.push({
 
 drawRoundTitleCentered(
   QF_L2_X + BOX_W / 2,
-  Y_QF + 18,
+  Y_QF + 20,
   "② 準々決勝 '26/3/14(土)"
 );
+
 if (qf2) {
   drawTeamWithFlagCentered(
     QF_L2_X + BOX_W / 2,
-    Y_QF + 45,
+    Y_QF + 60,
     buildTeamText(qf2.homeTeam, qf2.homeScore)
   );
+
+  ctx.save();
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+  ctx.textAlign = "center";
+  ctx.fillText("vs", QF_L2_X + BOX_W / 2, Y_QF + 85);
+  ctx.restore();
+
   drawTeamWithFlagCentered(
     QF_L2_X + BOX_W / 2,
-    Y_QF + 81,
-    buildTeamText(qf2.awayTeam, qf2.awayScore)  );
+    Y_QF + 110,
+    buildTeamText(qf2.awayTeam, qf2.awayScore)
+  );
 }
+
 if (qf2?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_L2_X + BOX_W / 2,
-    Y_QF + 111,
+    Y_QF + 145,
     `Win：${qf2.winnerTeam}`
   );
 }
@@ -822,7 +920,7 @@ drawBox(
   "",
   [
     "",
-    "vs",
+    "",
     "",
     null
   ]
@@ -839,24 +937,34 @@ BOX_HIT_AREAS.push({
 
 drawRoundTitleCentered(
   QF_R1_X + BOX_W / 2,
-  Y_QF + 18,
+  Y_QF + 20,
   "③ 準々決勝 '26/3/13(金)"
 );
+
 if (qf3) {
   drawTeamWithFlagCentered(
     QF_R1_X + BOX_W / 2,
-    Y_QF + 45,
+    Y_QF + 60,
     buildTeamText(qf3.homeTeam, qf3.homeScore)
   );
+
+  ctx.save();
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+  ctx.textAlign = "center";
+  ctx.fillText("vs", QF_R1_X + BOX_W / 2, Y_QF + 85);
+  ctx.restore();
+
   drawTeamWithFlagCentered(
     QF_R1_X + BOX_W / 2,
-    Y_QF + 81,
-    buildTeamText(qf3.awayTeam, qf3.awayScore)  );
+    Y_QF + 110,
+    buildTeamText(qf3.awayTeam, qf3.awayScore)
+  );
 }
+
 if (qf3?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_R1_X + BOX_W / 2,
-    Y_QF + 111,
+    Y_QF + 145,
     `Win：${qf3.winnerTeam}`
   );
 }
@@ -872,7 +980,7 @@ drawBox(
   "",
   [
     "",
-    "vs",
+    "",
     "",
     null
   ]
@@ -889,24 +997,34 @@ BOX_HIT_AREAS.push({
 
 drawRoundTitleCentered(
   QF_R2_X + BOX_W / 2,
-  Y_QF + 18,
+  Y_QF + 20,
   "④ 準々決勝 '26/3/14(土)"
 );
+
 if (qf4) {
   drawTeamWithFlagCentered(
     QF_R2_X + BOX_W / 2,
-    Y_QF + 45,
+    Y_QF + 60,
     buildTeamText(qf4.homeTeam, qf4.homeScore)
   );
+
+  ctx.save();
+  ctx.font = `bold ${FONT_MD}px sans-serif`;
+  ctx.textAlign = "center";
+  ctx.fillText("vs", QF_R2_X + BOX_W / 2, Y_QF + 85);
+  ctx.restore();
+
   drawTeamWithFlagCentered(
     QF_R2_X + BOX_W / 2,
-    Y_QF + 81,
-    buildTeamText(qf4.awayTeam, qf4.awayScore));
+    Y_QF + 110,
+    buildTeamText(qf4.awayTeam, qf4.awayScore)
+  );
 }
+
 if (qf4?.winnerTeam) {
   drawWinnerWithFlagCentered(
     QF_R2_X + BOX_W / 2,
-    Y_QF + 111,
+    Y_QF + 145,
     `Win：${qf4.winnerTeam}`
   );
 }
