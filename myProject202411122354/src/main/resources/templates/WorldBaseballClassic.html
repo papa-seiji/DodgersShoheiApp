@@ -475,6 +475,113 @@ WBC POOL 表示切替 / 順位表示 CSS
   text-decoration: none;
 }
 
+
+
+/* ===============================
+  決勝トーナメント表
+=============================== */
+
+.wbc-tournament-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  text-align: center;
+}
+
+#wbc-tournament-canvas {
+  width: 100%;
+  max-width: 1100px;
+  aspect-ratio: 11 / 9;
+  display: block;
+  margin: 0 auto;
+  background-color: rgb(0 255 22 / 9%);
+  border-radius: 12px;
+}
+
+/* ===============================
+  拡大表示モーダル
+=============================== */
+
+.hidden {
+  display: none;
+}
+
+#box-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* ★ 中央モーダル本体 */
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+
+  /* ★ 追加：Canvasがはみ出さない安全サイズ */
+  width: 720px;
+  height: 520px;
+  box-sizing: border-box;
+}
+
+/* ★ 拡大表示用Canvas（モーダル内に必須） */
+#box-preview-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 閉じるボタン */
+#modal-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+
+@media screen and (max-width: 890px) {
+  /* モーダルのサイズを縮小 */
+  .modal-content {
+    width: 70%; /* 横幅を80%に調整 */
+    height: auto;
+    max-width: 100%; /* 最大幅を100%に */
+  }
+
+  /* 拡大Canvasのサイズ調整 */
+  #box-preview-canvas {
+    width: 70%; /* 横幅を100%に */
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  /* モーダルのサイズを縮小 */
+  .modal-content {
+    width: 80%; /* 横幅を80%に調整 */
+    height: auto;
+    max-width: 100%; /* 最大幅を100%に */
+  }
+
+  /* 拡大Canvasのサイズ調整 */
+  #box-preview-canvas {
+    width: 80%; /* 横幅を100%に */
+    height: auto;
+  }
+}
+
 </style>
 
 
@@ -926,6 +1033,33 @@ if (window.location.hash.startsWith("#pool-title")) {
 
 
 
+    <!--決勝トーナメント表-->
+
+<section id="wbc-tournament" style="margin:60px 0; text-align:center;">
+<p style="font-weight: bold;">2026 WBC トーナメント表</p>
+  <h2>今入っているデータは表示確認テスト用のダミーデータ</h2>
+
+<div class="wbc-tournament-wrapper">
+<span>【各カードをタップすると拡大表示できます】</span>
+  <canvas id="wbc-tournament-canvas"></canvas>
+</div>
+</section>
+
+<!-- ===== BOX 拡大表示用モーダル ===== -->
+<div id="box-modal" class="hidden">
+<div class="modal-overlay" id="modal-overlay"></div>
+
+  <div class="modal-content">
+    <button id="modal-close">✕</button>
+
+    <canvas id="box-preview-canvas"></canvas>
+  </div>
+</div>
+
+    <script th:src="@{/js/wbc_tournament_canvas.js}"></script>
+
+
+
 
 <img id="samuraiLogo" alt="Samurai Japan Logo">
 
@@ -967,16 +1101,24 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
 </section>
 
 
-<p style="font-weight: bold;">2026 WBC トーナメント表</p>
-<div class="link">
-    <a href="https://www.2026wbc.jp/schedule/" target="_blank">公式2026wbc.jp</a>
-</div>
 
-  <div class="postseason-container">
+ <!-- <div class="postseason-container"> -->
 
     <!-- トーナメント線の背景 -->
-    <div class="bracket-background"></div>
- </div>
+    <!-- <div class="bracket-background"></div>
+ </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
 
   <!-- 🎬 WS Series 動画セクション（タブ式） -->
   <section id="ws-video-section">
@@ -1300,8 +1442,16 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
     <div id="pitching-stats" class="stats-container"></div>
   </section>
 
+<div class="link">
+    <a href="https://www.2026wbc.jp/schedule/" target="_blank">公式2026wbc.jp</a>
+</div>
+
 
   <div class="wbc-container">
+
+
+
+
 
   <!-- 🔗 Official X (Twitter) -->
 <div class="home-sns-guide">

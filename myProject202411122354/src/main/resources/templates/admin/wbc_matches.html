@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>WBC MATCHES ADMIN</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    select, input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .msg {
+      margin-top: 10px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+<h1>WBC MATCHES</h1>
+
+<p>year = <span th:text="${year}">2026</span></p>
+<p>round = <span th:text="${round}">QF</span></p>
+<p>matches size = <span th:text="${#lists.size(matches)}">0</span></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Round</th>
+      <th>No</th>
+      <th>Home-T</th>
+      <th>H-Score</th>
+      <th>A-Score</th>
+      <th>Away-T</th>
+      <th>Winner</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr th:each="m : ${matches}">
+      <td th:text="${m.round}">QF</td>
+      <td th:text="${m.matchNo}">1</td>
+
+      <!-- Home Team -->
+      <td>
+        <select th:id="'homeTeam-' + ${m.id}">
+          <option value="">---</option>
+          <option th:each="t : ${teamList}"
+                  th:value="${t}"
+                  th:text="${t}"
+                  th:selected="${t == m.homeTeam}">
+          </option>
+        </select>
+      </td>
+
+      <!-- Home Score -->
+      <td>
+        <input type="number" min="0"
+               th:id="'homeScore-' + ${m.id}"
+               th:value="${m.homeScore}">
+      </td>
+
+      <!-- Away Score -->
+      <td>
+        <input type="number" min="0"
+               th:id="'awayScore-' + ${m.id}"
+               th:value="${m.awayScore}">
+      </td>
+
+      <!-- Away Team -->
+      <td>
+        <select th:id="'awayTeam-' + ${m.id}">
+          <option value="">---</option>
+          <option th:each="t : ${teamList}"
+                  th:value="${t}"
+                  th:text="${t}"
+                  th:selected="${t == m.awayTeam}">
+          </option>
+        </select>
+      </td>
+
+      <!-- Winner Team（★ teamList から選択） -->
+      <td>
+        <select th:id="'winnerTeam-' + ${m.id}">
+          <option value="">-- 未決定 --</option>
+          <option th:each="t : ${teamList}"
+                  th:value="${t}"
+                  th:text="${t}"
+                  th:selected="${t == m.winnerTeam}">
+          </option>
+        </select>
+      </td>
+
+      <!-- Action -->
+      <td>
+        <button type="button"
+                th:onclick="'saveMatch(' + ${m.id} + ')'">
+          保存
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="msg" class="msg"></div>
+
+<!-- =========================
+     JavaScript
+========================= -->
+
+<script>
+function saveMatch(id) {
+
+  const body = {
+    id: id,
+    homeTeam: document.getElementById("homeTeam-" + id).value,
+    awayTeam: document.getElementById("awayTeam-" + id).value,
+    homeScore: document.getElementById("homeScore-" + id).value,
+    awayScore: document.getElementById("awayScore-" + id).value,
+    winnerTeam: document.getElementById("winnerTeam-" + id).value
+  };
+
+  fetch("/admin/wbc/api/match/update", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("update failed");
+
+    // ★ Google風：OK押下で画面更新
+    alert("保存しました");
+    location.reload();
+  })
+  .catch(err => {
+    alert("保存に失敗しました");
+    console.error(err);
+  });
+}
+</script>
+
+
+</body>
+</html>
