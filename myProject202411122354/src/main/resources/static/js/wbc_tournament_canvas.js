@@ -173,30 +173,39 @@ function buildTeamText(team, score) {
   // チーム未確定
   if (!team) return "未定";
 
+  // ★ 表示用は日本語に変換
+  const displayTeam = toJapaneseTeamName(team);
+
   // スコア未入力（null / undefined）の場合は表示しない
   if (score === null || score === undefined) {
-    return team;
+    return displayTeam;
   }
 
   // 0 も含めて表示する
-    return `${team} ${score}`;
+  return `${displayTeam} ${score}`;
 }
 
 
 
-
+//これは Canvas 本体ではなく、モーダル（拡大表示）専用のロジックです。
 function buildPreviewLines(data) {
   if (!data) return ["未定"];
 
   const lines = [];
 
-  if (data.homeTeam) {
+  const hasHome = !!data.homeTeam;
+  const hasAway = !!data.awayTeam;
+
+  if (hasHome) {
     lines.push(buildTeamText(data.homeTeam, data.homeScore));
   }
 
-  lines.push("vs");
+  // ★ 両チームがある場合のみ vs
+  if (hasHome && hasAway) {
+    lines.push("vs");
+  }
 
-  if (data.awayTeam) {
+  if (hasAway) {
     lines.push(buildTeamText(data.awayTeam, data.awayScore));
   }
 
@@ -247,33 +256,23 @@ function drawTeamWithFlagLeft(x, y, teamText) {
 
 
 // ==============================
-// 国旗＋チーム名（中央揃え）
+// 国旗＋チーム名（中央揃え・英語キー分離版）
 // ==============================
-function drawTeamWithFlagCentered(cx, y, teamText) {
-  if (!teamText) return;
+function drawTeamWithFlagCentered(cx, y, teamCode, displayText) {
+  if (!teamCode || !displayText) return;
 
   ctx.font = `bold ${FONT_LG}px sans-serif`;
-  ctx.textAlign = "left"; // ★手動配置するので left 固定
+  ctx.textAlign = "left";
 
-  // teamText: "USA 7" / "PUERTO RICO 3" など
-  const parts = teamText.split(" ");
-  const team = parts.slice(0, -1).join(" "); // 複数単語対応
-  const score = parts[parts.length - 1];
+  const flag = FLAGS[teamCode];
 
-  const text = `${team} ${score}`;
-
-  const flag = FLAGS[team];
   const FLAG_W = flag ? 26 : 0;
   const FLAG_H = 18;
   const GAP = flag ? 6 : 0;
 
-  // テキスト幅
-  const textWidth = ctx.measureText(text).width;
-
-  // 全体幅（国旗 + gap + テキスト）
+  const textWidth = ctx.measureText(displayText).width;
   const totalWidth = FLAG_W + GAP + textWidth;
 
-  // 左端X（中央から逆算）
   const startX = cx - totalWidth / 2;
 
   // 国旗
@@ -281,8 +280,8 @@ function drawTeamWithFlagCentered(cx, y, teamText) {
     ctx.drawImage(flag, startX, y - FLAG_H / 2, FLAG_W, FLAG_H);
   }
 
-  // テキスト
-  ctx.fillText(text, startX + FLAG_W + GAP, y);
+  // テキスト（日本語OK）
+  ctx.fillText(displayText, startX + FLAG_W + GAP, y);
 }
 
 
@@ -408,7 +407,7 @@ const CONNECT = 30 * UI_SCALE;
 // ==============================
 const FONT_SM = 12 * UI_SCALE;
 const FONT_MD = 14 * UI_SCALE;
-const FONT_LG = 15.5 * UI_SCALE;
+const FONT_LG = 19 * UI_SCALE;
 
 
   // ==============================
@@ -543,11 +542,11 @@ if (champion) {
   ctx.save(); // ★ 他への影響防止
 
   ctx.font = `bold ${FONT_LG}px sans-serif`; // ← 太字＋少し大きく
-  drawWinnerWithFlagCentered(
-    CENTER_X,
-    Y_CHAMP + 100, // ★ 少し下げてバランス調整
-    champion
-  );
+drawChampionWithFlagCentered(
+  CENTER_X,
+  Y_CHAMP + 90,
+  champion
+);
 
   ctx.restore();
 } else {
@@ -597,7 +596,8 @@ drawRoundTitleCentered(
 drawTeamWithFlagCentered(
   CENTER_X,
   Y_FINAL + 60,
-  buildTeamText(final.homeTeam, final.homeScore)
+  final.homeTeam,                                // ← 英語（国旗用）
+  buildTeamText(final.homeTeam, final.homeScore) // ← 日本語（表示用）
 );
 
 // ★ vs を明示的に描画（ここが今まで無かった）
@@ -611,6 +611,7 @@ ctx.restore();
 drawTeamWithFlagCentered(
   CENTER_X,
   Y_FINAL + 110,
+  final.awayTeam,
   buildTeamText(final.awayTeam, final.awayScore)
 );
 
@@ -666,11 +667,12 @@ drawRoundTitleCentered(
 
 if (sf1) {
   // 上チーム
-  drawTeamWithFlagCentered(
-    SF_LEFT_X + BOX_W / 2,
-    Y_SF + 60,
-    buildTeamText(sf1.homeTeam, sf1.homeScore)
-  );
+drawTeamWithFlagCentered(
+  SF_LEFT_X + BOX_W / 2,
+  Y_SF + 60,
+  sf1.homeTeam,
+  buildTeamText(sf1.homeTeam, sf1.homeScore)
+);
 
   // ★ vs を明示的に描画（準決勝①用）
   ctx.save();
@@ -684,11 +686,12 @@ if (sf1) {
   ctx.restore();
 
   // 下チーム
-  drawTeamWithFlagCentered(
-    SF_LEFT_X + BOX_W / 2,
-    Y_SF + 110,
-    buildTeamText(sf1.awayTeam, sf1.awayScore)
-  );
+drawTeamWithFlagCentered(
+  SF_LEFT_X + BOX_W / 2,
+  Y_SF + 110,
+  sf1.awayTeam,
+  buildTeamText(sf1.awayTeam, sf1.awayScore)
+);
 }
 
 // 勝者
@@ -739,6 +742,7 @@ if (sf2) {
   drawTeamWithFlagCentered(
     SF_RIGHT_X + BOX_W / 2,
     Y_SF + 60,
+    sf2.homeTeam,
     buildTeamText(sf2.homeTeam, sf2.homeScore)
   );
 
@@ -757,6 +761,7 @@ if (sf2) {
   drawTeamWithFlagCentered(
     SF_RIGHT_X + BOX_W / 2,
     Y_SF + 110,
+    sf2.awayTeam,
     buildTeamText(sf2.awayTeam, sf2.awayScore)
   );
 }
@@ -821,11 +826,12 @@ drawRoundTitleCentered(
 );
 
 if (qf1) {
-  drawTeamWithFlagCentered(
-    QF_L1_X + BOX_W / 2,
-    Y_QF + 60,
-    buildTeamText(qf1.homeTeam, qf1.homeScore)
-  );
+drawTeamWithFlagCentered(
+  QF_L1_X + BOX_W / 2,
+  Y_QF + 60,
+  qf1.homeTeam,
+  buildTeamText(qf1.homeTeam, qf1.homeScore)
+);
 
   // ★ vs（明示描画）
   ctx.save();
@@ -834,11 +840,12 @@ if (qf1) {
   ctx.fillText("vs", QF_L1_X + BOX_W / 2, Y_QF + 85);
   ctx.restore();
 
-  drawTeamWithFlagCentered(
-    QF_L1_X + BOX_W / 2,
-    Y_QF + 110,
-    buildTeamText(qf1.awayTeam, qf1.awayScore)
-  );
+drawTeamWithFlagCentered(
+  QF_L1_X + BOX_W / 2,
+  Y_QF + 110,
+  qf1.awayTeam,
+  buildTeamText(qf1.awayTeam, qf1.awayScore)
+);
 }
 
 if (qf1?.winnerTeam) {
@@ -885,6 +892,7 @@ if (qf2) {
   drawTeamWithFlagCentered(
     QF_L2_X + BOX_W / 2,
     Y_QF + 60,
+    qf2.homeTeam, 
     buildTeamText(qf2.homeTeam, qf2.homeScore)
   );
 
@@ -897,6 +905,7 @@ if (qf2) {
   drawTeamWithFlagCentered(
     QF_L2_X + BOX_W / 2,
     Y_QF + 110,
+    qf2.awayTeam, 
     buildTeamText(qf2.awayTeam, qf2.awayScore)
   );
 }
@@ -945,6 +954,7 @@ if (qf3) {
   drawTeamWithFlagCentered(
     QF_R1_X + BOX_W / 2,
     Y_QF + 60,
+    qf3.homeTeam,
     buildTeamText(qf3.homeTeam, qf3.homeScore)
   );
 
@@ -957,6 +967,7 @@ if (qf3) {
   drawTeamWithFlagCentered(
     QF_R1_X + BOX_W / 2,
     Y_QF + 110,
+    qf3.awayTeam,
     buildTeamText(qf3.awayTeam, qf3.awayScore)
   );
 }
@@ -1005,6 +1016,7 @@ if (qf4) {
   drawTeamWithFlagCentered(
     QF_R2_X + BOX_W / 2,
     Y_QF + 60,
+    qf4.homeTeam,
     buildTeamText(qf4.homeTeam, qf4.homeScore)
   );
 
@@ -1017,6 +1029,7 @@ if (qf4) {
   drawTeamWithFlagCentered(
     QF_R2_X + BOX_W / 2,
     Y_QF + 110,
+    qf4.awayTeam,
     buildTeamText(qf4.awayTeam, qf4.awayScore)
   );
 }
@@ -1051,6 +1064,82 @@ if (qf4?.winnerTeam) {
     vLine(SF_RIGHT_CENTER, Y_QF - CONNECT, Y_SF + BOX_H);
     hLine(QF_RIGHT_CENTER_2, SF_RIGHT_CENTER, Y_QF - CONNECT);
   }
+
+
+// ==============================
+// チーム名 英語 → 日本語（表示用）
+// ==============================
+const TEAM_NAME_JA_MAP = {
+  "PUERTO RICO": "プエルトリコ",
+  "CUBA": "キューバ",
+  "CANADA": "カナダ",
+  "PANAMA": "パナマ",
+  "COLOMBIA": "コロンビア",
+  "USA": "アメリカ",
+  "MEXICO": "メキシコ",
+  "ITALY": "イタリア",
+  "UNITED KINGDOM": "イギリス",
+  "BRAZIL": "ブラジル",
+  "JAPAN": "日本",
+  "AUSTRALIA": "オーストラリア",
+  "KOREA": "韓国",
+  "CZECH REPUBLIC": "チェコ",
+  "CHINESE TAIPEI": "タイペイ",
+  "VENEZUELA": "ベネズエラ",
+  "DOMINICAN REPUBLIC": "ドミニカ",
+  "NETHERLANDS": "オランダ",
+  "ISRAEL": "イスラエル",
+  "NICARAGUA": "ニカラグア"
+};
+
+function toJapaneseTeamName(teamName) {
+  if (!teamName) return "";
+  return TEAM_NAME_JA_MAP[teamName] || teamName;
+}
+
+
+function drawChampionWithFlagCentered(cx, y, teamName) {
+  if (!teamName) return;
+
+  ctx.save();
+  ctx.font = `bold ${FONT_LG}px sans-serif`;
+  ctx.textAlign = "left";
+
+  const label = "Win : ";
+
+  const teamKey   = teamName;                     // 🇯🇵 国旗キー
+  const teamLabel = toJapaneseTeamName(teamName); // 日本 表示
+
+  const flag = FLAGS[teamKey];
+
+  const FLAG_W = flag ? 30 : 0;
+  const FLAG_H = 20;
+  const GAP = flag ? 8 : 0;
+
+  const labelWidth = ctx.measureText(label).width;
+  const teamWidth  = ctx.measureText(teamLabel).width;
+
+  const totalWidth = labelWidth + FLAG_W + GAP + teamWidth;
+  const startX = cx - totalWidth / 2;
+
+  // Win :
+  ctx.fillText(label, startX, y);
+
+  // 国旗
+  if (flag && flag.complete && flag.naturalWidth > 0) {
+    ctx.drawImage(flag, startX + labelWidth, y - FLAG_H / 2, FLAG_W, FLAG_H);
+  }
+
+  // 日本語チーム名
+  ctx.fillText(
+    teamLabel,
+    startX + labelWidth + FLAG_W + GAP,
+    y
+  );
+
+  ctx.restore();
+}
+
 
   // 初回描画
   redraw();
