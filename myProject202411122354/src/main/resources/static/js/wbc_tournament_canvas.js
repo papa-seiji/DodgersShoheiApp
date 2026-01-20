@@ -71,7 +71,7 @@ const FLAGS = (() => {
     NETHERLANDS: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg",
     ISRAEL: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg",
     NICARAGUA: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg",
-    CZECH_REPUBLIC: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg",
+    "CZECH REPUBLIC": "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg",
     "CHINESE TAIPEI": "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg",
     "UNITED KINGDOM": "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg"
   };
@@ -83,6 +83,9 @@ const FLAGS = (() => {
     img.src = srcMap[k];
     images[k] = img;
   });
+
+
+
 
   return images;
 })();
@@ -269,8 +272,9 @@ function drawTeamWithFlagLeft(x, y, teamText) {
 // 国旗＋チーム名（中央揃え・英語キー分離版）
 // ==============================
 function drawTeamWithFlagCentered(cx, y, teamCode, displayText) {
-  if (!teamCode || !displayText) return;
 
+  if (!teamCode || !displayText) return;
+console.log("FLAG TEAM =", teamCode);
   ctx.font = `bold ${FONT_LG}px sans-serif`;
   ctx.textAlign = "left";
 
@@ -290,7 +294,7 @@ function drawTeamWithFlagCentered(cx, y, teamCode, displayText) {
     ctx.drawImage(flag, startX, y - FLAG_H / 2, FLAG_W, FLAG_H);
   }
 
-  // テキスト（日本語OK）
+  // テキスト
   ctx.fillText(displayText, startX + FLAG_W + GAP, y);
 }
 
