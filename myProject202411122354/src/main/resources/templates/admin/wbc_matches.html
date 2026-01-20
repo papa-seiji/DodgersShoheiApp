@@ -47,12 +47,12 @@
 
   <tbody>
     <tr th:each="m : ${matches}">
-      <td th:text="${m.round}">QF</td>
-      <td th:text="${m.matchNo}">1</td>
+      <td class="round" th:text="${m.round}">QF</td>
+      <td class="match-no" th:text="${m.matchNo}">1</td>
 
       <!-- Home Team -->
       <td>
-        <select th:id="'homeTeam-' + ${m.id}">
+        <select class="home-team" th:id="'homeTeam-' + ${m.id}">
           <option value="">---</option>
           <option th:each="t : ${teamList}"
                   th:value="${t}"
@@ -78,7 +78,7 @@
 
       <!-- Away Team -->
       <td>
-        <select th:id="'awayTeam-' + ${m.id}">
+        <select class="away-team" th:id="'awayTeam-' + ${m.id}">
           <option value="">---</option>
           <option th:each="t : ${teamList}"
                   th:value="${t}"
@@ -90,7 +90,7 @@
 
       <!-- Winner Team（★ teamList から選択） -->
       <td>
-        <select th:id="'winnerTeam-' + ${m.id}">
+        <select class="winner-team" th:id="'winnerTeam-' + ${m.id}">
           <option value="">-- 未決定 --</option>
           <option th:each="t : ${teamList}"
                   th:value="${t}"
@@ -148,6 +148,213 @@ function saveMatch(id) {
     console.error(err);
   });
 }
+</script>
+
+<script>
+/* =========================
+   ★ QF チーム定義（追加）
+========================= */
+const QF_POOLS_AB = [
+  "PUERTO RICO","CUBA","CANADA","PANAMA","COLOMBIA",
+  "USA","MEXICO","ITALY","UNITED KINGDOM","BRAZIL"
+];
+
+const QF_POOLS_CD = [
+  "JAPAN","AUSTRALIA","KOREA","CZECH REPUBLIC","CHINESE TAIPEI",
+  "VENEZUELA","DOMINICAN REPUBLIC","NETHERLANDS","ISRAEL","NICARAGUA"
+];
+
+
+/* =================================
+   ★ QF Home/Away 制御プルダウン制御
+================================== */
+function setupQFTeamSelect(row) {
+  const round = row.querySelector(".round").innerText;
+  const no    = Number(row.querySelector(".match-no").innerText);
+
+  if (round !== "QF") return;
+
+  const homeSel = row.querySelector(".home-team");
+  const awaySel = row.querySelector(".away-team");
+
+  const teams = (no === 1 || no === 2) ? QF_POOLS_AB : QF_POOLS_CD;
+
+  [homeSel, awaySel].forEach(sel => {
+    const current = sel.value;
+    sel.innerHTML = `<option value="">---</option>`;
+    teams.forEach(t => {
+      sel.innerHTML += `<option value="${t}">${t}</option>`;
+    });
+    sel.value = current;
+  });
+}
+
+
+/* ===========================
+   ★ Winner 動的生成連動にする
+=========================== */
+function updateWinnerSelect(row) {
+  const home = row.querySelector(".home-team").value;
+  const away = row.querySelector(".away-team").value;
+  const win  = row.querySelector(".winner-team");
+
+  const current = win.value;
+  win.innerHTML = `<option value="">-- 未決定 --</option>`;
+
+  if (home) win.innerHTML += `<option value="${home}">${home}</option>`;
+  if (away) win.innerHTML += `<option value="${away}">${away}</option>`;
+
+  win.value = current;
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+/* =========================
+   ★ QF Winner 取得
+========================= */
+function getQFWinners(qfNos) {
+  const winners = [];
+
+  qfNos.forEach(no => {
+    const row = [...document.querySelectorAll("tbody tr")]
+      .find(r =>
+        r.querySelector(".round")?.innerText === "QF" &&
+        Number(r.querySelector(".match-no")?.innerText) === no
+      );
+
+    if (!row) return;
+
+    const w = row.querySelector(".winner-team")?.value;
+    if (w) winners.push(w);
+  });
+
+  return winners;
+}
+
+/* =========================
+   ★ SF Home / Away 制御
+========================= */
+function setupSFTeamSelect(row) {
+  const round = row.querySelector(".round").innerText;
+  const no    = Number(row.querySelector(".match-no").innerText);
+
+  if (round !== "SF") return;
+
+  const homeSel = row.querySelector(".home-team");
+  const awaySel = row.querySelector(".away-team");
+
+  // SF① → QF①② / SF② → QF③④
+  const qfTargets = (no === 1) ? [1, 2] : [3, 4];
+  const teams = getQFWinners(qfTargets);
+
+  [homeSel, awaySel].forEach(sel => {
+    const current = sel.value;
+    sel.innerHTML = `<option value="">---</option>`;
+    teams.forEach(t => {
+      sel.innerHTML += `<option value="${t}">${t}</option>`;
+    });
+    sel.value = current;
+  });
+}
+
+document.querySelectorAll(".winner-team").forEach(sel => {
+  sel.addEventListener("change", () => {
+    document.querySelectorAll("tbody tr").forEach(r => {
+      setupSFTeamSelect(r);
+      updateWinnerSelect(r);
+    });
+  });
+});
+</script>
+
+<script>
+/* =========================
+   ★ SF Winner 取得
+========================= */
+function getSFWinner(sfNo) {
+  const row = [...document.querySelectorAll("tbody tr")]
+    .find(r =>
+      r.querySelector(".round")?.innerText === "SF" &&
+      Number(r.querySelector(".match-no")?.innerText) === sfNo
+    );
+
+  return row?.querySelector(".winner-team")?.value || "";
+}
+</script>
+
+
+<script>
+/* =========================
+   ★ FINAL Home / Away 制御
+========================= */
+function setupFinalTeamSelect(row) {
+  const round = row.querySelector(".round").innerText;
+  if (round !== "FINAL") return;
+
+  const homeSel = row.querySelector(".home-team");
+  const awaySel = row.querySelector(".away-team");
+
+  const homeTeam = getSFWinner(1); // SF① Winner
+  const awayTeam = getSFWinner(2); // SF② Winner
+
+  // Home
+  homeSel.innerHTML = `<option value="">---</option>`;
+  if (homeTeam) {
+    homeSel.innerHTML += `<option value="${homeTeam}">${homeTeam}</option>`;
+    homeSel.value = homeTeam;
+  }
+
+  // Away
+  awaySel.innerHTML = `<option value="">---</option>`;
+  if (awayTeam) {
+    awaySel.innerHTML += `<option value="${awayTeam}">${awayTeam}</option>`;
+    awaySel.value = awayTeam;
+  }
+}
+</script>
+<script>
+document.querySelectorAll(".winner-team").forEach(sel => {
+  sel.addEventListener("change", () => {
+    document.querySelectorAll("tbody tr").forEach(r => {
+      setupSFTeamSelect(r);
+      setupFinalTeamSelect(r); // ★ 追加
+      updateWinnerSelect(r);
+    });
+  });
+});
+</script>
+
+
+<script>
+/* =========================
+   ★ 初期化
+========================= */
+document.querySelectorAll("tbody tr").forEach(row => {
+  setupQFTeamSelect(row);
+  setupSFTeamSelect(row);   // ★ 追加
+  setupFinalTeamSelect(row);  // ★ 追加
+  updateWinnerSelect(row);
+
+  row.querySelector(".home-team").addEventListener("change", () => {
+    updateWinnerSelect(row);
+  });
+  row.querySelector(".away-team").addEventListener("change", () => {
+    updateWinnerSelect(row);
+  });
+});
 </script>
 
 

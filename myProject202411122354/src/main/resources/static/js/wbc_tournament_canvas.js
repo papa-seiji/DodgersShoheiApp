@@ -71,7 +71,7 @@ const FLAGS = (() => {
     NETHERLANDS: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/nl.jpg",
     ISRAEL: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/il.jpg",
     NICARAGUA: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/ni.jpg",
-    CZECH_REPUBLIC: "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg",
+    "CZECH REPUBLIC": "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/cz.jpg",
     "CHINESE TAIPEI": "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/tw.jpg",
     "UNITED KINGDOM": "https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/2026_WBC/flags/gb.jpg"
   };
@@ -83,6 +83,9 @@ const FLAGS = (() => {
     img.src = srcMap[k];
     images[k] = img;
   });
+
+
+
 
   return images;
 })();
@@ -269,8 +272,9 @@ function drawTeamWithFlagLeft(x, y, teamText) {
 // 国旗＋チーム名（中央揃え・英語キー分離版）
 // ==============================
 function drawTeamWithFlagCentered(cx, y, teamCode, displayText) {
-  if (!teamCode || !displayText) return;
 
+  if (!teamCode || !displayText) return;
+console.log("FLAG TEAM =", teamCode);
   ctx.font = `bold ${FONT_LG}px sans-serif`;
   ctx.textAlign = "left";
 
@@ -290,7 +294,7 @@ function drawTeamWithFlagCentered(cx, y, teamCode, displayText) {
     ctx.drawImage(flag, startX, y - FLAG_H / 2, FLAG_W, FLAG_H);
   }
 
-  // テキスト（日本語OK）
+  // テキスト
   ctx.fillText(displayText, startX + FLAG_W + GAP, y);
 }
 
@@ -847,6 +851,14 @@ if (hasSf2Teams) {
     const QF_R2_X = SF_RIGHT_X + BOX_W / 2;
 
 
+// 準々決勝 固定表示文言（B案）
+const QF_FIXED_LABELS = {
+  1: ["POOL A 2位", "POOL B 1位"],
+  2: ["POOL B 2位", "POOL A 1位"],
+  3: ["POOL C 2位", "POOL D 1位"],
+  4: ["POOL D 2位", "POOL C 1位"]
+};
+
 
 function drawQuarterFinal({
   ctx,
@@ -858,9 +870,7 @@ function drawQuarterFinal({
   match,
   hitTitle
 }) {
-  const hasTeams = match?.homeTeam || match?.awayTeam;
-
-  // 枠
+  // 枠は必ず描く
   drawBox(
     ctx,
     x,
@@ -887,9 +897,26 @@ function drawQuarterFinal({
     title
   );
 
-  if (hasTeams) {
+  // ★★★ B案：ここに入れる ★★★
+  if (!match?.homeTeam && !match?.awayTeam) {
+    const labels = QF_FIXED_LABELS[match.matchNo];
 
-    // 上チーム
+    ctx.save();
+    ctx.font = `bold ${FONT_LG}px sans-serif`;
+    ctx.textAlign = "center";
+
+    ctx.fillText(labels[0], x + boxW / 2, y + 70);
+    ctx.fillText("vs",        x + boxW / 2, y + 90);
+    ctx.fillText(labels[1], x + boxW / 2, y + 110);
+
+    ctx.restore();
+    return; // ← この試合の描画だけ終了
+  }
+  // ★★★ ここまで ★★★
+
+  const hasTeams = match?.homeTeam || match?.awayTeam;
+
+  if (hasTeams) {
     if (match.homeTeam) {
       drawTeamWithFlagCentered(
         x + boxW / 2,
@@ -899,20 +926,14 @@ function drawQuarterFinal({
       );
     }
 
-    // vs（両チームあるときのみ）
     if (match.homeTeam && match.awayTeam) {
       ctx.save();
       ctx.font = `bold ${FONT_MD}px sans-serif`;
       ctx.textAlign = "center";
-      ctx.fillText(
-        "vs",
-        x + boxW / 2,
-        y + 85
-      );
+      ctx.fillText("vs", x + boxW / 2, y + 85);
       ctx.restore();
     }
 
-    // 下チーム
     if (match.awayTeam) {
       drawTeamWithFlagCentered(
         x + boxW / 2,
@@ -921,26 +942,11 @@ function drawQuarterFinal({
         buildTeamText(match.awayTeam, match.awayScore)
       );
     }
-
-    // 勝者
-    if (match.winnerTeam) {
-      drawWinnerWithFlagCentered(
-        x + boxW / 2,
-        y + 145,
-        `Win：${match.winnerTeam}`
-      );
-    }
-
   } else {
-    // 完全未定
     ctx.save();
     ctx.font = `bold ${FONT_LG}px sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText(
-      "未定",
-      x + boxW / 2,
-      y + 90
-    );
+    ctx.fillText("未定", x + boxW / 2, y + 90);
     ctx.restore();
   }
 }
