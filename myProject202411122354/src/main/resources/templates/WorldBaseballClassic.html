@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WBC 2026 特集｜侍ジャパン・試合情報・大谷翔平情報まとめ</title>
   <link rel="stylesheet" th:href="@{/css/WorldBaseballClassic.css}">
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
 
   <style>
@@ -1063,6 +1064,230 @@ if (window.location.hash.startsWith("#pool-title")) {
 <!-- 既存 -->
 <script src="/js/wbc_tournament_canvas.js"></script>
 <script src="/js/wbc_tournament_ws.js"></script>
+
+
+<!-- =========================
+     🔐 管理者専用：WBC MATCHES 管理（htmx埋め込み）
+========================= -->
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+  <div
+    id="wbc-admin-matches"
+    hx-get="/admin/wbc/fragment/matches"
+    hx-trigger="load"
+    hx-swap="innerHTML">
+  </div>
+</div>
+
+<!-- =================================================
+     ▼ JavaScript（WBC 管理ロジック 完全版）
+================================================= -->
+
+<script>
+/* =========================
+   QF チーム定義
+========================= */
+const QF_POOLS_AB = [
+  "PUERTO RICO","CUBA","CANADA","PANAMA","COLOMBIA",
+  "USA","MEXICO","ITALY","UNITED KINGDOM","BRAZIL"
+];
+
+const QF_POOLS_CD = [
+  "JAPAN","AUSTRALIA","KOREA","CZECH REPUBLIC","CHINESE TAIPEI",
+  "VENEZUELA","DOMINICAN REPUBLIC","NETHERLANDS","ISRAEL","NICARAGUA"
+];
+
+/* =========================
+   QF Home / Away 制御
+========================= */
+function setupQFTeamSelect(row) {
+  const round = row.querySelector(".round")?.innerText;
+  const no = Number(row.querySelector(".match-no")?.innerText);
+  if (round !== "QF") return;
+
+  const teams = (no === 1 || no === 2) ? QF_POOLS_AB : QF_POOLS_CD;
+
+  ["home-team", "away-team"].forEach(cls => {
+    const sel = row.querySelector("." + cls);
+    if (!sel) return;
+
+    const current = sel.value;
+    sel.innerHTML = `<option value="">---</option>`;
+    teams.forEach(t => sel.innerHTML += `<option value="${t}">${t}</option>`);
+    sel.value = current;
+  });
+}
+
+/* =========================
+   Winner Select 連動生成
+========================= */
+function updateWinnerSelect(row) {
+  const home = row.querySelector(".home-team")?.value;
+  const away = row.querySelector(".away-team")?.value;
+  const win  = row.querySelector(".winner-team");
+  if (!win) return;
+
+  const current = win.value;
+  win.innerHTML = `<option value="">-- 未決定 --</option>`;
+  if (home) win.innerHTML += `<option value="${home}">${home}</option>`;
+  if (away) win.innerHTML += `<option value="${away}">${away}</option>`;
+  win.value = current;
+}
+
+/* =========================
+   QF Winner 取得
+========================= */
+function getQFWinners(qfNos) {
+  const winners = [];
+
+  qfNos.forEach(no => {
+    const row = [...document.querySelectorAll("#wbc-admin-matches tbody tr")]
+      .find(r =>
+        r.querySelector(".round")?.innerText === "QF" &&
+        Number(r.querySelector(".match-no")?.innerText) === no
+      );
+
+    const w = row?.querySelector(".winner-team")?.value;
+    if (w) winners.push(w);
+  });
+
+  return winners;
+}
+
+/* =========================
+   SF Home / Away 制御
+========================= */
+function setupSFTeamSelect(row) {
+  const round = row.querySelector(".round")?.innerText;
+  const no = Number(row.querySelector(".match-no")?.innerText);
+  if (round !== "SF") return;
+
+  const qfTargets = (no === 1) ? [1, 2] : [3, 4];
+  const teams = getQFWinners(qfTargets);
+
+  ["home-team", "away-team"].forEach(cls => {
+    const sel = row.querySelector("." + cls);
+    if (!sel) return;
+
+    const current = sel.value;
+    sel.innerHTML = `<option value="">---</option>`;
+    teams.forEach(t => sel.innerHTML += `<option value="${t}">${t}</option>`);
+    sel.value = current;
+  });
+}
+
+/* =========================
+   SF Winner 取得
+========================= */
+function getSFWinner(no) {
+  const row = [...document.querySelectorAll("#wbc-admin-matches tbody tr")]
+    .find(r =>
+      r.querySelector(".round")?.innerText === "SF" &&
+      Number(r.querySelector(".match-no")?.innerText) === no
+    );
+
+  return row?.querySelector(".winner-team")?.value || "";
+}
+
+/* =========================
+   FINAL Home / Away 制御
+========================= */
+function setupFinalTeamSelect(row) {
+  const round = row.querySelector(".round")?.innerText;
+  if (round !== "FINAL") return;
+
+  const homeTeam = getSFWinner(1);
+  const awayTeam = getSFWinner(2);
+
+  const homeSel = row.querySelector(".home-team");
+  const awaySel = row.querySelector(".away-team");
+
+  homeSel.innerHTML = `<option value="">---</option>`;
+  if (homeTeam) {
+    homeSel.innerHTML += `<option value="${homeTeam}">${homeTeam}</option>`;
+    homeSel.value = homeTeam;
+  }
+
+  awaySel.innerHTML = `<option value="">---</option>`;
+  if (awayTeam) {
+    awaySel.innerHTML += `<option value="${awayTeam}">${awayTeam}</option>`;
+    awaySel.value = awayTeam;
+  }
+}
+
+/* =========================
+   ★ htmx 読み込み後 初期化（最重要）
+========================= */
+document.body.addEventListener("htmx:afterSwap", function (e) {
+  if (!e.target.closest("#wbc-admin-matches")) return;
+
+  console.log("🔄 htmx fragment swapped → full init");
+
+  document.querySelectorAll("#wbc-admin-matches tbody tr").forEach(row => {
+    setupQFTeamSelect(row);
+    setupSFTeamSelect(row);
+    setupFinalTeamSelect(row);
+    updateWinnerSelect(row);
+
+    row.querySelector(".home-team")?.addEventListener("change", () => {
+      updateWinnerSelect(row);
+    });
+    row.querySelector(".away-team")?.addEventListener("change", () => {
+      updateWinnerSelect(row);
+    });
+  });
+});
+
+/* =========================
+   ★ Winner 変更時 再計算
+========================= */
+document.body.addEventListener("change", function (e) {
+  if (!e.target.classList.contains("winner-team")) return;
+
+  console.log("🏆 winner changed → SF / FINAL 再計算");
+
+  document.querySelectorAll("#wbc-admin-matches tbody tr").forEach(row => {
+    setupSFTeamSelect(row);
+    setupFinalTeamSelect(row);
+    updateWinnerSelect(row);
+  });
+});
+
+/* =========================
+   ★ 保存処理（API POST）
+========================= */
+document.addEventListener("click", function (e) {
+  if (!e.target.classList.contains("btn-save")) return;
+
+  const id = e.target.dataset.id;
+
+  const body = {
+    id: id,
+    homeTeam: document.getElementById("homeTeam-" + id)?.value || null,
+    awayTeam: document.getElementById("awayTeam-" + id)?.value || null,
+    homeScore: document.getElementById("homeScore-" + id)?.value,
+    awayScore: document.getElementById("awayScore-" + id)?.value,
+    winnerTeam: document.getElementById("winnerTeam-" + id)?.value || null
+  };
+
+  console.log("POST body =", body);
+
+  fetch("/admin/wbc/api/match/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("update failed");
+    alert("保存しました");
+  })
+  .catch(err => {
+    console.error(err);
+    alert("保存に失敗しました");
+  });
+});
+</script>
+
+
 
 
 
