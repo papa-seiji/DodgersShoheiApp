@@ -26,7 +26,7 @@ const FONT_CHAMP_BASE  = 16;
   const res = await fetch("/api/wbc/tournament?year=2026");
   const matches = await res.json();
 
-  const tournament = {};
+  let tournament = {};
   matches.forEach(m => {
     if (!tournament[m.round]) tournament[m.round] = {};
     tournament[m.round][m.matchNo] = m;
@@ -79,7 +79,11 @@ const FLAGS = (() => {
   const images = {};
   Object.keys(srcMap).forEach(k => {
     const img = new Image();
-    img.onload = () => redraw(); // ★ロード完了で再描画（既存仕様）
+img.onload = () => {
+  if (window.redrawTournament) {
+    window.redrawTournament();
+  }
+};
     img.src = srcMap[k];
     images[k] = img;
   });
@@ -516,8 +520,19 @@ if (overlay) {
   };
 }
 
-  function redraw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+window.redrawTournament = async function redrawTournament() {
+
+  const res = await fetch("/api/wbc/tournament?year=2026");
+  const matches = await res.json();
+
+  tournament = {};
+  matches.forEach(m => {
+    if (!tournament[m.round]) tournament[m.round] = {};
+    tournament[m.round][m.matchNo] = m;
+  });
+
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // ★ 必須：当たり判定を毎回リセット
   BOX_HIT_AREAS.length = 0;
@@ -1095,5 +1110,5 @@ function drawChampionWithFlagCentered(cx, y, teamName) {
 
 
   // 初回描画
-  redraw();
+  redrawTournament();
 });

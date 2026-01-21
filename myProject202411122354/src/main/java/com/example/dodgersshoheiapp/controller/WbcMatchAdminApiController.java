@@ -5,6 +5,7 @@ import com.example.dodgersshoheiapp.repository.WbcTournamentMatchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class WbcMatchAdminApiController {
 
     private final WbcTournamentMatchRepository repository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /**
      * 試合情報更新
@@ -43,11 +45,14 @@ public class WbcMatchAdminApiController {
 
         repository.save(match);
 
-        // ★ JSON を返す（フロントの res.json() 対応）
+        // ★ ここが「リアルタイム同期の本体」
+        messagingTemplate.convertAndSend(
+                "/topic/wbc/tournament",
+                Map.of("event", "updated", "id", match.getId()));
+
         return ResponseEntity.ok(
-                Map.of(
-                        "result", "ok",
-                        "id", match.getId()));
+                Map.of("result", "ok", "id", match.getId()));
+
     }
 
     /**
