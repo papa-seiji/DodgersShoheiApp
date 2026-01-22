@@ -1,0 +1,91 @@
+<!-- wbc_matches_fragment.html -->
+<div
+  th:fragment="wbcMatchesAdmin"
+  class="wbc-admin-wrapper"
+  sec:authorize="hasRole('ROLE_ADMIN')">
+
+  <h2>🔒 WBC MATCHES 管理</h2>
+
+  <p>year = <span th:text="${year}">2026</span></p>
+  <p>round = <span th:text="${round}">QF</span></p>
+  <p>matches size = <span th:text="${#lists.size(matches)}">0</span></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Round</th>
+        <th>No</th>
+        <th>Home</th>
+        <th>H</th>
+        <th>A</th>
+        <th>Away</th>
+        <th>Winner</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr th:each="m : ${matches}">
+        <td class="round" th:text="${m.round}">QF</td>
+        <td class="match-no" th:text="${m.matchNo}">1</td>
+
+        <td>
+          <select class="home-team" th:id="'homeTeam-' + ${m.id}">
+            <option value="">---</option>
+            <option th:each="t : ${teamList}"
+                    th:value="${t}"
+                    th:text="${t}"
+                    th:selected="${t == m.homeTeam}">
+            </option>
+          </select>
+        </td>
+
+        <td>
+          <input type="number" min="0"
+                 th:id="'homeScore-' + ${m.id}"
+                 th:value="${m.homeScore}">
+        </td>
+
+        <td>
+          <input type="number" min="0"
+                 th:id="'awayScore-' + ${m.id}"
+                 th:value="${m.awayScore}">
+        </td>
+
+        <td>
+          <select class="away-team" th:id="'awayTeam-' + ${m.id}">
+            <option value="">---</option>
+            <option th:each="t : ${teamList}"
+                    th:value="${t}"
+                    th:text="${t}"
+                    th:selected="${t == m.awayTeam}">
+            </option>
+          </select>
+        </td>
+
+        <td>
+          <select class="winner-team" th:id="'winnerTeam-' + ${m.id}">
+            <option value="">-- 未決定 --</option>
+            <option th:each="t : ${teamList}"
+                    th:value="${t}"
+                    th:text="${t}"
+                    th:selected="${t == m.winnerTeam}">
+            </option>
+          </select>
+        </td>
+
+        <td>
+          <button
+            type="button"
+            class="btn-save"
+            th:attr="data-id=${m.id}">
+            保存
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div id="msg" class="msg"></div>
+</div>
+
