@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -28,7 +29,30 @@ public class WbcMatchAdminFragmentController {
             @RequestParam(defaultValue = "2026") int year,
             Model model) {
 
+        // DB取得（順序はここでは気にしない）
         List<WbcTournamentMatch> matches = repository.findByYearOrderByRoundAscMatchNoAsc(year);
+
+        /*
+         * =========================
+         * ★ 管理画面用 表示順制御（重要）
+         * 表示順：
+         * 1. FINAL
+         * 2. SF（matchNo 逆順）
+         * 3. QF（matchNo 逆順）
+         * =========================
+         */
+        matches.sort(
+                Comparator
+                        .comparingInt((WbcTournamentMatch m) -> {
+                            return switch (m.getRound()) {
+                                case "FINAL" -> 1;
+                                case "SF" -> 2;
+                                case "QF" -> 3;
+                                default -> 99;
+                            };
+                        })
+                        // SF / QF は matchNo を逆順表示
+                        .thenComparing(m -> -m.getMatchNo()));
 
         model.addAttribute("year", year);
         model.addAttribute("round", "ALL");
@@ -41,7 +65,7 @@ public class WbcMatchAdminFragmentController {
                 "JAPAN", "AUSTRALIA", "KOREA", "CZECH REPUBLIC", "CHINESE TAIPEI",
                 "VENEZUELA", "DOMINICAN REPUBLIC", "NETHERLANDS", "ISRAEL", "NICARAGUA"));
 
-        // ★ htmx 用 fragment を返す（ここが最重要）
+        // ★ htmx 用 fragment を返す（最重要）
         return "admin/wbc_matches_fragment :: wbcMatchesAdmin";
     }
 }
