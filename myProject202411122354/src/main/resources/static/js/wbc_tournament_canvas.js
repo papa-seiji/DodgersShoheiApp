@@ -1111,4 +1111,16 @@ function drawChampionWithFlagCentered(cx, y, teamName) {
 
   // 初回描画
   redrawTournament();
+
+
+  // ===== WebSocket subscribe（ここに追加）=====
+const socket = new SockJS('/ws');
+const stompClient = Stomp.over(socket);
+
+stompClient.connect({}, () => {
+  stompClient.subscribe('/topic/wbc-tournament', () => {
+    reloadTournament();
+  });
+});
+
 });
