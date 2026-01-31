@@ -244,7 +244,7 @@
     <span th:text="${month}">4</span>月 試合一覧
   </h2>
 
-  <!-- ===== 試合一覧（既存） ===== -->
+  <!-- ===== 月間一覧テーブル ===== -->
   <table class="scorebook-table">
     <thead>
       <tr>
@@ -255,58 +255,57 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td th:text="${month} + '/12'">4/12</td>
+      <tr th:each="g : ${games}">
+        <td th:text="${g.date}">4/12</td>
         <td>vs DUMMY</td>
-        <td class="win">○ 5-3</td>
-        <td class="form-s">S</td>
+        <td class="win" th:text="${g.result}">○ 5-3</td>
+        <td th:text="${g.form}">S</td>
       </tr>
     </tbody>
   </table>
 
-  <!-- ===== ★ 試合詳細カード ===== -->
-  <div class="game-card">
+  <!-- ===== ★ 試合詳細カード（ここも games を回す） ===== -->
+  <div class="game-card" th:each="g : ${games}">
 
     <div class="game-header">
-      <span th:text="${month != null ? month : 4} + '/12 vs DUMMY'"></span>
-
-      <span class="win">○ 5-3</span>
+      <span th:text="${g.date} + ' vs DUMMY'">4/12 vs DUMMY</span>
+      <span class="win" th:text="${g.result}">○ 5-3</span>
     </div>
 
-<!-- ===== MLB LINE SCORE ===== -->
-<table class="linescore-table">
-  <thead>
-    <tr>
-      <th>TEAM</th>
-      <th>R</th>
-      <th>H</th>
-      <th>E</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>KC</td>
-      <td th:text="${score.awayR}">0</td>
-      <td th:text="${score.awayH}">0</td>
-      <td th:text="${score.awayE}">0</td>
-    </tr>
-    <tr>
-      <td>LAD</td>
-      <td th:text="${score.homeR}">0</td>
-      <td th:text="${score.homeH}">0</td>
-      <td th:text="${score.homeE}">0</td>
-    </tr>
-  </tbody>
-</table>
+    <!-- ===== MLB LINE SCORE ===== -->
+    <table class="linescore-table">
+      <thead>
+        <tr>
+          <th>TEAM</th>
+          <th>R</th>
+          <th>H</th>
+          <th>E</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>KC</td>
+          <td th:text="${g.score.awayR}">3</td>
+          <td th:text="${g.score.awayH}">6</td>
+          <td th:text="${g.score.awayE}">1</td>
+        </tr>
+        <tr>
+          <td>LAD</td>
+          <td th:text="${g.score.homeR}">5</td>
+          <td th:text="${g.score.homeH}">8</td>
+          <td th:text="${g.score.homeE}">0</td>
+        </tr>
+      </tbody>
+    </table>
 
     <!-- ===== 打撃サマリー ===== -->
-    <div class="batting-summary" th:text="${summary}">
+    <div class="batting-summary" th:text="${g.summary}">
       5打数 / 2安打
     </div>
 
     <!-- ===== 打席内容 ===== -->
     <ul class="atbat-list">
-      <li th:each="bat : ${atBats}">
+      <li th:each="bat : ${g.atBats}">
         <strong th:text="'第' + ${bat.no} + '打席'">第1打席</strong>
         ：対戦投手
         <span th:text="${bat.pitcher}">投手名</span>
@@ -317,14 +316,14 @@
 
     <!-- ===== IMAGE GALLERY ===== -->
     <div class="game-images">
-      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 1">
-      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 2">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight">
     </div>
 
     <!-- ===== コメント ===== -->
     <div class="game-comment">
       <strong>コメント：</strong>
-      <pre th:text="${comment}"></pre>
+      <pre th:text="${g.comment}"></pre>
     </div>
 
   </div>

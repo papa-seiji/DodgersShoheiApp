@@ -27,71 +27,50 @@ public class OhtaniScorebookController {
         }
         model.addAttribute("month", month);
 
-        // ===== ダミー打席 =====
-        List<Map<String, String>> atBats = List.of(
-                Map.of("no", "1", "pitcher", "yusei kikuchi", "hand", "左", "result", "ショートゴロ"),
-                Map.of("no", "2", "pitcher", "yusei kikuchi", "hand", "左", "result", "センターフライ"),
-                Map.of("no", "3", "pitcher", "yusei kikuchi", "hand", "左", "result", "Lホームラン"),
-                Map.of("no", "4", "pitcher", "yusei kikuchi", "hand", "左", "result", "センターフライ"),
-                Map.of("no", "5", "pitcher", "ben joys", "hand", "右", "result", "2Bヒット"));
+        // ===== 3日分の試合データ（ダミー） =====
+        List<Map<String, Object>> games = List.of(
 
-        model.addAttribute("atBats", atBats);
+                Map.of(
+                        "date", "4/12",
+                        "result", "○ 5-3",
+                        "form", "S",
+                        "summary", "5打数 / 2安打",
+                        "comment", "3打席目HR。内容が非常に良い。",
+                        "score", Map.of(
+                                "awayR", "3", "awayH", "6", "awayE", "1",
+                                "homeR", "5", "homeH", "8", "homeE", "0"),
+                        "atBats", List.of(
+                                Map.of("no", "1", "pitcher", "kikuchi", "hand", "左", "result", "ショートゴロ"),
+                                Map.of("no", "2", "pitcher", "kikuchi", "hand", "左", "result", "センターフライ"),
+                                Map.of("no", "3", "pitcher", "kikuchi", "hand", "左", "result", "HR"))),
 
-        // ===== ★ 打撃サマリー（← これが無かった） =====
-        model.addAttribute("summary", "5打数 / 2安打");
+                Map.of(
+                        "date", "4/13",
+                        "result", "● 2-4",
+                        "form", "B",
+                        "summary", "4打数 / 1安打",
+                        "comment", "序盤は合っていなかった。",
+                        "score", Map.of(
+                                "awayR", "4", "awayH", "7", "awayE", "0",
+                                "homeR", "2", "homeH", "5", "homeE", "1"),
+                        "atBats", List.of(
+                                Map.of("no", "1", "pitcher", "smith", "hand", "右", "result", "三振"),
+                                Map.of("no", "2", "pitcher", "smith", "hand", "右", "result", "ヒット"))),
 
-        // ===== ★ コメント（← これが無かった） =====
-        model.addAttribute(
-                "comment",
-                "昨日と違い、ボールを引き付けてフルスイングできていた。\n" +
-                        "3打席目HR。他打席も内容が良く、評価は S");
+                Map.of(
+                        "date", "4/14",
+                        "result", "○ 6-1",
+                        "form", "A",
+                        "summary", "5打数 / 3安打",
+                        "comment", "打球が強く、完全復調。",
+                        "score", Map.of(
+                                "awayR", "1", "awayH", "4", "awayE", "0",
+                                "homeR", "6", "homeH", "10", "homeE", "0"),
+                        "atBats", List.of(
+                                Map.of("no", "1", "pitcher", "lee", "hand", "左", "result", "二塁打"),
+                                Map.of("no", "2", "pitcher", "lee", "hand", "左", "result", "ヒット"))));
 
-        // ===== ダミー：ラインスコア（初期値） =====
-        Map<String, String> score = Map.of(
-                "awayR", "3",
-                "awayH", "6",
-                "awayE", "1",
-                "homeR", "5",
-                "homeH", "8",
-                "homeE", "0");
-
-        try {
-            RestTemplate rest = new RestTemplate();
-            String gamePk = "746147";
-            String url = "https://statsapi.mlb.com/api/v1/game/" + gamePk + "/linescore";
-
-            Map<String, Object> res = rest.getForObject(url, Map.class);
-
-            if (res != null && res.get("teams") instanceof Map) {
-                Map<String, Object> teams = (Map<String, Object>) res.get("teams");
-
-                Map<String, Object> home = (Map<String, Object>) teams.get("home");
-                Map<String, Object> away = (Map<String, Object>) teams.get("away");
-
-                Map<String, Object> homeStats = null;
-                Map<String, Object> awayStats = null;
-
-                if (home != null && home.get("teamStats") instanceof Map) {
-                    homeStats = (Map<String, Object>) ((Map<?, ?>) home.get("teamStats")).get("batting");
-                }
-
-                if (away != null && away.get("teamStats") instanceof Map) {
-                    awayStats = (Map<String, Object>) ((Map<?, ?>) away.get("teamStats")).get("batting");
-                }
-
-                score = Map.of(
-                        "awayR", awayStats != null ? String.valueOf(awayStats.getOrDefault("runs", "-")) : "-",
-                        "awayH", awayStats != null ? String.valueOf(awayStats.getOrDefault("hits", "-")) : "-",
-                        "awayE", awayStats != null ? String.valueOf(awayStats.getOrDefault("errors", "-")) : "-",
-                        "homeR", homeStats != null ? String.valueOf(homeStats.getOrDefault("runs", "-")) : "-",
-                        "homeH", homeStats != null ? String.valueOf(homeStats.getOrDefault("hits", "-")) : "-",
-                        "homeE", homeStats != null ? String.valueOf(homeStats.getOrDefault("errors", "-")) : "-");
-            }
-        } catch (Exception e) {
-            // 失敗してもダミー表示で継続
-        }
-
-        model.addAttribute("score", score);
+        model.addAttribute("games", games);
 
         return "hogehoge_02";
     }
