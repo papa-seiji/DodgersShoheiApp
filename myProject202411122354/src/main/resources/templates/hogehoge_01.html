@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ohtani Scorebook | Season Overview</title>
+<link rel="stylesheet" href="/css/hogehoge_01.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/hogehoge.js"></script>
+</head>
+
+<body>
+  <header class="page-header">
+    <h1 class="page-title">Ohtani Scorebook</h1>
+    <p class="page-subtitle">2026 Regular Season – Season Overview</p>
+  </header>
+
+<main class="season-overview">
+
+
+
+  <!-- ① 世界観レイヤー -->
+<section class="season-hero">
+
+<!-- 🔴 BATIN’ PANEL -->
+<div class="batting-panel">
+
+  <div class="batting-title">
+    BATTIN’
+  </div>
+
+  <div class="batting-status">
+    <p class="rank">調子：<span class="rank-c">C</span></p>
+    <ul>
+      <li>・強打が出ていない</li>
+      <li>・体が突っ込んでいる</li>
+      <li>・内角に弱い</li>
+    </ul>
+  </div>
+
+  <div class="batting-stats">
+    <div class="stats-header">2025 Stats</div>
+    <div class="stats-body">
+      <p>出場数：158</p>
+      <p>打率：.282</p>
+      <p>本塁打：55</p>
+      <p>盗塁：20</p>
+      <p>打点：102</p>
+      <p>OPS：1.014</p>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+  <div class="hero-canvas">
+
+    <div class="hero-ohtani"></div>
+
+
+<ul class="hero-months">
+
+<li data-month="4" class="month-calendar is-current">
+  <div class="cal-header">4</div>
+  <div class="cal-grid">
+    <span class="dow sun">日</span>
+    <span class="dow">月</span>
+    <span class="dow">火</span>
+    <span class="dow">水</span>
+    <span class="dow">木</span>
+    <span class="dow">金</span>
+    <span class="dow sat">土</span>
+    <!-- 1週目 -->
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day">1</span>
+    <span class="day">2</span>
+    <span class="day game">3</span>
+    <span class="day game">4</span>
+
+    <!-- 2週目 -->
+    <span class="day game">5</span>
+    <span class="day game">6</span>
+    <span class="day">7</span>
+    <span class="day">8</span>
+    <span class="day">9</span>
+    <span class="day game">10</span>
+    <span class="day game">11</span>
+
+    <!-- 3週目 -->
+    <span class="day game">12</span>
+    <span class="day game">13</span>
+    <span class="day game">14</span>
+    <span class="day">15</span>
+    <span class="day">16</span>
+    <span class="day game">17</span>
+    <span class="day game">18</span>
+
+    <!-- 4週目 -->
+    <span class="day game">19</span>
+    <span class="day game">20</span>
+    <span class="day">21</span>
+    <span class="day">22</span>
+    <span class="day">23</span>
+    <span class="day game">24</span>
+    <span class="day game">25</span>
+
+    <!-- 5週目 -->
+    <span class="day game">26</span>
+    <span class="day game">27</span>
+    <span class="day">28</span>
+    <span class="day">29</span>
+    <span class="day">30</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+  </div>
+</li>
+
+<li data-month="5" class="month-calendar">
+  <div class="cal-header">5</div>
+  <div class="cal-grid">
+    <!-- 曜日ヘッダ -->
+    <span class="dow sun">日</span>
+    <span class="dow">月</span>
+    <span class="dow">火</span>
+    <span class="dow">水</span>
+    <span class="dow">木</span>
+    <span class="dow">金</span>
+    <span class="dow sat">土</span>
+
+    <!-- 1週目（5/1=金） -->
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day">1</span>
+    <span class="day sat">2</span>
+
+    <!-- 2週目 -->
+    <span class="day sun game">3</span>
+    <span class="day game">4</span>
+    <span class="day game">5</span>
+    <span class="day">6</span>
+    <span class="day">7</span>
+    <span class="day">8</span>
+    <span class="day sat game">9</span>
+
+    <!-- 3週目 -->
+    <span class="day sun game">10</span>
+    <span class="day">11</span>
+    <span class="day">12</span>
+    <span class="day game">13</span>
+    <span class="day">14</span>
+    <span class="day">15</span>
+    <span class="day sat game">16</span>
+
+    <!-- 4週目 -->
+    <span class="day sun game">17</span>
+    <span class="day">18</span>
+    <span class="day">19</span>
+    <span class="day">20</span>
+    <span class="day">21</span>
+    <span class="day game">22</span>
+    <span class="day sat game">23</span>
+
+    <!-- 5週目 -->
+    <span class="day sun game">24</span>
+    <span class="day">25</span>
+    <span class="day">26</span>
+    <span class="day">27</span>
+    <span class="day">28</span>
+    <span class="day">29</span>
+    <span class="day sat game">30</span>
+
+    <!-- 6週目（余り） -->
+    <span class="day sun muted">31</span>
+  </div>
+</li>
+
+<li data-month="6" class="month-calendar">
+  <div class="cal-header">6</div>
+  <div class="cal-grid">
+    <!-- 曜日ヘッダ -->
+    <span class="dow sun">日</span>
+    <span class="dow">月</span>
+    <span class="dow">火</span>
+    <span class="dow">水</span>
+    <span class="dow">木</span>
+    <span class="dow">金</span>
+    <span class="dow sat">土</span>
+
+    <!-- 1週目（6/1=月） -->
+    <span class="day sun muted">--</span>
+    <span class="day">1</span>
+    <span class="day game">2</span>
+    <span class="day">3</span>
+    <span class="day">4</span>
+    <span class="day game">5</span>
+    <span class="day sat">6</span>
+
+    <!-- 2週目 -->
+    <span class="day sun game">7</span>
+    <span class="day">8</span>
+    <span class="day">9</span>
+    <span class="day game">10</span>
+    <span class="day">11</span>
+    <span class="day">12</span>
+    <span class="day sat game">13</span>
+
+    <!-- 3週目 -->
+    <span class="day sun">14</span>
+    <span class="day">15</span>
+    <span class="day game">16</span>
+    <span class="day">17</span>
+    <span class="day">18</span>
+    <span class="day game">19</span>
+    <span class="day sat">20</span>
+
+    <!-- 4週目 -->
+    <span class="day sun game">21</span>
+    <span class="day">22</span>
+    <span class="day">23</span>
+    <span class="day game">24</span>
+    <span class="day">25</span>
+    <span class="day">26</span>
+    <span class="day sat game">27</span>
+
+    <!-- 5週目 -->
+    <span class="day sun">28</span>
+    <span class="day">29</span>
+    <span class="day">30</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+  </div>
+</li>
+
+<li data-month="7" class="month-calendar">
+  <div class="cal-header">7</div>
+  <div class="cal-grid">
+    <span class="dow sun">日</span><span class="dow">月</span><span class="dow">火</span>
+    <span class="dow">水</span><span class="dow">木</span><span class="dow">金</span><span class="dow sat">土</span>
+
+    <span class="day sun muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day muted">--</span>
+    <span class="day game">1</span>
+    <span class="day">2</span>
+    <span class="day">3</span>
+    <span class="day sat game">4</span>
+
+    <span class="day sun">5</span><span class="day">6</span><span class="day">7</span>
+    <span class="day game">8</span><span class="day">9</span><span class="day">10</span><span class="day sat">11</span>
+
+    <span class="day sun game">12</span><span class="day">13</span><span class="day">14</span>
+    <span class="day">15</span><span class="day game">16</span><span class="day">17</span><span class="day sat">18</span>
+
+    <span class="day sun">19</span><span class="day">20</span><span class="day game">21</span>
+    <span class="day">22</span><span class="day">23</span><span class="day game">24</span><span class="day sat">25</span>
+
+    <span class="day sun game">26</span><span class="day">27</span><span class="day">28</span>
+    <span class="day">29</span><span class="day game">30</span><span class="day">31</span><span class="day muted">--</span>
+  </div>
+</li>
+
+<li data-month="8" class="month-calendar">
+  <div class="cal-header">8</div>
+  <div class="cal-grid">
+    <span class="dow sun">日</span><span class="dow">月</span><span class="dow">火</span>
+    <span class="dow">水</span><span class="dow">木</span><span class="dow">金</span><span class="dow sat">土</span>
+
+    <span class="day sun muted">--</span><span class="day muted">--</span><span class="day muted">--</span>
+    <span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span>
+    <span class="day sat game">1</span>
+
+    <span class="day sun">2</span><span class="day game">3</span><span class="day">4</span>
+    <span class="day">5</span><span class="day game">6</span><span class="day">7</span><span class="day sat">8</span>
+
+    <span class="day sun game">9</span><span class="day">10</span><span class="day">11</span>
+    <span class="day game">12</span><span class="day">13</span><span class="day">14</span><span class="day sat game">15</span>
+
+    <span class="day sun">16</span><span class="day">17</span><span class="day game">18</span>
+    <span class="day">19</span><span class="day">20</span><span class="day game">21</span><span class="day sat">22</span>
+
+    <span class="day sun game">23</span><span class="day">24</span><span class="day">25</span>
+    <span class="day game">26</span><span class="day">27</span><span class="day">28</span><span class="day sat game">29</span>
+
+    <span class="day sun">30</span><span class="day game">31</span>
+    <span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span>
+  </div>
+</li>
+
+<li data-month="9" class="month-calendar">
+  <div class="cal-header">9</div>
+  <div class="cal-grid">
+    <span class="dow sun">日</span><span class="dow">月</span><span class="dow">火</span>
+    <span class="dow">水</span><span class="dow">木</span><span class="dow">金</span><span class="dow sat">土</span>
+
+    <span class="day sun muted">--</span><span class="day muted">--</span><span class="day game">1</span>
+    <span class="day">2</span><span class="day">3</span><span class="day game">4</span><span class="day sat">5</span>
+
+    <span class="day sun">6</span><span class="day game">7</span><span class="day">8</span>
+    <span class="day">9</span><span class="day game">10</span><span class="day">11</span><span class="day sat game">12</span>
+
+    <span class="day sun">13</span><span class="day">14</span><span class="day game">15</span>
+    <span class="day">16</span><span class="day">17</span><span class="day game">18</span><span class="day sat">19</span>
+
+    <span class="day sun game">20</span><span class="day">21</span><span class="day">22</span>
+    <span class="day game">23</span><span class="day">24</span><span class="day">25</span><span class="day sat game">26</span>
+
+    <span class="day sun">27</span><span class="day">28</span><span class="day game">29</span>
+    <span class="day">30</span><span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span>
+  </div>
+</li>
+
+<li data-month="10" class="month-calendar">
+  <div class="cal-header">10</div>
+  <div class="cal-grid">
+    <span class="dow sun">日</span><span class="dow">月</span><span class="dow">火</span>
+    <span class="dow">水</span><span class="dow">木</span><span class="dow">金</span><span class="dow sat">土</span>
+
+    <span class="day sun muted">--</span><span class="day muted">--</span><span class="day muted">--</span>
+    <span class="day muted">--</span><span class="day game">1</span><span class="day">2</span><span class="day sat">3</span>
+
+    <span class="day sun game">4</span><span class="day">5</span><span class="day">6</span>
+    <span class="day game">7</span><span class="day">8</span><span class="day">9</span><span class="day sat game">10</span>
+
+    <span class="day sun">11</span><span class="day">12</span><span class="day game">13</span>
+    <span class="day">14</span><span class="day">15</span><span class="day game">16</span><span class="day sat">17</span>
+
+    <span class="day sun game">18</span><span class="day">19</span><span class="day">20</span>
+    <span class="day game">21</span><span class="day">22</span><span class="day">23</span><span class="day sat game">24</span>
+
+    <span class="day sun">25</span><span class="day">26</span><span class="day game">27</span>
+    <span class="day">28</span><span class="day">29</span><span class="day game">30</span><span class="day sat">31</span>
+  </div>
+</li>
+
+<li data-month="11" class="month-calendar">
+  <div class="cal-header">11</div>
+  <div class="cal-grid">
+    <span class="dow sun">日</span><span class="dow">月</span><span class="dow">火</span>
+    <span class="dow">水</span><span class="dow">木</span><span class="dow">金</span><span class="dow sat">土</span>
+
+    <span class="day sun game">1</span><span class="day">2</span><span class="day">3</span>
+    <span class="day game">4</span><span class="day">5</span><span class="day">6</span><span class="day sat game">7</span>
+
+    <span class="day sun">8</span><span class="day">9</span><span class="day game">10</span>
+    <span class="day">11</span><span class="day">12</span><span class="day game">13</span><span class="day sat">14</span>
+
+    <span class="day sun game">15</span><span class="day">16</span><span class="day">17</span>
+    <span class="day game">18</span><span class="day">19</span><span class="day">20</span><span class="day sat game">21</span>
+
+    <span class="day sun">22</span><span class="day">23</span><span class="day game">24</span>
+    <span class="day">25</span><span class="day">26</span><span class="day game">27</span><span class="day sat">28</span>
+
+    <span class="day sun game">29</span><span class="day">30</span>
+    <span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span><span class="day muted">--</span>
+  </div>
+</li>
+
+</ul>
+
+  </div>
+  <!-- ② 俯瞰（折れ線） -->
+<section class="season-trend">
+  <h4 class="trend-title">　　　　評価グラフ (4月–11月)</h4>
+
+  <div class="trend-card">
+    <canvas id="seasonTrendChart"></canvas>
+  </div>
+</section>
+
+</section>
+</main>
+</body>
+</html>

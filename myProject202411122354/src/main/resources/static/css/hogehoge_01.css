@@ -1,0 +1,459 @@
+/* =========================================================
+   HERO – 世界観レイヤー
+========================================================= */
+
+.season-hero {
+  background: #fbf3d6;
+  padding: 24px 20px 32px;
+  /* margin: 62px 107px 0 0;   ← PC基準。スマホでは触らない */
+}
+
+.hero-canvas {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 420px;
+
+  /* 時計配置用の基準点 */
+  --clock-cx: 62%;
+  --clock-cy: 36%;
+}
+
+
+/* =========================================================
+   BATIN' パネル
+========================================================= */
+
+.batting-panel {
+  position: absolute;
+  right: 6%;
+  top: 14%;
+  width: 260px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  z-index: 3;
+}
+
+/* タイトル楕円 */
+.batting-title {
+  background: #5b75b6;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 12px 0;
+  border-radius: 50%;
+  letter-spacing: 1px;
+}
+
+/* 調子コメント */
+.batting-status {
+  background: #ffffff;
+  border: 1px solid #aaa;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.batting-status .rank {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.rank-c {
+  color: #c83c3c;
+}
+
+.batting-status ul {
+  padding-left: 14px;
+  margin: 0;
+}
+
+/* 成績 */
+.batting-stats {
+  border: 1px solid #888;
+}
+
+.stats-header {
+  background: #5b75b6;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  padding: 6px 0;
+}
+
+.stats-body {
+  background: #ffffff;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.stats-body p {
+  margin: 2px 0;
+}
+
+
+@media (max-width: 900px) {
+  .batting-panel {
+    transform: scale(0.5);
+    transform-origin: top right;
+    right: 2%;
+    margin-top: 105px;
+    margin-right: 153px;
+  }
+}
+
+@media (max-width: 430px) {
+  .batting-panel {
+    transform: scale(0.4);
+    transform-origin: top right;
+    right: 2%;
+    margin-top: 25px;
+    margin-right: 4px;
+  }
+}
+
+
+
+/* =========================================================
+   大谷ビジュアル（中央基準・破綻防止）
+========================================================= */
+
+.hero-ohtani {
+  position: absolute;
+
+  width: 394px;
+  height: 480px;
+
+  /* 🔥 中央基準（scaleしてもズレない） */
+  /* left: 50%; */
+  inset-inline: 0;
+  margin-inline: auto;
+  bottom: 36px;
+  transform: translateX(-50%);
+
+  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png");
+  background-repeat: no-repeat;
+  /* background-position: center bottom; */
+  background-size: contain;
+
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* =========================================================
+   月の散在（時計円弧レイアウト）
+========================================================= */
+
+.hero-months {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-months li {
+  position: absolute;
+  width: 110px;
+  /* padding: 6px 0; */
+  text-align: center;
+  font-size: 12px;
+  background: #e2e2e2;
+  color: #444;
+  border-radius: 4px;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+/* 4時 → 11時（円弧） */
+.hero-months li[data-month="4"] {
+  left: calc(var(--clock-cx) + 260px);
+  top:  calc(var(--clock-cy) + 160px);
+}
+.hero-months li[data-month="5"] {
+  left: calc(var(--clock-cx) + 132px);
+  top:  calc(var(--clock-cy) + 240px);
+}
+.hero-months li[data-month="6"] {
+  left: calc(var(--clock-cx));
+  top:  calc(var(--clock-cy) + 280px);
+}
+.hero-months li[data-month="7"] {
+  left: calc(var(--clock-cx) - 131px);
+  top:  calc(var(--clock-cy) + 240px);
+}
+.hero-months li[data-month="8"] {
+  left: calc(var(--clock-cx) - 260px);
+  top:  calc(var(--clock-cy) + 160px);
+}
+.hero-months li[data-month="9"] {
+  left: calc(var(--clock-cx) - 300px);
+  top:  calc(var(--clock-cy) + -12px);
+}
+.hero-months li[data-month="10"] {
+  left: calc(var(--clock-cx) - 260px);
+  top:  calc(var(--clock-cy) - 184px);
+}
+.hero-months li[data-month="11"] {
+  left: calc(var(--clock-cx) - 131px);
+  top:  calc(var(--clock-cy) - 260px);
+}
+
+/* =========================================================
+   月カレンダー（ビジュアル）
+========================================================= */
+
+.month-calendar {
+  position: absolute;
+  width: 168px;
+  background: #f3f3f3;
+  border: 1px solid #999;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.month-calendar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+.cal-header {
+  background: #9fa4aa;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  padding: 6px 0;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 20px;
+  font-size: 11px;
+  background: #ffffff;
+  color: #333;
+  border-radius: 2px;
+}
+
+.day.muted {
+  background: #dddddd;
+  color: #777;
+}
+
+.day.impression {
+  background: rgba(95, 134, 201, 0.18);
+  color: #2f4f8f;
+  font-weight: 600;
+}
+
+
+/* 日曜日（1列目）＝赤 */
+.cal-grid .day:nth-child(7n + 1) {
+  color: #c0392b; /* 赤 */
+  font-weight: 600;
+}
+
+/* 土曜日（7列目）＝青 */
+.cal-grid .day:nth-child(7n) {
+  color: #1f5fbf; /* 青 */
+  font-weight: 600;
+}
+
+/* ② CSS：〇を付ける（おすすめはこれ）
+✅ 王道・一番きれい（borderで〇） */
+.day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 20px; */
+  height: 20px;
+  margin: 0.4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.day.game {
+    border: 0.1px solid #ff0101;
+    border-radius: 50%;
+}
+
+
+/* ③ 曜日ヘッダ用CSS（薄く・上品） */
+.cal-grid .dow {
+  font-size: 10px;
+  text-align: center;
+  color: #777;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.cal-grid .dow.sun {
+  color: #c84b4b; /* 日曜：薄赤 */
+}
+
+.cal-grid .dow.sat {
+  color: #084ef4; /* 土曜：薄青 */
+}
+
+
+/* 今月（4月）強調 */
+.month-calendar.is-current {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+}
+.month-calendar.is-current .cal-header {
+  background: #114195;
+}
+
+/* =========================================================
+   📱 スマホ対応（≤430px）
+   見た目はPCと同じ・縮小のみ・背景破綻なし
+========================================================= */
+
+@media (max-width: 900px) {
+
+  /* HERO全体を縮小するラッパー */
+  .season-hero {
+    padding-right: 94px;
+    overflow: hidden;
+  }
+
+  .season-hero::before {
+    content: "";
+    display: block;
+    height: calc(420px * 0.15); /* ← hero-canvas基準 */
+  }
+
+  .hero-canvas {
+    transform: scale(0.55);
+    transform-origin: top center;
+
+    /* レイアウト上は通常サイズのまま */
+    position: relative;
+    left: 50%;
+    translate: -50% 0;
+  }
+
+  /* 大谷は中央を維持 */
+  .hero-ohtani {
+    left: 84%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 430px) {
+
+  /* HERO全体を縮小するラッパー */
+  .season-hero {
+    padding-right: 94px;
+    overflow: hidden;
+  }
+
+  .season-hero::before {
+    content: "";
+    display: block;
+    height: calc(420px * 0.15); /* ← hero-canvas基準 */
+  }
+
+  .hero-canvas {
+    transform: scale(0.55);
+    transform-origin: top center;
+
+    /* レイアウト上は通常サイズのまま */
+    position: relative;
+    left: 50%;
+    translate: -50% 0;
+  }
+
+  /* 大谷は中央を維持 */
+  .hero-ohtani {
+    left: 116%;
+    transform: translateX(-50%);
+  }
+}
+
+
+
+/* ===============================
+   折れ線グラフセクション
+=============================== */
+
+/* .season-trend {
+  max-width: 1100px;
+  margin: -112px 0px 0px 0px;
+  width: 338px;
+}
+
+.trend-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.trend-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 16px 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+#seasonTrendChart {
+  width: 100%;
+  max-height: 260px;
+}
+ */
+
+
+@media (max-width: 900px) {
+
+    .trend-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: center;
+  margin-top: -78px;
+}
+
+    .trend-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 16px 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  width: 756px;
+}
+}
+@media (max-width: 430px) {
+    .trend-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: center;
+  margin-top: -78px;
+}
+
+    .trend-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 16px 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    width: 304px;
+
+}
+}

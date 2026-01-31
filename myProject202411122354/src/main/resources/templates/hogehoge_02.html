@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>hogehoge_02</title>
+  <link rel="stylesheet" href="/css/hogehoge_01.css">
+
+<style>
+/* ===== Layout ===== */
+.month-detail-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+.month-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+/* ===== Scorebook Table ===== */
+.scorebook-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fffdf6;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  margin-bottom: 32px;
+}
+
+.scorebook-table thead {
+  background: #2f2f2f;
+  color: #fff;
+}
+
+.scorebook-table th,
+.scorebook-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.scorebook-table tbody tr:hover {
+  background: #f7f3e8;
+}
+
+/* 勝敗 */
+.win { color: #c62828; font-weight: bold; }
+.lose { color: #1565c0; font-weight: bold; }
+
+/* 調子 */
+.form-s { color: #d32f2f; font-weight: bold; }
+.form-a { color: #ef6c00; font-weight: bold; }
+.form-b { color: #fbc02d; }
+.form-c { color: #546e7a; }
+
+/* ===== ★ 試合詳細カード（追加） ===== */
+.game-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 32px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.batting-summary {
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.atbat-list {
+  padding-left: 18px;
+  margin-bottom: 12px;
+}
+
+.atbat-list li {
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.bat-result {
+  margin-left: 6px;
+  font-weight: bold;
+}
+
+.game-comment {
+  background: #f7f7f7;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.game-comment pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+
+/* ===== Score ===== */
+.game-score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 12px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.game-score .team {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.game-score .home {
+  color: #1565c0; /* LAD */
+}
+
+.game-score .away {
+  color: #555;
+}
+
+.game-score .score {
+  font-size: 20px;
+}
+
+.game-score .score.win {
+  color: #c62828;
+}
+
+/* ===== Images ===== */
+.game-images {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.game-images img {
+  width: 100%;
+  max-width: 160px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+/* 戻る */
+.back-link {
+  display: inline-block;
+  margin-top: 24px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #3366cc;
+}
+</style>
+</head>
+
+<body>
+
+<h1>
+  <span th:text="${month}">4</span>月の詳細ページ
+</h1>
+<p id="info"></p>
+
+<div class="month-detail-wrapper">
+
+  <h2 class="month-title">
+    <span th:text="${month}">4</span>月 試合一覧
+  </h2>
+
+  <!-- ===== 試合一覧（既存） ===== -->
+  <table class="scorebook-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Opponent</th>
+        <th>Result</th>
+        <th>Form</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="day : ${days}">
+        <td th:text="${month} + '/' + ${day}">4/1</td>
+        <td>vs DUMMY</td>
+        <td class="win">○ 5-3</td>
+        <td class="form-s">S</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ===== ★ 試合詳細（ダミー） ===== -->
+  <div class="game-card">
+    <div class="game-header">
+      <span th:text="${month} + '/12 vs DUMMY'">4/12 vs DUMMY</span>
+      <span class="win">○ 5-3</span>
+    </div>
+
+    <!-- ===== SCORE ===== -->
+<div class="game-score">
+  <span class="team away">KC</span>
+  <span class="score">3</span>
+  <span class="dash">-</span>
+  <span class="score win">5</span>
+  <span class="team home">LAD</span>
+</div>
+
+
+    <div class="batting-summary" th:text="${summary}">
+      5打数 / 2安打
+    </div>
+
+    <ul class="atbat-list">
+      <li th:each="bat : ${atBats}">
+        <strong th:text="'第' + ${bat.no} + '打席'">第1打席</strong>
+        ：対戦投手
+        <span th:text="${bat.pitcher}">投手名</span>
+        （<span th:text="${bat.hand}">右</span>）
+        <span class="bat-result" th:text="${bat.result}">結果</span>
+      </li>
+    </ul>
+
+<!-- ===== IMAGE GALLERY ===== -->
+<div class="game-images">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 1">
+  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 2">
+</div>
+
+
+    <div class="game-comment">
+      <strong>コメント：</strong>
+      <pre th:text="${comment}"></pre>
+    </div>
+  </div>
+
+  <a href="/hogehoge_01" class="back-link">
+    ← シーズン概要に戻る
+  </a>
+
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const month = params.get("month");
+  document.getElementById("info").textContent =
+    month ? `${month}月の詳細ページ（ダミー）` : "月未指定";
+</script>
+
+</body>
+</html>
