@@ -56,7 +56,7 @@
 .form-b { color: #fbc02d; }
 .form-c { color: #546e7a; }
 
-/* ===== ★ 試合詳細カード（追加） ===== */
+/* ===== 試合詳細カード ===== */
 .game-card {
   background: #ffffff;
   border: 1px solid #ddd;
@@ -74,7 +74,7 @@
 }
 
 .batting-summary {
-  margin-bottom: 12px;
+  margin: 10px 0 12px;
   font-weight: bold;
 }
 
@@ -93,52 +93,6 @@
   font-weight: bold;
 }
 
-.game-comment {
-  background: #f7f7f7;
-  padding: 12px;
-  border-radius: 6px;
-}
-
-.game-comment pre {
-  margin: 0;
-  white-space: pre-wrap;
-  font-family: inherit;
-  font-size: 14px;
-}
-
-
-/* ===== Score ===== */
-.game-score {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  margin: 8px 0 12px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.game-score .team {
-  font-size: 14px;
-  opacity: 0.85;
-}
-
-.game-score .home {
-  color: #1565c0; /* LAD */
-}
-
-.game-score .away {
-  color: #555;
-}
-
-.game-score .score {
-  font-size: 20px;
-}
-
-.game-score .score.win {
-  color: #c62828;
-}
-
 /* ===== Images ===== */
 .game-images {
   display: flex;
@@ -154,6 +108,20 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
+/* ===== Comment ===== */
+.game-comment {
+  background: #f7f7f7;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.game-comment pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 14px;
+}
 
 /* 戻る */
 .back-link {
@@ -163,6 +131,103 @@
   font-weight: bold;
   color: #3366cc;
 }
+
+/* =====================================================
+   ★ MLB風 ラインスコア（完全再現）
+===================================================== */
+
+.linescore-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  background: #000;
+  color: #eee;
+  font-size: 13px;
+  font-family: "Arial Narrow", "Segoe UI", sans-serif;
+  box-shadow: inset 0 0 0 1px #222;
+}
+
+.linescore-table th,
+.linescore-table td {
+  border: 1px solid #222;
+  padding: 6px;
+  text-align: center;
+  min-width: 26px;
+}
+
+/* ヘッダ */
+.linescore-table thead th {
+  background: #111;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+/* TEAM列 */
+.linescore-table th:first-child,
+.linescore-table td:first-child {
+  min-width: 52px;
+  font-weight: bold;
+  color: #ddd;
+}
+
+/* Away イニング */
+.linescore-table tbody tr:first-child td:not(:first-child):not(:nth-last-child(-n+3)) {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+/* Home イニング */
+.linescore-table tbody tr:last-child td:not(:first-child):not(:nth-last-child(-n+3)) {
+  color: #fdd835;
+  font-weight: bold;
+}
+
+/* R H E */
+.linescore-table td:nth-last-child(3),
+.linescore-table td:nth-last-child(2),
+.linescore-table td:nth-last-child(1) {
+  background: #0b0b0b;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 勝利チーム R */
+.linescore-table tr:last-child td:nth-last-child(3) {
+  color: #ff5252;
+}
+
+/* チーム名 */
+.linescore-table tr:first-child td:first-child {
+  color: #b0bec5;
+}
+.linescore-table tr:last-child td:first-child {
+  color: #64b5f6;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .linescore-table {
+    font-size: 11px;
+  }
+  .linescore-table th,
+  .linescore-table td {
+    padding: 4px;
+  }
+}
+
+/* モバイル調整 */
+@media (max-width: 480px) {
+  .linescore-table {
+    font-size: 11px;
+  }
+
+  .linescore-table th,
+  .linescore-table td {
+    padding: 4px 4px;
+  }
+}
+
 </style>
 </head>
 
@@ -190,8 +255,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="day : ${days}">
-        <td th:text="${month} + '/' + ${day}">4/1</td>
+      <tr>
+        <td th:text="${month} + '/12'">4/12</td>
         <td>vs DUMMY</td>
         <td class="win">○ 5-3</td>
         <td class="form-s">S</td>
@@ -199,27 +264,47 @@
     </tbody>
   </table>
 
-  <!-- ===== ★ 試合詳細（ダミー） ===== -->
+  <!-- ===== ★ 試合詳細カード ===== -->
   <div class="game-card">
+
     <div class="game-header">
-      <span th:text="${month} + '/12 vs DUMMY'">4/12 vs DUMMY</span>
+      <span th:text="${month != null ? month : 4} + '/12 vs DUMMY'"></span>
+
       <span class="win">○ 5-3</span>
     </div>
 
-    <!-- ===== SCORE ===== -->
-<div class="game-score">
-  <span class="team away">KC</span>
-  <span class="score">3</span>
-  <span class="dash">-</span>
-  <span class="score win">5</span>
-  <span class="team home">LAD</span>
-</div>
+<!-- ===== MLB LINE SCORE ===== -->
+<table class="linescore-table">
+  <thead>
+    <tr>
+      <th>TEAM</th>
+      <th>R</th>
+      <th>H</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KC</td>
+      <td th:text="${score.awayR}">0</td>
+      <td th:text="${score.awayH}">0</td>
+      <td th:text="${score.awayE}">0</td>
+    </tr>
+    <tr>
+      <td>LAD</td>
+      <td th:text="${score.homeR}">0</td>
+      <td th:text="${score.homeH}">0</td>
+      <td th:text="${score.homeE}">0</td>
+    </tr>
+  </tbody>
+</table>
 
-
+    <!-- ===== 打撃サマリー ===== -->
     <div class="batting-summary" th:text="${summary}">
       5打数 / 2安打
     </div>
 
+    <!-- ===== 打席内容 ===== -->
     <ul class="atbat-list">
       <li th:each="bat : ${atBats}">
         <strong th:text="'第' + ${bat.no} + '打席'">第1打席</strong>
@@ -230,17 +315,18 @@
       </li>
     </ul>
 
-<!-- ===== IMAGE GALLERY ===== -->
-<div class="game-images">
-  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 1">
-  <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 2">
-</div>
+    <!-- ===== IMAGE GALLERY ===== -->
+    <div class="game-images">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 1">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png" alt="highlight 2">
+    </div>
 
-
+    <!-- ===== コメント ===== -->
     <div class="game-comment">
       <strong>コメント：</strong>
       <pre th:text="${comment}"></pre>
     </div>
+
   </div>
 
   <a href="/hogehoge_01" class="back-link">
