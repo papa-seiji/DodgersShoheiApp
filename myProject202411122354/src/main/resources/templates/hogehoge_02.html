@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>hogehoge_02</title>
   <link rel="stylesheet" href="/css/hogehoge_01.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+  window.MONTH_GAMES = /*[[${monthGames}]]*/ [];
+</script>
+<script src="/js/hogehoge_02.js"></script>
 
 <style>
 /* ===== Layout ===== */
@@ -238,7 +243,18 @@
 </h1>
 <p id="info"></p>
 
+  <a href="/hogehoge_01" class="back-link">
+    ← シーズン概要に戻る
+  </a>
+
+
 <div class="month-detail-wrapper">
+
+<!-- ===== 4月 成績推移グラフ ===== -->
+<div style="max-width:720px;margin:0 auto 32px;">
+  <canvas id="aprilChart" height="120"></canvas>
+</div>
+
 
   <h2 class="month-title">
     <span th:text="${month}">4</span>月 試合一覧
@@ -255,48 +271,80 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="g : ${games}">
-        <td th:text="${g.date}">4/12</td>
+    <tr th:each="g : ${monthGames}">
+
+        <td>
+        <a th:href="@{/hogehoge_02(month=${month}, date=${g.date})}"
+            th:text="${g.date}">
+            04/27
+        </a>
+        </td>
         <td>vs DUMMY</td>
         <td class="win" th:text="${g.result}">○ 5-3</td>
-        <td th:text="${g.form}">S</td>
-      </tr>
+            <td th:text="
+                ${g.value == 5 ? 'S' :
+                g.value == 4 ? 'A' :
+                g.value == 3 ? 'B' :
+                g.value == 2 ? 'C' :
+                g.value == 1 ? 'D' : '-'}
+            ">
+            </td>
+
+    </tr>
     </tbody>
   </table>
 
+
+<a th:if="${singleView}"
+   th:href="@{/hogehoge_02(month=${month})}"
+   class="back-link">
+  ← 4月一覧に戻る
+</a>
+
   <!-- ===== ★ 試合詳細カード（ここも games を回す） ===== -->
   <div class="game-card" th:each="g : ${games}">
+
 
     <div class="game-header">
       <span th:text="${g.date} + ' vs DUMMY'">4/12 vs DUMMY</span>
       <span class="win" th:text="${g.result}">○ 5-3</span>
     </div>
+        <span class="form-badge">
+        <span th:switch="${g.value}">
+            <span th:case="2">S</span>
+            <span th:case="1">A</span>
+            <span th:case="0">B</span>
+            <span th:case="-1">C</span>
+            <span th:case="*">-</span>
+        </span>
+        </span>
+
 
     <!-- ===== MLB LINE SCORE ===== -->
-    <table class="linescore-table">
-      <thead>
-        <tr>
-          <th>TEAM</th>
-          <th>R</th>
-          <th>H</th>
-          <th>E</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>KC</td>
-          <td th:text="${g.score.awayR}">3</td>
-          <td th:text="${g.score.awayH}">6</td>
-          <td th:text="${g.score.awayE}">1</td>
-        </tr>
-        <tr>
-          <td>LAD</td>
-          <td th:text="${g.score.homeR}">5</td>
-          <td th:text="${g.score.homeH}">8</td>
-          <td th:text="${g.score.homeE}">0</td>
-        </tr>
-      </tbody>
-    </table>
+<table class="linescore-table">
+  <thead>
+    <tr>
+      <th>TEAM</th>
+      <th>R</th>
+      <th>H</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KC</td>
+      <td th:text="${g.score['awayR']}">3</td>
+      <td th:text="${g.score['awayH']}">6</td>
+      <td th:text="${g.score['awayE']}">1</td>
+    </tr>
+    <tr>
+      <td>LAD</td>
+      <td th:text="${g.score['homeR']}">5</td>
+      <td th:text="${g.score['homeH']}">8</td>
+      <td th:text="${g.score['homeE']}">0</td>
+    </tr>
+  </tbody>
+</table>
 
     <!-- ===== 打撃サマリー ===== -->
     <div class="batting-summary" th:text="${g.summary}">
@@ -328,9 +376,6 @@
 
   </div>
 
-  <a href="/hogehoge_01" class="back-link">
-    ← シーズン概要に戻る
-  </a>
 
 </div>
 
@@ -338,7 +383,14 @@
   const params = new URLSearchParams(location.search);
   const month = params.get("month");
   document.getElementById("info").textContent =
-    month ? `${month}月の詳細ページ（ダミー）` : "月未指定";
+    month ? month + "月の詳細ページ（ダミー）" : "月未指定";
+</script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+  const APRIL_LABELS = [[${chartLabels}]];
+  const APRIL_VALUES = [[${chartValues}]];
+/*]]>*/
 </script>
 
 </body>
