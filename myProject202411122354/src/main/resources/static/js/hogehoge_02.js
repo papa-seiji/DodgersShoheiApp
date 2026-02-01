@@ -1,14 +1,21 @@
 /* =========================================================
-   April Daily Trend (Controller Sync)
+   Monthly Daily Trend Chart
    hogehoge_02.js
+   ※ Controller 側で formValue を 1〜5（D〜S）に正規化済
 ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
 
-  if (typeof APRIL_LABELS === "undefined") return;
+  // Controller から未連携の場合は何もしない
+  if (typeof APRIL_LABELS === "undefined" || typeof APRIL_VALUES === "undefined") {
+    return;
+  }
 
-  const ctx = document.getElementById("aprilChart").getContext("2d");
+  const canvas = document.getElementById("aprilChart");
+  if (!canvas) return;
 
-  // ★ Controller の value(1〜5)をそのまま使う
+  const ctx = canvas.getContext("2d");
+
+  // ★ Controller から来た値（1〜5）をそのまま使用
   const values = APRIL_VALUES;
 
   new Chart(ctx, {
@@ -30,9 +37,15 @@ document.addEventListener("DOMContentLoaded", () => {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            label: (c) => {
-              const map = {1:"D",2:"C",3:"B",4:"A",5:"S"};
-              return `Form: ${map[c.raw]}`;
+            label: (context) => {
+              const formMap = {
+                1: "D",
+                2: "C",
+                3: "B",
+                4: "A",
+                5: "S"
+              };
+              return `Form: ${formMap[context.raw] ?? "-"}`;
             }
           }
         }
@@ -43,7 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
           max: 5,
           ticks: {
             stepSize: 1,
-            callback: v => ({1:"D",2:"C",3:"B",4:"A",5:"S"}[v])
+            callback: (value) => ({
+              1: "D",
+              2: "C",
+              3: "B",
+              4: "A",
+              5: "S"
+            })[value] ?? ""
           }
         }
       }

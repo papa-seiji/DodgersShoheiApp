@@ -42,7 +42,16 @@ public class OhtaniGameController {
 
         for (OhtaniGame g : monthGames) {
             chartLabels.add(g.getGameDate().toString().substring(5)); // MM-dd
-            chartValues.add(g.getFormValue());
+
+            int graphValue = switch (g.getFormValue()) {
+                case 2 -> 5; // S
+                case 1 -> 4; // A
+                case 0 -> 3; // B
+                case -1 -> 2; // C
+                default -> 1; // D
+            };
+
+            chartValues.add(graphValue);
         }
 
         model.addAttribute("chartLabels", chartLabels);
