@@ -6,6 +6,14 @@
   <title>Ohtani Scorebook | Season Overview</title>
 <link rel="stylesheet" href="/css/hogehoge_01.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- ★ ここに追加（Controller → JS 受け渡し） -->
+  <!-- ★ th:inline を必ず付ける -->
+  <script th:inline="javascript">
+    window.APRIL_LABELS = [[${aprilLabels}]];
+    window.APRIL_VALUES = [[${aprilValues}]];
+  </script>
+
 <script src="/js/hogehoge.js"></script>
 </head>
 
