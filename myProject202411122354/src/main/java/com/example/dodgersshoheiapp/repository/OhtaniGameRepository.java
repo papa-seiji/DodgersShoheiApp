@@ -30,6 +30,7 @@ public class OhtaniGameRepository {
                         opponent,
                         result,
                         form_value,
+                        comment,
                         created_at
                     FROM ohtani_games
                     WHERE EXTRACT(YEAR FROM game_date) = ?

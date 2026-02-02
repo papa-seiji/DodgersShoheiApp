@@ -12,6 +12,7 @@ public class OhtaniGame {
     private String result;
     private int formValue;
     private LocalDateTime createdAt;
+    private String comment;
 
     // ★ これが足りなかった
     private List<OhtaniGameDetail> details;
@@ -64,6 +65,14 @@ public class OhtaniGame {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     // ★ これが Controller から呼ばれる

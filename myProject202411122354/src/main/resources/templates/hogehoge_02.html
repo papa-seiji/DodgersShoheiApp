@@ -346,7 +346,7 @@
       <span th:text="|${#temporals.format(g.gameDate,'MM/dd')} vs ${g.opponent}|"></span>
     </div>
 
-    <!-- 評価 -->
+    <!-- 評価 
     <span class="form-badge"
           th:text="
             ${g.formValue == 2 ? 'S' :
@@ -354,7 +354,7 @@
               g.formValue == 0 ? 'B' :
               g.formValue == -1 ? 'C' : 'D'}
           ">
-    </span>
+    </span>-->
 
     <!-- LINE SCORE -->
     <table class="linescore-table">
@@ -449,11 +449,26 @@
 
     </ul>
 
-<div class="game-comment">
-  <strong>コメント：</strong>
-  <pre>
-引き付けて強いスイング。内容が非常に良い。
+<div class="game-comment"
+     th:if="${g.comment != null and !#strings.isEmpty(g.comment)}">
+
+<strong
+  th:text="
+    |${#temporals.format(g.gameDate,'M/d')}の総評コメント：
+     評価【${
+       g.formValue == 2 ? 'S' :
+       g.formValue == 1 ? 'A' :
+       g.formValue == 0 ? 'B' :
+       g.formValue == -1 ? 'C' : 'D'
+     }】|
+  ">
+  4/28の総評コメント：評価【B】
+</strong>
+
+  <pre th:text="${g.comment}">
+    コメント本文
   </pre>
+
 </div>
 
 
