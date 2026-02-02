@@ -285,7 +285,7 @@
     <span th:text="${month}">4</span>月 試合一覧
   </h2>
 
-  <!-- ===== 月間一覧テーブル（★ 常に表示）===== -->
+  <!-- ===== 月間一覧テーブル ===== -->
   <table class="scorebook-table">
     <thead>
       <tr>
@@ -297,67 +297,56 @@
     </thead>
 
     <tbody>
-    <tr th:each="g : ${monthGames}"
-        th:if="${param.date == null or g.gameDate.toString() == param.date[0]}"
-        th:attr="data-date=${g.gameDate}"
-        class="game-row">
+      <tr th:each="g : ${monthGames}"
+          th:if="${g != null and (param.date == null or g.gameDate.toString() == param.date[0])}"
+          th:attr="data-date=${g.gameDate}"
+          class="game-row">
 
         <td>
-        <a th:href="@{/hogehoge_02(
-            month=${month},
-            date=${g.gameDate}
-        )}"
-            th:text="${#temporals.format(g.gameDate,'MM/dd')}">
+          <a th:href="@{/hogehoge_02(month=${month}, date=${g.gameDate})}"
+             th:text="${#temporals.format(g.gameDate,'MM/dd')}">
             04/06
-        </a>
+          </a>
         </td>
 
         <td th:text="${g.opponent}">PADRES</td>
 
         <td th:text="${g.result}"
             th:classappend="${g.result.contains('●')} ? 'lose' : 'win'">
-        ○ 4-2
+          ○ 4-2
         </td>
 
         <td th:text="
-        ${g.formValue == 2 ? 'S' :
+          ${g.formValue == 2 ? 'S' :
             g.formValue == 1 ? 'A' :
             g.formValue == 0 ? 'B' :
             g.formValue == -1 ? 'C' : 'D'}
         ">
         </td>
 
-    </tr>
+      </tr>
     </tbody>
   </table>
 
-
-<!-- ===== 一覧に戻るボタン（date 指定時のみ表示）===== -->
-<div class="back-to-month"
-     th:if="${param.date != null}">
-
-  <a th:href="@{/hogehoge_02(month=${month})}"
-     class="back-button">
-    ← <span th:text="${month}">4</span>月の試合一覧に戻る
-  </a>
-
-</div>
-
-
+  <!-- ===== 一覧に戻る ===== -->
+  <div class="back-to-month" th:if="${param.date != null}">
+    <a th:href="@{/hogehoge_02(month=${month})}" class="back-button">
+      ← <span th:text="${month}">4</span>月の試合一覧に戻る
+    </a>
+  </div>
 
   <!-- ===== 試合詳細カード ===== -->
-  <!-- ★ games が「全件 or 1件」に切り替わる -->
-<div class="game-card"
-     th:each="g : ${games}"
-     th:id="'game-' + ${g.gameDate}">
+  <div class="game-card"
+       th:each="g : ${games}"
+       th:if="${g != null}"
+       th:id="|game-${g.gameDate}|">
 
+    <!-- ヘッダー -->
     <div class="game-header">
-      <span th:text="${#temporals.format(g.gameDate,'MM/dd')} + ' vs ' + ${g.opponent}">
-        4/12 vs PADRES
-      </span>
-      <span class="win" th:text="${g.result}">○ 5-3</span>
+      <span th:text="|${#temporals.format(g.gameDate,'MM/dd')} vs ${g.opponent}|"></span>
     </div>
 
+    <!-- 評価 -->
     <span class="form-badge"
           th:text="
             ${g.formValue == 2 ? 'S' :
@@ -367,96 +356,138 @@
           ">
     </span>
 
-<!--ページ下部にスクロール用 JS を追加-->
-<script th:inline="javascript">
-/*<![CDATA[*/
-  const selectedDate = /*[[${selectedDate}]]*/ null;
-
-  if (selectedDate) {
-
-    // ===== 詳細カードへスクロール =====
-    const targetCard = document.getElementById('game-' + selectedDate);
-    if (targetCard) {
-      targetCard.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-
-    // ===== 一覧テーブルのハイライト =====
-    document.querySelectorAll('.game-row').forEach(row => {
-      if (row.dataset.date === selectedDate) {
-        row.classList.add('is-selected');
-      }
-    });
-  }
-/*]]>*/
-</script>
-
-
-    <!-- ===== LINE SCORE（仮）===== -->
+    <!-- LINE SCORE -->
     <table class="linescore-table">
       <thead>
         <tr>
-          <th>TEAM</th>
-          <th>R</th>
-          <th>H</th>
-          <th>E</th>
+          <th>TEAM</th><th>R</th><th>H</th><th>E</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td th:text="${g.opponent}">AWAY</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
+          <td th:text="${g.opponent}">PADRES</td>
+          <td>-</td><td>-</td><td>-</td>
         </tr>
         <tr>
           <td>LAD</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
+          <td>-</td><td>-</td><td>-</td>
         </tr>
       </tbody>
     </table>
 
-    <!-- ===== 打撃サマリー（仮）===== -->
-    <div class="batting-summary">
+    <!-- 打撃サマリー -->
+    <div class="batting-summary" th:with="d=${g.details[0]}"
+         th:text="
+           (${d.pa1Result != null ? 1 : 0}
+          + ${d.pa2Result != null ? 1 : 0}
+          + ${d.pa3Result != null ? 1 : 0}
+          + ${d.pa4Result != null ? 1 : 0}
+          + ${d.pa5Result != null ? 1 : 0}
+          + ${d.pa6Result != null ? 1 : 0})
+          + '打数 / ' +
+          (${d.pa1Result == 'HIT' || d.pa1Result == 'HR' ? 1 : 0}
+          + ${d.pa2Result == 'HIT' || d.pa2Result == 'HR' ? 1 : 0}
+          + ${d.pa3Result == 'HIT' || d.pa3Result == 'HR' ? 1 : 0}
+          + ${d.pa4Result == 'HIT' || d.pa4Result == 'HR' ? 1 : 0}
+          + ${d.pa5Result == 'HIT' || d.pa5Result == 'HR' ? 1 : 0}
+          + ${d.pa6Result == 'HIT' || d.pa6Result == 'HR' ? 1 : 0})
+          + '安打'
+         ">
       5打数 / 2安打
     </div>
 
-    <!-- ===== 打席内容 ===== -->
-    <ul class="atbat-list" th:if="${g.details != null}">
-      <li th:each="d : ${g.details}">
-        <strong th:text="'第' + ${d.battingOrder} + '打席'">第1打席</strong>
-        ：対戦投手
-        <span th:text="${d.pitcher}">投手名</span>
-        （<span th:text="${d.pitcherHand}">右</span>）
-        <span class="bat-result" th:text="${d.result}">結果</span>
+    <!-- 打席内容 -->
+    <ul class="atbat-list" th:with="d=${g.details[0]}">
+
+      <li th:if="${d.pa1Result != null}">
+        <strong>第1打席：</strong>
+        対戦投手 <span th:text="${d.pa1Pitcher}"></span>
+        （<span th:text="${d.pa1PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa1Result}"></span><br>
+        <span th:text="${d.pa1Description}"></span>
       </li>
+
+      <li th:if="${d.pa2Result != null}">
+        <strong>第2打席：</strong>
+        対戦投手 <span th:text="${d.pa2Pitcher}"></span>
+        （<span th:text="${d.pa2PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa2Result}"></span><br>
+        <span th:text="${d.pa2Description}"></span>
+      </li>
+
+      <li th:if="${d.pa3Result != null}">
+        <strong>第3打席：</strong>
+        対戦投手 <span th:text="${d.pa3Pitcher}"></span>
+        （<span th:text="${d.pa3PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa3Result}"></span><br>
+        <span th:text="${d.pa3Description}"></span>
+      </li>
+
+      <li th:if="${d.pa4Result != null}">
+        <strong>第4打席：</strong>
+        対戦投手 <span th:text="${d.pa4Pitcher}"></span>
+        （<span th:text="${d.pa4PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa4Result}"></span><br>
+        <span th:text="${d.pa4Description}"></span>
+      </li>
+
+      <li th:if="${d.pa5Result != null}">
+        <strong>第5打席：</strong>
+        対戦投手 <span th:text="${d.pa5Pitcher}"></span>
+        （<span th:text="${d.pa5PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa5Result}"></span><br>
+        <span th:text="${d.pa5Description}"></span>
+      </li>
+
+      <li th:if="${d.pa6Result != null}">
+        <strong>第6打席：</strong>
+        対戦投手 <span th:text="${d.pa6Pitcher}"></span>
+        （<span th:text="${d.pa6PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa6Result}"></span><br>
+        <span th:text="${d.pa6Description}"></span>
+      </li>
+
     </ul>
 
-    <!-- ===== コメント（仮）===== -->
-    <div class="game-comment">
-      <strong>コメント：</strong>
-      <pre>引き付けて強いスイング。内容が非常に良い。</pre>
-    </div>
-
-  </div>
-
+<div class="game-comment">
+  <strong>コメント：</strong>
+  <pre>
+引き付けて強いスイング。内容が非常に良い。
+  </pre>
 </div>
 
+
+<!-- スクロール制御 -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+const selectedDate = /*[[${selectedDate != null ? selectedDate : 'null'}]]*/ null;
+
+if (selectedDate) {
+  const targetCard = document.getElementById('game-' + selectedDate);
+  if (targetCard) {
+    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.querySelectorAll('.game-row').forEach(row => {
+    if (row.dataset.date === selectedDate) {
+      row.classList.add('is-selected');
+    }
+  });
+}
+/*]]>*/
+</script>
+
 <script>
-  const params = new URLSearchParams(location.search);
-  const month = params.get("month");
-  document.getElementById("info").textContent =
-    month ? month + "月の詳細ページ" : "月未指定";
+const params = new URLSearchParams(location.search);
+const month = params.get("month");
+document.getElementById("info").textContent =
+  month ? month + "月の詳細ページ" : "月未指定";
 </script>
 
 <script th:inline="javascript">
 /*<![CDATA[*/
-  const APRIL_LABELS = [[${chartLabels}]];
-  const APRIL_VALUES = [[${chartValues}]];
+const APRIL_LABELS = [[${chartLabels}]];
+const APRIL_VALUES = [[${chartValues}]];
 /*]]>*/
 </script>
 
