@@ -9,10 +9,12 @@
 
   <!-- ★ ここに追加（Controller → JS 受け渡し） -->
   <!-- ★ th:inline を必ず付ける -->
-  <script th:inline="javascript">
-    window.APRIL_LABELS = [[${aprilLabels}]];
-    window.APRIL_VALUES = [[${aprilValues}]];
-  </script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+  window.LABELS = [[${labels}]];
+  window.VALUES = [[${values}]];
+/*]]>*/
+</script>
 
 <script src="/js/hogehoge.js"></script>
 </head>

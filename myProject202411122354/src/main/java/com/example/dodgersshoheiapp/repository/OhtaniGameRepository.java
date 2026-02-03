@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -140,4 +141,36 @@ public class OhtaniGameRepository {
             return d;
         }
     };
+
+    /**
+     * 期間指定で試合取得（旬平均・グラフ用）
+     */
+    public List<OhtaniGame> findGamesBetween(LocalDate start, LocalDate end) {
+
+        String sql = """
+                    SELECT
+                        id,
+                        game_date,
+                        opponent,
+                        result,
+                        form_value,
+                        comment,
+                        created_at
+                    FROM ohtani_games
+                    WHERE game_date BETWEEN ? AND ?
+                    ORDER BY game_date
+                """;
+
+        return jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(OhtaniGame.class),
+                start,
+                end);
+    }
+
+    public LocalDate findLatestGameDate() {
+        String sql = "SELECT MAX(game_date) FROM ohtani_games";
+        return jdbcTemplate.queryForObject(sql, LocalDate.class);
+    }
+
 }
