@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>hogehoge_02</title>
-  <link rel="stylesheet" href="/css/hogehoge_01.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:inline="javascript">
   window.MONTH_GAMES = /*[[${monthGames}]]*/ [];
@@ -13,9 +12,12 @@
 <style>
 /* ===== Layout ===== */
 .month-detail-wrapper {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 24px 16px 40px;
+  max-width: 1200px;   /* ← 画面を広く使いたいならここを拡張 */
+  width: 100%;
+  margin: 0 auto;     /* ★ 常に中央 */
+  padding: 24px 20px 40px;
+  box-sizing: border-box;
+    overflow-x: hidden; /* ★これ */
 }
 
 .month-title {
@@ -63,10 +65,12 @@
 
 /* ===== 試合詳細カード ===== */
 .game-card {
+  width: 100%;                /* ★必須 */
+  box-sizing: border-box;     /* ★必須 */
   background: #ffffff;
   border: 1px solid #ddd;
   border-radius: 10px;
-  padding: 16px;
+  /* padding: 16px; */
   margin-bottom: 32px;
 }
 
@@ -119,6 +123,7 @@
   padding: 12px;
   border-radius: 6px;
   margin-top: 12px;
+  margin-bottom: 50px;
 }
 
 .game-comment pre {
@@ -238,7 +243,7 @@
 
 
 /* Mobile */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .linescore-table {
     font-size: 11px;
   }
@@ -246,10 +251,10 @@
   .linescore-table td {
     padding: 4px;
   }
-}
+} */
 
 /* モバイル調整 */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .linescore-table {
     font-size: 11px;
   }
@@ -258,7 +263,7 @@
   .linescore-table td {
     padding: 4px 4px;
   }
-}
+} */
 
 </style>
 </head>
@@ -268,7 +273,7 @@
 <h1>
   <span th:text="${month}">4</span>月の詳細ページ
 </h1>
-<p id="info"></p>
+<!--<p id="info"></p>-->
 
 <a href="/hogehoge_01" class="back-link">
   ← シーズン概要に戻る
@@ -277,7 +282,7 @@
 <div class="month-detail-wrapper">
 
   <!-- ===== 4月 成績推移グラフ ===== -->
-  <div style="max-width:720px;margin:0 auto 32px;">
+  <div style="margin:0 auto 32px;">
     <canvas id="aprilChart" height="120"></canvas>
   </div>
 

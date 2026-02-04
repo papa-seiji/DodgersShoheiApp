@@ -60,17 +60,17 @@
 
   </div>
 
-  <div class="batting-stats">
-    <div class="stats-header">2025 Stats</div>
-    <div class="stats-body">
-      <p>出場数：158</p>
-      <p>打率：.282</p>
-      <p>本塁打：55</p>
-      <p>盗塁：20</p>
-      <p>打点：102</p>
-      <p>OPS：1.014</p>
-    </div>
-  </div>
+                <!--<div id="SeasonStats-1">2025 Stats</div>-->
+                <!-- 打者成績セクション -->
+                <div id="hitter-stats">
+                    <div id="HitterStats-1">Hitter Stats</div>
+                    <div><strong>出場数:</strong> <span id="gamesPlayed"></span></div>
+                    <div><strong>打率:　</strong> <span id="avg"></span></div>
+                    <div><strong>本塁打:</strong> <span id="homeRuns"></span></div>
+                    <div><strong>盗塁:　</strong> <span id="stolenBases"></span></div>
+                    <div><strong>打点:　</strong> <span id="rbi"></span></div>
+                    <div><strong>OPS:　</strong> <span id="ops"></span></div>
+                </div>
 
 </div>
 
@@ -402,5 +402,9 @@
 
 </section>
 </main>
+
+  <!-- MLB.comから打撃成績取得しているjs -->
+<script src="/js/stats.js"></script>
+
 </body>
 </html>
