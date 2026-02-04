@@ -76,6 +76,8 @@ public class SecurityConfig {
                                 "/archive",
                                 "/links",
                                 "/kike",
+                                "/hogehoge_01",
+                                "/hogehoge_02",
 
                                 // 認証関連
                                 "/auth/login",

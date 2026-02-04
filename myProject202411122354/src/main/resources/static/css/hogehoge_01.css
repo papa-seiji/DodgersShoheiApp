@@ -1,9 +1,28 @@
+
 /* =========================================================
    HERO – 世界観レイヤー
 ========================================================= */
 header{
   text-align: center;
 }
+
+.back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #001531;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    /* margin-top: 24px; */
+    margin-left: 251px;
+}
+
+.back-button:hover {
+    background-color: #003366;
+}
+
 
 .season-hero {
   background: #fbf3d6;
@@ -49,7 +68,7 @@ header{
 .batting-panel {
   position: absolute;
   right: 17%;
-  top: 14%;
+  top: 5%;
   width: 260px;
 
   display: flex;
@@ -123,7 +142,7 @@ header{
     transform: scale(0.5);
     transform-origin: top right;
     right: 2%;
-            margin-top: 75px;
+            margin-top: 178px;
         margin-right: 125px;
   }
 
@@ -160,6 +179,25 @@ header{
   --clock-cx: 62%;
   --clock-cy: 36%;
 }
+
+.back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #001531;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    /* margin-top: 24px; */
+    margin-left: 324px;
+}
+
+.back-button:hover {
+    background-color: #003366;
+}
+
+
 }
 
 @media (max-width: 430px) {
@@ -167,10 +205,26 @@ header{
     transform: scale(0.4);
     transform-origin: top right;
     right: 2%;
-    margin-top: 25px;
+    margin-top: 180px;
     margin-right: 4px;
   }
 
+.back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #001531;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    /* margin-top: 24px; */
+    margin-left: 89px;
+}
+
+.back-button:hover {
+    background-color: #003366;
+}
 
 
 
