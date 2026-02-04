@@ -3,6 +3,8 @@ package com.example.dodgersshoheiapp.repository;
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniGameDetail;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -168,8 +170,39 @@ public class OhtaniGameRepository {
                 end);
     }
 
+    public OhtaniGame findLatestGame() {
+
+        String sql = """
+                    SELECT
+                        id,
+                        game_date,
+                        opponent,
+                        result,
+                        form_value,
+                        comment,
+                        created_at
+                    FROM ohtani_games
+                    ORDER BY game_date DESC
+                    LIMIT 1
+                """;
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                new BeanPropertyRowMapper<>(OhtaniGame.class));
+    }
+
+    /**
+     * ★ 最新試合日を取得（hogehoge_01 用）
+     */
     public LocalDate findLatestGameDate() {
-        String sql = "SELECT MAX(game_date) FROM ohtani_games";
+
+        String sql = """
+                    SELECT game_date
+                    FROM ohtani_games
+                    ORDER BY game_date DESC
+                    LIMIT 1
+                """;
+
         return jdbcTemplate.queryForObject(sql, LocalDate.class);
     }
 

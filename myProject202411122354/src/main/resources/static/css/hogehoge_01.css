@@ -51,7 +51,7 @@
 
 /* 調子コメント */
 .batting-status {
-  background: #ffffff;
+  background: #44bce8;
   border: 1px solid #aaa;
   padding: 10px 12px;
   font-size: 13px;
@@ -60,6 +60,7 @@
 .batting-status .rank {
   margin-bottom: 6px;
   font-weight: bold;
+  font-size: 37px;
 }
 
 .rank-c {
@@ -320,6 +321,60 @@
 .month-calendar.is-current .cal-header {
   background: #114195;
 }
+
+
+.batting-date {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.rank-value {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.batting-comment {
+  margin-top: 8px;
+  line-height: 1.7;
+  font-size: 14px;
+
+  /* ★ 長文・改行対策 */
+  white-space: pre-wrap;   /* 改行・連続文字をそのまま表示 */
+  word-break: break-word; /* 英数字の長文も折り返す */
+  overflow-wrap: anywhere;
+
+  /* 見た目調整 */
+  padding-top: 4px;
+}
+
+/* 3️⃣ CSS：ランクごとの色を定義 */
+.rank-value {
+  font-weight: bold;
+  font-size: 50px;
+}
+
+/* ===== ランク別カラー ===== */
+.rank-S {
+  color: #e53935; /* 赤：爆発 */
+}
+
+.rank-A {
+  color: #fb8c00; /* オレンジ：好調 */
+}
+
+.rank-B {
+  color: #555555; /* グレー：普通 */
+}
+
+.rank-C {
+  color: #1e88e5; /* 青：不調 */
+}
+
+.rank-D {
+  color: #6d6d6d; /* 薄グレー：低調 */
+}
+
 
 /* =========================================================
    📱 スマホ対応（≤430px）
