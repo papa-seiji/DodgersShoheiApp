@@ -7,14 +7,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const [hitterStatsData, pitcherStatsData] = await response.json();
 
-        // 打者成績を表示
+        // 打者成績（存在する場合のみ）
+        const gamesPlayedEl = document.getElementById("gamesPlayed");
+        if (gamesPlayedEl) {
         const hitterStats = hitterStatsData.stats[0].splits[0].stat;
-        document.getElementById("gamesPlayed").textContent = hitterStats.gamesPlayed || "N/A";
+        gamesPlayedEl.textContent = hitterStats.gamesPlayed || "N/A";
         document.getElementById("avg").textContent = hitterStats.avg || "N/A";
         document.getElementById("homeRuns").textContent = hitterStats.homeRuns || "N/A";
         document.getElementById("stolenBases").textContent = hitterStats.stolenBases || "N/A";
         document.getElementById("rbi").textContent = hitterStats.rbi || "N/A";
         document.getElementById("ops").textContent = hitterStats.ops || "N/A";
+        }
 
         // 投手成績を表示
         const pitcherStats = pitcherStatsData.stats[0].splits[0].stat;

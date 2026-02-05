@@ -137,6 +137,11 @@ public class OhtaniScorebookController {
         return "hogehoge_01";
     }
 
+    @GetMapping("/hogehoge_03")
+    public String showPitchingOverview() {
+        return "hogehoge_03";
+    }
+
     /**
      * ============================
      * 🆕 日記ヘッダ用（最新試合）

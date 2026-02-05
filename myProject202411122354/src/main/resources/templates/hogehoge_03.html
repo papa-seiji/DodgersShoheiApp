@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ohtani Scorebook | Season Overview</title>
-<link rel="stylesheet" href="/css/hogehoge_01.css">
+<link rel="stylesheet" href="/css/hogehoge_03.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- ★ ここに追加（Controller → JS 受け渡し） -->
@@ -33,12 +33,12 @@
   <!-- ① 世界観レイヤー -->
 <section class="season-hero">
 
-<!-- 🔴 BATIN’ PANEL -->
+<!-- 🔴 PITTIN’ PANEL -->
 <div class="batting-panel">
 
-<a href="/hogehoge_03" class="batting-link">
-  <div class="batting-title">
-    BATTIN’
+<a href="/hogehoge_01" class="batting-link">
+  <div class="pitting-title">
+    PITTIN’
   </div>
 </a>
 
@@ -64,15 +64,14 @@
   </div>
 
                 <!--<div id="SeasonStats-1">2025 Stats</div>-->
-                <!-- 打者成績セクション -->
-                <div id="hitter-stats">
-                    <div id="HitterStats-1">Hitter Stats</div>
-                    <div><strong>出場数:</strong> <span id="gamesPlayed"></span></div>
-                    <div><strong>打率:　</strong> <span id="avg"></span></div>
-                    <div><strong>本塁打:</strong> <span id="homeRuns"></span></div>
-                    <div><strong>盗塁:　</strong> <span id="stolenBases"></span></div>
-                    <div><strong>打点:　</strong> <span id="rbi"></span></div>
-                    <div><strong>OPS:　</strong> <span id="ops"></span></div>
+                <!-- 投手成績セクション -->
+                <div id="pitcher-stats">
+                    <div id="pitcher-stats-2">Pitcher Stats</div>
+                    <div id="pitcher-stats-2_child"><strong>投球日:　</strong> <span id="pitcherGamesPlayed"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>勝ち:　　</strong> <span id="wins"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>負け:　　</strong> <span id="losses"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>防御率:　</strong> <span id="era"></span></div>
+                    <div id="pitcher-stats-2_child"><strong>奪三振:　</strong> <span id="strikeOuts"></span></div>
                 </div>
 
 </div>
@@ -406,7 +405,7 @@
 </section>
 </main>
 
-  <!-- MLB.comから打撃成績取得しているjs -->
+  <!-- MLB.comから投手成績取得しているjs -->
 <script src="/js/stats.js"></script>
 
 </body>
