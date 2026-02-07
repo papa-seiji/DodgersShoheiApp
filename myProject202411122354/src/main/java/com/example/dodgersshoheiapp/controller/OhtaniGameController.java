@@ -3,6 +3,9 @@ package com.example.dodgersshoheiapp.controller;
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniGameDetail;
 import com.example.dodgersshoheiapp.repository.OhtaniGameRepository;
+import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameRepository;
+import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,7 @@ import java.util.List;
 public class OhtaniGameController {
 
     private final OhtaniGameRepository repository;
+    private final OhtaniPitchingGameRepository pitchingGameRepository; // ★追加
 
     @GetMapping("/hogehoge_02")
     public String showMonthlyGames(
@@ -88,4 +92,5 @@ public class OhtaniGameController {
 
         return "hogehoge_02";
     }
+
 }
