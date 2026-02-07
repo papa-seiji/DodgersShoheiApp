@@ -332,107 +332,215 @@
 
     <!-- ===== 1回〜10回（明示展開・安全版） ===== -->
 
-    <div class="inning-block" th:if="${detail.inning1So != null}">
-      <div class="inning-stats">
-        【1回】 SO:<span th:text="${detail.inning1So}"></span>
-        BB:<span th:text="${detail.inning1Bb}"></span>
-        OUT:<span th:text="${detail.inning1Out}"></span>
-        HIT:<span th:text="${detail.inning1Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning1Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning2So != null}">
-      <div class="inning-stats">
-        【2回】 SO:<span th:text="${detail.inning2So}"></span>
-        BB:<span th:text="${detail.inning2Bb}"></span>
-        OUT:<span th:text="${detail.inning2Out}"></span>
-        HIT:<span th:text="${detail.inning2Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning2Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning3So != null}">
-      <div class="inning-stats">
-        【3回】 SO:<span th:text="${detail.inning3So}"></span>
-        BB:<span th:text="${detail.inning3Bb}"></span>
-        OUT:<span th:text="${detail.inning3Out}"></span>
-        HIT:<span th:text="${detail.inning3Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning3Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning4So != null}">
-      <div class="inning-stats">
-        【4回】 SO:<span th:text="${detail.inning4So}"></span>
-        BB:<span th:text="${detail.inning4Bb}"></span>
-        OUT:<span th:text="${detail.inning4Out}"></span>
-        HIT:<span th:text="${detail.inning4Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning4Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning5So != null}">
-      <div class="inning-stats">
-        【5回】 SO:<span th:text="${detail.inning5So}"></span>
-        BB:<span th:text="${detail.inning5Bb}"></span>
-        OUT:<span th:text="${detail.inning5Out}"></span>
-        HIT:<span th:text="${detail.inning5Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning5Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning6So != null}">
-      <div class="inning-stats">
-        【6回】 SO:<span th:text="${detail.inning6So}"></span>
-        BB:<span th:text="${detail.inning6Bb}"></span>
-        OUT:<span th:text="${detail.inning6Out}"></span>
-        HIT:<span th:text="${detail.inning6Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning6Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning7So != null}">
-      <div class="inning-stats">
-        【7回】 SO:<span th:text="${detail.inning7So}"></span>
-        BB:<span th:text="${detail.inning7Bb}"></span>
-        OUT:<span th:text="${detail.inning7Out}"></span>
-        HIT:<span th:text="${detail.inning7Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning7Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning8So != null}">
-      <div class="inning-stats">
-        【8回】 SO:<span th:text="${detail.inning8So}"></span>
-        BB:<span th:text="${detail.inning8Bb}"></span>
-        OUT:<span th:text="${detail.inning8Out}"></span>
-        HIT:<span th:text="${detail.inning8Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning8Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning9So != null}">
-      <div class="inning-stats">
-        【9回】 SO:<span th:text="${detail.inning9So}"></span>
-        BB:<span th:text="${detail.inning9Bb}"></span>
-        OUT:<span th:text="${detail.inning9Out}"></span>
-        HIT:<span th:text="${detail.inning9Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning9Description}"></div>
-    </div>
-
-    <div class="inning-block" th:if="${detail.inning10So != null}">
-      <div class="inning-stats">
-        【10回】 SO:<span th:text="${detail.inning10So}"></span>
-        BB:<span th:text="${detail.inning10Bb}"></span>
-        OUT:<span th:text="${detail.inning10Out}"></span>
-        HIT:<span th:text="${detail.inning10Hit}"></span>
-      </div>
-      <div class="inning-desc" th:text="${detail.inning10Description}"></div>
-    </div>
-
+<!-- ===== 登板詳細（Inning Detail：1回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning1So != null and detail.inning1So != 0)
+        or (detail.inning1Bb != null and detail.inning1Bb != 0)
+        or (detail.inning1Out != null and detail.inning1Out != 0)
+        or (detail.inning1Hit != null and detail.inning1Hit != 0)
+        or !#strings.isEmpty(detail.inning1Description)
+     )}">
+  <div class="inning-stats">
+    【1回】
+    SO:<span th:text="${detail.inning1So}"></span>
+    BB:<span th:text="${detail.inning1Bb}"></span>
+    OUT:<span th:text="${detail.inning1Out}"></span>
+    HIT:<span th:text="${detail.inning1Hit}"></span>
   </div>
+  <div class="inning-desc"
+       th:text="${detail.inning1Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：2回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning2So != null and detail.inning2So != 0)
+        or (detail.inning2Bb != null and detail.inning2Bb != 0)
+        or (detail.inning2Out != null and detail.inning2Out != 0)
+        or (detail.inning2Hit != null and detail.inning2Hit != 0)
+        or !#strings.isEmpty(detail.inning2Description)
+     )}">
+  <div class="inning-stats">
+    【2回】
+    SO:<span th:text="${detail.inning2So}"></span>
+    BB:<span th:text="${detail.inning2Bb}"></span>
+    OUT:<span th:text="${detail.inning2Out}"></span>
+    HIT:<span th:text="${detail.inning2Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning2Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：3回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning3So != null and detail.inning3So != 0)
+        or (detail.inning3Bb != null and detail.inning3Bb != 0)
+        or (detail.inning3Out != null and detail.inning3Out != 0)
+        or (detail.inning3Hit != null and detail.inning3Hit != 0)
+        or !#strings.isEmpty(detail.inning3Description)
+     )}">
+  <div class="inning-stats">
+    【3回】
+    SO:<span th:text="${detail.inning3So}"></span>
+    BB:<span th:text="${detail.inning3Bb}"></span>
+    OUT:<span th:text="${detail.inning3Out}"></span>
+    HIT:<span th:text="${detail.inning3Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning3Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：4回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning4So != null and detail.inning4So != 0)
+        or (detail.inning4Bb != null and detail.inning4Bb != 0)
+        or (detail.inning4Out != null and detail.inning4Out != 0)
+        or (detail.inning4Hit != null and detail.inning4Hit != 0)
+        or !#strings.isEmpty(detail.inning4Description)
+     )}">
+  <div class="inning-stats">
+    【4回】
+    SO:<span th:text="${detail.inning4So}"></span>
+    BB:<span th:text="${detail.inning4Bb}"></span>
+    OUT:<span th:text="${detail.inning4Out}"></span>
+    HIT:<span th:text="${detail.inning4Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning4Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：5回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning5So != null and detail.inning5So != 0)
+        or (detail.inning5Bb != null and detail.inning5Bb != 0)
+        or (detail.inning5Out != null and detail.inning5Out != 0)
+        or (detail.inning5Hit != null and detail.inning5Hit != 0)
+        or !#strings.isEmpty(detail.inning5Description)
+     )}">
+  <div class="inning-stats">
+    【5回】
+    SO:<span th:text="${detail.inning5So}"></span>
+    BB:<span th:text="${detail.inning5Bb}"></span>
+    OUT:<span th:text="${detail.inning5Out}"></span>
+    HIT:<span th:text="${detail.inning5Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning5Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：6回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning6So != null and detail.inning6So != 0)
+        or (detail.inning6Bb != null and detail.inning6Bb != 0)
+        or (detail.inning6Out != null and detail.inning6Out != 0)
+        or (detail.inning6Hit != null and detail.inning6Hit != 0)
+        or !#strings.isEmpty(detail.inning6Description)
+     )}">
+  <div class="inning-stats">
+    【6回】
+    SO:<span th:text="${detail.inning6So}"></span>
+    BB:<span th:text="${detail.inning6Bb}"></span>
+    OUT:<span th:text="${detail.inning6Out}"></span>
+    HIT:<span th:text="${detail.inning6Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning6Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：7回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning7So != null and detail.inning7So != 0)
+        or (detail.inning7Bb != null and detail.inning7Bb != 0)
+        or (detail.inning7Out != null and detail.inning7Out != 0)
+        or (detail.inning7Hit != null and detail.inning7Hit != 0)
+        or !#strings.isEmpty(detail.inning7Description)
+     )}">
+  <div class="inning-stats">
+    【7回】
+    SO:<span th:text="${detail.inning7So}"></span>
+    BB:<span th:text="${detail.inning7Bb}"></span>
+    OUT:<span th:text="${detail.inning7Out}"></span>
+    HIT:<span th:text="${detail.inning7Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning7Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：8回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning8So != null and detail.inning8So != 0)
+        or (detail.inning8Bb != null and detail.inning8Bb != 0)
+        or (detail.inning8Out != null and detail.inning8Out != 0)
+        or (detail.inning8Hit != null and detail.inning8Hit != 0)
+        or !#strings.isEmpty(detail.inning8Description)
+     )}">
+  <div class="inning-stats">
+    【8回】
+    SO:<span th:text="${detail.inning8So}"></span>
+    BB:<span th:text="${detail.inning8Bb}"></span>
+    OUT:<span th:text="${detail.inning8Out}"></span>
+    HIT:<span th:text="${detail.inning8Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning8Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：9回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning9So != null and detail.inning9So != 0)
+        or (detail.inning9Bb != null and detail.inning9Bb != 0)
+        or (detail.inning9Out != null and detail.inning9Out != 0)
+        or (detail.inning9Hit != null and detail.inning9Hit != 0)
+        or !#strings.isEmpty(detail.inning9Description)
+     )}">
+  <div class="inning-stats">
+    【9回】
+    SO:<span th:text="${detail.inning9So}"></span>
+    BB:<span th:text="${detail.inning9Bb}"></span>
+    OUT:<span th:text="${detail.inning9Out}"></span>
+    HIT:<span th:text="${detail.inning9Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning9Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：10回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning10So != null and detail.inning10So != 0)
+        or (detail.inning10Bb != null and detail.inning10Bb != 0)
+        or (detail.inning10Out != null and detail.inning10Out != 0)
+        or (detail.inning10Hit != null and detail.inning10Hit != 0)
+        or !#strings.isEmpty(detail.inning10Description)
+     )}">
+  <div class="inning-stats">
+    【10回】
+    SO:<span th:text="${detail.inning10So}"></span>
+    BB:<span th:text="${detail.inning10Bb}"></span>
+    OUT:<span th:text="${detail.inning10Out}"></span>
+    HIT:<span th:text="${detail.inning10Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning10Description}">
+  </div>
+</div>
 
   <!-- ===== 総評 ===== -->
   <div class="game-comment"
