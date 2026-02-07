@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class OhtaniPitchingGameController {
@@ -28,7 +30,6 @@ public class OhtaniPitchingGameController {
     @GetMapping("/hogehoge_04")
     public String showPitchingMonth(
             @RequestParam(name = "month", required = false) Integer month,
-            @RequestParam(name = "date", required = false) String date,
             Model model) {
 
         int year = 2026;
@@ -39,48 +40,31 @@ public class OhtaniPitchingGameController {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
+        // =========================
+        // ① 月内の全登板試合
+        // =========================
         List<OhtaniPitchingGame> monthGames = pitchingGameRepository.findByGameDateBetween(startDate, endDate);
 
         // =========================
-        // ★ BATTING側と同じ絞り込みロジック
+        // ② 試合ID → Detail のMap
         // =========================
-        OhtaniPitchingGame selectedGame = null;
+        Map<Long, OhtaniPitchingGameDetail> detailMap = new HashMap<>();
 
-        if (date != null) {
-            LocalDate targetDate = LocalDate.parse(date);
-
-            monthGames = monthGames.stream()
-                    .filter(g -> g.getGameDate().equals(targetDate))
-                    .toList();
-
-            if (!monthGames.isEmpty()) {
-                selectedGame = monthGames.get(0);
-            }
-        } else {
-            // 初期表示：月の先頭試合をデフォルト詳細にする
-            if (!monthGames.isEmpty()) {
-                selectedGame = monthGames.get(0);
-            }
-        }
-
-        // =========================
-        // ★ イニング詳細（1試合 = 1レコード）
-        // =========================
-        OhtaniPitchingGameDetail detail = null;
-        if (selectedGame != null) {
-            detail = detailRepository
-                    .findByGameIdOrderByIdDesc(selectedGame.getId())
+        for (OhtaniPitchingGame game : monthGames) {
+            detailRepository
+                    .findByGameIdOrderByIdDesc(game.getId())
                     .stream()
                     .findFirst()
-                    .orElse(null);
+                    .ifPresent(detail -> detailMap.put(game.getId(), detail));
         }
 
+        // =========================
+        // ③ View へ渡す
+        // =========================
         model.addAttribute("month", month);
         model.addAttribute("monthGames", monthGames);
-        model.addAttribute("selectedGame", selectedGame);
-        model.addAttribute("detail", detail); // ★ここが重要
+        model.addAttribute("detailMap", detailMap);
 
         return "hogehoge_04";
-
     }
 }
