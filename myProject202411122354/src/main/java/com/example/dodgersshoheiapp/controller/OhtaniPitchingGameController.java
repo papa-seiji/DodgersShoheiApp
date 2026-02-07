@@ -30,40 +30,51 @@ public class OhtaniPitchingGameController {
     @GetMapping("/hogehoge_04")
     public String showPitchingMonth(
             @RequestParam(name = "month", required = false) Integer month,
+            @RequestParam(name = "date", required = false) String date,
             Model model) {
 
         int year = 2026;
-        if (month == null) {
+        if (month == null)
             month = 4;
-        }
 
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        // =========================
-        // ① 月内の全登板試合
-        // =========================
         List<OhtaniPitchingGame> monthGames = pitchingGameRepository.findByGameDateBetween(startDate, endDate);
 
-        // =========================
-        // ② 試合ID → Detail のMap
-        // =========================
-        Map<Long, OhtaniPitchingGameDetail> detailMap = new HashMap<>();
+        OhtaniPitchingGame selectedGame = null;
 
-        for (OhtaniPitchingGame game : monthGames) {
-            detailRepository
-                    .findByGameIdOrderByIdDesc(game.getId())
-                    .stream()
-                    .findFirst()
-                    .ifPresent(detail -> detailMap.put(game.getId(), detail));
+        // =========================
+        // ★ hogehoge_02 と同じ絞り込み
+        // =========================
+        if (date != null) {
+            LocalDate targetDate = LocalDate.parse(date);
+
+            monthGames = monthGames.stream()
+                    .filter(g -> g.getGameDate().equals(targetDate))
+                    .toList();
+
+            if (!monthGames.isEmpty()) {
+                selectedGame = monthGames.get(0);
+            }
         }
 
         // =========================
-        // ③ View へ渡す
+        // ★ detailMap（カード用）
         // =========================
+        Map<Long, OhtaniPitchingGameDetail> detailMap = new HashMap<>();
+        for (OhtaniPitchingGame game : monthGames) {
+            detailRepository.findByGameIdOrderByIdDesc(game.getId())
+                    .stream()
+                    .findFirst()
+                    .ifPresent(d -> detailMap.put(game.getId(), d));
+        }
+
         model.addAttribute("month", month);
         model.addAttribute("monthGames", monthGames);
+        model.addAttribute("selectedGame", selectedGame);
         model.addAttribute("detailMap", detailMap);
+        model.addAttribute("selectedDate", date); // ★ ハイライト用
 
         return "hogehoge_04";
     }
