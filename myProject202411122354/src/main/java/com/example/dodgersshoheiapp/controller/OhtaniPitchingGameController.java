@@ -1,7 +1,9 @@
 package com.example.dodgersshoheiapp.controller;
 
 import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
+import com.example.dodgersshoheiapp.model.OhtaniPitchingGameDetail;
 import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameRepository;
+import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameDetailRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +16,13 @@ import java.util.List;
 public class OhtaniPitchingGameController {
 
     private final OhtaniPitchingGameRepository pitchingGameRepository;
+    private final OhtaniPitchingGameDetailRepository detailRepository;
 
     public OhtaniPitchingGameController(
-            OhtaniPitchingGameRepository pitchingGameRepository) {
+            OhtaniPitchingGameRepository pitchingGameRepository,
+            OhtaniPitchingGameDetailRepository detailRepository) {
         this.pitchingGameRepository = pitchingGameRepository;
+        this.detailRepository = detailRepository;
     }
 
     @GetMapping("/hogehoge_04")
@@ -39,7 +44,6 @@ public class OhtaniPitchingGameController {
         // =========================
         // ★ BATTING側と同じ絞り込みロジック
         // =========================
-
         OhtaniPitchingGame selectedGame = null;
 
         if (date != null) {
@@ -59,10 +63,24 @@ public class OhtaniPitchingGameController {
             }
         }
 
+        // =========================
+        // ★ イニング詳細（1試合 = 1レコード）
+        // =========================
+        OhtaniPitchingGameDetail detail = null;
+        if (selectedGame != null) {
+            detail = detailRepository
+                    .findByGameIdOrderByIdDesc(selectedGame.getId())
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
+        }
+
         model.addAttribute("month", month);
         model.addAttribute("monthGames", monthGames);
         model.addAttribute("selectedGame", selectedGame);
+        model.addAttribute("detail", detail); // ★ここが重要
 
         return "hogehoge_04";
+
     }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 public interface OhtaniPitchingGameDetailRepository
         extends JpaRepository<OhtaniPitchingGameDetail, Long> {
 
-    List<OhtaniPitchingGameDetail> findByGameId(Long gameId);
+    List<OhtaniPitchingGameDetail> findByGameIdOrderByIdDesc(Long gameId);
 }

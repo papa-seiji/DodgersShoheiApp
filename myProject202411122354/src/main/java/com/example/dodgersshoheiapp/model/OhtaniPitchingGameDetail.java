@@ -15,49 +15,196 @@ public class OhtaniPitchingGameDetail {
     private Long gameId;
 
     // =====================
-    // ★ 追加：勝敗・球数
+    // 勝敗・球数
     // =====================
     @Column(name = "win_lose")
-    private String winLose; // WIN / LOSE / ND
+    private String winLose;
 
     @Column(name = "decision_pitcher")
-    private String decisionPitcher; // 勝ち投手 or 負け投手（不要ならNULL）
+    private String decisionPitcher;
 
     @Column(name = "total_pitches")
-    private Integer totalPitches; // その日に投げた総球数
+    private Integer totalPitches;
 
     // =====================
-    // inning01 ～ inning10（文字列でOK）
+    // 1回
     // =====================
-    @Column(columnDefinition = "TEXT")
-    private String inning01;
+    @Column(name = "inning1_so")
+    private Integer inning1So;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning02;
+    @Column(name = "inning1_bb")
+    private Integer inning1Bb;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning03;
+    @Column(name = "inning1_hit")
+    private Integer inning1Hit;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning04;
+    @Column(name = "inning1_out")
+    private Integer inning1Out;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning05;
+    @Column(name = "inning1_description", columnDefinition = "TEXT")
+    private String inning1Description;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning06;
+    // =====================
+    // 2回
+    // =====================
+    @Column(name = "inning2_so")
+    private Integer inning2So;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning07;
+    @Column(name = "inning2_bb")
+    private Integer inning2Bb;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning08;
+    @Column(name = "inning2_hit")
+    private Integer inning2Hit;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning09;
+    @Column(name = "inning2_out")
+    private Integer inning2Out;
 
-    @Column(columnDefinition = "TEXT")
-    private String inning10;
+    @Column(name = "inning2_description", columnDefinition = "TEXT")
+    private String inning2Description;
+
+    // =====================
+    // 3回
+    // =====================
+    @Column(name = "inning3_so")
+    private Integer inning3So;
+
+    @Column(name = "inning3_bb")
+    private Integer inning3Bb;
+
+    @Column(name = "inning3_hit")
+    private Integer inning3Hit;
+
+    @Column(name = "inning3_out")
+    private Integer inning3Out;
+
+    @Column(name = "inning3_description", columnDefinition = "TEXT")
+    private String inning3Description;
+
+    // =====================
+    // 4回
+    // =====================
+    @Column(name = "inning4_so")
+    private Integer inning4So;
+
+    @Column(name = "inning4_bb")
+    private Integer inning4Bb;
+
+    @Column(name = "inning4_hit")
+    private Integer inning4Hit;
+
+    @Column(name = "inning4_out")
+    private Integer inning4Out;
+
+    @Column(name = "inning4_description", columnDefinition = "TEXT")
+    private String inning4Description;
+
+    // =====================
+    // 5回
+    // =====================
+    @Column(name = "inning5_so")
+    private Integer inning5So;
+
+    @Column(name = "inning5_bb")
+    private Integer inning5Bb;
+
+    @Column(name = "inning5_hit")
+    private Integer inning5Hit;
+
+    @Column(name = "inning5_out")
+    private Integer inning5Out;
+
+    @Column(name = "inning5_description", columnDefinition = "TEXT")
+    private String inning5Description;
+
+    // =====================
+    // 6回
+    // =====================
+    @Column(name = "inning6_so")
+    private Integer inning6So;
+
+    @Column(name = "inning6_bb")
+    private Integer inning6Bb;
+
+    @Column(name = "inning6_hit")
+    private Integer inning6Hit;
+
+    @Column(name = "inning6_out")
+    private Integer inning6Out;
+
+    @Column(name = "inning6_description", columnDefinition = "TEXT")
+    private String inning6Description;
+
+    // =====================
+    // 7回
+    // =====================
+    @Column(name = "inning7_so")
+    private Integer inning7So;
+
+    @Column(name = "inning7_bb")
+    private Integer inning7Bb;
+
+    @Column(name = "inning7_hit")
+    private Integer inning7Hit;
+
+    @Column(name = "inning7_out")
+    private Integer inning7Out;
+
+    @Column(name = "inning7_description", columnDefinition = "TEXT")
+    private String inning7Description;
+
+    // =====================
+    // 8回
+    // =====================
+    @Column(name = "inning8_so")
+    private Integer inning8So;
+
+    @Column(name = "inning8_bb")
+    private Integer inning8Bb;
+
+    @Column(name = "inning8_hit")
+    private Integer inning8Hit;
+
+    @Column(name = "inning8_out")
+    private Integer inning8Out;
+
+    @Column(name = "inning8_description", columnDefinition = "TEXT")
+    private String inning8Description;
+
+    // =====================
+    // 9回
+    // =====================
+    @Column(name = "inning9_so")
+    private Integer inning9So;
+
+    @Column(name = "inning9_bb")
+    private Integer inning9Bb;
+
+    @Column(name = "inning9_hit")
+    private Integer inning9Hit;
+
+    @Column(name = "inning9_out")
+    private Integer inning9Out;
+
+    @Column(name = "inning9_description", columnDefinition = "TEXT")
+    private String inning9Description;
+
+    // =====================
+    // 10回
+    // =====================
+    @Column(name = "inning10_so")
+    private Integer inning10So;
+
+    @Column(name = "inning10_bb")
+    private Integer inning10Bb;
+
+    @Column(name = "inning10_hit")
+    private Integer inning10Hit;
+
+    @Column(name = "inning10_out")
+    private Integer inning10Out;
+
+    @Column(name = "inning10_description", columnDefinition = "TEXT")
+    private String inning10Description;
 
     // =====================
     // 共通
@@ -68,8 +215,23 @@ public class OhtaniPitchingGameDetail {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    /* ===== getter / setter ===== */
+    // =====================
+    // lifecycle
+    // =====================
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
+    }
 
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // =====================
+    // getter / setter
+    // =====================
     public Long getId() {
         return id;
     }
@@ -86,111 +248,212 @@ public class OhtaniPitchingGameDetail {
         return winLose;
     }
 
-    public void setWinLose(String winLose) {
-        this.winLose = winLose;
-    }
-
     public String getDecisionPitcher() {
         return decisionPitcher;
-    }
-
-    public void setDecisionPitcher(String decisionPitcher) {
-        this.decisionPitcher = decisionPitcher;
     }
 
     public Integer getTotalPitches() {
         return totalPitches;
     }
 
-    public void setTotalPitches(Integer totalPitches) {
-        this.totalPitches = totalPitches;
+    public Integer getInning1So() {
+        return inning1So;
     }
 
-    public String getInning01() {
-        return inning01;
+    public Integer getInning1Bb() {
+        return inning1Bb;
     }
 
-    public void setInning01(String inning01) {
-        this.inning01 = inning01;
+    public Integer getInning1Hit() {
+        return inning1Hit;
     }
 
-    public String getInning02() {
-        return inning02;
+    public Integer getInning1Out() {
+        return inning1Out;
     }
 
-    public void setInning02(String inning02) {
-        this.inning02 = inning02;
+    public String getInning1Description() {
+        return inning1Description;
     }
 
-    public String getInning03() {
-        return inning03;
+    public Integer getInning2So() {
+        return inning2So;
     }
 
-    public void setInning03(String inning03) {
-        this.inning03 = inning03;
+    public Integer getInning2Bb() {
+        return inning2Bb;
     }
 
-    public String getInning04() {
-        return inning04;
+    public Integer getInning2Hit() {
+        return inning2Hit;
     }
 
-    public void setInning04(String inning04) {
-        this.inning04 = inning04;
+    public Integer getInning2Out() {
+        return inning2Out;
     }
 
-    public String getInning05() {
-        return inning05;
+    public String getInning2Description() {
+        return inning2Description;
     }
 
-    public void setInning05(String inning05) {
-        this.inning05 = inning05;
+    public Integer getInning3So() {
+        return inning3So;
     }
 
-    public String getInning06() {
-        return inning06;
+    public Integer getInning3Bb() {
+        return inning3Bb;
     }
 
-    public void setInning06(String inning06) {
-        this.inning06 = inning06;
+    public Integer getInning3Hit() {
+        return inning3Hit;
     }
 
-    public String getInning07() {
-        return inning07;
+    public Integer getInning3Out() {
+        return inning3Out;
     }
 
-    public void setInning07(String inning07) {
-        this.inning07 = inning07;
+    public String getInning3Description() {
+        return inning3Description;
     }
 
-    public String getInning08() {
-        return inning08;
+    public Integer getInning4So() {
+        return inning4So;
     }
 
-    public void setInning08(String inning08) {
-        this.inning08 = inning08;
+    public Integer getInning4Bb() {
+        return inning4Bb;
     }
 
-    public String getInning09() {
-        return inning09;
+    public Integer getInning4Hit() {
+        return inning4Hit;
     }
 
-    public void setInning09(String inning09) {
-        this.inning09 = inning09;
+    public Integer getInning4Out() {
+        return inning4Out;
     }
 
-    public String getInning10() {
-        return inning10;
+    public String getInning4Description() {
+        return inning4Description;
     }
 
-    public void setInning10(String inning10) {
-        this.inning10 = inning10;
+    public Integer getInning5So() {
+        return inning5So;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Integer getInning5Bb() {
+        return inning5Bb;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public Integer getInning5Hit() {
+        return inning5Hit;
     }
+
+    public Integer getInning5Out() {
+        return inning5Out;
+    }
+
+    public String getInning5Description() {
+        return inning5Description;
+    }
+
+    public Integer getInning6So() {
+        return inning6So;
+    }
+
+    public Integer getInning6Bb() {
+        return inning6Bb;
+    }
+
+    public Integer getInning6Hit() {
+        return inning6Hit;
+    }
+
+    public Integer getInning6Out() {
+        return inning6Out;
+    }
+
+    public String getInning6Description() {
+        return inning6Description;
+    }
+
+    public Integer getInning7So() {
+        return inning7So;
+    }
+
+    public Integer getInning7Bb() {
+        return inning7Bb;
+    }
+
+    public Integer getInning7Hit() {
+        return inning7Hit;
+    }
+
+    public Integer getInning7Out() {
+        return inning7Out;
+    }
+
+    public String getInning7Description() {
+        return inning7Description;
+    }
+
+    public Integer getInning8So() {
+        return inning8So;
+    }
+
+    public Integer getInning8Bb() {
+        return inning8Bb;
+    }
+
+    public Integer getInning8Hit() {
+        return inning8Hit;
+    }
+
+    public Integer getInning8Out() {
+        return inning8Out;
+    }
+
+    public String getInning8Description() {
+        return inning8Description;
+    }
+
+    public Integer getInning9So() {
+        return inning9So;
+    }
+
+    public Integer getInning9Bb() {
+        return inning9Bb;
+    }
+
+    public Integer getInning9Hit() {
+        return inning9Hit;
+    }
+
+    public Integer getInning9Out() {
+        return inning9Out;
+    }
+
+    public String getInning9Description() {
+        return inning9Description;
+    }
+
+    public Integer getInning10So() {
+        return inning10So;
+    }
+
+    public Integer getInning10Bb() {
+        return inning10Bb;
+    }
+
+    public Integer getInning10Hit() {
+        return inning10Hit;
+    }
+
+    public Integer getInning10Out() {
+        return inning10Out;
+    }
+
+    public String getInning10Description() {
+        return inning10Description;
+    }
+
 }

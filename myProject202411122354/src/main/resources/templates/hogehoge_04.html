@@ -313,53 +313,168 @@
     </a>
   </div>
 
-  <!-- ===== 試合詳細カード（BATTING側と同じ思想：1件のみ） ===== -->
-  <div class="game-card"
-       th:if="${selectedGame != null}"
-       th:id="|game-${selectedGame.gameDate}|">
+<!-- ===== 試合詳細カード ===== -->
+<div class="game-card"
+     th:if="${selectedGame != null}"
+     th:id="|game-${selectedGame.gameDate}|">
 
-    <!-- ヘッダー -->
-    <div class="game-header">
-      <span th:text="|${#temporals.format(selectedGame.gameDate,'MM/dd')} vs ${selectedGame.opponent}|"></span>
+  <!-- ヘッダー -->
+  <div class="game-header">
+    <span th:text="|${#temporals.format(selectedGame.gameDate,'MM/dd')} vs ${selectedGame.opponent}|"></span>
+  </div>
+
+  <!-- Pitching Summary -->
+  <div class="pitching-summary">
+    <p>
+      <strong>Result：</strong>
+      <span th:text="${selectedGame.result}"></span>
+    </p>
+    <!--<p>
+      <strong>評価：</strong>
+      <span th:text="${selectedGame.formValue}"></span>
+    </p>-->
+  </div>
+
+  <!-- ===== 登板詳細（Inning Detail）===== -->
+  <div class="inning-block" th:if="${detail != null}">
+    <div class="inning-stats">
+      【1回】
+      SO: <span th:text="${detail.inning1So}"></span>
+      BB: <span th:text="${detail.inning1Bb}"></span>
+      OUT: <span th:text="${detail.inning1Out}"></span>
+      HIT: <span th:text="${detail.inning1Hit}"></span>
     </div>
-
-    <!-- Pitching Summary -->
-    <div class="pitching-summary">
-      <p>
-        <strong>Result：</strong>
-        <span th:text="${selectedGame.result}">W 5-2</span>
-      </p>
-      <p>
-        <strong>評価：</strong>
-        <span th:text="${selectedGame.formValue}">A</span>
-      </p>
+    <div class="inning-desc"
+        th:text="${detail.inning1Description}">
     </div>
+  </div>
+<!-- ===== 登板詳細（Inning Detail：2回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【2回】
+    SO: <span th:text="${detail.inning2So}"></span>
+    BB: <span th:text="${detail.inning2Bb}"></span>
+    OUT: <span th:text="${detail.inning2Out}"></span>
+    HIT: <span th:text="${detail.inning2Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning2Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：3回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【3回】
+    SO: <span th:text="${detail.inning3So}"></span>
+    BB: <span th:text="${detail.inning3Bb}"></span>
+    OUT: <span th:text="${detail.inning3Out}"></span>
+    HIT: <span th:text="${detail.inning3Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning3Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：4回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【4回】
+    SO: <span th:text="${detail.inning4So}"></span>
+    BB: <span th:text="${detail.inning4Bb}"></span>
+    OUT: <span th:text="${detail.inning4Out}"></span>
+    HIT: <span th:text="${detail.inning4Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning4Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：5回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【5回】
+    SO: <span th:text="${detail.inning5So}"></span>
+    BB: <span th:text="${detail.inning5Bb}"></span>
+    OUT: <span th:text="${detail.inning5Out}"></span>
+    HIT: <span th:text="${detail.inning5Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning5Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：6回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【6回】
+    SO: <span th:text="${detail.inning6So}"></span>
+    BB: <span th:text="${detail.inning6Bb}"></span>
+    OUT: <span th:text="${detail.inning6Out}"></span>
+    HIT: <span th:text="${detail.inning6Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning6Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：7回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【7回】
+    SO: <span th:text="${detail.inning7So}"></span>
+    BB: <span th:text="${detail.inning7Bb}"></span>
+    OUT: <span th:text="${detail.inning7Out}"></span>
+    HIT: <span th:text="${detail.inning7Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning7Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：8回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【8回】
+    SO: <span th:text="${detail.inning8So}"></span>
+    BB: <span th:text="${detail.inning8Bb}"></span>
+    OUT: <span th:text="${detail.inning8Out}"></span>
+    HIT: <span th:text="${detail.inning8Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning8Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：9回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【9回】
+    SO: <span th:text="${detail.inning9So}"></span>
+    BB: <span th:text="${detail.inning9Bb}"></span>
+    OUT: <span th:text="${detail.inning9Out}"></span>
+    HIT: <span th:text="${detail.inning9Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning9Description}">
+  </div>
+</div>
+<!-- ===== 登板詳細（Inning Detail：10回）===== -->
+<div class="inning-block" th:if="${detail != null}">
+  <div class="inning-stats">
+    【10回】
+    SO: <span th:text="${detail.inning10So}"></span>
+    BB: <span th:text="${detail.inning10Bb}"></span>
+    OUT: <span th:text="${detail.inning10Out}"></span>
+    HIT: <span th:text="${detail.inning10Hit}"></span>
+  </div>
+  <div class="inning-desc"
+      th:text="${detail.inning10Description}">
+  </div>
+</div>
 
-    <!-- inning 詳細（後で中身を作る） -->
-    <!--<div class="inning-box" th:if="${selectedGame.details != null}">
-      <h4>Inning Detail</h4>
-      <ul>
-        <li th:each="d : ${selectedGame.details}">
-          <span th:text="${d.inning}">1</span>回：
-          <span th:text="${d.outs}">3</span>OUT /
-          被安打 <span th:text="${d.hit}">1</span> /
-          奪三振 <span th:text="${d.so}">1</span>
-        </li>
-      </ul>
-    </div>-->
+  <!-- 総評コメント -->
+  <div class="game-comment"
+       th:if="${selectedGame.comment != null and !#strings.isEmpty(selectedGame.comment)}">
 
-    <!-- 総評コメント -->
-    <div class="game-comment"
-         th:if="${selectedGame.comment != null and !#strings.isEmpty(selectedGame.comment)}">
+    <strong
+      th:text="|${#temporals.format(selectedGame.gameDate,'M/d')} 総評（${selectedGame.formValue}）|">
+    </strong>
 
-      <strong
-        th:text="|${#temporals.format(selectedGame.gameDate,'M/d')} 総評（${selectedGame.formValue}）|">
-      </strong>
-
-      <pre th:text="${selectedGame.comment}"></pre>
-
-    </div>
-
+    <pre th:text="${selectedGame.comment}"></pre>
   </div>
 
 </div>

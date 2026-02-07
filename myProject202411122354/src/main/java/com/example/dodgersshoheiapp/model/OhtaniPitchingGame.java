@@ -2,6 +2,7 @@ package com.example.dodgersshoheiapp.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "ohtani_pitching_games")
@@ -33,6 +34,10 @@ public class OhtaniPitchingGame {
     // ★ 追加②：総評コメント
     @Column(name = "comment")
     private String comment;
+
+    // ★ 追加③：登板詳細（表示専用・DB非連携）
+    @Transient
+    private List<OhtaniPitchingGameDetail> details;
 
     /* ===== getter / setter ===== */
 
@@ -80,7 +85,8 @@ public class OhtaniPitchingGame {
         this.totalPitches = totalPitches;
     }
 
-    // ★ 追加 getter / setter
+    // ===== form / comment =====
+
     public String getFormValue() {
         return formValue;
     }
@@ -95,5 +101,15 @@ public class OhtaniPitchingGame {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    // ===== details =====
+
+    public List<OhtaniPitchingGameDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<OhtaniPitchingGameDetail> details) {
+        this.details = details;
     }
 }
