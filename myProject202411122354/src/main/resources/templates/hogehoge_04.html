@@ -263,11 +263,13 @@
     <canvas id="aprilChart" height="120"></canvas>
   </div>
 -->
+
   <h2 class="month-title">
     <span th:text="${month}">4</span>月 登板一覧
   </h2>
 
   <!-- ===== 月間一覧テーブル ===== -->
+<!-- ===== 月間一覧テーブル ===== -->
 <table class="scorebook-table">
   <thead>
     <tr>
@@ -278,86 +280,89 @@
     </tr>
   </thead>
 
-<tbody>
-  <tr th:each="g : ${monthGames}"
-      th:attr="data-date=${g.gameDate}"
-      class="game-row"
-      th:attrappend="id=${'game-' + g.gameDate}">
+  <tbody>
+    <tr th:each="g : ${monthGames}"
+        th:if="${g != null and (param.date == null or g.gameDate.toString() == param.date[0])}"
+        th:attr="data-date=${g.gameDate}"
+        class="game-row">
 
-    <td>
-      <a th:href="${'/hogehoge_04?month=' + month + '#game-' + g.gameDate}"
-         th:text="${#temporals.format(g.gameDate,'MM/dd')}">
-        04/03
-      </a>
-    </td>
+      <td>
+        <a th:href="@{/hogehoge_04(month=${month}, date=${g.gameDate})}"
+           th:text="${#temporals.format(g.gameDate,'MM/dd')}">
+        </a>
+      </td>
 
-    <td th:text="${g.opponent}">PADRES</td>
+      <td th:text="${g.opponent}"></td>
 
-    <td th:text="${g.result}">W 5-2</td>
+      <td th:text="${g.result}"
+          th:classappend="${g.result.contains('●')} ? 'lose' : 'win'">
+      </td>
 
-    <td th:text="${g.formValue}">A</td>
+<td th:text="${g.formValue}"
+    th:classappend="'form-' + ${#strings.toLowerCase(g.formValue)}">
+</td>
 
-  </tr>
-</tbody>
+    </tr>
+  </tbody>
 </table>
-
 
   <!-- ===== 一覧に戻る ===== -->
   <div class="back-to-month" th:if="${param.date != null}">
-    <a th:href="@{/hogehoge_03(month=${month})}" class="back-button">
+    <a th:href="@{/hogehoge_04(month=${month})}" class="back-button">
       ← <span th:text="${month}">4</span>月の登板一覧に戻る
     </a>
   </div>
 
-  <!-- ===== 試合詳細カード ===== -->
-<div class="game-card"
-     th:each="g : ${monthGames}"
-     th:id="|game-${g.gameDate}|">
+  <!-- ===== 試合詳細カード（BATTING側と同じ思想：1件のみ） ===== -->
+  <div class="game-card"
+       th:if="${selectedGame != null}"
+       th:id="|game-${selectedGame.gameDate}|">
 
-  <!-- ヘッダー -->
-  <div class="game-header">
-    <span th:text="|${#temporals.format(g.gameDate,'MM/dd')} vs ${g.opponent}|"></span>
-  </div>
+    <!-- ヘッダー -->
+    <div class="game-header">
+      <span th:text="|${#temporals.format(selectedGame.gameDate,'MM/dd')} vs ${selectedGame.opponent}|"></span>
+    </div>
 
-  <!-- Pitching Summary -->
-  <div class="pitching-summary">
-    <p>
-      <strong>Result：</strong>
-      <span th:text="${g.result}">W 5-2</span>
-    </p>
-    <p>
-      <strong>評価：</strong>
-      <span th:text="${g.formValue}">A</span>
-    </p>
-  </div>
+    <!-- Pitching Summary -->
+    <div class="pitching-summary">
+      <p>
+        <strong>Result：</strong>
+        <span th:text="${selectedGame.result}">W 5-2</span>
+      </p>
+      <p>
+        <strong>評価：</strong>
+        <span th:text="${selectedGame.formValue}">A</span>
+      </p>
+    </div>
 
-  <!-- inning 詳細（後で中身を作る） -->
-  <!--<div class="inning-box" th:if="${g.details != null}">
-    <h4>Inning Detail</h4>
-    <ul>
-      <li th:each="d : ${g.details}">
-        <span th:text="${d.inning}">1</span>回：
-        <span th:text="${d.outs}">3</span>OUT /
-        被安打 <span th:text="${d.hit}">1</span> /
-        奪三振 <span th:text="${d.so}">1</span>
-      </li>
-    </ul>
-  </div>-->
+    <!-- inning 詳細（後で中身を作る） -->
+    <!--<div class="inning-box" th:if="${selectedGame.details != null}">
+      <h4>Inning Detail</h4>
+      <ul>
+        <li th:each="d : ${selectedGame.details}">
+          <span th:text="${d.inning}">1</span>回：
+          <span th:text="${d.outs}">3</span>OUT /
+          被安打 <span th:text="${d.hit}">1</span> /
+          奪三振 <span th:text="${d.so}">1</span>
+        </li>
+      </ul>
+    </div>-->
 
-  <!-- 総評コメント -->
-  <div class="game-comment"
-       th:if="${g.comment != null and !#strings.isEmpty(g.comment)}">
+    <!-- 総評コメント -->
+    <div class="game-comment"
+         th:if="${selectedGame.comment != null and !#strings.isEmpty(selectedGame.comment)}">
 
-    <strong
-      th:text="|${#temporals.format(g.gameDate,'M/d')} 総評（${g.formValue}）|">
-    </strong>
+      <strong
+        th:text="|${#temporals.format(selectedGame.gameDate,'M/d')} 総評（${selectedGame.formValue}）|">
+      </strong>
 
-    <pre th:text="${g.comment}"></pre>
+      <pre th:text="${selectedGame.comment}"></pre>
+
+    </div>
 
   </div>
 
 </div>
-
 
 <!-- スクロール制御 -->
 <!--<script th:inline="javascript">

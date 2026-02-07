@@ -1,6 +1,7 @@
 package com.example.dodgersshoheiapp.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ohtani_pitching_game_details")
@@ -13,17 +14,59 @@ public class OhtaniPitchingGameDetail {
     @Column(name = "game_id", nullable = false)
     private Long gameId;
 
-    // inning01 ～ inning10（今回は文字列でOK）
+    // =====================
+    // ★ 追加：勝敗・球数
+    // =====================
+    @Column(name = "win_lose")
+    private String winLose; // WIN / LOSE / ND
+
+    @Column(name = "decision_pitcher")
+    private String decisionPitcher; // 勝ち投手 or 負け投手（不要ならNULL）
+
+    @Column(name = "total_pitches")
+    private Integer totalPitches; // その日に投げた総球数
+
+    // =====================
+    // inning01 ～ inning10（文字列でOK）
+    // =====================
+    @Column(columnDefinition = "TEXT")
     private String inning01;
+
+    @Column(columnDefinition = "TEXT")
     private String inning02;
+
+    @Column(columnDefinition = "TEXT")
     private String inning03;
+
+    @Column(columnDefinition = "TEXT")
     private String inning04;
+
+    @Column(columnDefinition = "TEXT")
     private String inning05;
+
+    @Column(columnDefinition = "TEXT")
     private String inning06;
+
+    @Column(columnDefinition = "TEXT")
     private String inning07;
+
+    @Column(columnDefinition = "TEXT")
     private String inning08;
+
+    @Column(columnDefinition = "TEXT")
     private String inning09;
+
+    @Column(columnDefinition = "TEXT")
     private String inning10;
+
+    // =====================
+    // 共通
+    // =====================
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     /* ===== getter / setter ===== */
 
@@ -37,6 +80,30 @@ public class OhtaniPitchingGameDetail {
 
     public void setGameId(Long gameId) {
         this.gameId = gameId;
+    }
+
+    public String getWinLose() {
+        return winLose;
+    }
+
+    public void setWinLose(String winLose) {
+        this.winLose = winLose;
+    }
+
+    public String getDecisionPitcher() {
+        return decisionPitcher;
+    }
+
+    public void setDecisionPitcher(String decisionPitcher) {
+        this.decisionPitcher = decisionPitcher;
+    }
+
+    public Integer getTotalPitches() {
+        return totalPitches;
+    }
+
+    public void setTotalPitches(Integer totalPitches) {
+        this.totalPitches = totalPitches;
     }
 
     public String getInning01() {
@@ -117,5 +184,13 @@ public class OhtaniPitchingGameDetail {
 
     public void setInning10(String inning10) {
         this.inning10 = inning10;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

@@ -2,7 +2,6 @@ package com.example.dodgersshoheiapp.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "ohtani_pitching_games")
@@ -12,23 +11,30 @@ public class OhtaniPitchingGame {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "game_date")
+    @Column(name = "game_date", nullable = false)
     private LocalDate gameDate;
 
+    @Column(name = "opponent")
     private String opponent;
 
+    @Column(name = "result")
     private String result;
 
-    @Column(name = "form_value")
-    private String formValue; // ← A / S / B / C / D
+    @Column(name = "win_lose")
+    private String winLose;
 
+    @Column(name = "total_pitches")
+    private Integer totalPitches;
+
+    // ★ 追加①：評価（S/A/B/C/D）
+    @Column(name = "form_value")
+    private String formValue;
+
+    // ★ 追加②：総評コメント
+    @Column(name = "comment")
     private String comment;
 
-    // ===== 表示用（DB非永続）=====
-    @Transient
-    private List<OhtaniPitchingGameDetail> details;
-
-    // ===== getter / setter =====
+    /* ===== getter / setter ===== */
 
     public Long getId() {
         return id;
@@ -58,6 +64,23 @@ public class OhtaniPitchingGame {
         this.result = result;
     }
 
+    public String getWinLose() {
+        return winLose;
+    }
+
+    public void setWinLose(String winLose) {
+        this.winLose = winLose;
+    }
+
+    public Integer getTotalPitches() {
+        return totalPitches;
+    }
+
+    public void setTotalPitches(Integer totalPitches) {
+        this.totalPitches = totalPitches;
+    }
+
+    // ★ 追加 getter / setter
     public String getFormValue() {
         return formValue;
     }
@@ -72,13 +95,5 @@ public class OhtaniPitchingGame {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public List<OhtaniPitchingGameDetail> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<OhtaniPitchingGameDetail> details) {
-        this.details = details;
     }
 }
