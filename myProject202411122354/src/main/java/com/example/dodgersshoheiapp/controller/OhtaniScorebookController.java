@@ -34,18 +34,15 @@ public class OhtaniScorebookController {
     @GetMapping("/hogehoge_01")
     public String showSeasonOverview(Model model) {
 
-        // ===== 既存（BATTING） =====
+        // ===== BATTING（直近）=====
         LocalDate latestGameDate = gameRepository.findLatestGameDate();
         OhtaniGame latestGame = gameRepository.findLatestGame();
 
         model.addAttribute("latestGameDate", latestGame.getGameDate());
-
-        String latestFormRank = convertFormRank(latestGame.getFormValue());
-        model.addAttribute("latestFormRank", latestFormRank);
-
-        String latestFormEmoji = convertFormEmoji(latestGame.getFormValue());
-        model.addAttribute("latestFormEmoji", latestFormEmoji);
-
+        model.addAttribute("latestFormRank",
+                convertFormRank(latestGame.getFormValue()));
+        model.addAttribute("latestFormEmoji",
+                convertFormEmoji(latestGame.getFormValue()));
         model.addAttribute("latestComment", latestGame.getComment());
 
         int latestMonth = latestGameDate.getMonthValue();
@@ -53,7 +50,7 @@ public class OhtaniScorebookController {
         List<String> labels = new ArrayList<>();
         List<Integer> values = new ArrayList<>();
 
-        // ===== BATTING（旬平均）※既存ロジック踏襲 =====
+        // ===== BATTING（旬平均）=====
         for (int m = 4; m <= Math.min(latestMonth, 11); m++) {
             labels.add(m + "月上旬");
             values.add(avgForm(2026, m, 1, 10));
@@ -63,18 +60,14 @@ public class OhtaniScorebookController {
 
             labels.add(m + "月下旬");
             values.add(avgForm(
-                    2026,
-                    m,
-                    21,
+                    2026, m, 21,
                     LocalDate.of(2026, m, 1).lengthOfMonth()));
         }
 
         model.addAttribute("labels", labels);
         model.addAttribute("values", values);
 
-        // ============================
-        // ★ 追加：PITCHING（月平均・4〜11月）
-        // ============================
+        // ===== PITCHING（月平均・4〜11月）=====
         List<String> pitchingMonthLabels = new ArrayList<>();
         List<Double> pitchingMonthAverages = new ArrayList<>();
 
@@ -90,7 +83,6 @@ public class OhtaniScorebookController {
             pitchingMonthLabels.add(m + "月");
 
             if (games.isEmpty()) {
-                // 登板なし → 点を出さない
                 pitchingMonthAverages.add(null);
                 continue;
             }
@@ -104,7 +96,7 @@ public class OhtaniScorebookController {
                     case "A" -> 4;
                     case "B" -> 3;
                     case "C" -> 2;
-                    default -> 1; // D or 想定外
+                    default -> 1;
                 };
                 sum += value;
                 count++;
@@ -127,13 +119,43 @@ public class OhtaniScorebookController {
     @GetMapping("/hogehoge_03")
     public String showPitchingOverview(Model model) {
 
+        // ============================
+        // ★ 直近 PITTIN’
+        // ============================
+        OhtaniPitchingGame latestPitchingGame = pitchingGameRepository.findTopByOrderByGameDateDesc();
+
+        if (latestPitchingGame != null) {
+
+            model.addAttribute(
+                    "latestPitchingGameDate",
+                    latestPitchingGame.getGameDate());
+
+            String rank = latestPitchingGame.getFormValue(); // "S","A","B"…
+            model.addAttribute("latestPitchingFormRank", rank);
+
+            String emoji = switch (rank) {
+                case "S" -> "🔥";
+                case "A" -> "😊";
+                case "B" -> "😳";
+                case "C" -> "😣";
+                default -> "🧊";
+            };
+            model.addAttribute("latestPitchingFormEmoji", emoji);
+
+            model.addAttribute(
+                    "latestPitchingComment",
+                    latestPitchingGame.getComment());
+        }
+
+        // ============================
+        // ★ 月平均グラフ（既存）
+        // ============================
         int year = 2026;
 
         List<String> pitchingMonthLabels = new ArrayList<>();
         List<Double> pitchingMonthAverages = new ArrayList<>();
 
         for (int m = 4; m <= 11; m++) {
-
             LocalDate start = LocalDate.of(year, m, 1);
             LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
 
@@ -147,21 +169,16 @@ public class OhtaniScorebookController {
             }
 
             int sum = 0;
-            int count = 0;
-
             for (OhtaniPitchingGame g : games) {
-                int value = switch (g.getFormValue()) {
+                sum += switch (g.getFormValue()) {
                     case "S" -> 5;
                     case "A" -> 4;
                     case "B" -> 3;
                     case "C" -> 2;
-                    default -> 1; // D
+                    default -> 1;
                 };
-                sum += value;
-                count++;
             }
-
-            pitchingMonthAverages.add((double) sum / count);
+            pitchingMonthAverages.add((double) sum / games.size());
         }
 
         model.addAttribute("pitchingMonthLabels", pitchingMonthLabels);
@@ -172,7 +189,7 @@ public class OhtaniScorebookController {
 
     /**
      * ============================
-     * 旬ごとの評価平均（BATTING 用）
+     * BATTING：旬平均
      * ============================
      */
     private Integer avgForm(int year, int month, int startDay, int endDay) {
@@ -200,9 +217,6 @@ public class OhtaniScorebookController {
         return (int) Math.round(avg);
     }
 
-    /**
-     * form_value（-2〜2） → ランク（S〜D）
-     */
     private String convertFormRank(Integer value) {
         if (value == null)
             return "-";
@@ -216,9 +230,6 @@ public class OhtaniScorebookController {
         };
     }
 
-    /**
-     * form_value（-2〜2） → 絵文字
-     */
     private String convertFormEmoji(Integer value) {
         if (value == null)
             return "";

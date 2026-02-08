@@ -42,26 +42,26 @@
   </div>
 </a>
 
-  <div class="batting-status">
+<div class="batting-status">
 
-    <p class="batting-date">
-      直近：
-      <span th:text="${#temporals.format(latestGameDate, 'yyyy/MM/dd')}"></span>
-    </p>
+  <p class="batting-date">
+    直近：
+    <span th:text="${#temporals.format(latestPitchingGameDate, 'yyyy/MM/dd')}"></span>
+  </p>
 
-    <p class="rank">
-      調子：
-      <span class="rank-value"
-            th:text="${latestFormRank + ' ' + (latestFormEmoji != null ? latestFormEmoji : '')}"
-            th:classappend="' rank-' + ${latestFormRank}">
-      </span>
-    </p>
+  <p class="rank">
+    調子：
+    <span class="rank-value"
+          th:text="${latestPitchingFormRank + ' ' + (latestPitchingFormEmoji != null ? latestPitchingFormEmoji : '')}"
+          th:classappend="' rank-' + ${latestPitchingFormRank}">
+    </span>
+  </p>
 
-    <p class="batting-comment"
-      th:text="${latestComment}">
-    </p>
+  <p class="batting-comment"
+     th:text="${latestPitchingComment}">
+  </p>
 
-  </div>
+</div>
 
                 <!--<div id="SeasonStats-1">2025 Stats</div>-->
                 <!-- 投手成績セクション -->

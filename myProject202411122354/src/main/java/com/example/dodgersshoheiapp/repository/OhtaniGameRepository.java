@@ -2,8 +2,11 @@ package com.example.dodgersshoheiapp.repository;
 
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniGameDetail;
+import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
+
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -204,6 +207,12 @@ public class OhtaniGameRepository {
                 """;
 
         return jdbcTemplate.queryForObject(sql, LocalDate.class);
+    }
+
+    public interface OhtaniPitchingGameRepository
+            extends JpaRepository<OhtaniPitchingGame, Long> {
+
+        OhtaniPitchingGame findTopByOrderByGameDateDesc();
     }
 
 }
