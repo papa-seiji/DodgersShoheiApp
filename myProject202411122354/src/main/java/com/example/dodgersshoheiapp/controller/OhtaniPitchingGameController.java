@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,9 @@ public class OhtaniPitchingGameController {
             Model model) {
 
         int year = 2026;
-        if (month == null)
+        if (month == null) {
             month = 4;
+        }
 
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
@@ -60,6 +62,37 @@ public class OhtaniPitchingGameController {
         }
 
         // =========================
+        // ★ グラフ用（日次・hogehoge_02 と同型）
+        // =========================
+        List<String> chartLabels = new ArrayList<>();
+        List<Integer> chartValues = new ArrayList<>();
+
+        // =========================
+        // ★ 月平均評価用（今回の主役）
+        // =========================
+        int sum = 0;
+        int count = 0;
+
+        for (OhtaniPitchingGame g : monthGames) {
+            chartLabels.add(g.getGameDate().toString().substring(5)); // MM-dd
+
+            int value = switch (g.getFormValue()) {
+                case "S" -> 5;
+                case "A" -> 4;
+                case "B" -> 3;
+                case "C" -> 2;
+                default -> 1; // D or null
+            };
+
+            chartValues.add(value);
+
+            sum += value;
+            count++;
+        }
+
+        Double monthAverage = (count > 0) ? (double) sum / count : null;
+
+        // =========================
         // ★ detailMap（カード用）
         // =========================
         Map<Long, OhtaniPitchingGameDetail> detailMap = new HashMap<>();
@@ -74,7 +107,14 @@ public class OhtaniPitchingGameController {
         model.addAttribute("monthGames", monthGames);
         model.addAttribute("selectedGame", selectedGame);
         model.addAttribute("detailMap", detailMap);
-        model.addAttribute("selectedDate", date); // ★ ハイライト用
+        model.addAttribute("selectedDate", date);
+
+        // ★ 日次折れ線用
+        model.addAttribute("chartLabels", chartLabels);
+        model.addAttribute("chartValues", chartValues);
+
+        // ★ 月平均評価（hogehoge_03 用）
+        model.addAttribute("monthAverage", monthAverage);
 
         return "hogehoge_04";
     }

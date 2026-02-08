@@ -6,15 +6,15 @@
   <title>Ohtani Scorebook | Season Overview</title>
 <link rel="stylesheet" href="/css/hogehoge_03.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/hogehoge_03.js"></script>
 
   <!-- ★ ここに追加（Controller → JS 受け渡し） -->
-  <!-- ★ th:inline を必ず付ける -->
-<script th:inline="javascript">
+<!-- <script th:inline="javascript">
 /*<![CDATA[*/
   window.LABELS = [[${labels}]];
   window.VALUES = [[${values}]];
 /*]]>*/
-</script>
+</script> -->
 
 <script src="/js/hogehoge_pitting.js"></script>
 </head>
@@ -398,9 +398,19 @@
   <h4 class="trend-title">　　　　評価グラフ (4月–11月)</h4>
 
   <div class="trend-card">
-    <canvas id="seasonTrendChart"></canvas>
+    <canvas id="pitchingSeasonChart"></canvas>
   </div>
 </section>
+
+<!-- ===============================
+     Controller → JS 受け渡し（投手）
+=============================== -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+const PITCHING_MONTH_LABELS = [[${pitchingMonthLabels}]];
+const PITCHING_MONTH_AVERAGES = [[${pitchingMonthAverages}]];
+/*]]>*/
+</script>
 
 </section>
 </main>

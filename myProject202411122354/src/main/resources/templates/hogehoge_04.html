@@ -7,6 +7,7 @@
 <script th:inline="javascript">
   window.MONTH_GAMES = /*[[${monthGames}]]*/ [];
 </script>
+<script src="/js/hogehoge_04.js"></script>
 
 <style>
 /* ===== Layout ===== */
@@ -125,16 +126,18 @@
 
 .inning-stats{
   font-weight: bold;
-    font-size: 18px;
-    color: #f34141;
+    font-size: 19px;
+    color: #070707;
+    background-color: #ffeba4;
 }
 
 
 .inning-desc{
   margin-left: 58px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     font-weight: bold;
     color: #000000 ;
+    font-size: 21px;
 }
 
 /* ===== Comment ===== */
@@ -283,11 +286,9 @@
 <div class="month-detail-wrapper">
 
   <!-- ===== 4月 成績推移グラフ ===== -->
-<!--
   <div style="margin:0 auto 32px;">
-    <canvas id="aprilChart" height="120"></canvas>
+    <canvas id="hogehoge04Chart" height="120"></canvas>
   </div>
--->
 
   <h2 class="month-title">
     <span th:text="${month}">4</span>月 登板一覧
@@ -346,7 +347,19 @@
      th:with="detail=${detailMap[game.id]}">
 
   <!-- ヘッダ -->
-  <h3 th:text="|${#temporals.format(game.gameDate,'M/d')} vs ${game.opponent}|"></h3>
+  <h3 class="game-title">
+    <span
+      th:text="|${#temporals.format(game.gameDate,'M/d')} vs ${game.opponent}|">
+    </span>
+    <span class="total-pitches" th:if="${detail != null and detail.totalPitches != null}">
+      （投球数：<span th:text="${detail.totalPitches}"></span>球）
+    </span>
+        <span class="decision-pitcher" th:if="${detail != null and detail.decisionPitcher != null}">
+      （<span th:text="${detail.decisionPitcher}"></span>）
+    </span>
+
+  </h3>
+
 
   <!-- ===== 登板詳細 ===== -->
   <div th:if="${detail != null}">
@@ -567,7 +580,7 @@
   <div class="game-comment"
        th:if="${game.comment != null and !#strings.isEmpty(game.comment)}">
     <strong
-      th:text="|${#temporals.format(game.gameDate,'M/d')} 総評（${game.formValue}）|">
+      th:text="|${#temporals.format(game.gameDate,'M/d')} 総評【${game.formValue}】|">
     </strong>
     <pre th:text="${game.comment}"></pre>
   </div>
@@ -607,6 +620,14 @@ if (selectedDate) {
   const APRIL_VALUES = [[${chartValues}]];
 /*]]>*/
 </script>-->
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+const HOGEHOGE04_LABELS = [[${chartLabels}]];
+const HOGEHOGE04_VALUES = [[${chartValues}]];
+/*]]>*/
+</script>
+
 
 </body>
 </html>
