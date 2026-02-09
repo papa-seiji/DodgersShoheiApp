@@ -65,6 +65,7 @@ public class SecurityConfig {
                                 "/widgets/**", // ← ★これを追加
                                 "/",
                                 "/home",
+                                "/fragments/**", // ← これ！！
 
                                 // WBC（閲覧専用）
                                 "/wbc/**",
@@ -78,6 +79,8 @@ public class SecurityConfig {
                                 "/kike",
                                 "/hogehoge_01",
                                 "/hogehoge_02",
+                                "/hogehoge_03",
+                                "/hogehoge_04",
 
                                 // 認証関連
                                 "/auth/login",
@@ -98,6 +101,10 @@ public class SecurityConfig {
                                 "/api/dodgers/standings",
                                 "/api/stats",
                                 "/api/visitorCounter/**",
+                                "/hogehoge_01",
+                                "/hogehoge_02",
+                                "/hogehoge_03",
+                                "/hogehoge_04",
 
                                 // 参加するならログイン必須
                                 "/comments",

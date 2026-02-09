@@ -658,6 +658,27 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- end MLB 地区別順位表 (スワイプ対応) -->
 
 
+<!-- ============================= -->
+<!-- 2026 Scorebook (HTMX Embed) -->
+<!-- ============================= -->
+
+<div id="scorebook-2026-wrapper">
+
+  <div
+    hx-get="/fragments/batting2026"
+    hx-trigger="load"
+    hx-swap="innerHTML">
+    <!-- Batting loading... -->
+  </div>
+
+  <div
+    hx-get="/fragments/pitching2026"
+    hx-trigger="load"
+    hx-swap="innerHTML">
+    <!-- Pitching loading... -->
+  </div>
+
+</div>
 
 
 
