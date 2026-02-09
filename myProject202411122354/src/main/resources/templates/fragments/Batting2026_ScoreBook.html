@@ -1,14 +1,17 @@
-<!-- fragments/Batting2026_ScoreBook.html -->
-<div class="scorebook-card batting">
-    <div class="scorebook-date">
-        直近：2026/11/30
-    </div>
+<div th:fragment="battingScorebook" class="scorebook-card batting">
+<div class="selfishness">勝手に【BATTING】評価</div>
+  <div class="scorebook-date">
+    評価対象ゲーム：
+    <span th:text="${#temporals.format(latestGameDate, 'yyyy/MM/dd')}"></span>
+  </div>
 
-    <div class="scorebook-grade">
-        調子： <span class="grade-s">S</span> 🔥
-    </div>
+  <div class="scorebook-grade">
+    評価：
+    <span th:text="${latestFormRank + ' ' + latestFormEmoji}"></span>
+  </div>
 
-    <div class="scorebook-comment">
-        引き付けて強いスイング。内容が非常に良い。
-    </div>
+  <div class="scorebook-comment"
+       th:text="${latestComment}">
+  </div>
+
 </div>

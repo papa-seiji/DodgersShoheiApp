@@ -1,14 +1,21 @@
 <!-- fragments/Pitching2026_ScoreBook.html -->
-<div class="scorebook-card pitching">
-    <div class="scorebook-date">
-        直近：2026/11/20
-    </div>
+<div class="scorebook-card pitching"
+     th:if="${latestPitchingGameDate != null}">
+<div class="selfishness">勝手に【PITCHING】評価</div>
+  <div class="scorebook-date">
+    評価対象：
+    <span th:text="${#temporals.format(latestPitchingGameDate, 'yyyy/MM/dd')}"></span>
+  </div>
 
-    <div class="scorebook-grade">
-        調子： <span class="grade-s">S</span> 🔥
-    </div>
+  <div class="scorebook-grade">
+    評価：
+    <span class="grade"
+          th:text="${latestPitchingFormRank + ' ' + latestPitchingFormEmoji}">
+    </span>
+  </div>
 
-    <div class="scorebook-comment">
-        シーズン締めに相応しい投球。
-    </div>
+  <div class="scorebook-comment"
+       th:text="${latestPitchingComment}">
+  </div>
+
 </div>
