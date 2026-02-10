@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>hogehoge_04</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+  window.MONTH_GAMES = /*[[${monthGames}]]*/ [];
+</script>
+<script src="/js/hogehoge_04.js"></script>
+
+<style>
+/* ===== Layout ===== */
+.month-detail-wrapper {
+  max-width: 1200px;   /* ← 画面を広く使いたいならここを拡張 */
+  width: 100%;
+  margin: 0 auto;     /* ★ 常に中央 */
+  padding: 24px 20px 40px;
+  box-sizing: border-box;
+    overflow-x: hidden; /* ★これ */
+}
+
+.month-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+/* ===== Scorebook Table ===== */
+.scorebook-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fffdf6;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  margin-bottom: 32px;
+}
+
+.scorebook-table thead {
+  background: #2f2f2f;
+  color: #fff;
+}
+
+.scorebook-table th,
+.scorebook-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.scorebook-table tbody tr:hover {
+  background: #f7f3e8;
+}
+
+/* 勝敗 */
+.win { color: #c62828; font-weight: bold; }
+.lose { color: #1565c0; font-weight: bold; }
+
+/* 調子 */
+.form-s { color: #d32f2f; font-weight: bold; }
+.form-a { color: #ef6c00; font-weight: bold; }
+.form-b { color: #fbc02d; }
+.form-c { color: #546e7a; }
+
+/* ===== 試合詳細カード ===== */
+.game-card {
+  width: 100%;                /* ★必須 */
+  box-sizing: border-box;     /* ★必須 */
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  /* padding: 16px; */
+  margin-bottom: 32px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.batting-summary {
+  margin: 10px 0 12px;
+  font-weight: bold;
+}
+
+.atbat-list {
+  padding-left: 18px;
+  margin-bottom: 12px;
+}
+
+.atbat-list li {
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.bat-result {
+  margin-left: 6px;
+  font-weight: bold;
+}
+
+/* ===== Images ===== */
+.game-images {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.game-images img {
+  width: 100%;
+  max-width: 160px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+/* .inning-block{
+  font-weight: bold;
+    font-size: 21px;
+    color: #f34141;
+} */
+
+.inning-stats{
+  font-weight: bold;
+    font-size: 19px;
+    color: #070707;
+    background-color: #ffeba4;
+}
+
+
+.inning-desc{
+  margin-left: 58px;
+    margin-bottom: 14px;
+    font-weight: bold;
+    color: #000000 ;
+    font-size: 21px;
+}
+
+/* ===== Comment ===== */
+.game-comment {
+  background: #3eb92c8a;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  margin-bottom: 50px;
+}
+
+.game-comment pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* 戻る */
+.back-link {
+  display: inline-block;
+  margin-top: 24px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #3366cc;
+  font-size: 28px;
+}
+
+/* =====================================================
+   ★ MLB風 ラインスコア（完全再現）
+===================================================== */
+
+.linescore-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  background: #000;
+  color: #eee;
+  font-size: 13px;
+  font-family: "Arial Narrow", "Segoe UI", sans-serif;
+  box-shadow: inset 0 0 0 1px #222;
+}
+
+.linescore-table th,
+.linescore-table td {
+  border: 1px solid #222;
+  padding: 6px;
+  text-align: center;
+  min-width: 26px;
+}
+
+/* ヘッダ */
+.linescore-table thead th {
+  background: #111;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+/* TEAM列 */
+.linescore-table th:first-child,
+.linescore-table td:first-child {
+  min-width: 52px;
+  font-weight: bold;
+  color: #ddd;
+}
+
+/* Away イニング */
+.linescore-table tbody tr:first-child td:not(:first-child):not(:nth-last-child(-n+3)) {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+/* Home イニング */
+.linescore-table tbody tr:last-child td:not(:first-child):not(:nth-last-child(-n+3)) {
+  color: #fdd835;
+  font-weight: bold;
+}
+
+/* R H E */
+.linescore-table td:nth-last-child(3),
+.linescore-table td:nth-last-child(2),
+.linescore-table td:nth-last-child(1) {
+  background: #0b0b0b;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 勝利チーム R */
+.linescore-table tr:last-child td:nth-last-child(3) {
+  color: #ff5252;
+}
+
+/* チーム名 */
+.linescore-table tr:first-child td:first-child {
+  color: #b0bec5;
+}
+.linescore-table tr:last-child td:first-child {
+  color: #64b5f6;
+}
+
+
+/* .game-row.is-selected {
+  background: #d5ad1b;
+}
+ */
+
+.selected-row  {
+  background: #d5ad1b;
+}
+
+.back-to-month {
+  margin: 16px 0;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #df8383;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background: #0a0a0a;
+    color: #ffffff;
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+<h1>
+  <span th:text="${month}">4</span>月の詳細ページ
+</h1>
+<!--<p id="info"></p>-->
+
+<a href="/hogehoge_03" class="back-link">
+  ← シーズンカレンダーに戻る
+</a>
+
+<div class="month-detail-wrapper">
+
+  <!-- ===== 4月 成績推移グラフ ===== -->
+  <div style="margin:0 auto 32px;">
+    <canvas id="hogehoge04Chart" height="120"></canvas>
+  </div>
+
+  <h2 class="month-title">
+    <span th:text="${month}">4</span>月 登板一覧
+  </h2>
+
+<!-- ===== 月間一覧テーブル ===== -->
+<table class="scorebook-table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Opponent</th>
+      <th>Result</th>
+      <th>Form</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr th:each="g : ${monthGames}"
+        th:if="${g != null and (param.date == null or g.gameDate.toString() == param.date[0])}"
+        th:attr="data-date=${g.gameDate}"
+        class="game-row"
+        th:classappend="${param.date != null and g.gameDate.toString() == param.date[0]}
+                        ? ' selected-row' : ''">
+
+      <td>
+        <a th:href="@{/hogehoge_04(month=${month}, date=${g.gameDate})}"
+          th:text="${#temporals.format(g.gameDate,'MM/dd')}">
+        </a>
+      </td>
+
+      <td th:text="${g.opponent}"></td>
+
+      <td th:text="${g.result}"
+          th:classappend="${g.result.contains('●')} ? 'lose' : 'win'">
+      </td>
+
+      <td th:text="${g.formValue}"
+          th:classappend="'form-' + ${#strings.toLowerCase(g.formValue)}">
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+
+  <!-- ===== 一覧に戻る ===== -->
+  <div class="back-to-month" th:if="${param.date != null}">
+    <a th:href="@{/hogehoge_04(month=${month})}" class="back-button">
+      ← <span th:text="${month}">4</span>月の登板一覧に戻る
+    </a>
+  </div>
+
+<!-- ===== 試合詳細カード ===== -->
+<!-- ===== 登板カード ===== -->
+<div class="game-card"
+     th:each="game : ${monthGames}"
+     th:with="detail=${detailMap[game.id]}">
+
+  <!-- ヘッダ -->
+  <h3 class="game-title">
+    <span
+      th:text="|${#temporals.format(game.gameDate,'M/d')} vs ${game.opponent}|">
+    </span>
+    <span class="total-pitches" th:if="${detail != null and detail.totalPitches != null}">
+      （投球数：<span th:text="${detail.totalPitches}"></span>球）
+    </span>
+        <span class="decision-pitcher" th:if="${detail != null and detail.decisionPitcher != null}">
+      （<span th:text="${detail.decisionPitcher}"></span>）
+    </span>
+
+  </h3>
+
+
+  <!-- ===== 登板詳細 ===== -->
+  <div th:if="${detail != null}">
+
+    <!-- ===== 1回〜10回（明示展開・安全版） ===== -->
+
+<!-- ===== 登板詳細（Inning Detail：1回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning1So != null and detail.inning1So != 0)
+        or (detail.inning1Bb != null and detail.inning1Bb != 0)
+        or (detail.inning1Out != null and detail.inning1Out != 0)
+        or (detail.inning1Hit != null and detail.inning1Hit != 0)
+        or !#strings.isEmpty(detail.inning1Description)
+     )}">
+  <div class="inning-stats">
+    【1回】
+    SO:<span th:text="${detail.inning1So}"></span>
+    BB:<span th:text="${detail.inning1Bb}"></span>
+    OUT:<span th:text="${detail.inning1Out}"></span>
+    HIT:<span th:text="${detail.inning1Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning1Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：2回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning2So != null and detail.inning2So != 0)
+        or (detail.inning2Bb != null and detail.inning2Bb != 0)
+        or (detail.inning2Out != null and detail.inning2Out != 0)
+        or (detail.inning2Hit != null and detail.inning2Hit != 0)
+        or !#strings.isEmpty(detail.inning2Description)
+     )}">
+  <div class="inning-stats">
+    【2回】
+    SO:<span th:text="${detail.inning2So}"></span>
+    BB:<span th:text="${detail.inning2Bb}"></span>
+    OUT:<span th:text="${detail.inning2Out}"></span>
+    HIT:<span th:text="${detail.inning2Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning2Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：3回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning3So != null and detail.inning3So != 0)
+        or (detail.inning3Bb != null and detail.inning3Bb != 0)
+        or (detail.inning3Out != null and detail.inning3Out != 0)
+        or (detail.inning3Hit != null and detail.inning3Hit != 0)
+        or !#strings.isEmpty(detail.inning3Description)
+     )}">
+  <div class="inning-stats">
+    【3回】
+    SO:<span th:text="${detail.inning3So}"></span>
+    BB:<span th:text="${detail.inning3Bb}"></span>
+    OUT:<span th:text="${detail.inning3Out}"></span>
+    HIT:<span th:text="${detail.inning3Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning3Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：4回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning4So != null and detail.inning4So != 0)
+        or (detail.inning4Bb != null and detail.inning4Bb != 0)
+        or (detail.inning4Out != null and detail.inning4Out != 0)
+        or (detail.inning4Hit != null and detail.inning4Hit != 0)
+        or !#strings.isEmpty(detail.inning4Description)
+     )}">
+  <div class="inning-stats">
+    【4回】
+    SO:<span th:text="${detail.inning4So}"></span>
+    BB:<span th:text="${detail.inning4Bb}"></span>
+    OUT:<span th:text="${detail.inning4Out}"></span>
+    HIT:<span th:text="${detail.inning4Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning4Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：5回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning5So != null and detail.inning5So != 0)
+        or (detail.inning5Bb != null and detail.inning5Bb != 0)
+        or (detail.inning5Out != null and detail.inning5Out != 0)
+        or (detail.inning5Hit != null and detail.inning5Hit != 0)
+        or !#strings.isEmpty(detail.inning5Description)
+     )}">
+  <div class="inning-stats">
+    【5回】
+    SO:<span th:text="${detail.inning5So}"></span>
+    BB:<span th:text="${detail.inning5Bb}"></span>
+    OUT:<span th:text="${detail.inning5Out}"></span>
+    HIT:<span th:text="${detail.inning5Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning5Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：6回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning6So != null and detail.inning6So != 0)
+        or (detail.inning6Bb != null and detail.inning6Bb != 0)
+        or (detail.inning6Out != null and detail.inning6Out != 0)
+        or (detail.inning6Hit != null and detail.inning6Hit != 0)
+        or !#strings.isEmpty(detail.inning6Description)
+     )}">
+  <div class="inning-stats">
+    【6回】
+    SO:<span th:text="${detail.inning6So}"></span>
+    BB:<span th:text="${detail.inning6Bb}"></span>
+    OUT:<span th:text="${detail.inning6Out}"></span>
+    HIT:<span th:text="${detail.inning6Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning6Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：7回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning7So != null and detail.inning7So != 0)
+        or (detail.inning7Bb != null and detail.inning7Bb != 0)
+        or (detail.inning7Out != null and detail.inning7Out != 0)
+        or (detail.inning7Hit != null and detail.inning7Hit != 0)
+        or !#strings.isEmpty(detail.inning7Description)
+     )}">
+  <div class="inning-stats">
+    【7回】
+    SO:<span th:text="${detail.inning7So}"></span>
+    BB:<span th:text="${detail.inning7Bb}"></span>
+    OUT:<span th:text="${detail.inning7Out}"></span>
+    HIT:<span th:text="${detail.inning7Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning7Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：8回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning8So != null and detail.inning8So != 0)
+        or (detail.inning8Bb != null and detail.inning8Bb != 0)
+        or (detail.inning8Out != null and detail.inning8Out != 0)
+        or (detail.inning8Hit != null and detail.inning8Hit != 0)
+        or !#strings.isEmpty(detail.inning8Description)
+     )}">
+  <div class="inning-stats">
+    【8回】
+    SO:<span th:text="${detail.inning8So}"></span>
+    BB:<span th:text="${detail.inning8Bb}"></span>
+    OUT:<span th:text="${detail.inning8Out}"></span>
+    HIT:<span th:text="${detail.inning8Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning8Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：9回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning9So != null and detail.inning9So != 0)
+        or (detail.inning9Bb != null and detail.inning9Bb != 0)
+        or (detail.inning9Out != null and detail.inning9Out != 0)
+        or (detail.inning9Hit != null and detail.inning9Hit != 0)
+        or !#strings.isEmpty(detail.inning9Description)
+     )}">
+  <div class="inning-stats">
+    【9回】
+    SO:<span th:text="${detail.inning9So}"></span>
+    BB:<span th:text="${detail.inning9Bb}"></span>
+    OUT:<span th:text="${detail.inning9Out}"></span>
+    HIT:<span th:text="${detail.inning9Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning9Description}">
+  </div>
+</div>
+
+<!-- ===== 登板詳細（Inning Detail：10回）===== -->
+<div class="inning-block"
+     th:if="${detail != null and (
+        (detail.inning10So != null and detail.inning10So != 0)
+        or (detail.inning10Bb != null and detail.inning10Bb != 0)
+        or (detail.inning10Out != null and detail.inning10Out != 0)
+        or (detail.inning10Hit != null and detail.inning10Hit != 0)
+        or !#strings.isEmpty(detail.inning10Description)
+     )}">
+  <div class="inning-stats">
+    【10回】
+    SO:<span th:text="${detail.inning10So}"></span>
+    BB:<span th:text="${detail.inning10Bb}"></span>
+    OUT:<span th:text="${detail.inning10Out}"></span>
+    HIT:<span th:text="${detail.inning10Hit}"></span>
+  </div>
+  <div class="inning-desc"
+       th:text="${detail.inning10Description}">
+  </div>
+</div>
+
+  <!-- ===== 総評 ===== -->
+  <div class="game-comment"
+       th:if="${game.comment != null and !#strings.isEmpty(game.comment)}">
+    <strong
+      th:text="|${#temporals.format(game.gameDate,'M/d')} 総評【${game.formValue}】|">
+    </strong>
+    <pre th:text="${game.comment}"></pre>
+  </div>
+
+</div>
+
+<!-- スクロール制御 -->
+<!--<script th:inline="javascript">
+/*<![CDATA[*/
+const selectedDate = /*[[${selectedDate != null ? selectedDate : 'null'}]]*/ null;
+
+if (selectedDate) {
+  const targetCard = document.getElementById('game-' + selectedDate);
+  if (targetCard) {
+    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.querySelectorAll('.game-row').forEach(row => {
+    if (row.dataset.date === selectedDate) {
+      row.classList.add('is-selected');
+    }
+  });
+}
+/*]]>*/
+</script>-->
+
+<!--<script>
+  const params = new URLSearchParams(location.search);
+  const month = params.get("month");
+  document.getElementById("info").textContent =
+    month ? month + "月の詳細ページ" : "月未指定";
+</script>-->
+
+<!--<script th:inline="javascript">
+/*<![CDATA[*/
+  const APRIL_LABELS = [[${chartLabels}]];
+  const APRIL_VALUES = [[${chartValues}]];
+/*]]>*/
+</script>-->
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+const HOGEHOGE04_LABELS = [[${chartLabels}]];
+const HOGEHOGE04_VALUES = [[${chartValues}]];
+/*]]>*/
+</script>
+
+
+</body>
+</html>

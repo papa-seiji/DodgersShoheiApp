@@ -21,6 +21,71 @@ body {
     /* min-height: 100vh; ページ全体を画面いっぱいに表示 */
 }
 
+
+/* ============================
+   評価エリア（Scorebook Card）
+============================ */
+
+#scorebook-2026-wrapper a {
+  color: inherit;
+  font-size: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+#scorebook-2026-wrapper:hover {
+  opacity: 0.92;
+}
+
+
+/* 共通 */
+.scorebook-card {
+  padding: 10px 12px;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.selfishness{
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* BATTING */
+.scorebook-card.batting {
+  background: #44bce8;
+  border: 1px solid #fb0000;
+  width: 319.67px;
+  border-radius: 3%;
+}
+
+/* PITCHING */
+.scorebook-card.pitching {
+  background: #f17373cf;   /* ← 同じでOK */
+  border: 1px solid #fb0000;
+    width: 319.67px;
+    border-radius: 3%;
+}
+
+/* 調子表示 */
+.scorebook-grade {
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 37px;
+}
+
+.scorebook-comment {
+  line-height: 1.2em;
+  height: 3.6em;              /* 1.2em × 3行 */
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;      /* 表示行数 */
+  -webkit-box-orient: vertical;
+}
+
+
+
+
 #judgetani {
     color: #ceec07;
     background-color: #13137a;

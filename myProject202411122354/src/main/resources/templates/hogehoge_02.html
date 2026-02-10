@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>hogehoge_02</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+  window.MONTH_GAMES = /*[[${monthGames}]]*/ [];
+</script>
+<script src="/js/hogehoge_02.js"></script>
+
+<style>
+/* ===== Layout ===== */
+.month-detail-wrapper {
+  max-width: 1200px;   /* ← 画面を広く使いたいならここを拡張 */
+  width: 100%;
+  margin: 0 auto;     /* ★ 常に中央 */
+  padding: 24px 20px 40px;
+  box-sizing: border-box;
+    overflow-x: hidden; /* ★これ */
+}
+
+.month-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+/* ===== Scorebook Table ===== */
+.scorebook-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fffdf6;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  margin-bottom: 32px;
+}
+
+.scorebook-table thead {
+  background: #2f2f2f;
+  color: #fff;
+}
+
+.scorebook-table th,
+.scorebook-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.scorebook-table tbody tr:hover {
+  background: #f7f3e8;
+}
+
+/* 勝敗 */
+.win { color: #c62828; font-weight: bold; }
+.lose { color: #1565c0; font-weight: bold; }
+
+/* 調子 */
+.form-s { color: #d32f2f; font-weight: bold; }
+.form-a { color: #ef6c00; font-weight: bold; }
+.form-b { color: #fbc02d; }
+.form-c { color: #546e7a; }
+
+/* ===== 試合詳細カード ===== */
+.game-card {
+  width: 100%;                /* ★必須 */
+  box-sizing: border-box;     /* ★必須 */
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  /* padding: 16px; */
+  margin-bottom: 32px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.batting-summary {
+  margin: 10px 0 12px;
+  font-weight: bold;
+}
+
+.atbat-list {
+  padding-left: 18px;
+  margin-bottom: 12px;
+}
+
+.atbat-list li {
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.bat-result {
+  margin-left: 6px;
+  font-weight: bold;
+}
+
+/* ===== Images ===== */
+.game-images {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.game-images img {
+  width: 100%;
+  max-width: 160px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* ===== Comment ===== */
+.game-comment {
+  background: #3eb92c8a;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  margin-bottom: 50px;
+}
+
+.game-comment pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* 戻る */
+.back-link {
+  display: inline-block;
+  margin-top: 24px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #3366cc;
+  font-size: 28px;
+}
+
+/* =====================================================
+   ★ MLB風 ラインスコア（完全再現）
+===================================================== */
+
+.linescore-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  background: #000;
+  color: #eee;
+  font-size: 13px;
+  font-family: "Arial Narrow", "Segoe UI", sans-serif;
+  box-shadow: inset 0 0 0 1px #222;
+}
+
+.linescore-table th,
+.linescore-table td {
+  border: 1px solid #222;
+  padding: 6px;
+  text-align: center;
+  min-width: 26px;
+}
+
+/* ヘッダ */
+.linescore-table thead th {
+  background: #111;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+/* TEAM列 */
+.linescore-table th:first-child,
+.linescore-table td:first-child {
+  min-width: 52px;
+  font-weight: bold;
+  color: #ddd;
+}
+
+/* Away イニング */
+.linescore-table tbody tr:first-child td:not(:first-child):not(:nth-last-child(-n+3)) {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+/* Home イニング */
+.linescore-table tbody tr:last-child td:not(:first-child):not(:nth-last-child(-n+3)) {
+  color: #fdd835;
+  font-weight: bold;
+}
+
+/* R H E */
+.linescore-table td:nth-last-child(3),
+.linescore-table td:nth-last-child(2),
+.linescore-table td:nth-last-child(1) {
+  background: #0b0b0b;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 勝利チーム R */
+.linescore-table tr:last-child td:nth-last-child(3) {
+  color: #ff5252;
+}
+
+/* チーム名 */
+.linescore-table tr:first-child td:first-child {
+  color: #b0bec5;
+}
+.linescore-table tr:last-child td:first-child {
+  color: #64b5f6;
+}
+
+
+.game-row.is-selected {
+  background: #d5ad1b;
+}
+
+
+.back-to-month {
+  margin: 16px 0;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #df8383;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background: #0a0a0a;
+    color: #ffffff;
+
+}
+
+
+/* Mobile */
+/* @media (max-width: 480px) {
+  .linescore-table {
+    font-size: 11px;
+  }
+  .linescore-table th,
+  .linescore-table td {
+    padding: 4px;
+  }
+} */
+
+/* モバイル調整 */
+/* @media (max-width: 480px) {
+  .linescore-table {
+    font-size: 11px;
+  }
+
+  .linescore-table th,
+  .linescore-table td {
+    padding: 4px 4px;
+  }
+} */
+
+</style>
+</head>
+
+<body>
+
+<h1>
+  <span th:text="${month}">4</span>月の詳細ページ
+</h1>
+<!--<p id="info"></p>-->
+
+<a href="/hogehoge_01" class="back-link">
+  ← シーズンカレンダーに戻る
+</a>
+
+<div class="month-detail-wrapper">
+
+  <!-- ===== 4月 成績推移グラフ ===== -->
+  <div style="margin:0 auto 32px;">
+    <canvas id="aprilChart" height="120"></canvas>
+  </div>
+
+  <h2 class="month-title">
+    <span th:text="${month}">4</span>月 試合一覧
+  </h2>
+
+  <!-- ===== 月間一覧テーブル ===== -->
+  <table class="scorebook-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Opponent</th>
+        <th>Result</th>
+        <th>Form</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr th:each="g : ${monthGames}"
+          th:if="${g != null and (param.date == null or g.gameDate.toString() == param.date[0])}"
+          th:attr="data-date=${g.gameDate}"
+          class="game-row">
+
+        <td>
+          <a th:href="@{/hogehoge_02(month=${month}, date=${g.gameDate})}"
+             th:text="${#temporals.format(g.gameDate,'MM/dd')}">
+            04/06
+          </a>
+        </td>
+
+        <td th:text="${g.opponent}">PADRES</td>
+
+        <td th:text="${g.result}"
+            th:classappend="${g.result.contains('●')} ? 'lose' : 'win'">
+          ○ 4-2
+        </td>
+
+        <td th:text="
+          ${g.formValue == 2 ? 'S' :
+            g.formValue == 1 ? 'A' :
+            g.formValue == 0 ? 'B' :
+            g.formValue == -1 ? 'C' : 'D'}
+        ">
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ===== 一覧に戻る ===== -->
+  <div class="back-to-month" th:if="${param.date != null}">
+    <a th:href="@{/hogehoge_02(month=${month})}" class="back-button">
+      ← <span th:text="${month}">4</span>月の試合一覧に戻る
+    </a>
+  </div>
+
+  <!-- ===== 試合詳細カード ===== -->
+  <div class="game-card"
+       th:each="g : ${games}"
+       th:if="${g != null}"
+       th:id="|game-${g.gameDate}|">
+
+    <!-- ヘッダー -->
+    <div class="game-header">
+      <span th:text="|${#temporals.format(g.gameDate,'MM/dd')} vs ${g.opponent}|"></span>
+    </div>
+
+    <!-- 評価 
+    <span class="form-badge"
+          th:text="
+            ${g.formValue == 2 ? 'S' :
+              g.formValue == 1 ? 'A' :
+              g.formValue == 0 ? 'B' :
+              g.formValue == -1 ? 'C' : 'D'}
+          ">
+    </span>-->
+
+    <!-- LINE SCORE -->
+    <table class="linescore-table">
+      <thead>
+        <tr>
+          <th>TEAM</th><th>R</th><th>H</th><th>E</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td th:text="${g.opponent}">PADRES</td>
+          <td>-</td><td>-</td><td>-</td>
+        </tr>
+        <tr>
+          <td>LAD</td>
+          <td>-</td><td>-</td><td>-</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 打撃サマリー -->
+    <div class="batting-summary" th:with="d=${g.details[0]}"
+         th:text="
+           (${d.pa1Result != null ? 1 : 0}
+          + ${d.pa2Result != null ? 1 : 0}
+          + ${d.pa3Result != null ? 1 : 0}
+          + ${d.pa4Result != null ? 1 : 0}
+          + ${d.pa5Result != null ? 1 : 0}
+          + ${d.pa6Result != null ? 1 : 0})
+          + '打数 / ' +
+          (${d.pa1Result == 'HIT' || d.pa1Result == 'HR' ? 1 : 0}
+          + ${d.pa2Result == 'HIT' || d.pa2Result == 'HR' ? 1 : 0}
+          + ${d.pa3Result == 'HIT' || d.pa3Result == 'HR' ? 1 : 0}
+          + ${d.pa4Result == 'HIT' || d.pa4Result == 'HR' ? 1 : 0}
+          + ${d.pa5Result == 'HIT' || d.pa5Result == 'HR' ? 1 : 0}
+          + ${d.pa6Result == 'HIT' || d.pa6Result == 'HR' ? 1 : 0})
+          + '安打'
+         ">
+      5打数 / 2安打
+    </div>
+
+    <!-- 打席内容 -->
+    <ul class="atbat-list" th:with="d=${g.details[0]}">
+
+      <li th:if="${d.pa1Result != null}">
+        <strong>第1打席：</strong>
+        対戦投手 <span th:text="${d.pa1Pitcher}"></span>
+        （<span th:text="${d.pa1PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa1Result}"></span><br>
+        <span th:text="${d.pa1Description}"></span>
+      </li>
+
+      <li th:if="${d.pa2Result != null}">
+        <strong>第2打席：</strong>
+        対戦投手 <span th:text="${d.pa2Pitcher}"></span>
+        （<span th:text="${d.pa2PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa2Result}"></span><br>
+        <span th:text="${d.pa2Description}"></span>
+      </li>
+
+      <li th:if="${d.pa3Result != null}">
+        <strong>第3打席：</strong>
+        対戦投手 <span th:text="${d.pa3Pitcher}"></span>
+        （<span th:text="${d.pa3PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa3Result}"></span><br>
+        <span th:text="${d.pa3Description}"></span>
+      </li>
+
+      <li th:if="${d.pa4Result != null}">
+        <strong>第4打席：</strong>
+        対戦投手 <span th:text="${d.pa4Pitcher}"></span>
+        （<span th:text="${d.pa4PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa4Result}"></span><br>
+        <span th:text="${d.pa4Description}"></span>
+      </li>
+
+      <li th:if="${d.pa5Result != null}">
+        <strong>第5打席：</strong>
+        対戦投手 <span th:text="${d.pa5Pitcher}"></span>
+        （<span th:text="${d.pa5PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa5Result}"></span><br>
+        <span th:text="${d.pa5Description}"></span>
+      </li>
+
+      <li th:if="${d.pa6Result != null}">
+        <strong>第6打席：</strong>
+        対戦投手 <span th:text="${d.pa6Pitcher}"></span>
+        （<span th:text="${d.pa6PitcherHand}"></span>）
+        <span class="bat-result" th:text="${d.pa6Result}"></span><br>
+        <span th:text="${d.pa6Description}"></span>
+      </li>
+
+    </ul>
+
+<div class="game-comment"
+     th:if="${g.comment != null and !#strings.isEmpty(g.comment)}">
+
+<strong
+  th:text="
+    |${#temporals.format(g.gameDate,'M/d')}の総評コメント：
+     評価【${
+       g.formValue == 2 ? 'S' :
+       g.formValue == 1 ? 'A' :
+       g.formValue == 0 ? 'B' :
+       g.formValue == -1 ? 'C' : 'D'
+     }】|
+  ">
+  4/28の総評コメント：評価【B】
+</strong>
+
+  <pre th:text="${g.comment}">
+    コメント本文
+  </pre>
+
+</div>
+
+
+<!-- スクロール制御 -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+const selectedDate = /*[[${selectedDate != null ? selectedDate : 'null'}]]*/ null;
+
+if (selectedDate) {
+  const targetCard = document.getElementById('game-' + selectedDate);
+  if (targetCard) {
+    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.querySelectorAll('.game-row').forEach(row => {
+    if (row.dataset.date === selectedDate) {
+      row.classList.add('is-selected');
+    }
+  });
+}
+/*]]>*/
+</script>
+
+<script>
+const params = new URLSearchParams(location.search);
+const month = params.get("month");
+document.getElementById("info").textContent =
+  month ? month + "月の詳細ページ" : "月未指定";
+</script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+const APRIL_LABELS = [[${chartLabels}]];
+const APRIL_VALUES = [[${chartValues}]];
+/*]]>*/
+</script>
+
+</body>
+</html>

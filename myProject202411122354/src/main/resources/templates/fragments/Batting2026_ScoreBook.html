@@ -1,0 +1,21 @@
+<a th:href="@{/hogehoge_01}" class="scorebook-link">
+  <div th:fragment="battingScorebook" class="scorebook-card batting">
+
+    <div class="selfishness">勝手に【BATTING】評価</div>
+
+    <div class="scorebook-date">
+      評価対象ゲーム：
+      <span th:text="${#temporals.format(latestGameDate, 'yyyy/MM/dd')}"></span>
+    </div>
+
+    <div class="scorebook-grade">
+      評価：
+      <span th:text="${latestFormRank + ' ' + latestFormEmoji}"></span>
+    </div>
+
+    <div class="scorebook-comment"
+         th:text="${latestComment}">
+    </div>
+
+  </div>
+</a>
