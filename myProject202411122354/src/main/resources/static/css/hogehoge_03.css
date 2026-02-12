@@ -73,7 +73,7 @@ header{
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 
   z-index: 3;
 }
@@ -292,38 +292,42 @@ header{
   z-index: 1;
 }
 
-/* 4時 → 11時（円弧） */
+/* 3時 → 11時（円弧） */
+.hero-months li[data-month="3"] {
+  left: calc(var(--clock-cx) - -244px);
+    top: calc(var(--clock-cy) - -118px);
+}
 .hero-months li[data-month="4"] {
-  left: calc(var(--clock-cx) + 260px);
-  top:  calc(var(--clock-cy) + 160px);
+  left: calc(var(--clock-cx) + 170px);
+    top: calc(var(--clock-cy) + 277px);
 }
 .hero-months li[data-month="5"] {
-  left: calc(var(--clock-cx) + 132px);
-  top:  calc(var(--clock-cy) + 240px);
+  left: calc(var(--clock-cx) + 42px);
+    top: calc(var(--clock-cy) + 310px);
 }
 .hero-months li[data-month="6"] {
-  left: calc(var(--clock-cx));
-  top:  calc(var(--clock-cy) + 280px);
+  left: calc(var(--clock-cx) - 87px);
+    top: calc(var(--clock-cy) + 313px);
 }
 .hero-months li[data-month="7"] {
-  left: calc(var(--clock-cx) - 131px);
-  top:  calc(var(--clock-cy) + 240px);
+      left: calc(var(--clock-cx) - 210px);
+    top: calc(var(--clock-cy) + 279px);
 }
 .hero-months li[data-month="8"] {
   left: calc(var(--clock-cx) - 260px);
-  top:  calc(var(--clock-cy) + 160px);
+  top:  calc(var(--clock-cy) + 90px);
 }
 .hero-months li[data-month="9"] {
-  left: calc(var(--clock-cx) - 300px);
-  top:  calc(var(--clock-cy) + -12px);
+  left: calc(var(--clock-cx) - 289px);
+    top: calc(var(--clock-cy) - 72px);
 }
 .hero-months li[data-month="10"] {
-  left: calc(var(--clock-cx) - 260px);
-  top:  calc(var(--clock-cy) - 184px);
+  left: calc(var(--clock-cx) - 204px);
+  top:  calc(var(--clock-cy) - 225px);
 }
 .hero-months li[data-month="11"] {
-  left: calc(var(--clock-cx) - 131px);
-  top:  calc(var(--clock-cy) - 260px);
+  left: calc(var(--clock-cx) - 82px);
+  top:  calc(var(--clock-cy) - 294px);
 }
 
 /* =========================================================
@@ -590,8 +594,8 @@ header{
 
   /* 大谷は中央を維持 */
   .hero-ohtani {
-    left: 66%;
-        top: -4%;
+    left: 69%;
+        top: 11%;
     transform: translateX(-50%);
   }
 }
@@ -623,7 +627,7 @@ header{
   /* 大谷は中央を維持 */
   .hero-ohtani {
     left: 62%;
-        top: 3%;
+        top: 14%;
     transform: translateX(-50%);
   }
 }
@@ -668,7 +672,7 @@ header{
   font-weight: 600;
   margin-bottom: 12px;
   text-align: center;
-  margin-top: -78px;
+  margin-top: -56px;
 }
 
     .trend-card {
@@ -685,7 +689,7 @@ header{
   font-weight: 600;
   margin-bottom: 12px;
   text-align: center;
-  margin-top: -78px;
+  margin-top: -52px;
 }
 
     .trend-card {

@@ -45,20 +45,21 @@ header{
 .hero-ohtani {
     position: absolute;
     width: 394px;
-    height: 480px;
+    height: 500px;
     left: 50%;
     inset-inline: 0;
     /* margin-inline: auto; */
     bottom: 36px;
     /* transform: translateX(-50%); */
-    background-image: url(https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png);
+    background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E3%82%B9%E3%82%B3%E3%82%A2%E3%83%96%E3%83%83%E3%82%AF%E6%89%93%E8%80%85%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3001.png");
     background-repeat: no-repeat;
     /* background-position: center bottom; */
     background-size: contain;
     opacity: 0.95;
     pointer-events: none;
     z-index: 2;
-    margin-left: 690px;
+        margin-left: 566px;
+    top: -19%;
 }
 
 /* =========================================================
@@ -71,7 +72,7 @@ header{
   top: 5%;
   width: 260px;
 
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   gap: 16px;
 
@@ -88,6 +89,7 @@ header{
   padding: 12px 0;
   border-radius: 50%;
   letter-spacing: 1px;
+  margin-bottom: 9px;
 }
 
 /* 調子コメント */
@@ -159,7 +161,7 @@ header{
   bottom: 36px;
   transform: translateX(-50%);
 
-  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png");
+  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E3%82%B9%E3%82%B3%E3%82%A2%E3%83%96%E3%83%83%E3%82%AF%E6%89%93%E8%80%85%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3001.png");
   background-repeat: no-repeat;
   /* background-position: center bottom; */
   background-size: contain;
@@ -245,7 +247,7 @@ header{
   bottom: 36px;
   transform: translateX(-50%);
 
-  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E6%8F%BA%E3%82%8C%E3%82%8B%E3%82%B9%E3%82%A4%E3%83%B3%E3%82%B0%E7%BF%94%E5%B9%B3.png");
+  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E3%82%B9%E3%82%B3%E3%82%A2%E3%83%96%E3%83%83%E3%82%AF%E6%89%93%E8%80%85%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3001.png");
   background-repeat: no-repeat;
   /* background-position: center bottom; */
   background-size: contain;
@@ -293,7 +295,7 @@ header{
 }
 
 /* 4時 → 11時（円弧） */
-.hero-months li[data-month="4"] {
+/* .hero-months li[data-month="4"] {
   left: calc(var(--clock-cx) + 260px);
   top:  calc(var(--clock-cy) + 160px);
 }
@@ -324,8 +326,45 @@ header{
 .hero-months li[data-month="11"] {
   left: calc(var(--clock-cx) - 131px);
   top:  calc(var(--clock-cy) - 260px);
-}
+} */
 
+
+.hero-months li[data-month="3"] {
+  left: calc(var(--clock-cx) - -244px);
+    top: calc(var(--clock-cy) - -118px);
+}
+.hero-months li[data-month="4"] {
+  left: calc(var(--clock-cx) + 170px);
+    top: calc(var(--clock-cy) + 277px);
+}
+.hero-months li[data-month="5"] {
+  left: calc(var(--clock-cx) + 42px);
+    top: calc(var(--clock-cy) + 310px);
+}
+.hero-months li[data-month="6"] {
+  left: calc(var(--clock-cx) - 87px);
+    top: calc(var(--clock-cy) + 313px);
+}
+.hero-months li[data-month="7"] {
+      left: calc(var(--clock-cx) - 210px);
+    top: calc(var(--clock-cy) + 279px);
+}
+.hero-months li[data-month="8"] {
+  left: calc(var(--clock-cx) - 260px);
+  top:  calc(var(--clock-cy) + 90px);
+}
+.hero-months li[data-month="9"] {
+  left: calc(var(--clock-cx) - 289px);
+    top: calc(var(--clock-cy) - 72px);
+}
+.hero-months li[data-month="10"] {
+  left: calc(var(--clock-cx) - 204px);
+  top:  calc(var(--clock-cy) - 225px);
+}
+.hero-months li[data-month="11"] {
+  left: calc(var(--clock-cx) - 82px);
+  top:  calc(var(--clock-cy) - 294px);
+}
 /* =========================================================
    月カレンダー（ビジュアル）
 ========================================================= */
@@ -513,7 +552,7 @@ header{
   margin-top: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   font-size: 13px;
-  line-height: 1.6;
+  /* line-height: 1.6; */
   max-width: 220px;
 }
 
@@ -590,7 +629,8 @@ header{
 
   /* 大谷は中央を維持 */
   .hero-ohtani {
-    left: 84%;
+    top: -14%;
+        left: 65%;
     transform: translateX(-50%);
   }
 }
@@ -621,7 +661,8 @@ header{
 
   /* 大谷は中央を維持 */
   .hero-ohtani {
-    left: 116%;
+    top: -14%;
+        left: 64%;
     transform: translateX(-50%);
   }
 }
@@ -666,7 +707,7 @@ header{
   font-weight: 600;
   margin-bottom: 12px;
   text-align: center;
-  margin-top: -78px;
+  margin-top: -56px;
 }
 
     .trend-card {
@@ -683,7 +724,7 @@ header{
   font-weight: 600;
   margin-bottom: 12px;
   text-align: center;
-  margin-top: -78px;
+  margin-top: -52px;
 }
 
     .trend-card {

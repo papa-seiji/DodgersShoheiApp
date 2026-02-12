@@ -51,7 +51,7 @@ public class OhtaniScorebookController {
         List<Integer> values = new ArrayList<>();
 
         // ===== BATTING（旬平均）=====
-        for (int m = 4; m <= Math.min(latestMonth, 11); m++) {
+        for (int m = 3; m <= Math.min(latestMonth, 11); m++) {
             labels.add(m + "月上旬");
             values.add(avgForm(2026, m, 1, 10));
 
@@ -67,13 +67,13 @@ public class OhtaniScorebookController {
         model.addAttribute("labels", labels);
         model.addAttribute("values", values);
 
-        // ===== PITCHING（月平均・4〜11月）=====
+        // ===== PITCHING（月平均・3〜11月）=====
         List<String> pitchingMonthLabels = new ArrayList<>();
         List<Double> pitchingMonthAverages = new ArrayList<>();
 
         int year = 2026;
 
-        for (int m = 4; m <= 11; m++) {
+        for (int m = 3; m <= 11; m++) {
 
             LocalDate start = LocalDate.of(year, m, 1);
             LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
@@ -155,7 +155,7 @@ public class OhtaniScorebookController {
         List<String> pitchingMonthLabels = new ArrayList<>();
         List<Double> pitchingMonthAverages = new ArrayList<>();
 
-        for (int m = 4; m <= 11; m++) {
+        for (int m = 3; m <= 11; m++) {
             LocalDate start = LocalDate.of(year, m, 1);
             LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
 
