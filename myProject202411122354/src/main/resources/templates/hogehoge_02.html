@@ -479,7 +479,7 @@
 
 
 <!-- スクロール制御 -->
-<script th:inline="javascript">
+<!-- <script th:inline="javascript">
 /*<![CDATA[*/
 const selectedDate = /*[[${selectedDate != null ? selectedDate : 'null'}]]*/ null;
 
@@ -496,19 +496,46 @@ if (selectedDate) {
   });
 }
 /*]]>*/
-</script>
+</script>-->
 
-<script>
+<!--<script>
 const params = new URLSearchParams(location.search);
 const month = params.get("month");
 document.getElementById("info").textContent =
   month ? month + "月の詳細ページ" : "月未指定";
-</script>
+</script>-->
 
 <script th:inline="javascript">
 /*<![CDATA[*/
-const APRIL_LABELS = [[${chartLabels}]];
-const APRIL_VALUES = [[${chartValues}]];
+window.CHART_LABELS = [[${chartLabels}]];
+window.CHART_VALUES = [[${chartValues}]];
+/*]]>*/
+</script>
+
+<!-- スクロール制御（1回だけ） -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+window.SELECTED_DATE = [[${selectedDate}]];
+
+if (window.SELECTED_DATE) {
+
+  const targetCard =
+    document.getElementById('game-' + window.SELECTED_DATE);
+
+  if (targetCard) {
+    targetCard.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
+
+  document.querySelectorAll('.game-row')
+    .forEach(row => {
+      if (row.dataset.date === window.SELECTED_DATE) {
+        row.classList.add('is-selected');
+      }
+    });
+}
 /*]]>*/
 </script>
 

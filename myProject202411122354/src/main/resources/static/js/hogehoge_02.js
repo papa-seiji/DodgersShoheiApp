@@ -2,11 +2,13 @@
    Monthly Daily Trend Chart
    hogehoge_02.js
    ※ Controller 側で formValue を 1〜5（D〜S）に正規化済
+   ※ window.CHART_LABELS / window.CHART_VALUES 使用版
 ========================================================= */
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Controller から未連携の場合は何もしない
-  if (typeof APRIL_LABELS === "undefined" || typeof APRIL_VALUES === "undefined") {
+  // ===== 安全チェック（window版） =====
+  if (!window.CHART_LABELS || !window.CHART_VALUES) {
     return;
   }
 
@@ -15,13 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const ctx = canvas.getContext("2d");
 
-  // ★ Controller から来た値（1〜5）をそのまま使用
-  const values = APRIL_VALUES;
+  // Controller から来た値（1〜5）をそのまま使用
+  const values = window.CHART_VALUES;
 
   new Chart(ctx, {
     type: "line",
     data: {
-      labels: APRIL_LABELS,
+      labels: window.CHART_LABELS,
       datasets: [{
         data: values,
         borderColor: "#1565c0",
@@ -68,4 +70,5 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
 });

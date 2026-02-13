@@ -1,13 +1,12 @@
 /* =========================================================
    Monthly Daily Trend Chart
    hogehoge_04.js
+   ※ HTML側で window.CHART_LABELS / window.CHART_VALUES を定義
 ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
 
-  if (
-    typeof HOGEHOGE04_LABELS === "undefined" ||
-    typeof HOGEHOGE04_VALUES === "undefined"
-  ) {
+  // HTML側未連携なら何もしない
+  if (!window.CHART_LABELS || !window.CHART_VALUES) {
     return;
   }
 
@@ -16,12 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const ctx = canvas.getContext("2d");
 
-  const values = HOGEHOGE04_VALUES;
+  const values = window.CHART_VALUES;
 
   new Chart(ctx, {
     type: "line",
     data: {
-      labels: HOGEHOGE04_LABELS,
+      labels: window.CHART_LABELS,
       datasets: [{
         data: values,
         borderColor: "#1565c0",
