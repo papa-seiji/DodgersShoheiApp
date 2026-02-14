@@ -13,6 +13,24 @@ public class OhtaniGame {
     private int formValue;
     private LocalDateTime createdAt;
     private String comment;
+    private String homeTeamName;
+    private String awayTeamName;
+
+    public String getHomeTeamName() {
+        return homeTeamName;
+    }
+
+    public void setHomeTeamName(String homeTeamName) {
+        this.homeTeamName = homeTeamName;
+    }
+
+    public String getAwayTeamName() {
+        return awayTeamName;
+    }
+
+    public void setAwayTeamName(String awayTeamName) {
+        this.awayTeamName = awayTeamName;
+    }
 
     // 🔥 MLB API 連携用（gamePk）
     private Long gamePk;

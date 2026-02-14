@@ -123,6 +123,16 @@ public class OhtaniGameController {
 
                     if (res != null) {
 
+                        // ===== 🔥 Team名 注入（record対応） =====
+                        if (res.home() != null) {
+                            game.setHomeTeamName(res.home().teamName());
+                        }
+
+                        if (res.away() != null) {
+                            game.setAwayTeamName(res.away().teamName());
+                        }
+
+                        // ===== 各回 Runs =====
                         game.setHomeRunsByInning(res.homeRunsByInning());
                         game.setAwayRunsByInning(res.awayRunsByInning());
 
