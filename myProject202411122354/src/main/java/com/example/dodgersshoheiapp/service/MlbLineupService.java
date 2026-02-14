@@ -57,7 +57,7 @@ public class MlbLineupService {
             JsonNode root = mapper.readTree(json);
 
             // ======================================================
-            // ✅ 安全に linescore → innings 取得（既存破壊なし）
+            // ✅ linescore 取得
             // ======================================================
 
             JsonNode linescore = root.path("liveData").path("linescore");
@@ -65,8 +65,14 @@ public class MlbLineupService {
             List<Integer> homeRunsByInning = new ArrayList<>();
             List<Integer> awayRunsByInning = new ArrayList<>();
 
+            Integer homeHits = null;
+            Integer awayHits = null;
+            Integer homeErrors = null;
+            Integer awayErrors = null;
+
             if (!linescore.isMissingNode()) {
 
+                // ===== innings =====
                 JsonNode innings = linescore.path("innings");
 
                 if (innings.isArray()) {
@@ -81,6 +87,25 @@ public class MlbLineupService {
                                 inning.path("away")
                                         .path("runs")
                                         .asInt(0));
+                    }
+                }
+
+                // ===== 🔥 H / E 追加 =====
+                JsonNode teams = linescore.path("teams");
+
+                if (!teams.isMissingNode()) {
+
+                    JsonNode homeNode = teams.path("home");
+                    JsonNode awayNode = teams.path("away");
+
+                    if (!homeNode.isMissingNode()) {
+                        homeHits = homeNode.path("hits").asInt(0);
+                        homeErrors = homeNode.path("errors").asInt(0);
+                    }
+
+                    if (!awayNode.isMissingNode()) {
+                        awayHits = awayNode.path("hits").asInt(0);
+                        awayErrors = awayNode.path("errors").asInt(0);
                     }
                 }
             }
@@ -131,7 +156,7 @@ public class MlbLineupService {
             TeamLineup away = new TeamLineup(awayName, awayProb, awayLineup);
 
             // ======================================================
-            // ✅ DTO 拡張版 return（延長完全対応）
+            // ✅ DTO 拡張版 return（H / E 対応）
             // ======================================================
 
             return new LineupResponse(
@@ -139,7 +164,11 @@ public class MlbLineupService {
                     away,
                     gameInfo,
                     homeRunsByInning,
-                    awayRunsByInning);
+                    awayRunsByInning,
+                    homeHits,
+                    awayHits,
+                    homeErrors,
+                    awayErrors);
 
         } catch (Exception e) {
             throw new RuntimeException(

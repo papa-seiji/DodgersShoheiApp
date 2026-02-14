@@ -363,14 +363,15 @@
     </span>-->
 
 <!-- LINE SCORE -->
+<!-- LINE SCORE -->
 <table class="linescore-table"
-       th:if="${g.homeRunsByInning != null}">
+       th:if="${g.homeRunsByInning != null and !#lists.isEmpty(g.homeRunsByInning)}">
 
     <thead>
     <tr>
         <th>TEAM</th>
 
-        <!-- イニング番号 -->
+        <!-- イニング番号（延長自動対応） -->
         <th th:each="i : ${#numbers.sequence(1, g.homeRunsByInning.size())}"
             th:text="${i}">
         </th>
@@ -391,11 +392,14 @@
             th:text="${run}">
         </td>
 
-        <!-- ★ Controllerで計算済み -->
-        <td th:text="${g.awayTotalRuns}">0</td>
+        <!-- R -->
+        <td th:text="${g.awayTotalRuns != null ? g.awayTotalRuns : 0}">0</td>
 
-        <td>-</td>
-        <td>-</td>
+        <!-- H -->
+        <td th:text="${g.awayHits != null ? g.awayHits : 0}">0</td>
+
+        <!-- E -->
+        <td th:text="${g.awayErrors != null ? g.awayErrors : 0}">0</td>
     </tr>
 
     <!-- ===== HOME ===== -->
@@ -406,11 +410,14 @@
             th:text="${run}">
         </td>
 
-        <!-- ★ Controllerで計算済み -->
-        <td th:text="${g.homeTotalRuns}">0</td>
+        <!-- R -->
+        <td th:text="${g.homeTotalRuns != null ? g.homeTotalRuns : 0}">0</td>
 
-        <td>-</td>
-        <td>-</td>
+        <!-- H -->
+        <td th:text="${g.homeHits != null ? g.homeHits : 0}">0</td>
+
+        <!-- E -->
+        <td th:text="${g.homeErrors != null ? g.homeErrors : 0}">0</td>
     </tr>
 
     </tbody>

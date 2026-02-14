@@ -28,6 +28,12 @@ public class OhtaniGame {
     private Integer homeTotalRuns;
     private Integer awayTotalRuns;
 
+    // 🔥 H / E 追加
+    private Integer homeHits;
+    private Integer awayHits;
+    private Integer homeErrors;
+    private Integer awayErrors;
+
     // ===== Getter / Setter =====
 
     public int getId() {
@@ -141,4 +147,39 @@ public class OhtaniGame {
     public void setAwayTotalRuns(Integer awayTotalRuns) {
         this.awayTotalRuns = awayTotalRuns;
     }
+
+    // ===== H / E =====
+
+    public Integer getHomeHits() {
+        return homeHits;
+    }
+
+    public void setHomeHits(Integer homeHits) {
+        this.homeHits = homeHits;
+    }
+
+    public Integer getAwayHits() {
+        return awayHits;
+    }
+
+    public void setAwayHits(Integer awayHits) {
+        this.awayHits = awayHits;
+    }
+
+    public Integer getHomeErrors() {
+        return homeErrors;
+    }
+
+    public void setHomeErrors(Integer homeErrors) {
+        this.homeErrors = homeErrors;
+    }
+
+    public Integer getAwayErrors() {
+        return awayErrors;
+    }
+
+    public void setAwayErrors(Integer awayErrors) {
+        this.awayErrors = awayErrors;
+    }
+
 }

@@ -7,13 +7,30 @@ public record LineupResponse(
         TeamLineup away,
         GameInfo gameInfo,
         List<Integer> homeRunsByInning,
-        List<Integer> awayRunsByInning) {
+        List<Integer> awayRunsByInning,
+        Integer homeHits,
+        Integer awayHits,
+        Integer homeErrors,
+        Integer awayErrors) {
 
     /**
      * 🔥 既存互換コンストラクタ（超重要）
      * 旧コードとの完全互換を維持するため必須
      */
-    public LineupResponse(TeamLineup home, TeamLineup away, GameInfo gameInfo) {
-        this(home, away, gameInfo, List.of(), List.of());
+    public LineupResponse(TeamLineup home,
+            TeamLineup away,
+            GameInfo gameInfo) {
+
+        this(
+                home,
+                away,
+                gameInfo,
+                List.of(), // homeRunsByInning
+                List.of(), // awayRunsByInning
+                null, // homeHits
+                null, // awayHits
+                null, // homeErrors
+                null // awayErrors
+        );
     }
 }

@@ -81,14 +81,13 @@ public class OhtaniGameController {
         }
 
         // ===== 打席詳細 + Linescore 注入 =====
-        // ===== 打席詳細 + Linescore 注入 =====
         for (OhtaniGame game : targetGames) {
 
             // ===== 打席詳細 =====
             List<OhtaniGameDetail> details = repository.findDetailsByGameId(game.getId());
             game.setDetails(details);
 
-            // ===== 🔥 Linescore 注入 =====
+            // ===== 🔥 Linescore + H/E 注入 =====
             System.out.println("DEBUG gameDate=" + game.getGameDate()
                     + " gamePk=" + game.getGamePk());
 
@@ -99,10 +98,11 @@ public class OhtaniGameController {
 
                     if (res != null) {
 
+                        // ===== 各回Runs =====
                         game.setHomeRunsByInning(res.homeRunsByInning());
                         game.setAwayRunsByInning(res.awayRunsByInning());
 
-                        // ★★★ 合計計算をControllerで実行 ★★★
+                        // ===== ★ 合計RunsをControllerで計算 =====
                         if (res.homeRunsByInning() != null) {
                             int homeTotal = res.homeRunsByInning()
                                     .stream()
@@ -119,7 +119,13 @@ public class OhtaniGameController {
                             game.setAwayTotalRuns(awayTotal);
                         }
 
-                        System.out.println("DEBUG linescore injected for gamePk="
+                        // ===== 🔥 H / E 注入 =====
+                        game.setHomeHits(res.homeHits());
+                        game.setAwayHits(res.awayHits());
+                        game.setHomeErrors(res.homeErrors());
+                        game.setAwayErrors(res.awayErrors());
+
+                        System.out.println("DEBUG linescore + HE injected for gamePk="
                                 + game.getGamePk());
 
                     } else {
@@ -138,7 +144,6 @@ public class OhtaniGameController {
                         + game.getGameDate());
             }
         }
-
         model.addAttribute("games", targetGames);
 
         return "hogehoge_02";
