@@ -341,7 +341,6 @@
     </a>
   </div>
 
-<!-- ===== 試合詳細カード ===== -->
 <!-- ===== 登板カード ===== -->
 <div class="game-card"
      th:each="game : ${monthGames}"
@@ -352,14 +351,106 @@
     <span
       th:text="|${#temporals.format(game.gameDate,'M/d')} vs ${game.opponent}|">
     </span>
-    <span class="total-pitches" th:if="${detail != null and detail.totalPitches != null}">
+
+    <span class="total-pitches"
+          th:if="${detail != null and detail.totalPitches != null}">
       （投球数：<span th:text="${detail.totalPitches}"></span>球）
     </span>
-        <span class="decision-pitcher" th:if="${detail != null and detail.decisionPitcher != null}">
+
+    <span class="decision-pitcher"
+          th:if="${detail != null and detail.decisionPitcher != null}">
       （<span th:text="${detail.decisionPitcher}"></span>）
     </span>
-
   </h3>
+
+<!-- ========================================= -->
+<!-- 🔵 Linescore（このカード内のみ） -->
+<!-- ========================================= -->
+
+<th:block th:with="g=${linescoreMap[game.id]}">
+
+  <table class="linescore-table"
+         th:if="${g != null and g.homeRunsByInning != null}">
+
+    <thead>
+      <tr>
+        <th>TEAM</th>
+
+        <th th:each="i : ${#numbers.sequence(1, g.homeRunsByInning.size())}"
+            th:text="${i}">
+        </th>
+
+        <th>R</th>
+        <th>H</th>
+        <th>E</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <!-- LADがHOME -->
+      <th:block th:if="${g.home.teamName == 'Los Angeles Dodgers'}">
+
+        <tr th:with="awayTotal=0">
+          <td th:text="${g.away.teamName}"></td>
+
+          <td th:each="run : ${g.awayRunsByInning}"
+              th:text="${run}"
+              th:with="awayTotal=${awayTotal + run}">
+          </td>
+
+          <td th:text="${#aggregates.sum(g.awayRunsByInning)}"></td>
+          <td th:text="${g.awayHits != null ? g.awayHits : 0}"></td>
+          <td th:text="${g.awayErrors != null ? g.awayErrors : 0}"></td>
+        </tr>
+
+        <tr>
+          <td>LAD</td>
+
+          <td th:each="run : ${g.homeRunsByInning}"
+              th:text="${run}">
+          </td>
+
+          <td th:text="${#aggregates.sum(g.homeRunsByInning)}"></td>
+          <td th:text="${g.homeHits != null ? g.homeHits : 0}"></td>
+          <td th:text="${g.homeErrors != null ? g.homeErrors : 0}"></td>
+        </tr>
+
+      </th:block>
+
+      <!-- LADがAWAY -->
+      <th:block th:if="${g.away.teamName == 'Los Angeles Dodgers'}">
+
+        <tr>
+          <td>LAD</td>
+
+          <td th:each="run : ${g.awayRunsByInning}"
+              th:text="${run}">
+          </td>
+
+          <td th:text="${#aggregates.sum(g.awayRunsByInning)}"></td>
+          <td th:text="${g.awayHits != null ? g.awayHits : 0}"></td>
+          <td th:text="${g.awayErrors != null ? g.awayErrors : 0}"></td>
+        </tr>
+
+        <tr>
+          <td th:text="${g.home.teamName}"></td>
+
+          <td th:each="run : ${g.homeRunsByInning}"
+              th:text="${run}">
+          </td>
+
+          <td th:text="${#aggregates.sum(g.homeRunsByInning)}"></td>
+          <td th:text="${g.homeHits != null ? g.homeHits : 0}"></td>
+          <td th:text="${g.homeErrors != null ? g.homeErrors : 0}"></td>
+        </tr>
+
+      </th:block>
+
+    </tbody>
+  </table>
+
+</th:block>
 
 
   <!-- ===== 登板詳細 ===== -->
@@ -587,40 +678,6 @@
   </div>
 
 </div>
-
-<!-- スクロール制御 -->
-<!--<script th:inline="javascript">
-/*<![CDATA[*/
-const selectedDate = /*[[${selectedDate != null ? selectedDate : 'null'}]]*/ null;
-
-if (selectedDate) {
-  const targetCard = document.getElementById('game-' + selectedDate);
-  if (targetCard) {
-    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  document.querySelectorAll('.game-row').forEach(row => {
-    if (row.dataset.date === selectedDate) {
-      row.classList.add('is-selected');
-    }
-  });
-}
-/*]]>*/
-</script>-->
-
-<!--<script>
-  const params = new URLSearchParams(location.search);
-  const month = params.get("month");
-  document.getElementById("info").textContent =
-    month ? month + "月の詳細ページ" : "月未指定";
-</script>-->
-
-<!--<script th:inline="javascript">
-/*<![CDATA[*/
-  const APRIL_LABELS = [[${chartLabels}]];
-  const APRIL_VALUES = [[${chartValues}]];
-/*]]>*/
-</script>-->
 
 <script th:inline="javascript">
 /*<![CDATA[*/

@@ -27,6 +27,10 @@ public class OhtaniPitchingGame {
     @Column(name = "total_pitches")
     private Integer totalPitches;
 
+    // 🔥 ここに追加
+    @Column(name = "game_pk")
+    private Long gamePk;
+
     // ★ 追加①：評価（S/A/B/C/D）
     @Column(name = "form_value")
     private String formValue;
@@ -112,4 +116,13 @@ public class OhtaniPitchingGame {
     public void setDetails(List<OhtaniPitchingGameDetail> details) {
         this.details = details;
     }
+
+    public Long getGamePk() {
+        return gamePk;
+    }
+
+    public void setGamePk(Long gamePk) {
+        this.gamePk = gamePk;
+    }
+
 }
