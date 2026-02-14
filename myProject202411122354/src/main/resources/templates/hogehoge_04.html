@@ -278,7 +278,6 @@
 <h1>
   <span th:text="${month}">4</span>月の詳細ページ
 </h1>
-<!--<p id="info"></p>-->
 
 <a href="/hogehoge_03" class="back-link">
   ← シーズンカレンダーに戻る
@@ -286,7 +285,7 @@
 
 <div class="month-detail-wrapper">
 
-  <!-- ===== 4月 成績推移グラフ ===== -->
+  <!-- ===== 成績推移グラフ ===== -->
   <div style="margin:0 auto 32px;">
     <canvas id="hogehoge04Chart" height="120"></canvas>
   </div>
@@ -295,56 +294,83 @@
     <span th:text="${month}">4</span>月 登板一覧
   </h2>
 
-<!-- ===== 月間一覧テーブル ===== -->
-<table class="scorebook-table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Opponent</th>
-      <th>Result</th>
-      <th>Form</th>
-    </tr>
-  </thead>
+  <!-- ============================= -->
+  <!-- 🔵 ① 選択日の詳細タイトル -->
+  <!-- ============================= -->
+  <div th:if="${selectedDate != null}">
+    <div class="game-card"
+         th:each="g : ${monthGames}"
+         th:if="${g.gameDate.toString() == selectedDate}"
+         th:with="detail=${detailMap[g.id]}">
 
-  <tbody>
-    <tr th:each="g : ${monthGames}"
-        th:if="${g != null and (param.date == null or g.gameDate.toString() == param.date[0])}"
-        th:attr="data-date=${g.gameDate}"
-        class="game-row"
-        th:classappend="${param.date != null and g.gameDate.toString() == param.date[0]}
-                        ? ' selected-row' : ''">
+      <h3 class="game-title">
+        <span th:text="|${#temporals.format(g.gameDate,'M/d')} vs ${g.opponent}|"></span>
 
-      <td>
-        <a th:href="@{/hogehoge_04(month=${month}, date=${g.gameDate})}"
-          th:text="${#temporals.format(g.gameDate,'MM/dd')}">
-        </a>
-      </td>
+        <span class="total-pitches"
+              th:if="${detail != null and detail.totalPitches != null}">
+          （投球数：<span th:text="${detail.totalPitches}"></span>球）
+        </span>
 
-      <td th:text="${g.opponent}"></td>
+        <span class="decision-pitcher"
+              th:if="${detail != null and detail.decisionPitcher != null}">
+          （<span th:text="${detail.decisionPitcher}"></span>）
+        </span>
+      </h3>
+    </div>
+  </div>
 
-      <td th:text="${g.result}"
-          th:classappend="${g.result.contains('●')} ? 'lose' : 'win'">
-      </td>
+  <!-- ===== 月間一覧テーブル ===== -->
+  <table class="scorebook-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Opponent</th>
+        <th>Result</th>
+        <th>Form</th>
+      </tr>
+    </thead>
 
-      <td th:text="${g.formValue}"
-          th:classappend="'form-' + ${#strings.toLowerCase(g.formValue)}">
-      </td>
+    <tbody>
+      <tr th:each="g : ${monthGames}"
+          th:attr="data-date=${g.gameDate}"
+          class="game-row"
+          th:classappend="${selectedDate != null and g.gameDate.toString() == selectedDate} 
+                          ? ' selected-row' : ''">
 
-    </tr>
-  </tbody>
-</table>
+        <td>
+          <a th:href="@{/hogehoge_04(month=${month}, date=${g.gameDate})}"
+             th:text="${#temporals.format(g.gameDate,'MM/dd')}">
+          </a>
+        </td>
 
-  <!-- ===== 一覧に戻る ===== -->
-  <div class="back-to-month" th:if="${param.date != null}">
+        <td th:text="${g.opponent}"></td>
+
+        <td th:text="${g.result}"
+            th:classappend="${g.result.contains('●')} ? 'lose' : 'win'">
+        </td>
+
+        <td th:text="${g.formValue}"
+            th:classappend="'form-' + ${#strings.toLowerCase(g.formValue)}">
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 🔵 一覧に戻る（selectedDate基準に変更） -->
+  <div class="back-to-month" th:if="${selectedDate != null}">
     <a th:href="@{/hogehoge_04(month=${month})}" class="back-button">
       ← <span th:text="${month}">4</span>月の登板一覧に戻る
     </a>
   </div>
 
-<!-- ===== 登板カード ===== -->
-<div class="game-card"
-     th:each="game : ${monthGames}"
-     th:with="detail=${detailMap[game.id]}">
+  <!-- ============================= -->
+  <!-- 🔵 ② 登板カード（絞り込み制御） -->
+  <!-- ============================= -->
+  <div class="game-card"
+       th:each="game : ${monthGames}"
+       th:if="${selectedDate == null or game.gameDate.toString() == selectedDate}"
+       th:with="detail=${detailMap[game.id]}">
 
   <!-- ヘッダ -->
   <h3 class="game-title">
