@@ -354,4 +354,37 @@ public class MlbLineupService {
                 .map(e -> e.getValue().entry)
                 .collect(Collectors.toList());
     }
+
+    // game_date から MLB API を叩いて→ 自動で gamePk を取得→ DB に保存れを実装
+    public Long fetchGamePkByDate(LocalDate date) {
+
+        String url = "https://statsapi.mlb.com/api/v1/schedule"
+                + "?sportId=1"
+                + "&date=" + date
+                + "&teamId=119"; // LAD
+
+        String json = restTemplate.getForObject(url, String.class);
+
+        try {
+            JsonNode root = mapper.readTree(json);
+
+            JsonNode dates = root.path("dates");
+
+            if (dates.isArray() && dates.size() > 0) {
+
+                JsonNode games = dates.get(0).path("games");
+
+                if (games.isArray() && games.size() > 0) {
+
+                    return games.get(0).path("gamePk").asLong();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

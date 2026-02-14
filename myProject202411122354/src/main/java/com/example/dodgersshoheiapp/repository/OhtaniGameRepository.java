@@ -216,4 +216,16 @@ public class OhtaniGameRepository {
         OhtaniPitchingGame findTopByOrderByGameDateDesc();
     }
 
+    // ★ 追加：game_pk 更新用
+    public void updateGamePk(int gameId, Long gamePk) {
+
+        String sql = """
+                UPDATE ohtani_games
+                SET game_pk = ?
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update(sql, gamePk, gameId);
+    }
+
 }

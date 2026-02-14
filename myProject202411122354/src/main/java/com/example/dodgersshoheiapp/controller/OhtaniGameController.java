@@ -87,22 +87,46 @@ public class OhtaniGameController {
             List<OhtaniGameDetail> details = repository.findDetailsByGameId(game.getId());
             game.setDetails(details);
 
-            // ===== 🔥 Linescore + H/E 注入 =====
             System.out.println("DEBUG gameDate=" + game.getGameDate()
                     + " gamePk=" + game.getGamePk());
 
-            if (game.getGamePk() != null) {
-                try {
+            try {
+
+                // =====================================================
+                // 🧠 STEP 2 — gamePk 自動取得（NULL時のみ）
+                // =====================================================
+                if (game.getGamePk() == null) {
+
+                    final int DODGERS_TEAM_ID = 119;
+
+                    var autoGamePkOpt = lineupService.findGamePkByDate(DODGERS_TEAM_ID, game.getGameDate());
+
+                    if (autoGamePkOpt.isPresent()) {
+
+                        long autoGamePk = autoGamePkOpt.getAsLong();
+
+                        System.out.println("AUTO gamePk found = " + autoGamePk);
+
+                        game.setGamePk(autoGamePk);
+
+                        // DB保存
+                        repository.updateGamePk(game.getId(), autoGamePk);
+                    }
+                }
+
+                // =====================================================
+                // 🔥 Linescore + H/E 注入
+                // =====================================================
+                if (game.getGamePk() != null) {
 
                     LineupResponse res = lineupService.fetchLineups(game.getGamePk());
 
                     if (res != null) {
 
-                        // ===== 各回Runs =====
                         game.setHomeRunsByInning(res.homeRunsByInning());
                         game.setAwayRunsByInning(res.awayRunsByInning());
 
-                        // ===== ★ 合計RunsをControllerで計算 =====
+                        // ===== Runs合計 =====
                         if (res.homeRunsByInning() != null) {
                             int homeTotal = res.homeRunsByInning()
                                     .stream()
@@ -119,7 +143,7 @@ public class OhtaniGameController {
                             game.setAwayTotalRuns(awayTotal);
                         }
 
-                        // ===== 🔥 H / E 注入 =====
+                        // ===== H / E =====
                         game.setHomeHits(res.homeHits());
                         game.setAwayHits(res.awayHits());
                         game.setHomeErrors(res.homeErrors());
@@ -127,23 +151,16 @@ public class OhtaniGameController {
 
                         System.out.println("DEBUG linescore + HE injected for gamePk="
                                 + game.getGamePk());
-
-                    } else {
-                        System.out.println("DEBUG LineupResponse is null for gamePk="
-                                + game.getGamePk());
                     }
-
-                } catch (Exception e) {
-                    System.out.println("Linescore fetch failed for gamePk="
-                            + game.getGamePk());
-                    e.printStackTrace();
                 }
 
-            } else {
-                System.out.println("DEBUG gamePk is NULL for date="
+            } catch (Exception e) {
+                System.out.println("Game processing failed for date="
                         + game.getGameDate());
+                e.printStackTrace();
             }
         }
+
         model.addAttribute("games", targetGames);
 
         return "hogehoge_02";
