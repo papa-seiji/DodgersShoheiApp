@@ -47,9 +47,47 @@ public class MlbLineupService {
 
     /** Build lineups and game info (JST time + official US date). */
     public LineupResponse fetchLineups(long gamePk) {
-        String json = restTemplate.getForObject(FEED_URL, String.class, Map.of("gamePk", gamePk));
+
+        String json = restTemplate.getForObject(
+                FEED_URL,
+                String.class,
+                Map.of("gamePk", gamePk));
+
         try {
             JsonNode root = mapper.readTree(json);
+
+            // ======================================================
+            // ✅ 安全に linescore → innings 取得（既存破壊なし）
+            // ======================================================
+
+            JsonNode linescore = root.path("liveData").path("linescore");
+
+            List<Integer> homeRunsByInning = new ArrayList<>();
+            List<Integer> awayRunsByInning = new ArrayList<>();
+
+            if (!linescore.isMissingNode()) {
+
+                JsonNode innings = linescore.path("innings");
+
+                if (innings.isArray()) {
+                    for (JsonNode inning : innings) {
+
+                        homeRunsByInning.add(
+                                inning.path("home")
+                                        .path("runs")
+                                        .asInt(0));
+
+                        awayRunsByInning.add(
+                                inning.path("away")
+                                        .path("runs")
+                                        .asInt(0));
+                    }
+                }
+            }
+
+            // ======================================================
+            // ❗ 既存ロジック（変更なし）
+            // ======================================================
 
             String homeName = root.at("/gameData/teams/home/name").asText("");
             String awayName = root.at("/gameData/teams/away/name").asText("");
@@ -70,14 +108,17 @@ public class MlbLineupService {
             String dateTimeUtc = root.at("/gameData/datetime/dateTime").isMissingNode()
                     ? ""
                     : root.at("/gameData/datetime/dateTime").asText("");
+
             ZonedDateTime jstDateTime = null;
             if (!dateTimeUtc.isEmpty()) {
-                jstDateTime = ZonedDateTime.parse(dateTimeUtc).withZoneSameInstant(JST);
+                jstDateTime = ZonedDateTime.parse(dateTimeUtc)
+                        .withZoneSameInstant(JST);
             }
 
             // official US date
             String officialDateStr = root.at("/gameData/datetime/officialDate").asText("");
             LocalDate officialDate = null;
+
             if (!officialDateStr.isEmpty()) {
                 officialDate = LocalDate.parse(officialDateStr);
             } else if (jstDateTime != null) {
@@ -88,10 +129,22 @@ public class MlbLineupService {
 
             TeamLineup home = new TeamLineup(homeName, homeProb, homeLineup);
             TeamLineup away = new TeamLineup(awayName, awayProb, awayLineup);
-            return new LineupResponse(home, away, gameInfo);
+
+            // ======================================================
+            // ✅ DTO 拡張版 return（延長完全対応）
+            // ======================================================
+
+            return new LineupResponse(
+                    home,
+                    away,
+                    gameInfo,
+                    homeRunsByInning,
+                    awayRunsByInning);
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse MLB live feed: " + e.getMessage(), e);
+            throw new RuntimeException(
+                    "Failed to parse MLB live feed: " + e.getMessage(),
+                    e);
         }
     }
 

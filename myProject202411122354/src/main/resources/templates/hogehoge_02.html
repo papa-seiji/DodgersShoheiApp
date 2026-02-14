@@ -362,48 +362,88 @@
           ">
     </span>-->
 
-    <!-- LINE SCORE -->
-    <table class="linescore-table">
-      <thead>
-        <tr>
-          <th>TEAM</th><th>R</th><th>H</th><th>E</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td th:text="${g.opponent}">PADRES</td>
-          <td>-</td><td>-</td><td>-</td>
-        </tr>
-        <tr>
-          <td>LAD</td>
-          <td>-</td><td>-</td><td>-</td>
-        </tr>
-      </tbody>
-    </table>
+<!-- LINE SCORE -->
+<table class="linescore-table"
+       th:if="${g.homeRunsByInning != null}">
+
+    <thead>
+    <tr>
+        <th>TEAM</th>
+
+        <!-- イニング番号 -->
+        <th th:each="i : ${#numbers.sequence(1, g.homeRunsByInning.size())}"
+            th:text="${i}">
+        </th>
+
+        <th>R</th>
+        <th>H</th>
+        <th>E</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <!-- ===== AWAY ===== -->
+    <tr>
+        <td th:text="${g.opponent}">AWAY</td>
+
+        <td th:each="run : ${g.awayRunsByInning}"
+            th:text="${run}">
+        </td>
+
+        <!-- ★ Controllerで計算済み -->
+        <td th:text="${g.awayTotalRuns}">0</td>
+
+        <td>-</td>
+        <td>-</td>
+    </tr>
+
+    <!-- ===== HOME ===== -->
+    <tr>
+        <td>LAD</td>
+
+        <td th:each="run : ${g.homeRunsByInning}"
+            th:text="${run}">
+        </td>
+
+        <!-- ★ Controllerで計算済み -->
+        <td th:text="${g.homeTotalRuns}">0</td>
+
+        <td>-</td>
+        <td>-</td>
+    </tr>
+
+    </tbody>
+</table>
+
 
     <!-- 打撃サマリー -->
-    <div class="batting-summary" th:with="d=${g.details[0]}"
-         th:text="
-           (${d.pa1Result != null ? 1 : 0}
-          + ${d.pa2Result != null ? 1 : 0}
-          + ${d.pa3Result != null ? 1 : 0}
-          + ${d.pa4Result != null ? 1 : 0}
-          + ${d.pa5Result != null ? 1 : 0}
-          + ${d.pa6Result != null ? 1 : 0})
-          + '打数 / ' +
-          (${d.pa1Result == 'HIT' || d.pa1Result == 'HR' ? 1 : 0}
-          + ${d.pa2Result == 'HIT' || d.pa2Result == 'HR' ? 1 : 0}
-          + ${d.pa3Result == 'HIT' || d.pa3Result == 'HR' ? 1 : 0}
-          + ${d.pa4Result == 'HIT' || d.pa4Result == 'HR' ? 1 : 0}
-          + ${d.pa5Result == 'HIT' || d.pa5Result == 'HR' ? 1 : 0}
-          + ${d.pa6Result == 'HIT' || d.pa6Result == 'HR' ? 1 : 0})
-          + '安打'
-         ">
-      5打数 / 2安打
-    </div>
+<div class="batting-summary"
+     th:if="${g.details != null and !#lists.isEmpty(g.details)}"
+     th:with="d=${g.details[0]}"
+     th:text="
+       (${d.pa1Result != null ? 1 : 0}
+      + ${d.pa2Result != null ? 1 : 0}
+      + ${d.pa3Result != null ? 1 : 0}
+      + ${d.pa4Result != null ? 1 : 0}
+      + ${d.pa5Result != null ? 1 : 0}
+      + ${d.pa6Result != null ? 1 : 0})
+      + '打数 / ' +
+      (${d.pa1Result == 'HIT' || d.pa1Result == 'HR' ? 1 : 0}
+      + ${d.pa2Result == 'HIT' || d.pa2Result == 'HR' ? 1 : 0}
+      + ${d.pa3Result == 'HIT' || d.pa3Result == 'HR' ? 1 : 0}
+      + ${d.pa4Result == 'HIT' || d.pa4Result == 'HR' ? 1 : 0}
+      + ${d.pa5Result == 'HIT' || d.pa5Result == 'HR' ? 1 : 0}
+      + ${d.pa6Result == 'HIT' || d.pa6Result == 'HR' ? 1 : 0})
+      + '安打'
+     ">
+</div>
 
     <!-- 打席内容 -->
-    <ul class="atbat-list" th:with="d=${g.details[0]}">
+    <ul class="atbat-list"
+    th:if="${g.details != null and !#lists.isEmpty(g.details)}"
+    th:with="d=${g.details[0]}">
+
 
       <li th:if="${d.pa1Result != null}">
         <strong>第1打席：</strong>

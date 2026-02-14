@@ -37,7 +37,8 @@ public class OhtaniGameRepository {
                         result,
                         form_value,
                         comment,
-                        created_at
+                        created_at,
+                        game_pk          -- ★ 追加
                     FROM ohtani_games
                     WHERE EXTRACT(YEAR FROM game_date) = ?
                       AND EXTRACT(MONTH FROM game_date) = ?
