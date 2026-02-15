@@ -13,9 +13,44 @@ public class OhtaniGame {
     private int formValue;
     private LocalDateTime createdAt;
     private String comment;
+    private String homeTeamName;
+    private String awayTeamName;
 
-    // ★ これが足りなかった
+    public String getHomeTeamName() {
+        return homeTeamName;
+    }
+
+    public void setHomeTeamName(String homeTeamName) {
+        this.homeTeamName = homeTeamName;
+    }
+
+    public String getAwayTeamName() {
+        return awayTeamName;
+    }
+
+    public void setAwayTeamName(String awayTeamName) {
+        this.awayTeamName = awayTeamName;
+    }
+
+    // 🔥 MLB API 連携用（gamePk）
+    private Long gamePk;
+
+    // 🔥 打席詳細
     private List<OhtaniGameDetail> details;
+
+    // 🔥 Linescore（APIから取得・DB保存しない）
+    private List<Integer> homeRunsByInning;
+    private List<Integer> awayRunsByInning;
+
+    // ★★★ 追加：合計得点（Controller計算用） ★★★
+    private Integer homeTotalRuns;
+    private Integer awayTotalRuns;
+
+    // 🔥 H / E 追加
+    private Integer homeHits;
+    private Integer awayHits;
+    private Integer homeErrors;
+    private Integer awayErrors;
 
     // ===== Getter / Setter =====
 
@@ -75,7 +110,18 @@ public class OhtaniGame {
         this.comment = comment;
     }
 
-    // ★ これが Controller から呼ばれる
+    // ===== gamePk =====
+
+    public Long getGamePk() {
+        return gamePk;
+    }
+
+    public void setGamePk(Long gamePk) {
+        this.gamePk = gamePk;
+    }
+
+    // ===== details =====
+
     public List<OhtaniGameDetail> getDetails() {
         return details;
     }
@@ -83,4 +129,75 @@ public class OhtaniGame {
     public void setDetails(List<OhtaniGameDetail> details) {
         this.details = details;
     }
+
+    // ===== Linescore =====
+
+    public List<Integer> getHomeRunsByInning() {
+        return homeRunsByInning;
+    }
+
+    public void setHomeRunsByInning(List<Integer> homeRunsByInning) {
+        this.homeRunsByInning = homeRunsByInning;
+    }
+
+    public List<Integer> getAwayRunsByInning() {
+        return awayRunsByInning;
+    }
+
+    public void setAwayRunsByInning(List<Integer> awayRunsByInning) {
+        this.awayRunsByInning = awayRunsByInning;
+    }
+
+    // ===== ★ 合計得点 =====
+
+    public Integer getHomeTotalRuns() {
+        return homeTotalRuns;
+    }
+
+    public void setHomeTotalRuns(Integer homeTotalRuns) {
+        this.homeTotalRuns = homeTotalRuns;
+    }
+
+    public Integer getAwayTotalRuns() {
+        return awayTotalRuns;
+    }
+
+    public void setAwayTotalRuns(Integer awayTotalRuns) {
+        this.awayTotalRuns = awayTotalRuns;
+    }
+
+    // ===== H / E =====
+
+    public Integer getHomeHits() {
+        return homeHits;
+    }
+
+    public void setHomeHits(Integer homeHits) {
+        this.homeHits = homeHits;
+    }
+
+    public Integer getAwayHits() {
+        return awayHits;
+    }
+
+    public void setAwayHits(Integer awayHits) {
+        this.awayHits = awayHits;
+    }
+
+    public Integer getHomeErrors() {
+        return homeErrors;
+    }
+
+    public void setHomeErrors(Integer homeErrors) {
+        this.homeErrors = homeErrors;
+    }
+
+    public Integer getAwayErrors() {
+        return awayErrors;
+    }
+
+    public void setAwayErrors(Integer awayErrors) {
+        this.awayErrors = awayErrors;
+    }
+
 }

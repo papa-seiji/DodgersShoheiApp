@@ -362,48 +362,125 @@
           ">
     </span>-->
 
-    <!-- LINE SCORE -->
-    <table class="linescore-table">
-      <thead>
+<!-- LINE SCORE -->
+<table class="linescore-table"
+       th:if="${g.homeRunsByInning != null and !#lists.isEmpty(g.homeRunsByInning)}">
+
+    <thead>
+    <tr>
+        <th>TEAM</th>
+
+        <!-- イニング番号（延長自動対応） -->
+        <th th:each="i : ${#numbers.sequence(1, g.homeRunsByInning.size())}"
+            th:text="${i}">
+        </th>
+
+        <th>R</th>
+        <th>H</th>
+        <th>E</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <!-- ===================================================== -->
+    <!-- 🔥 LADがHOMEの場合（LAD下段） -->
+    <!-- ===================================================== -->
+    <th:block th:if="${g.homeTeamName == 'Los Angeles Dodgers'}">
+
+        <!-- 上段 = AWAY（相手） -->
         <tr>
-          <th>TEAM</th><th>R</th><th>H</th><th>E</th>
+            <td th:text="${g.awayTeamName}">AWAY</td>
+
+            <td th:each="run : ${g.awayRunsByInning}"
+                th:text="${run}">
+            </td>
+
+            <td th:text="${g.awayTotalRuns != null ? g.awayTotalRuns : 0}">0</td>
+            <td th:text="${g.awayHits != null ? g.awayHits : 0}">0</td>
+            <td th:text="${g.awayErrors != null ? g.awayErrors : 0}">0</td>
         </tr>
-      </thead>
-      <tbody>
+
+        <!-- 下段 = LAD -->
         <tr>
-          <td th:text="${g.opponent}">PADRES</td>
-          <td>-</td><td>-</td><td>-</td>
+            <td>LAD</td>
+
+            <td th:each="run : ${g.homeRunsByInning}"
+                th:text="${run}">
+            </td>
+
+            <td th:text="${g.homeTotalRuns != null ? g.homeTotalRuns : 0}">0</td>
+            <td th:text="${g.homeHits != null ? g.homeHits : 0}">0</td>
+            <td th:text="${g.homeErrors != null ? g.homeErrors : 0}">0</td>
         </tr>
+
+    </th:block>
+
+
+    <!-- ===================================================== -->
+    <!-- 🔥 LADがAWAYの場合（LAD上段） -->
+    <!-- ===================================================== -->
+    <th:block th:if="${g.awayTeamName == 'Los Angeles Dodgers'}">
+
+        <!-- 上段 = LAD -->
         <tr>
-          <td>LAD</td>
-          <td>-</td><td>-</td><td>-</td>
+            <td>LAD</td>
+
+            <td th:each="run : ${g.awayRunsByInning}"
+                th:text="${run}">
+            </td>
+
+            <td th:text="${g.awayTotalRuns != null ? g.awayTotalRuns : 0}">0</td>
+            <td th:text="${g.awayHits != null ? g.awayHits : 0}">0</td>
+            <td th:text="${g.awayErrors != null ? g.awayErrors : 0}">0</td>
         </tr>
-      </tbody>
-    </table>
+
+        <!-- 下段 = HOME（相手） -->
+        <tr>
+            <td th:text="${g.homeTeamName}">HOME</td>
+
+            <td th:each="run : ${g.homeRunsByInning}"
+                th:text="${run}">
+            </td>
+
+            <td th:text="${g.homeTotalRuns != null ? g.homeTotalRuns : 0}">0</td>
+            <td th:text="${g.homeHits != null ? g.homeHits : 0}">0</td>
+            <td th:text="${g.homeErrors != null ? g.homeErrors : 0}">0</td>
+        </tr>
+
+    </th:block>
+
+    </tbody>
+</table>
+
 
     <!-- 打撃サマリー -->
-    <div class="batting-summary" th:with="d=${g.details[0]}"
-         th:text="
-           (${d.pa1Result != null ? 1 : 0}
-          + ${d.pa2Result != null ? 1 : 0}
-          + ${d.pa3Result != null ? 1 : 0}
-          + ${d.pa4Result != null ? 1 : 0}
-          + ${d.pa5Result != null ? 1 : 0}
-          + ${d.pa6Result != null ? 1 : 0})
-          + '打数 / ' +
-          (${d.pa1Result == 'HIT' || d.pa1Result == 'HR' ? 1 : 0}
-          + ${d.pa2Result == 'HIT' || d.pa2Result == 'HR' ? 1 : 0}
-          + ${d.pa3Result == 'HIT' || d.pa3Result == 'HR' ? 1 : 0}
-          + ${d.pa4Result == 'HIT' || d.pa4Result == 'HR' ? 1 : 0}
-          + ${d.pa5Result == 'HIT' || d.pa5Result == 'HR' ? 1 : 0}
-          + ${d.pa6Result == 'HIT' || d.pa6Result == 'HR' ? 1 : 0})
-          + '安打'
-         ">
-      5打数 / 2安打
-    </div>
+<div class="batting-summary"
+     th:if="${g.details != null and !#lists.isEmpty(g.details)}"
+     th:with="d=${g.details[0]}"
+     th:text="
+       (${d.pa1Result != null ? 1 : 0}
+      + ${d.pa2Result != null ? 1 : 0}
+      + ${d.pa3Result != null ? 1 : 0}
+      + ${d.pa4Result != null ? 1 : 0}
+      + ${d.pa5Result != null ? 1 : 0}
+      + ${d.pa6Result != null ? 1 : 0})
+      + '打数 / ' +
+      (${d.pa1Result == 'HIT' || d.pa1Result == 'HR' ? 1 : 0}
+      + ${d.pa2Result == 'HIT' || d.pa2Result == 'HR' ? 1 : 0}
+      + ${d.pa3Result == 'HIT' || d.pa3Result == 'HR' ? 1 : 0}
+      + ${d.pa4Result == 'HIT' || d.pa4Result == 'HR' ? 1 : 0}
+      + ${d.pa5Result == 'HIT' || d.pa5Result == 'HR' ? 1 : 0}
+      + ${d.pa6Result == 'HIT' || d.pa6Result == 'HR' ? 1 : 0})
+      + '安打'
+     ">
+</div>
 
     <!-- 打席内容 -->
-    <ul class="atbat-list" th:with="d=${g.details[0]}">
+    <ul class="atbat-list"
+    th:if="${g.details != null and !#lists.isEmpty(g.details)}"
+    th:with="d=${g.details[0]}">
+
 
       <li th:if="${d.pa1Result != null}">
         <strong>第1打席：</strong>

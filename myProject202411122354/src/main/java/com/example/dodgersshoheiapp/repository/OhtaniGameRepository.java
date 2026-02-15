@@ -37,7 +37,8 @@ public class OhtaniGameRepository {
                         result,
                         form_value,
                         comment,
-                        created_at
+                        created_at,
+                        game_pk          -- ★ 追加
                     FROM ohtani_games
                     WHERE EXTRACT(YEAR FROM game_date) = ?
                       AND EXTRACT(MONTH FROM game_date) = ?
@@ -213,6 +214,18 @@ public class OhtaniGameRepository {
             extends JpaRepository<OhtaniPitchingGame, Long> {
 
         OhtaniPitchingGame findTopByOrderByGameDateDesc();
+    }
+
+    // ★ 追加：game_pk 更新用
+    public void updateGamePk(int gameId, Long gamePk) {
+
+        String sql = """
+                UPDATE ohtani_games
+                SET game_pk = ?
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update(sql, gamePk, gameId);
     }
 
 }

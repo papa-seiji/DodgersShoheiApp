@@ -47,9 +47,72 @@ public class MlbLineupService {
 
     /** Build lineups and game info (JST time + official US date). */
     public LineupResponse fetchLineups(long gamePk) {
-        String json = restTemplate.getForObject(FEED_URL, String.class, Map.of("gamePk", gamePk));
+
+        String json = restTemplate.getForObject(
+                FEED_URL,
+                String.class,
+                Map.of("gamePk", gamePk));
+
         try {
             JsonNode root = mapper.readTree(json);
+
+            // ======================================================
+            // ✅ linescore 取得
+            // ======================================================
+
+            JsonNode linescore = root.path("liveData").path("linescore");
+
+            List<Integer> homeRunsByInning = new ArrayList<>();
+            List<Integer> awayRunsByInning = new ArrayList<>();
+
+            Integer homeHits = null;
+            Integer awayHits = null;
+            Integer homeErrors = null;
+            Integer awayErrors = null;
+
+            if (!linescore.isMissingNode()) {
+
+                // ===== innings =====
+                JsonNode innings = linescore.path("innings");
+
+                if (innings.isArray()) {
+                    for (JsonNode inning : innings) {
+
+                        homeRunsByInning.add(
+                                inning.path("home")
+                                        .path("runs")
+                                        .asInt(0));
+
+                        awayRunsByInning.add(
+                                inning.path("away")
+                                        .path("runs")
+                                        .asInt(0));
+                    }
+                }
+
+                // ===== 🔥 H / E 追加 =====
+                JsonNode teams = linescore.path("teams");
+
+                if (!teams.isMissingNode()) {
+
+                    JsonNode homeNode = teams.path("home");
+                    JsonNode awayNode = teams.path("away");
+
+                    if (!homeNode.isMissingNode()) {
+                        homeHits = homeNode.path("hits").asInt(0);
+                        homeErrors = homeNode.path("errors").asInt(0);
+                    }
+
+                    if (!awayNode.isMissingNode()) {
+                        awayHits = awayNode.path("hits").asInt(0);
+                        awayErrors = awayNode.path("errors").asInt(0);
+                    }
+                }
+            }
+
+            // ======================================================
+            // ❗ 既存ロジック（変更なし）
+            // ======================================================
 
             String homeName = root.at("/gameData/teams/home/name").asText("");
             String awayName = root.at("/gameData/teams/away/name").asText("");
@@ -70,14 +133,17 @@ public class MlbLineupService {
             String dateTimeUtc = root.at("/gameData/datetime/dateTime").isMissingNode()
                     ? ""
                     : root.at("/gameData/datetime/dateTime").asText("");
+
             ZonedDateTime jstDateTime = null;
             if (!dateTimeUtc.isEmpty()) {
-                jstDateTime = ZonedDateTime.parse(dateTimeUtc).withZoneSameInstant(JST);
+                jstDateTime = ZonedDateTime.parse(dateTimeUtc)
+                        .withZoneSameInstant(JST);
             }
 
             // official US date
             String officialDateStr = root.at("/gameData/datetime/officialDate").asText("");
             LocalDate officialDate = null;
+
             if (!officialDateStr.isEmpty()) {
                 officialDate = LocalDate.parse(officialDateStr);
             } else if (jstDateTime != null) {
@@ -88,10 +154,26 @@ public class MlbLineupService {
 
             TeamLineup home = new TeamLineup(homeName, homeProb, homeLineup);
             TeamLineup away = new TeamLineup(awayName, awayProb, awayLineup);
-            return new LineupResponse(home, away, gameInfo);
+
+            // ======================================================
+            // ✅ DTO 拡張版 return（H / E 対応）
+            // ======================================================
+
+            return new LineupResponse(
+                    home,
+                    away,
+                    gameInfo,
+                    homeRunsByInning,
+                    awayRunsByInning,
+                    homeHits,
+                    awayHits,
+                    homeErrors,
+                    awayErrors);
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse MLB live feed: " + e.getMessage(), e);
+            throw new RuntimeException(
+                    "Failed to parse MLB live feed: " + e.getMessage(),
+                    e);
         }
     }
 
@@ -272,4 +354,37 @@ public class MlbLineupService {
                 .map(e -> e.getValue().entry)
                 .collect(Collectors.toList());
     }
+
+    // game_date から MLB API を叩いて→ 自動で gamePk を取得→ DB に保存れを実装
+    public Long fetchGamePkByDate(LocalDate date) {
+
+        String url = "https://statsapi.mlb.com/api/v1/schedule"
+                + "?sportId=1"
+                + "&date=" + date
+                + "&teamId=119"; // LAD
+
+        String json = restTemplate.getForObject(url, String.class);
+
+        try {
+            JsonNode root = mapper.readTree(json);
+
+            JsonNode dates = root.path("dates");
+
+            if (dates.isArray() && dates.size() > 0) {
+
+                JsonNode games = dates.get(0).path("games");
+
+                if (games.isArray() && games.size() > 0) {
+
+                    return games.get(0).path("gamePk").asLong();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
