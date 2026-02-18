@@ -1986,9 +1986,20 @@ backToTopBtn.addEventListener("click", () => {
 </script>
 
 <!-- 🔔 ログイン成功トースト -->
-<div id="login-toast" class="login-toast hidden">
+<!--<div id="login-toast" class="login-toast hidden">
   <span id="login-toast-message"></span>
+</div>-->
+
+<div id="login-toast" class="login-toast hidden">
+  <div class="login-toast-inner">
+      <img id="login-toast-img"
+           class="login-toast-img"
+           src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/toast/%E3%83%86%E3%82%99%E3%82%B3%E3%83%92%E3%82%9A%E3%83%B3001.png"
+           alt="icon">
+      <span id="login-toast-message"></span>
+  </div>
 </div>
+
 
 <script th:inline="javascript">
     window.LOGIN_USERNAME = /*[[${#authentication.name}]]*/ null;

@@ -3,15 +3,15 @@
     bottom: 109px;
     left: 50%;
     transform: translateX(-50%);
-    background: #242222e0;
+    background: #ff2c2ce3;
     color: #f2f5ef;
-    padding: 12px 20px;
+    padding: 5px 15px 9px 15px;
     border-radius: 8px;
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 9999;
-    width: 208px;
-    height: 56px;
+    width: 300px;
+    height: 70px;
     font-weight: bold;
 }
 
@@ -21,4 +21,17 @@
 
 .login-toast.hidden {
     display: none;
+}
+
+
+.login-toast-inner {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+}
+
+.login-toast-img {
+    width: 44px;
+    height: 78px;
+    object-fit: contain;
 }
