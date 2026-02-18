@@ -51,14 +51,14 @@ header{
     /* margin-inline: auto; */
     bottom: 36px;
     /* transform: translateX(-50%); */
-    background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E3%82%B9%E3%82%B3%E3%82%A2%E3%83%96%E3%83%83%E3%82%AF%E6%89%93%E8%80%85%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3005.png");
+    background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3007.png");
     background-repeat: no-repeat;
     /* background-position: center bottom; */
     background-size: contain;
     opacity: 0.95;
     pointer-events: none;
     z-index: 2;
-        margin-left: 709px;
+        margin-left: 632px;
     top: -14%;
 }
 
@@ -161,7 +161,7 @@ header{
   bottom: 36px;
   transform: translateX(-50%);
 
-  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E3%82%B9%E3%82%B3%E3%82%A2%E3%83%96%E3%83%83%E3%82%AF%E6%89%93%E8%80%85%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3005.png");
+  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3007.png");
   background-repeat: no-repeat;
   /* background-position: center bottom; */
   background-size: contain;
@@ -247,7 +247,7 @@ header{
   bottom: 36px;
   transform: translateX(-50%);
 
-  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E3%82%B9%E3%82%B3%E3%82%A2%E3%83%96%E3%83%83%E3%82%AF%E6%89%93%E8%80%85%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3005.png");
+  background-image: url("https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/SOZAI/%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3007.png");
   background-repeat: no-repeat;
   /* background-position: center bottom; */
   background-size: contain;
@@ -630,7 +630,7 @@ header{
   /* 大谷は中央を維持 */
   .hero-ohtani {
     top: -11%;
-        left: 83%;
+        left: 76%;
     transform: translateX(-50%);
   }
 }
@@ -662,7 +662,7 @@ header{
   /* 大谷は中央を維持 */
   .hero-ohtani {
     top: -13%;
-        left: 117%;
+        left: 100%;
     transform: translateX(-50%);
   }
 }
