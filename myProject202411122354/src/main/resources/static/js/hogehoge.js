@@ -2,6 +2,7 @@
    hogehoge.js
    - Season Trend Graph (April)
    - Month Calendar Navigation
+   - ShoheiIndex Definition Slide Panel
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -68,15 +69,45 @@ if (
   });
 }
 
-  /* =========================
-     ② カレンダー → hogehoge_02
-  ========================= */
-  document.querySelectorAll(".month-calendar").forEach(calendar => {
-    calendar.addEventListener("click", () => {
-      const month = calendar.dataset.month;
-      window.location.href = `/hogehoge_02?month=${month}`;
-    });
+/* =========================
+   ② カレンダー → hogehoge_02
+========================= */
+document.querySelectorAll(".month-calendar").forEach(calendar => {
+  calendar.addEventListener("click", () => {
+    const month = calendar.dataset.month;
+    window.location.href = `/hogehoge_02?month=${month}`;
   });
+});
 
+
+/* =========================
+   ③ ShoheiIndex 定義スライド制御
+========================= */
+
+const tab = document.getElementById("indexDefinitionTab");
+const panel = document.getElementById("indexDefinitionPanel");
+const overlay = document.getElementById("indexOverlay");
+const closeBtn = document.getElementById("closeIndexPanel");
+
+if (tab && panel && overlay) {
+
+  const openPanel = () => {
+    panel.classList.add("active");
+    overlay.classList.add("active");
+  };
+
+  const closePanel = () => {
+    panel.classList.remove("active");
+    overlay.classList.remove("active");
+  };
+
+  tab.addEventListener("click", openPanel);
+
+  overlay.addEventListener("click", closePanel);
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closePanel);
+  }
+}
 
 });

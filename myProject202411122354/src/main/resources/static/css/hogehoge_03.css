@@ -701,3 +701,100 @@ header{
 
 }
 }
+
+/* =========================================================
+   ShoheiIndex 定義スライドパネル（最小構成）
+========================================================= */
+
+/* 左固定タブ */
+#indexDefinitionTab {
+  position: fixed;
+  left: 0;
+  top: 24%;
+  background: #001531;
+  color: #ffffff;
+  padding: 10px 6px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  cursor: pointer;
+  z-index: 1000;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+/* スライド本体 */
+#indexDefinitionPanel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 70%;
+  max-width: 380px;
+  height: 80%;
+  background: #e1fbd6;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1001;
+  padding: 10px;
+  overflow-y: auto;
+  box-shadow: 4px 0 12px rgba(0,0,0,0.2);
+}
+
+/* 開いた状態 */
+#indexDefinitionPanel.active {
+  transform: translateX(0);
+}
+
+/* ヘッダー */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.panel-header h2 {
+  font-size: 21px;
+  margin: 0;
+}
+
+#closeIndexPanel {
+  background: none;
+  border: none;
+  font-size: 83px;
+    cursor: pointer;
+    font-weight: bold;
+    background: #e1fbd6;
+    margin: 6px 31px;
+}
+
+/* オーバーレイ */
+#indexOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 999;
+}
+
+#indexOverlay.active {
+  display: block;
+}
+
+.condition01{
+  margin-left: -14px;
+}
+
+.condition02{
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* リストの「・」を消す方法 */
+#indexDefinitionPanel ul {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}

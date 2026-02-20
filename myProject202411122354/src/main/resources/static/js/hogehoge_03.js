@@ -68,4 +68,38 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+
+  /* =========================
+   ③ ShoheiIndex 定義スライド制御
+========================= */
+
+const tab = document.getElementById("indexDefinitionTab");
+const panel = document.getElementById("indexDefinitionPanel");
+const overlay = document.getElementById("indexOverlay");
+const closeBtn = document.getElementById("closeIndexPanel");
+
+if (tab && panel && overlay) {
+
+  const openPanel = () => {
+    panel.classList.add("active");
+    overlay.classList.add("active");
+  };
+
+  const closePanel = () => {
+    panel.classList.remove("active");
+    overlay.classList.remove("active");
+  };
+
+  tab.addEventListener("click", openPanel);
+
+  overlay.addEventListener("click", closePanel);
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closePanel);
+  }
+}
+
 });
+
+
