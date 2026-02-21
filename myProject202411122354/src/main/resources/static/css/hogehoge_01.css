@@ -793,15 +793,16 @@ header{
   margin: 0;
 }
 
-#closeIndexPanel {
+/* #closeIndexPanel {
   background: none;
   border: none;
-  font-size: 83px;
+    font-size: 56px;
     cursor: pointer;
     font-weight: bold;
-    background: #bdf5ffc7;
+    background: #ffffffc7;
     margin: 6px 31px;
-}
+    top: 73%;
+} */
 
 /* オーバーレイ */
 #indexOverlay {
@@ -833,4 +834,62 @@ header{
   list-style: none;
   padding-left: 0;
   margin-left: 0;
+}
+
+
+
+/* Netflix風パネル */
+#indexDefinitionPanel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 78%;
+  max-width: 420px;
+  /* height: 100vh; */
+  max-height: 100vh;
+
+  background: rgb(15 15 15 / 18%);
+  backdrop-filter: blur(18px);
+
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+  z-index: 1001;
+
+  /* padding: 60px 28px 120px; */
+  overflow-y: auto;
+  color: rgba(255,255,255,0.9);
+}
+
+#indexDefinitionPanel ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#indexDefinitionPanel li {
+  /* margin-bottom: 22px; */
+  line-height: 1.7;
+  font-size: 17px;
+}
+
+/* 🔥 修正済み：スクロール影響を受けない固定位置 */
+.netflix-close {
+  position: fixed;   /* ← absolute → fixed に変更 */
+  /* bottom: 40px; */
+  /* パネル中央に固定（width:70% / max-width:420px対応） */
+  left: min(33vw, 200px);
+  /* transform: translateX(-50%); */
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #000000;
+  font-size: 28px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 2000;
+}
+
+#indexOverlay {
+  background: rgba(0,0,0,0.6);
 }
