@@ -3,6 +3,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     let currentYear = "2026";   // デフォルト2026
 
     async function loadStats(year) {
+
+        // 🔥 タイトル更新
+            document.querySelectorAll(".stats-year-title").forEach(el => {
+            el.textContent = `${year} Stats`;
+        });
+
         try {
             const response = await fetch(`/api/stats?year=${year}`);
             if (!response.ok) {
