@@ -529,10 +529,15 @@ window.onload = fetchGameInfo;
 <!-- end ニュース/トピック/サイト最新情報 -->
 
 
+              <div class="season-tabs">
+                <button class="season-tab active" data-year="2025">'25</button>
+                <button class="season-tab" data-year="2026">'26</button>
+              </div>
 
 <!--start MLB 地区別順位表 (スワイプ対応) -->
 <!-- MLB 地区別順位表 -->
 <div class="standings-container">
+
 <!-- ✅ スワイプボタン -->
 <button id="prevBtn" class="standings-nav prev" aria-label="前へ">◀</button>
 <button id="nextBtn" class="standings-nav next" aria-label="次へ">▶</button>
@@ -565,10 +570,12 @@ window.onload = fetchGameInfo;
             <h3>2025 AL 東地区</h3>
             <table class="styled-table"><thead><tr><th>順位</th><th>チーム</th><th>勝</th><th>敗</th><th>勝率</th><th>ゲーム差</th></tr></thead><tbody id="al-east-body"></tbody></table></div></div></div>
 
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    let currentIndex = 0; // 🚀 デフォルトを NL 西地区に設定
+
+    let currentYear = "2026"; // 🔥 デフォルト
+
+    let currentIndex = 0;
     const slides = document.querySelectorAll(".standings-slide");
     const wrapper = document.querySelector(".standings-wrapper");
 
@@ -576,7 +583,6 @@ document.addEventListener("DOMContentLoaded", function () {
         wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
     }
 
-    // 🚀 ページロード時に NL 西地区を表示
     updateSlide();
 
     document.getElementById("nextBtn").addEventListener("click", function () {
@@ -589,7 +595,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateSlide();
     });
 
-    // スワイプ対応
+    // スワイプ
     let startX = 0;
     wrapper.addEventListener("touchstart", (e) => {
         startX = e.touches[0].clientX;
@@ -605,54 +611,87 @@ document.addEventListener("DOMContentLoaded", function () {
         updateSlide();
     });
 
-    // 🚀 **データを取得して各地区のテーブルに挿入**
-    fetch("/api/dodgers/standings")
-        .then(response => response.json())
-        .then(data => {
-            function populateTable(data, tbody) {
-                data.forEach(team => {
-                    let row = document.createElement("tr");
-                    let trophy = team.rank === "1" ? "🏆" : "";
-                    let winPercentage = team.winPercentage !== null
-                        ? parseFloat(team.winPercentage).toFixed(3)
-                        : (team.wins / (team.wins + team.losses)).toFixed(3);
+    // 🔥 standings取得関数（共通化）
+    function loadStandings(year) {
 
+        // 見出し更新
+        document.querySelectorAll(".standings-slide h3").forEach(h3 => {
+            h3.textContent = h3.textContent.replace(/\d{4}/, year);
+        });
 
-//<td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> となっていたがチーム名は一旦削除した。好きな時に戻せるようにコメントで残置！
-                    row.innerHTML = `
-                        <td>${team.rank}️⃣ ${trophy}</td>
-                        <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"> </td>
-                        <td>${team.wins}</td>
-                        <td>${team.losses}</td>
-                        <td>${winPercentage}</td>
-                        <td>${team.gamesBack}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            }
+        fetch(`/api/dodgers/standings?year=${year}`)
+            .then(response => response.json())
+            .then(data => {
 
-            // **各地区にデータを挿入**
-            const tableIds = {
-                "NL 東地区": "nl-east-body",
-                "NL 中地区": "nl-central-body",
-                "NL 西地区": "nl-west-body",
-                "AL 東地区": "al-east-body",
-                "AL 中地区": "al-central-body",
-                "AL 西地区": "al-west-body"
-            };
+                function populateTable(data, tbody) {
+                    data.forEach(team => {
 
-            Object.entries(data).forEach(([key, value]) => {
-                let tableId = tableIds[key];
-                if (tableId) {
-                    let tbody = document.getElementById(tableId);
-                    if (tbody) {
-                        tbody.innerHTML = ""; // **前回のデータをクリア**
-                        populateTable(value, tbody);
-                    }
+                        let row = document.createElement("tr");
+                        let trophy = team.rank === "1" ? "🏆" : "";
+
+                        let winPercentage = team.winPercentage !== null
+                            ? parseFloat(team.winPercentage).toFixed(3)
+                            : (team.wins / (team.wins + team.losses)).toFixed(3);
+
+                        row.innerHTML = `
+                            <td>${team.rank}️⃣ ${trophy}</td>
+                            <td><img src="https://www.mlbstatic.com/team-logos/${team.teamId}.svg" width="30"></td>
+                            <td>${team.wins}</td>
+                            <td>${team.losses}</td>
+                            <td>${winPercentage}</td>
+                            <td>${team.gamesBack}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
                 }
-            });
-        })
-        .catch(error => console.error("Error loading standings:", error));
+
+                const tableIds = {
+                    "NL 東地区": "nl-east-body",
+                    "NL 中地区": "nl-central-body",
+                    "NL 西地区": "nl-west-body",
+                    "AL 東地区": "al-east-body",
+                    "AL 中地区": "al-central-body",
+                    "AL 西地区": "al-west-body"
+                };
+
+                Object.entries(data).forEach(([key, value]) => {
+                    let tableId = tableIds[key];
+                    if (tableId) {
+                        let tbody = document.getElementById(tableId);
+                        if (tbody) {
+                            tbody.innerHTML = "";
+                            populateTable(value, tbody);
+                        }
+                    }
+                });
+
+            })
+            .catch(error => console.error("Error loading standings:", error));
+    }
+
+    // 🔥 初期表示
+    loadStandings(currentYear);
+
+    // 🔥 タブ連動
+    document.querySelectorAll(".season-tab").forEach(tab => {
+
+        tab.classList.toggle("active", tab.dataset.year === currentYear);
+
+        tab.addEventListener("click", function () {
+
+            document.querySelectorAll(".season-tab")
+                .forEach(t => t.classList.remove("active"));
+
+            tab.classList.add("active");
+
+            currentYear = tab.dataset.year;
+
+            loadStandings(currentYear); // 🔥 再取得
+
+        });
+
+    });
+
 });
 </script>
 <!-- end MLB 地区別順位表 (スワイプ対応) -->

@@ -241,7 +241,6 @@ h5 {
 
 
 
-
 /* start======== ホームラン＆ピッチングカウンター ======= */
 .stats-container-1 {
     display: flex;
@@ -261,7 +260,7 @@ h5 {
 
 .season-tab {
   padding: 4px 10px;
-  border-radius: 14px;
+  /* border-radius: 14px; */
   border: none;
   background: #ddd;
   font-weight: bold;
@@ -1985,7 +1984,7 @@ body {
 /* start======== ニュース/トピック/サイト最新情報 (max-width: 430px)======== */
 
 #news-section {
-    margin: 20px auto;
+    margin: 20px auto 50px auto;
     padding: 10px;
     width: 350px;
     border: 2px solid #ccc;
