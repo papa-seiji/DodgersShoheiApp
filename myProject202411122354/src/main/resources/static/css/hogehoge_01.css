@@ -565,6 +565,30 @@ header{
   margin-bottom: 6px;
 }
 
+
+.season-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.season-tab {
+  padding: 4px 10px;
+  border-radius: 14px;
+  border: none;
+  background: #ddd;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.season-tab.active {
+  background: #fdf300;
+    color: #ff0000;
+    font-weight: bold;
+}
+
+
+
 /* 「Hitter Stats」 */
 #HitterStats-1 {
   font-size: 13px;

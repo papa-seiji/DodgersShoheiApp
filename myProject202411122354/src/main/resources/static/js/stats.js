@@ -14,29 +14,53 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hitterSplit = hitterStatsData?.stats?.[0]?.splits?.[0];
             const pitcherSplit = pitcherStatsData?.stats?.[0]?.splits?.[0];
 
-            // ===== 打者 =====
+            // =========================
+            // 打者
+            // =========================
             if (hitterSplit) {
                 const hitterStats = hitterSplit.stat;
-                document.getElementById("gamesPlayed").textContent = hitterStats.gamesPlayed || "N/A";
-                document.getElementById("avg").textContent = hitterStats.avg || "N/A";
-                document.getElementById("homeRuns").textContent = hitterStats.homeRuns || "N/A";
-                document.getElementById("stolenBases").textContent = hitterStats.stolenBases || "N/A";
-                document.getElementById("rbi").textContent = hitterStats.rbi || "N/A";
-                document.getElementById("ops").textContent = hitterStats.ops || "N/A";
+
+                const hitterMap = {
+                    gamesPlayed: hitterStats.gamesPlayed,
+                    avg: hitterStats.avg,
+                    homeRuns: hitterStats.homeRuns,
+                    stolenBases: hitterStats.stolenBases,
+                    rbi: hitterStats.rbi,
+                    ops: hitterStats.ops
+                };
+
+                Object.keys(hitterMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = hitterMap[id] || "N/A";
+                });
+
             } else {
-                document.querySelectorAll("#hitter-stats span").forEach(el => el.textContent = "—");
+                document.querySelectorAll("#hitter-stats span")
+                    .forEach(el => el.textContent = "—");
             }
 
-            // ===== 投手 =====
+            // =========================
+            // 投手
+            // =========================
             if (pitcherSplit) {
                 const pitcherStats = pitcherSplit.stat;
-                document.getElementById("pitcherGamesPlayed").textContent = pitcherStats.gamesPlayed || "N/A";
-                document.getElementById("wins").textContent = pitcherStats.wins || "N/A";
-                document.getElementById("losses").textContent = pitcherStats.losses || "N/A";
-                document.getElementById("era").textContent = pitcherStats.era || "N/A";
-                document.getElementById("strikeOuts").textContent = pitcherStats.strikeOuts || "N/A";
+
+                const pitcherMap = {
+                    pitcherGamesPlayed: pitcherStats.gamesPlayed,
+                    wins: pitcherStats.wins,
+                    losses: pitcherStats.losses,
+                    era: pitcherStats.era,
+                    strikeOuts: pitcherStats.strikeOuts
+                };
+
+                Object.keys(pitcherMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = pitcherMap[id] || "N/A";
+                });
+
             } else {
-                document.querySelectorAll("#pitcher-stats span").forEach(el => el.textContent = "—");
+                document.querySelectorAll("#pitcher-stats span")
+                    .forEach(el => el.textContent = "—");
             }
 
         } catch (error) {
@@ -44,37 +68,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // 🔥 年を全部のタブに反映させる関数
+    // タブ同期
     function syncTabs(year) {
-
         document.querySelectorAll(".season-tab").forEach(tab => {
-            if (tab.dataset.year === year) {
-                tab.classList.add("active");
-            } else {
-                tab.classList.remove("active");
-            }
+            tab.classList.toggle("active", tab.dataset.year === year);
         });
-
-        document.getElementById("SeasonStats-1").textContent = year + " Stats";
-        document.getElementById("SeasonStats-2").textContent = year + " Stats";
     }
 
     // 初期表示
     syncTabs(currentYear);
     await loadStats(currentYear);
 
-    // 全タブ共通イベント
+    // タブイベント
     document.querySelectorAll(".season-tab").forEach(tab => {
-
         tab.addEventListener("click", async () => {
-
             currentYear = tab.dataset.year;
-
             syncTabs(currentYear);
             await loadStats(currentYear);
-
         });
-
     });
 
 });

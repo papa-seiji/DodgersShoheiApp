@@ -18,66 +18,66 @@ public class OhtaniJudgeWebSocketController {
 
                 // 打撃成績（大谷・ジャッジ）
                 Object ohtani = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
                 Object judge = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/592450/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/592450/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
 
                 // 打撃成績（トラウト・エドマン）
                 Object trout = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/545361/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/545361/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
                 Object edoman = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/669242/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/669242/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
 
                 // 打撃成績（誠也・ベッツ）
                 Object seiya = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/673548/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/673548/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
                 Object betts = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/605141/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/605141/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
 
                 // 打撃成績（シュワバー・テオスカー）
                 Object schwarber = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/656941/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/656941/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
                 Object teoscar = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/606192/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/606192/stats?stats=season&season=2026&group=hitting",
 
                                 Object.class);
                 // 打撃成績（ローリー・吉田正尚）
                 Object raleigh = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/663728/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/663728/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
                 Object yoshida = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/807799/stats?stats=season&season=2025&group=hitting",
+                                "https://statsapi.mlb.com/api/v1/people/807799/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
 
                 // 投手成績（山本由伸・今永昇太）
                 Object yamamoto = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/808967/stats?stats=season&season=2025&group=pitching",
+                                "https://statsapi.mlb.com/api/v1/people/808967/stats?stats=season&season=2026&group=pitching",
                                 Object.class);
                 Object imanaga = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/684007/stats?stats=season&season=2025&group=pitching",
+                                "https://statsapi.mlb.com/api/v1/people/684007/stats?stats=season&season=2026&group=pitching",
                                 Object.class);
 
                 // 投手成績（菅野智之・佐々木朗希）
                 Object sugano = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/608372/stats?stats=season&season=2025&group=pitching",
+                                "https://statsapi.mlb.com/api/v1/people/608372/stats?stats=season&season=2026&group=pitching",
                                 Object.class);
                 Object sasaki = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=season&season=2025&group=pitching",
+                                "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=season&season=2026&group=pitching",
                                 Object.class);
 
                 // 投手成績（ダルビッシュ有・Jacob Misiorowski ）
                 Object darvish = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/506433/stats?stats=season&season=2025&group=pitching",
+                                "https://statsapi.mlb.com/api/v1/people/506433/stats?stats=season&season=2026&group=pitching",
                                 Object.class);
                 Object misiorowski = restTemplate.getForObject(
-                                "https://statsapi.mlb.com/api/v1/people/694819/stats?stats=season&season=2025&group=pitching",
+                                "https://statsapi.mlb.com/api/v1/people/694819/stats?stats=season&season=2026&group=pitching",
                                 Object.class);
 
                 // まとめて返す
