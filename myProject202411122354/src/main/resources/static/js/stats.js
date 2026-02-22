@@ -1,33 +1,97 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const response = await fetch("/api/stats");
-        if (!response.ok) {
-            throw new Error(`Failed to load stats: ${response.status}`);
+
+    let currentYear = "2026";   // デフォルト2026
+
+    async function loadStats(year) {
+
+        // 🔥 タイトル更新
+            document.querySelectorAll(".stats-year-title").forEach(el => {
+            el.textContent = `${year} Stats`;
+        });
+
+        try {
+            const response = await fetch(`/api/stats?year=${year}`);
+            if (!response.ok) {
+                throw new Error(`Failed to load stats: ${response.status}`);
+            }
+
+            const [hitterStatsData, pitcherStatsData] = await response.json();
+
+            const hitterSplit = hitterStatsData?.stats?.[0]?.splits?.[0];
+            const pitcherSplit = pitcherStatsData?.stats?.[0]?.splits?.[0];
+
+            // =========================
+            // 打者
+            // =========================
+            if (hitterSplit) {
+                const hitterStats = hitterSplit.stat;
+
+                const hitterMap = {
+                    gamesPlayed: hitterStats.gamesPlayed,
+                    avg: hitterStats.avg,
+                    homeRuns: hitterStats.homeRuns,
+                    stolenBases: hitterStats.stolenBases,
+                    rbi: hitterStats.rbi,
+                    ops: hitterStats.ops
+                };
+
+                Object.keys(hitterMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = hitterMap[id] || "N/A";
+                });
+
+            } else {
+                document.querySelectorAll("#hitter-stats span")
+                    .forEach(el => el.textContent = "—");
+            }
+
+            // =========================
+            // 投手
+            // =========================
+            if (pitcherSplit) {
+                const pitcherStats = pitcherSplit.stat;
+
+                const pitcherMap = {
+                    pitcherGamesPlayed: pitcherStats.gamesPlayed,
+                    wins: pitcherStats.wins,
+                    losses: pitcherStats.losses,
+                    era: pitcherStats.era,
+                    strikeOuts: pitcherStats.strikeOuts
+                };
+
+                Object.keys(pitcherMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = pitcherMap[id] || "N/A";
+                });
+
+            } else {
+                document.querySelectorAll("#pitcher-stats span")
+                    .forEach(el => el.textContent = "—");
+            }
+
+        } catch (error) {
+            console.error("Error loading stats:", error);
         }
-
-        const [hitterStatsData, pitcherStatsData] = await response.json();
-
-        // 打者成績（存在する場合のみ）
-        const gamesPlayedEl = document.getElementById("gamesPlayed");
-        if (gamesPlayedEl) {
-        const hitterStats = hitterStatsData.stats[0].splits[0].stat;
-        gamesPlayedEl.textContent = hitterStats.gamesPlayed || "N/A";
-        document.getElementById("avg").textContent = hitterStats.avg || "N/A";
-        document.getElementById("homeRuns").textContent = hitterStats.homeRuns || "N/A";
-        document.getElementById("stolenBases").textContent = hitterStats.stolenBases || "N/A";
-        document.getElementById("rbi").textContent = hitterStats.rbi || "N/A";
-        document.getElementById("ops").textContent = hitterStats.ops || "N/A";
-        }
-
-        // 投手成績を表示
-        const pitcherStats = pitcherStatsData.stats[0].splits[0].stat;
-        document.getElementById("pitcherGamesPlayed").textContent = pitcherStats.gamesPlayed || "N/A";
-        document.getElementById("wins").textContent = pitcherStats.wins || "N/A";
-        document.getElementById("losses").textContent = pitcherStats.losses || "N/A";
-        document.getElementById("era").textContent = pitcherStats.era || "N/A";
-        document.getElementById("strikeOuts").textContent = pitcherStats.strikeOuts || "N/A";
-
-    } catch (error) {
-        console.error("Error loading stats:", error);
     }
+
+    // タブ同期
+    function syncTabs(year) {
+        document.querySelectorAll(".season-tab").forEach(tab => {
+            tab.classList.toggle("active", tab.dataset.year === year);
+        });
+    }
+
+    // 初期表示
+    syncTabs(currentYear);
+    await loadStats(currentYear);
+
+    // タブイベント
+    document.querySelectorAll(".season-tab").forEach(tab => {
+        tab.addEventListener("click", async () => {
+            currentYear = tab.dataset.year;
+            syncTabs(currentYear);
+            await loadStats(currentYear);
+        });
+    });
+
 });

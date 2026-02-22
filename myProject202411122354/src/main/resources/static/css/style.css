@@ -241,7 +241,6 @@ h5 {
 
 
 
-
 /* start======== ホームラン＆ピッチングカウンター ======= */
 .stats-container-1 {
     display: flex;
@@ -250,6 +249,31 @@ h5 {
     /* margin-left: 118px; */
     margin-right: -11px;
 }
+
+
+
+.season-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.season-tab {
+  padding: 4px 10px;
+  /* border-radius: 14px; */
+  border: none;
+  background: #ddd;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.season-tab.active {
+  background: #fdf300;
+    color: #ff0000;
+    font-weight: bold;
+}
+
+
 
 #SeasonStats-1 {
     background-color: #3737e2;
@@ -1960,7 +1984,7 @@ body {
 /* start======== ニュース/トピック/サイト最新情報 (max-width: 430px)======== */
 
 #news-section {
-    margin: 20px auto;
+    margin: 20px auto 50px auto;
     padding: 10px;
     width: 350px;
     border: 2px solid #ccc;

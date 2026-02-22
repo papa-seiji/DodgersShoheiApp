@@ -9,6 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/dodgers/standings")
 public class DodgersStandingsController {
+
     private final DodgersStandingsService standingsService;
 
     public DodgersStandingsController(DodgersStandingsService standingsService) {
@@ -16,7 +17,9 @@ public class DodgersStandingsController {
     }
 
     @GetMapping
-    public Map<String, List<Map<String, Object>>> getMLBStandings() {
-        return standingsService.getMLBStandings();
+    public Map<String, List<Map<String, Object>>> getMLBStandings(
+            @RequestParam(defaultValue = "2025") String year // 🔥 追加
+    ) {
+        return standingsService.getMLBStandings(year); // 🔥 year渡す
     }
 }

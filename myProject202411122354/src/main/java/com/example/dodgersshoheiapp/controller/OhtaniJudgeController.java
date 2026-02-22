@@ -12,29 +12,29 @@ import java.util.Map;
 @RestController
 public class OhtaniJudgeController {
 
-    private static final String OHTANI_HITTING_API = "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2025&group=hitting";
-    private static final String JUDGE_HITTING_API = "https://statsapi.mlb.com/api/v1/people/592450/stats?stats=season&season=2025&group=hitting";
+    private static final String OHTANI_HITTING_API = "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2026&group=hitting";
+    private static final String JUDGE_HITTING_API = "https://statsapi.mlb.com/api/v1/people/592450/stats?stats=season&season=2026&group=hitting";
 
-    private static final String TROUT_HITTING_API = "https://statsapi.mlb.com/api/v1/people/545361/stats?stats=season&season=2025&group=hitting";
-    private static final String EDOMAN_HITTING_API = "https://statsapi.mlb.com/api/v1/people/669242/stats?stats=season&season=2025&group=hitting";
+    private static final String TROUT_HITTING_API = "https://statsapi.mlb.com/api/v1/people/545361/stats?stats=season&season=2026&group=hitting";
+    private static final String EDOMAN_HITTING_API = "https://statsapi.mlb.com/api/v1/people/669242/stats?stats=season&season=2026&group=hitting";
 
-    private static final String SEIYA_HITTING_API = "https://statsapi.mlb.com/api/v1/people/673548/stats?stats=season&season=2025&group=hitting";
-    private static final String BETTS_HITTING_API = "https://statsapi.mlb.com/api/v1/people/605141/stats?stats=season&season=2025&group=hitting";
+    private static final String SEIYA_HITTING_API = "https://statsapi.mlb.com/api/v1/people/673548/stats?stats=season&season=2026&group=hitting";
+    private static final String BETTS_HITTING_API = "https://statsapi.mlb.com/api/v1/people/605141/stats?stats=season&season=2026&group=hitting";
 
-    private static final String YAMAMOTO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808967/stats?stats=season&season=2025&group=pitching";
-    private static final String IMANAGA_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/684007/stats?stats=season&season=2025&group=pitching";
+    private static final String YAMAMOTO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808967/stats?stats=season&season=2026&group=pitching";
+    private static final String IMANAGA_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/684007/stats?stats=season&season=2026&group=pitching";
 
-    private static final String SUGANO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/608372/stats?stats=season&season=2025&group=pitching";
-    private static final String SASAKI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=season&season=2025&group=pitching";
+    private static final String SUGANO_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/608372/stats?stats=season&season=2026&group=pitching";
+    private static final String SASAKI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/808963/stats?stats=season&season=2026&group=pitching";
 
-    private static final String DARVISH_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/506433/stats?stats=season&season=2025&group=pitching";
-    private static final String MISIOROWSKI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/694819/stats?stats=season&season=2025&group=pitching";
+    private static final String DARVISH_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/506433/stats?stats=season&season=2026&group=pitching";
+    private static final String MISIOROWSKI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/694819/stats?stats=season&season=2026&group=pitching";
 
-    private static final String SCHWARBER_HITTING_API = "https://statsapi.mlb.com/api/v1/people/656941/stats?stats=season&season=2025&group=hitting";
-    private static final String TEOSCAR_HITTING_API = "https://statsapi.mlb.com/api/v1/people/606192/stats?stats=season&season=2025&group=hitting";
+    private static final String SCHWARBER_HITTING_API = "https://statsapi.mlb.com/api/v1/people/656941/stats?stats=season&season=2026&group=hitting";
+    private static final String TEOSCAR_HITTING_API = "https://statsapi.mlb.com/api/v1/people/606192/stats?stats=season&season=2026&group=hitting";
 
-    private static final String RALEIGH_HITTING_API = "https://statsapi.mlb.com/api/v1/people/663728/stats?stats=season&season=2025&group=hitting";
-    private static final String YOSHIDA_HITTING_API = "https://statsapi.mlb.com/api/v1/people/807799/stats?stats=season&season=2025&group=hitting";
+    private static final String RALEIGH_HITTING_API = "https://statsapi.mlb.com/api/v1/people/663728/stats?stats=season&season=2026&group=hitting";
+    private static final String YOSHIDA_HITTING_API = "https://statsapi.mlb.com/api/v1/people/807799/stats?stats=season&season=2026&group=hitting";
 
     @GetMapping("/api/ohtani-vs-judge/stats")
     public ResponseEntity<Map<String, Object>> getOhtaniVsJudgeStats() {
