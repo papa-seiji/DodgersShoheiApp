@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -173,6 +175,23 @@ public class OhtaniGameController {
 
         model.addAttribute("games", targetGames);
 
-        return "hogehoge_02";
+        // ===============================
+        // 🔥 DEBUG MOCK Shohei HR 表示確認用
+        // ===============================
+        {
+            List<Map<String, Object>> mock = new ArrayList<>();
+
+            Map<String, Object> testHr = new HashMap<>();
+            testHr.put("launchSpeed", 111.1);
+            testHr.put("launchAngle", 50);
+            testHr.put("totalDistance", 420);
+
+            mock.add(testHr);
+
+            model.addAttribute("debugShoheiHRs", mock);
+
+            // 最後に return
+            return "hogehoge_02";
+        }
     }
 }

@@ -303,3 +303,5 @@
 {"username":"Seiji","action":"LOGIN","ipAddress":"localhost","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","timestamp":"2026-02-21T00:36:43.2765743"}
 {"username":"Seiji","action":"LOGIN","ipAddress":"localhost","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","timestamp":"2026-02-21T08:46:59.4042935"}
 {"username":"Seiji","action":"LOGIN","ipAddress":"localhost","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","timestamp":"2026-02-22T21:41:08.1918696"}
+{"username":"Seiji","action":"FAILED_LOGIN","ipAddress":"localhost","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","timestamp":"2026-03-01T11:06:01.6384041"}
+{"username":"Seiji","action":"LOGIN","ipAddress":"localhost","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36","timestamp":"2026-03-01T11:06:12.4914471"}

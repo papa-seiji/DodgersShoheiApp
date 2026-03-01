@@ -352,7 +352,7 @@
       <span th:text="|${#temporals.format(g.gameDate,'MM/dd')} vs ${g.opponent}|"></span>
     </div>
 
-    <!-- 評価 
+    <!-- 評価
     <span class="form-badge"
           th:text="
             ${g.formValue == 2 ? 'S' :
@@ -555,32 +555,346 @@
 </div>
 
 
-<!-- スクロール制御 -->
-<!-- <script th:inline="javascript">
-/*<![CDATA[*/
-const selectedDate = /*[[${selectedDate != null ? selectedDate : 'null'}]]*/ null;
+<!-- game-cardの下に追加：Shohei HR表示 -->
 
-if (selectedDate) {
-  const targetCard = document.getElementById('game-' + selectedDate);
-  if (targetCard) {
-    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+<div class="shohei-hr-section"
+     th:if="${game != null and game.shoheiHRs != null and !#lists.isEmpty(game.shoheiHRs)}">
 
-  document.querySelectorAll('.game-row').forEach(row => {
-    if (row.dataset.date === selectedDate) {
-      row.classList.add('is-selected');
+    <h4>🔥 Shohei HR</h4>
+
+    <div th:each="hr : ${game.shoheiHRs}" class="shohei-hr-card">
+
+        <div>
+            🚀 Exit Velocity:
+            <span th:text="${hr.launchSpeed}">0</span> mph
+        </div>
+
+        <div>
+            📐 Launch Angle:
+            <span th:text="${hr.launchAngle}">0</span>°
+        </div>
+
+        <div>
+            📏 Distance:
+            <span th:text="${hr.totalDistance}">0</span> ft
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- 🔥 DEBUG MOCK HR表示確認ブロック -->
+<div style="background:#111;color:#fff;padding:15px;margin:20px 0;border-radius:8px;"
+     th:if="${debugShoheiHRs != null}">
+
+    <h3 style="margin-bottom:10px;">🔥 DEBUG Shohei HR MOCK</h3>
+
+    <div th:each="hr : ${debugShoheiHRs}"
+         style="padding:8px;background:#222;margin-bottom:8px;border-radius:6px;">
+
+        🚀 EV:
+        <span th:text="${hr.launchSpeed}">0</span> mph /
+
+        📐 LA:
+        <span th:text="${hr.launchAngle}">0</span>° /
+
+        📏 Dist:
+        <span th:text="${hr.totalDistance}">0</span> ft
+    </div>
+
+</div>
+
+<!--<canvas id="hrCanvas"
+        width="300"
+        height="200"
+        style="background:#0b1c2d;border-radius:12px;margin-top:10px;">
+</canvas>-->
+
+<canvas id="hrCanvas" style="background:#0b1c2d;border-radius:12px;margin-top:10px;"></canvas>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("hrCanvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+
+    // =========================
+    // キャンバス拡大設定
+    // =========================
+    const displayWidth = 700;
+    const displayHeight = 500;
+    const scaleFactor = 2.1;
+
+    canvas.width = displayWidth;
+    canvas.height = displayHeight;
+
+    ctx.scale(scaleFactor, scaleFactor);
+
+    const launchSpeed = 111.1;
+    const launchAngle = 33;
+    const distance = 415;
+
+    // =========================
+    // 外野
+    // =========================
+    ctx.beginPath();
+    ctx.moveTo(150, 180);
+    ctx.lineTo(40, 120);
+    ctx.quadraticCurveTo(150, 40, 260, 120);
+    ctx.closePath();
+    ctx.fillStyle = "#1e7a34";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(150, 180);
+    ctx.lineTo(40, 120);
+    ctx.moveTo(150, 180);
+    ctx.lineTo(260, 120);
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(40, 120);
+    ctx.quadraticCurveTo(150, 40, 260, 120);
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(40, 125);
+    ctx.quadraticCurveTo(150, 50, 260, 125);
+    ctx.strokeStyle = "rgba(0,0,0,0.6)";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(40, 120);
+    ctx.lineTo(40, 40);
+    ctx.moveTo(260, 120);
+    ctx.lineTo(260, 40);
+    ctx.strokeStyle = "#ffd700";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // =========================
+    // 内野
+    // =========================
+    ctx.beginPath();
+    ctx.moveTo(150, 180);
+    ctx.lineTo(95, 150);
+    ctx.lineTo(150, 120);
+    ctx.lineTo(205, 150);
+    ctx.closePath();
+    ctx.fillStyle = "#000";
+    ctx.fill();
+
+    function drawBase(x, y) {
+        const size = 8;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(Math.PI / 4);
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(-size/2, -size/2, size, size);
+        ctx.restore();
     }
-  });
-}
-/*]]>*/
-</script>-->
 
-<!--<script>
-const params = new URLSearchParams(location.search);
-const month = params.get("month");
-document.getElementById("info").textContent =
-  month ? month + "月の詳細ページ" : "月未指定";
-</script>-->
+    drawBase(150, 174);
+    drawBase(100, 150);
+    drawBase(150, 126);
+    drawBase(200, 150);
+
+    // =========================
+    // 弾道計算
+    // =========================
+    const homeX = 150;
+    const homeY = 180;
+
+    const centerFT = 361;
+    const a = 110;
+    const b = 140;
+
+    const sprayAngle = 55;
+    const directionRad = sprayAngle * Math.PI / 180;
+    const angleRad = launchAngle * Math.PI / 180;
+
+    const maxRadius =
+        (a * b) /
+        Math.sqrt(
+            (b * Math.cos(directionRad))**2 +
+            (a * Math.sin(directionRad))**2
+        );
+
+    const ratio = distance / centerFT;
+    const finalRadius = maxRadius * ratio;
+
+    const endX = homeX + finalRadius * Math.cos(directionRad);
+    const endY = homeY - finalRadius * Math.sin(directionRad);
+
+    const peakRadius = finalRadius * 0.55;
+
+    const peakX = homeX + peakRadius * Math.cos(directionRad);
+    const peakY =
+        homeY -
+        peakRadius * Math.sin(directionRad) -
+        (Math.sin(angleRad) * 80);
+
+    ctx.beginPath();
+    ctx.moveTo(homeX, homeY);
+    ctx.quadraticCurveTo(peakX, peakY, endX, endY);
+    ctx.strokeStyle = "#ffb74d";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(endX, endY, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "#ff1744";
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "#ff1744";
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    const estimatedHeight = Math.round(
+        distance * Math.sin(angleRad) * 0.45
+    );
+
+
+// =========================
+// 🎯 放物線上の任意点を取得
+// =========================
+function getQuadraticPoint(t, x0, y0, cx, cy, x1, y1) {
+    const x =
+        (1 - t) * (1 - t) * x0 +
+        2 * (1 - t) * t * cx +
+        t * t * x1;
+
+    const y =
+        (1 - t) * (1 - t) * y0 +
+        2 * (1 - t) * t * cy +
+        t * t * y1;
+
+    return { x, y };
+}
+
+
+    // =========================
+    // 吹き出し描画関数
+    // =========================
+    function drawBubble(x, y, title, value) {
+
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        x *= scaleFactor;
+        y *= scaleFactor;
+
+        const titleParts = title.split(" ");
+        const valueParts = value.split(" ");
+
+        const lineHeight = 13;
+        const padding = 0;
+
+        ctx.font = "bold 15px Arial";
+        let maxWidth = 0;
+
+        [...titleParts, ...valueParts].forEach(t => {
+            maxWidth = Math.max(maxWidth, ctx.measureText(t).width);
+        });
+
+        const radius = Math.max(26, maxWidth / 2 + padding);
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#f2f4f7";
+        ctx.fill();
+        ctx.strokeStyle = "#d0d4d8";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(x - 6, y + radius);
+        ctx.lineTo(x + 6, y + radius);
+        ctx.lineTo(x, y + radius + 8);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.textAlign = "center";
+
+        let totalLines = titleParts.length + valueParts.length;
+        let startY = y - ((totalLines - 1) * lineHeight) / 2;
+
+        ctx.fillStyle = "#6b7280";
+        ctx.font = "10px Arial";
+        titleParts.forEach(t => {
+            ctx.fillText(t, x, startY);
+            startY += lineHeight;
+        });
+
+        ctx.fillStyle = "#111827";
+        ctx.font = "bold 15px Arial";
+        valueParts.forEach(v => {
+            ctx.fillText(v, x, startY);
+            startY += lineHeight;
+        });
+
+        ctx.restore();
+    }
+
+    // =========================
+    // 🎯 Statcast寄せ配置
+    // =========================
+
+    const normalX = -Math.sin(directionRad);
+    const normalY = -Math.cos(directionRad);
+
+    // HEIGHT（ピーク外側）
+    // 放物線の中腹（t=0.45くらい）
+    const midPoint = getQuadraticPoint(
+        0.45,
+        homeX, homeY,
+        peakX, peakY,
+        endX, endY
+    );
+
+    drawBubble(
+        midPoint.x,
+        midPoint.y - 25,
+        "HEIGHT",
+        estimatedHeight + " FT"
+    );
+
+    // DISTANCE（着弾外側）
+    drawBubble(
+        endX,
+        endY - 30,
+        "DISTANCE",
+        distance + " FT"
+    );
+
+    // EXIT VELOCITY（ホーム左下）
+    drawBubble(
+        homeX - 25,
+        homeY + 12,
+        "EXIT VELOCITY",
+        launchSpeed + " MPH"
+    );
+
+    // LAUNCH ANGLE（ホーム右下）
+    drawBubble(
+        homeX + 20,
+        homeY + 10,
+        "LAUNCH ANGLE",
+        launchAngle + "°"
+    );
+
+});
+</script>
+
 
 <script th:inline="javascript">
 /*<![CDATA[*/
