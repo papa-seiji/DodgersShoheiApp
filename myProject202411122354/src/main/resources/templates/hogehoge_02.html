@@ -352,7 +352,7 @@
       <span th:text="|${#temporals.format(g.gameDate,'MM/dd')} vs ${g.opponent}|"></span>
     </div>
 
-    <!-- 評価 
+    <!-- 評価
     <span class="form-badge"
           th:text="
             ${g.formValue == 2 ? 'S' :
@@ -555,32 +555,331 @@
 </div>
 
 
-<!-- スクロール制御 -->
-<!-- <script th:inline="javascript">
-/*<![CDATA[*/
-const selectedDate = /*[[${selectedDate != null ? selectedDate : 'null'}]]*/ null;
+<!-- game-cardの下に追加：Shohei HR表示 -->
 
-if (selectedDate) {
-  const targetCard = document.getElementById('game-' + selectedDate);
-  if (targetCard) {
-    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+<!-- ===================================== -->
+<!-- 🔥 Shohei HR 表示ブロック -->
+<!-- ===================================== -->
+<div th:if="${game != null and game.shoheiHRs != null and #lists.size(game.shoheiHRs) > 0}">
+<!-- <div th:if="${debugShoheiHRs != null and #lists.size(debugShoheiHRs) > 0}"> テスト用-->
 
-  document.querySelectorAll('.game-row').forEach(row => {
-    if (row.dataset.date === selectedDate) {
-      row.classList.add('is-selected');
+    <h3>🔥 Shohei Home-Run Details</h3>
+    <!-- 🔥 HR統計カード復活 -->
+ <!-- <div th:each="hr : ${debugShoheiHRs}" テスト用 -->
+      <div th:each="hr : ${game.shoheiHRs}"
+      style="margin-bottom:12px;
+              padding:10px 14px;
+              background:#96b9dc;
+              border-radius:10px;
+              font-weight:bold;
+              display:flex;
+              gap:24px;">
+
+      <div>
+          🚀 Exit Velocity:
+          <span th:text="${hr.launchSpeed}"></span> mph
+      </div>
+
+      <div>
+          📐 Launch Angle:
+          <span th:text="${hr.launchAngle}"></span>°
+      </div>
+
+      <div>
+          📏 Distance:
+          <span th:text="${hr.totalDistance}"></span> ft
+      </div>
+
+</div>
+
+        <!-- HRデータをゲーム単位でJSへ渡す -->
+<script th:inline="javascript">
+    window["hrData_776496"] = [[${debugShoheiHRs}]];
+</script>
+
+<canvas id="hrCanvas-776496"
+        width="700"
+        height="580"
+        style="background:#0b1c2d;border-radius:12px;margin-top:10px;">
+</canvas>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        drawHRCanvas(
+            'hrCanvas-776496',
+            window["hrData_776496"]
+        );
+    });
+</script>
+</div>
+
+<!-- 新しい描画エンジン（複数対応）-->
+<script>
+function drawHRCanvas(canvasId, hrList) {
+
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || !hrList || hrList.length === 0) return;
+
+    const ctx = canvas.getContext("2d");
+
+    const displayWidth = 700;
+    const displayHeight = 600;
+    const scaleFactor = 1.9;
+
+    canvas.width = displayWidth;
+    canvas.height = displayHeight;
+
+    ctx.scale(scaleFactor, scaleFactor);
+
+    const globalOffsetY = 90;
+    ctx.translate(0, globalOffsetY);
+
+    const homeX = displayWidth / (2 * scaleFactor);
+    const homeY = 180;
+
+    const leftPoleX = homeX - 110;
+    const rightPoleX = homeX + 110;
+    const fenceTopY = 40;
+
+    // =========================
+    // 外野
+    // =========================
+    ctx.beginPath();
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(leftPoleX, 120);
+    ctx.quadraticCurveTo(homeX, fenceTopY, rightPoleX, 120);
+    ctx.closePath();
+    ctx.fillStyle = "#1e7a34";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(leftPoleX, 120);
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(rightPoleX, 120);
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(leftPoleX, 120);
+    ctx.quadraticCurveTo(homeX, fenceTopY, rightPoleX, 120);
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(leftPoleX, 125);
+    ctx.quadraticCurveTo(homeX, 50, rightPoleX, 125);
+    ctx.strokeStyle = "rgba(0,0,0,0.6)";
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(leftPoleX, 120);
+    ctx.lineTo(leftPoleX, 40);
+    ctx.moveTo(rightPoleX, 120);
+    ctx.lineTo(rightPoleX, 40);
+    ctx.strokeStyle = "#ffd700";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // =========================
+    // 内野
+    // =========================
+    ctx.beginPath();
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(homeX - 55, 150);
+    ctx.lineTo(homeX, 120);
+    ctx.lineTo(homeX + 55, 150);
+    ctx.closePath();
+    ctx.fillStyle = "#000";
+    ctx.fill();
+
+    function drawBase(x, y) {
+        const size = 8;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(Math.PI / 4);
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(-size/2, -size/2, size, size);
+        ctx.restore();
     }
-  });
-}
-/*]]>*/
-</script>-->
 
-<!--<script>
-const params = new URLSearchParams(location.search);
-const month = params.get("month");
-document.getElementById("info").textContent =
-  month ? month + "月の詳細ページ" : "月未指定";
-</script>-->
+    drawBase(homeX, 174);
+    drawBase(homeX - 50, 150);
+    drawBase(homeX, 126);
+    drawBase(homeX + 50, 150);
+
+    // =========================
+    // 共通吹き出し関数（旧完全版）
+    // =========================
+    function drawBubble(x, y, title, value) {
+
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        x = x * scaleFactor;
+        y = (y + globalOffsetY) * scaleFactor;
+
+        const titleParts = title.split(" ");
+        const valueParts = value.split(" ");
+
+        const lineHeight = 13;
+        const padding = 0;
+
+        ctx.font = "bold 15px Arial";
+        let maxWidth = 0;
+
+        [...titleParts, ...valueParts].forEach(t => {
+            maxWidth = Math.max(maxWidth, ctx.measureText(t).width);
+        });
+
+        const radius = Math.max(26, maxWidth / 2 + padding);
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#f2f4f7";
+        ctx.fill();
+        ctx.strokeStyle = "#d0d4d8";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(x - 6, y + radius);
+        ctx.lineTo(x + 6, y + radius);
+        ctx.lineTo(x, y + radius + 8);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.textAlign = "center";
+
+        let totalLines = titleParts.length + valueParts.length;
+        let startY = y - ((totalLines - 1) * lineHeight) / 2;
+
+        ctx.fillStyle = "#6b7280";
+        ctx.font = "10px Arial";
+        titleParts.forEach(t => {
+            ctx.fillText(t, x, startY);
+            startY += lineHeight;
+        });
+
+        ctx.fillStyle = "#111827";
+        ctx.font = "bold 15px Arial";
+        valueParts.forEach(v => {
+            ctx.fillText(v, x, startY);
+            startY += lineHeight;
+        });
+
+        ctx.restore();
+    }
+
+    function getQuadraticPoint(t, x0, y0, cx, cy, x1, y1) {
+        const x =
+            (1 - t) * (1 - t) * x0 +
+            2 * (1 - t) * t * cx +
+            t * t * x1;
+
+        const y =
+            (1 - t) * (1 - t) * y0 +
+            2 * (1 - t) * t * cy +
+            t * t * y1;
+
+        return { x, y };
+    }
+
+    // =========================
+    // HRループ（完全復元）
+    // =========================
+    hrList.forEach((hr) => {
+
+        const launchSpeed = hr.launchSpeed || 0;
+        const launchAngle = hr.launchAngle || 0;
+        const distance = hr.totalDistance || 0;
+
+        const angleRad = launchAngle * Math.PI / 180;
+
+        let directionRad;
+
+        if (hr.coordX != null && hr.coordY != null) {
+            const dx = hr.coordX - homeX;
+            const dy = homeY - hr.coordY;
+            directionRad = Math.atan2(dy, dx);
+        } else {
+            directionRad = Math.PI / 2;
+        }
+
+        const centerFT = 400;
+        const a = 140;
+        const b = 180;
+
+        const maxRadius =
+            (a * b) /
+            Math.sqrt(
+                (b * Math.cos(directionRad)) ** 2 +
+                (a * Math.sin(directionRad)) ** 2
+            );
+
+        const finalRadius = maxRadius * (distance / centerFT);
+
+        const endX = homeX + finalRadius * Math.cos(directionRad);
+        const endY = homeY - finalRadius * Math.sin(directionRad);
+
+        const peakRadius = finalRadius * 0.55;
+        const peakX = homeX + peakRadius * Math.cos(directionRad);
+        const peakY =
+            homeY -
+            peakRadius * Math.sin(directionRad) -
+            (Math.sin(angleRad) * 140);
+
+        const estimatedHeight = Math.round(
+            distance * Math.sin(angleRad) * 0.45
+        );
+
+        // 放物線
+        ctx.beginPath();
+        ctx.moveTo(homeX, homeY);
+        ctx.quadraticCurveTo(peakX, peakY, endX, endY);
+
+        const gradient = ctx.createLinearGradient(homeX, homeY, endX, endY);
+        gradient.addColorStop(0, "#ffb347");
+        gradient.addColorStop(1, "#ff8c00");
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = "rgba(255,140,0,0.6)";
+        ctx.shadowBlur = 12;
+        ctx.lineCap = "round";
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // 着弾点
+        ctx.beginPath();
+        ctx.arc(endX, endY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff2d2d";
+        ctx.shadowColor = "rgba(255,0,0,0.6)";
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        const midPoint = getQuadraticPoint(
+            0.45,
+            homeX, homeY,
+            peakX, peakY,
+            endX, endY
+        );
+
+        drawBubble(midPoint.x, midPoint.y - 25, "HEIGHT", estimatedHeight + " FT");
+        drawBubble(endX, endY - 30, "DISTANCE", distance + " FT");
+        drawBubble(homeX - 25, homeY + 12, "EXIT VELOCITY", launchSpeed + " MPH");
+        drawBubble(homeX + 20, homeY + 10, "LAUNCH ANGLE", launchAngle + "°");
+
+    });
+
+}
+</script>
+
 
 <script th:inline="javascript">
 /*<![CDATA[*/

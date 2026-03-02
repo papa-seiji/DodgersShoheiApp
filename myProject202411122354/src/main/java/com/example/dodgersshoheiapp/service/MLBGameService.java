@@ -107,4 +107,202 @@ public class MLBGameService {
 
         return formattedGame;
     }
+
+    // gamePk → playByPlay JSON が取れる
+    public Map<String, Object> getPlayByPlay(Long gamePk) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://statsapi.mlb.com/api/v1/game/"
+                + gamePk + "/playByPlay";
+
+        return restTemplate.getForObject(url, Map.class);
+    }
+
+    ////////////////////////////// 対象日のHR数を取得する
+    public int countHomeRuns(Long gamePk) {
+
+        Map<String, Object> playByPlay = getPlayByPlay(gamePk);
+
+        if (playByPlay == null)
+            return 0;
+
+        var allPlays = (java.util.List<Map<String, Object>>) playByPlay.get("allPlays");
+
+        if (allPlays == null)
+            return 0;
+
+        int hrCount = 0;
+
+        for (Map<String, Object> play : allPlays) {
+            Map<String, Object> result = (Map<String, Object>) play.get("result");
+            if (result != null) {
+                String event = (String) result.get("event");
+                if ("Home Run".equals(event)) {
+                    hrCount++;
+                }
+            }
+        }
+
+        return hrCount;
+    }
+
+    ////////////////////////////// HRを打った選手名を取得する
+    public java.util.List<String> getHomeRunHitters(Long gamePk) {
+
+        Map<String, Object> playByPlay = getPlayByPlay(gamePk);
+        if (playByPlay == null)
+            return java.util.Collections.emptyList();
+
+        var allPlays = (java.util.List<Map<String, Object>>) playByPlay.get("allPlays");
+        if (allPlays == null)
+            return java.util.Collections.emptyList();
+
+        java.util.List<String> hitters = new java.util.ArrayList<>();
+
+        for (Map<String, Object> play : allPlays) {
+            Map<String, Object> result = (Map<String, Object>) play.get("result");
+            if (result != null) {
+                String event = (String) result.get("event");
+                if ("Home Run".equals(event)) {
+
+                    Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+
+                    if (matchup != null) {
+                        Map<String, Object> batter = (Map<String, Object>) matchup.get("batter");
+
+                        if (batter != null) {
+                            hitters.add((String) batter.get("fullName"));
+                        }
+                    }
+                }
+            }
+        }
+
+        return hitters;
+    }
+
+    // HRの打球データを取得する
+    // launchSpeed（打球速度）launchAngle（打球角度）totalDistance（飛距離）hitCoordinates（座標）
+    public java.util.List<Map<String, Object>> getHomeRunDetails(Long gamePk) {
+
+        Map<String, Object> playByPlay = getPlayByPlay(gamePk);
+        if (playByPlay == null)
+            return java.util.Collections.emptyList();
+
+        var allPlays = (java.util.List<Map<String, Object>>) playByPlay.get("allPlays");
+        if (allPlays == null)
+            return java.util.Collections.emptyList();
+
+        java.util.List<Map<String, Object>> hrDetails = new java.util.ArrayList<>();
+
+        for (Map<String, Object> play : allPlays) {
+
+            Map<String, Object> result = (Map<String, Object>) play.get("result");
+            if (result == null)
+                continue;
+
+            String event = (String) result.get("event");
+            if (!"Home Run".equals(event))
+                continue;
+
+            Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+
+            Map<String, Object> batter = matchup != null ? (Map<String, Object>) matchup.get("batter") : null;
+
+            Map<String, Object> hr = new java.util.HashMap<>();
+
+            if (batter != null) {
+                hr.put("hitter", batter.get("fullName"));
+            }
+
+            // 🔥 ここが修正ポイント
+            var playEvents = (java.util.List<Map<String, Object>>) play.get("playEvents");
+
+            if (playEvents != null) {
+                for (Map<String, Object> eventObj : playEvents) {
+
+                    Map<String, Object> hitData = (Map<String, Object>) eventObj.get("hitData");
+
+                    if (hitData != null) {
+                        hr.put("launchSpeed", hitData.get("launchSpeed"));
+                        hr.put("launchAngle", hitData.get("launchAngle"));
+                        hr.put("totalDistance", hitData.get("totalDistance"));
+                    }
+                }
+            }
+
+            hrDetails.add(hr);
+        }
+
+        return hrDetails;
+    }
+
+    /////////////////////////////// Shohei専用抽出メソッド
+    public List<Map<String, Object>> getShoheiHomeRuns(Long gamePk) {
+
+        Map<String, Object> playByPlay = getPlayByPlay(gamePk);
+        if (playByPlay == null)
+            return Collections.emptyList();
+
+        var allPlays = (List<Map<String, Object>>) playByPlay.get("allPlays");
+        if (allPlays == null)
+            return Collections.emptyList();
+
+        List<Map<String, Object>> shoheiHRs = new ArrayList<>();
+
+        for (Map<String, Object> play : allPlays) {
+
+            Map<String, Object> result = (Map<String, Object>) play.get("result");
+            if (result == null)
+                continue;
+
+            if (!"Home Run".equals(result.get("event")))
+                continue;
+
+            Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+
+            if (matchup == null)
+                continue;
+
+            Map<String, Object> batter = (Map<String, Object>) matchup.get("batter");
+
+            if (batter == null)
+                continue;
+
+            String name = (String) batter.get("fullName");
+
+            if (!"Shohei Ohtani".equals(name))
+                continue;
+
+            Map<String, Object> hr = new HashMap<>();
+            hr.put("hitter", name);
+
+            var playEvents = (List<Map<String, Object>>) play.get("playEvents");
+
+            if (playEvents != null) {
+                for (Map<String, Object> eventObj : playEvents) {
+                    Map<String, Object> hitData = (Map<String, Object>) eventObj.get("hitData");
+
+                    if (hitData != null) {
+                        hr.put("launchSpeed", hitData.get("launchSpeed"));
+                        hr.put("launchAngle", hitData.get("launchAngle"));
+                        hr.put("totalDistance", hitData.get("totalDistance"));
+
+                        // 🔥 ここ追加
+                        Map<String, Object> coordinates = (Map<String, Object>) hitData.get("coordinates");
+
+                        if (coordinates != null) {
+                            hr.put("coordX", coordinates.get("coordX"));
+                            hr.put("coordY", coordinates.get("coordY"));
+                        }
+                    }
+                }
+            }
+
+            shoheiHRs.add(hr);
+        }
+
+        return shoheiHRs;
+    }
 }

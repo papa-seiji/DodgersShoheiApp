@@ -5,6 +5,7 @@ import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniGameDetail;
 import com.example.dodgersshoheiapp.repository.OhtaniGameRepository;
 import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameRepository;
+import com.example.dodgersshoheiapp.service.MLBGameService;
 import com.example.dodgersshoheiapp.service.MlbLineupService;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class OhtaniGameController {
     private final OhtaniGameRepository repository;
     private final OhtaniPitchingGameRepository pitchingGameRepository;
     private final MlbLineupService lineupService; // ★追加
+    private final MLBGameService mlbGameService; // ★追加
 
     @GetMapping("/hogehoge_02")
     public String showMonthlyGames(
@@ -173,6 +177,62 @@ public class OhtaniGameController {
 
         model.addAttribute("games", targetGames);
 
+        // ===============================
+        // 🔥 DEBUG MOCK Shohei HR 表示確認用
+        // ===============================
+        // {
+        // List<Map<String, Object>> mock = new ArrayList<>();
+        //
+        // Map<String, Object> testHr = new HashMap<>();
+        //
+        // testHr.put("hitter", "Shohei Ohtani");
+        // testHr.put("launchSpeed", 120.1);
+        // testHr.put("launchAngle", 32);
+        // testHr.put("totalDistance", 398);
+        // testHr.put("coordX", 80);
+        // testHr.put("coordY", 120);
+        //
+        // mock.add(testHr);
+        //
+        // model.addAttribute("debugShoheiHRs", mock);
+        //
+        // return "hogehoge_02";
+        // }
+
+        // ===============================
+        // 🔥 Shohei HR 実データ注入（試合単位保持）
+        // ===============================
+
+        for (OhtaniGame game : targetGames) {
+
+            // 念のため初期化（前回値残り防止）
+            game.setShoheiHRs(null);
+
+            if (game.getGamePk() != null) {
+
+                List<Map<String, Object>> hrs = mlbGameService.getShoheiHomeRuns(game.getGamePk());
+
+                if (hrs != null && !hrs.isEmpty()) {
+                    game.setShoheiHRs(hrs);
+                }
+            }
+        }
+
+        model.addAttribute("games", targetGames);
+
         return "hogehoge_02";
+
+        // ===============================
+        // 🔥 Shohei HR 実データ注入（テスト用固定gamePk）フィールド描画確認用ロジック
+        // ===============================
+
+        // Long testGamePk = 813031L; // ← 去年のShohei HRがある試合のgamePkに変更
+
+        // List<Map<String, Object>> shoheiHRs =
+        // mlbGameService.getShoheiHomeRuns(testGamePk);
+
+        // model.addAttribute("debugShoheiHRs", shoheiHRs);
+
+        // return "hogehoge_02";
     }
 }
