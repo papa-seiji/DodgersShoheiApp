@@ -51,6 +51,8 @@ public class OhtaniGame {
     private Integer awayHits;
     private Integer homeErrors;
     private Integer awayErrors;
+    // 🔥 Shohei HR（試合単位保持・DB非保存）
+    private List<java.util.Map<String, Object>> shoheiHRs;
 
     // ===== Getter / Setter =====
 
@@ -200,4 +202,13 @@ public class OhtaniGame {
         this.awayErrors = awayErrors;
     }
 
+    // ===== Shohei HR =====
+
+    public List<java.util.Map<String, Object>> getShoheiHRs() {
+        return shoheiHRs;
+    }
+
+    public void setShoheiHRs(List<java.util.Map<String, Object>> shoheiHRs) {
+        this.shoheiHRs = shoheiHRs;
+    }
 }

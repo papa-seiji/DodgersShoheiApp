@@ -557,127 +557,130 @@
 
 <!-- game-cardの下に追加：Shohei HR表示 -->
 
-<div class="shohei-hr-section"
-     th:if="${game != null and game.shoheiHRs != null and !#lists.isEmpty(game.shoheiHRs)}">
+<!-- ===================================== -->
+<!-- 🔥 Shohei HR 表示ブロック -->
+<!-- ===================================== -->
+<div th:if="${game != null and game.shoheiHRs != null and #lists.size(game.shoheiHRs) > 0}">
+<!-- <div th:if="${debugShoheiHRs != null and #lists.size(debugShoheiHRs) > 0}"> テスト用-->
 
-    <h4>🔥 Shohei HR</h4>
+    <h3>🔥 Shohei Home-Run Details</h3>
+    <!-- 🔥 HR統計カード復活 -->
+ <!-- <div th:each="hr : ${debugShoheiHRs}" テスト用 -->
+      <div th:each="hr : ${game.shoheiHRs}"
+      style="margin-bottom:12px;
+              padding:10px 14px;
+              background:#96b9dc;
+              border-radius:10px;
+              font-weight:bold;
+              display:flex;
+              gap:24px;">
 
-    <div th:each="hr : ${game.shoheiHRs}" class="shohei-hr-card">
+      <div>
+          🚀 Exit Velocity:
+          <span th:text="${hr.launchSpeed}"></span> mph
+      </div>
 
-        <div>
-            🚀 Exit Velocity:
-            <span th:text="${hr.launchSpeed}">0</span> mph
-        </div>
+      <div>
+          📐 Launch Angle:
+          <span th:text="${hr.launchAngle}"></span>°
+      </div>
 
-        <div>
-            📐 Launch Angle:
-            <span th:text="${hr.launchAngle}">0</span>°
-        </div>
-
-        <div>
-            📏 Distance:
-            <span th:text="${hr.totalDistance}">0</span> ft
-        </div>
-
-    </div>
-
-</div>
-
-
-
-<!-- 🔥 DEBUG MOCK HR表示確認ブロック -->
-<div style="background:#111;color:#fff;padding:15px;margin:20px 0;border-radius:8px;"
-     th:if="${debugShoheiHRs != null}">
-
-    <h3 style="margin-bottom:10px;">🔥 DEBUG Shohei HR MOCK</h3>
-
-    <div th:each="hr : ${debugShoheiHRs}"
-         style="padding:8px;background:#222;margin-bottom:8px;border-radius:6px;">
-
-        🚀 EV:
-        <span th:text="${hr.launchSpeed}">0</span> mph /
-
-        📐 LA:
-        <span th:text="${hr.launchAngle}">0</span>° /
-
-        📏 Dist:
-        <span th:text="${hr.totalDistance}">0</span> ft
-    </div>
+      <div>
+          📏 Distance:
+          <span th:text="${hr.totalDistance}"></span> ft
+      </div>
 
 </div>
 
-<!--<canvas id="hrCanvas"
-        width="300"
-        height="200"
+        <!-- HRデータをゲーム単位でJSへ渡す -->
+<script th:inline="javascript">
+    window["hrData_776496"] = [[${debugShoheiHRs}]];
+</script>
+
+<canvas id="hrCanvas-776496"
+        width="700"
+        height="580"
         style="background:#0b1c2d;border-radius:12px;margin-top:10px;">
-</canvas>-->
-
-<canvas id="hrCanvas" style="background:#0b1c2d;border-radius:12px;margin-top:10px;"></canvas>
+</canvas>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
+        drawHRCanvas(
+            'hrCanvas-776496',
+            window["hrData_776496"]
+        );
+    });
+</script>
+</div>
 
-    const canvas = document.getElementById("hrCanvas");
-    if (!canvas) return;
+<!-- 新しい描画エンジン（複数対応）-->
+<script>
+function drawHRCanvas(canvasId, hrList) {
+
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || !hrList || hrList.length === 0) return;
 
     const ctx = canvas.getContext("2d");
 
-    // =========================
-    // キャンバス拡大設定
-    // =========================
     const displayWidth = 700;
-    const displayHeight = 500;
-    const scaleFactor = 2.1;
+    const displayHeight = 600;
+    const scaleFactor = 1.9;
 
     canvas.width = displayWidth;
     canvas.height = displayHeight;
 
     ctx.scale(scaleFactor, scaleFactor);
 
-    const launchSpeed = 111.1;
-    const launchAngle = 33;
-    const distance = 415;
+    const globalOffsetY = 90;
+    ctx.translate(0, globalOffsetY);
+
+    const homeX = displayWidth / (2 * scaleFactor);
+    const homeY = 180;
+
+    const leftPoleX = homeX - 110;
+    const rightPoleX = homeX + 110;
+    const fenceTopY = 40;
 
     // =========================
     // 外野
     // =========================
     ctx.beginPath();
-    ctx.moveTo(150, 180);
-    ctx.lineTo(40, 120);
-    ctx.quadraticCurveTo(150, 40, 260, 120);
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(leftPoleX, 120);
+    ctx.quadraticCurveTo(homeX, fenceTopY, rightPoleX, 120);
     ctx.closePath();
     ctx.fillStyle = "#1e7a34";
     ctx.fill();
 
     ctx.beginPath();
-    ctx.moveTo(150, 180);
-    ctx.lineTo(40, 120);
-    ctx.moveTo(150, 180);
-    ctx.lineTo(260, 120);
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(leftPoleX, 120);
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(rightPoleX, 120);
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 2;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(40, 120);
-    ctx.quadraticCurveTo(150, 40, 260, 120);
+    ctx.moveTo(leftPoleX, 120);
+    ctx.quadraticCurveTo(homeX, fenceTopY, rightPoleX, 120);
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 6;
     ctx.lineCap = "round";
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(40, 125);
-    ctx.quadraticCurveTo(150, 50, 260, 125);
+    ctx.moveTo(leftPoleX, 125);
+    ctx.quadraticCurveTo(homeX, 50, rightPoleX, 125);
     ctx.strokeStyle = "rgba(0,0,0,0.6)";
     ctx.lineWidth = 8;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(40, 120);
-    ctx.lineTo(40, 40);
-    ctx.moveTo(260, 120);
-    ctx.lineTo(260, 40);
+    ctx.moveTo(leftPoleX, 120);
+    ctx.lineTo(leftPoleX, 40);
+    ctx.moveTo(rightPoleX, 120);
+    ctx.lineTo(rightPoleX, 40);
     ctx.strokeStyle = "#ffd700";
     ctx.lineWidth = 1;
     ctx.stroke();
@@ -686,10 +689,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // 内野
     // =========================
     ctx.beginPath();
-    ctx.moveTo(150, 180);
-    ctx.lineTo(95, 150);
-    ctx.lineTo(150, 120);
-    ctx.lineTo(205, 150);
+    ctx.moveTo(homeX, homeY);
+    ctx.lineTo(homeX - 55, 150);
+    ctx.lineTo(homeX, 120);
+    ctx.lineTo(homeX + 55, 150);
     ctx.closePath();
     ctx.fillStyle = "#000";
     ctx.fill();
@@ -704,94 +707,21 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.restore();
     }
 
-    drawBase(150, 174);
-    drawBase(100, 150);
-    drawBase(150, 126);
-    drawBase(200, 150);
+    drawBase(homeX, 174);
+    drawBase(homeX - 50, 150);
+    drawBase(homeX, 126);
+    drawBase(homeX + 50, 150);
 
     // =========================
-    // 弾道計算
-    // =========================
-    const homeX = 150;
-    const homeY = 180;
-
-    const centerFT = 361;
-    const a = 110;
-    const b = 140;
-
-    const sprayAngle = 55;
-    const directionRad = sprayAngle * Math.PI / 180;
-    const angleRad = launchAngle * Math.PI / 180;
-
-    const maxRadius =
-        (a * b) /
-        Math.sqrt(
-            (b * Math.cos(directionRad))**2 +
-            (a * Math.sin(directionRad))**2
-        );
-
-    const ratio = distance / centerFT;
-    const finalRadius = maxRadius * ratio;
-
-    const endX = homeX + finalRadius * Math.cos(directionRad);
-    const endY = homeY - finalRadius * Math.sin(directionRad);
-
-    const peakRadius = finalRadius * 0.55;
-
-    const peakX = homeX + peakRadius * Math.cos(directionRad);
-    const peakY =
-        homeY -
-        peakRadius * Math.sin(directionRad) -
-        (Math.sin(angleRad) * 80);
-
-    ctx.beginPath();
-    ctx.moveTo(homeX, homeY);
-    ctx.quadraticCurveTo(peakX, peakY, endX, endY);
-    ctx.strokeStyle = "#ffb74d";
-    ctx.lineWidth = 4;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(endX, endY, 6, 0, Math.PI * 2);
-    ctx.fillStyle = "#ff1744";
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = "#ff1744";
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    const estimatedHeight = Math.round(
-        distance * Math.sin(angleRad) * 0.45
-    );
-
-
-// =========================
-// 🎯 放物線上の任意点を取得
-// =========================
-function getQuadraticPoint(t, x0, y0, cx, cy, x1, y1) {
-    const x =
-        (1 - t) * (1 - t) * x0 +
-        2 * (1 - t) * t * cx +
-        t * t * x1;
-
-    const y =
-        (1 - t) * (1 - t) * y0 +
-        2 * (1 - t) * t * cy +
-        t * t * y1;
-
-    return { x, y };
-}
-
-
-    // =========================
-    // 吹き出し描画関数
+    // 共通吹き出し関数（旧完全版）
     // =========================
     function drawBubble(x, y, title, value) {
 
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        x *= scaleFactor;
-        y *= scaleFactor;
+        x = x * scaleFactor;
+        y = (y + globalOffsetY) * scaleFactor;
 
         const titleParts = title.split(" ");
         const valueParts = value.split(" ");
@@ -845,54 +775,109 @@ function getQuadraticPoint(t, x0, y0, cx, cy, x1, y1) {
         ctx.restore();
     }
 
+    function getQuadraticPoint(t, x0, y0, cx, cy, x1, y1) {
+        const x =
+            (1 - t) * (1 - t) * x0 +
+            2 * (1 - t) * t * cx +
+            t * t * x1;
+
+        const y =
+            (1 - t) * (1 - t) * y0 +
+            2 * (1 - t) * t * cy +
+            t * t * y1;
+
+        return { x, y };
+    }
+
     // =========================
-    // 🎯 Statcast寄せ配置
+    // HRループ（完全復元）
     // =========================
+    hrList.forEach((hr) => {
 
-    const normalX = -Math.sin(directionRad);
-    const normalY = -Math.cos(directionRad);
+        const launchSpeed = hr.launchSpeed || 0;
+        const launchAngle = hr.launchAngle || 0;
+        const distance = hr.totalDistance || 0;
 
-    // HEIGHT（ピーク外側）
-    // 放物線の中腹（t=0.45くらい）
-    const midPoint = getQuadraticPoint(
-        0.45,
-        homeX, homeY,
-        peakX, peakY,
-        endX, endY
-    );
+        const angleRad = launchAngle * Math.PI / 180;
 
-    drawBubble(
-        midPoint.x,
-        midPoint.y - 25,
-        "HEIGHT",
-        estimatedHeight + " FT"
-    );
+        let directionRad;
 
-    // DISTANCE（着弾外側）
-    drawBubble(
-        endX,
-        endY - 30,
-        "DISTANCE",
-        distance + " FT"
-    );
+        if (hr.coordX != null && hr.coordY != null) {
+            const dx = hr.coordX - homeX;
+            const dy = homeY - hr.coordY;
+            directionRad = Math.atan2(dy, dx);
+        } else {
+            directionRad = Math.PI / 2;
+        }
 
-    // EXIT VELOCITY（ホーム左下）
-    drawBubble(
-        homeX - 25,
-        homeY + 12,
-        "EXIT VELOCITY",
-        launchSpeed + " MPH"
-    );
+        const centerFT = 400;
+        const a = 140;
+        const b = 180;
 
-    // LAUNCH ANGLE（ホーム右下）
-    drawBubble(
-        homeX + 20,
-        homeY + 10,
-        "LAUNCH ANGLE",
-        launchAngle + "°"
-    );
+        const maxRadius =
+            (a * b) /
+            Math.sqrt(
+                (b * Math.cos(directionRad)) ** 2 +
+                (a * Math.sin(directionRad)) ** 2
+            );
 
-});
+        const finalRadius = maxRadius * (distance / centerFT);
+
+        const endX = homeX + finalRadius * Math.cos(directionRad);
+        const endY = homeY - finalRadius * Math.sin(directionRad);
+
+        const peakRadius = finalRadius * 0.55;
+        const peakX = homeX + peakRadius * Math.cos(directionRad);
+        const peakY =
+            homeY -
+            peakRadius * Math.sin(directionRad) -
+            (Math.sin(angleRad) * 140);
+
+        const estimatedHeight = Math.round(
+            distance * Math.sin(angleRad) * 0.45
+        );
+
+        // 放物線
+        ctx.beginPath();
+        ctx.moveTo(homeX, homeY);
+        ctx.quadraticCurveTo(peakX, peakY, endX, endY);
+
+        const gradient = ctx.createLinearGradient(homeX, homeY, endX, endY);
+        gradient.addColorStop(0, "#ffb347");
+        gradient.addColorStop(1, "#ff8c00");
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = "rgba(255,140,0,0.6)";
+        ctx.shadowBlur = 12;
+        ctx.lineCap = "round";
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // 着弾点
+        ctx.beginPath();
+        ctx.arc(endX, endY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff2d2d";
+        ctx.shadowColor = "rgba(255,0,0,0.6)";
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        const midPoint = getQuadraticPoint(
+            0.45,
+            homeX, homeY,
+            peakX, peakY,
+            endX, endY
+        );
+
+        drawBubble(midPoint.x, midPoint.y - 25, "HEIGHT", estimatedHeight + " FT");
+        drawBubble(endX, endY - 30, "DISTANCE", distance + " FT");
+        drawBubble(homeX - 25, homeY + 12, "EXIT VELOCITY", launchSpeed + " MPH");
+        drawBubble(homeX + 20, homeY + 10, "LAUNCH ANGLE", launchAngle + "°");
+
+    });
+
+}
 </script>
 
 

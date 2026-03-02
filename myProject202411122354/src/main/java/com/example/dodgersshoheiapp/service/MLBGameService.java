@@ -288,6 +288,14 @@ public class MLBGameService {
                         hr.put("launchSpeed", hitData.get("launchSpeed"));
                         hr.put("launchAngle", hitData.get("launchAngle"));
                         hr.put("totalDistance", hitData.get("totalDistance"));
+
+                        // 🔥 ここ追加
+                        Map<String, Object> coordinates = (Map<String, Object>) hitData.get("coordinates");
+
+                        if (coordinates != null) {
+                            hr.put("coordX", coordinates.get("coordX"));
+                            hr.put("coordY", coordinates.get("coordY"));
+                        }
                     }
                 }
             }
