@@ -208,10 +208,10 @@ async function loadPostseasonStats() {
         console.warn("API取得失敗、手動データで表示します:", error);
 
         const manualStats = {
-            ohtaniHitting: { avg: ".435", homeRuns: 1, rbi: 8, ops: "1.345" },
-            ohtaniPitching: { era: "1.86", inningsPitched: "9 2/3", strikeOuts: 11, whip: "0.152" },
-            yamamotoPitching: { era: "2.45", inningsPitched: "7 1/3", strikeOuts: 12, whip: "0.160" },
-            sasakiPitching: { era: "3.52", inningsPitched: "7 2/3", strikeOuts: 11, whip: "0.233" }
+            ohtaniHitting: { avg: ".750", homeRuns: 1, rbi: 5, ops: "2.500" },
+            // ohtaniPitching: { era: "1.86", inningsPitched: "9 2/3", strikeOuts: 11, whip: "0.152" },
+            yamamotoPitching: { era: "0.00", inningsPitched: "2 2/3", strikeOuts: 2, whip: "1.13" },
+            // sasakiPitching: { era: "3.52", inningsPitched: "7 2/3", strikeOuts: 11, whip: "0.233" }
         };
 
         renderPostseasonStats(manualStats);
@@ -247,9 +247,9 @@ function renderPostseasonStats(statsData) {
     `;
 
     const pitchers = [
-        { data: statsData.ohtaniPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.ohtaniPitching || {}, player: players[0] },
+        // { data: statsData.ohtaniPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.ohtaniPitching || {}, player: players[0] },
         { data: statsData.yamamotoPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.yamamotoPitching || {}, player: players[1] },
-        { data: statsData.sasakiPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.sasakiPitching || {}, player: players[2] }
+        // { data: statsData.sasakiPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.sasakiPitching || {}, player: players[2] }
     ];
 
     document.getElementById("pitching-stats").innerHTML = pitchers.map(p => `
