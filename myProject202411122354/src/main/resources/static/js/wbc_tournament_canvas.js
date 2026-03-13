@@ -630,7 +630,7 @@ BOX_HIT_AREAS.push({
 drawRoundTitleCentered(
   CENTER_X,
   Y_FINAL + 20,
-  "決勝 '26/3/17(火)"
+  "決勝 '26/3/18(水)"
 );
 
 
@@ -714,7 +714,7 @@ BOX_HIT_AREAS.push({
 drawRoundTitleCentered(
   SF_LEFT_X + BOX_W / 2,
   Y_SF + 20,
-  "① 準決勝 '26/3/15(日)"
+  "① 準決勝 '26/3/16(月)"
 );
 
 if (hasSf1Teams) {
@@ -794,7 +794,7 @@ BOX_HIT_AREAS.push({
 drawRoundTitleCentered(
   SF_RIGHT_X + BOX_W / 2,
   Y_SF + 20,
-  "② 準決勝 '26/3/16(月)"
+  "② 準決勝 '26/3/17(火)"
 );
 
 if (hasSf2Teams) {
@@ -868,9 +868,9 @@ if (hasSf2Teams) {
 
 // 準々決勝 固定表示文言（B案）
 const QF_FIXED_LABELS = {
-  1: ["POOL A 2位", "POOL B 1位"],
-  2: ["POOL B 2位", "POOL A 1位"],
-  3: ["POOL C 2位", "POOL D 1位"],
+  1: ["POOL C 2位", "POOL D 1位"],
+  2: ["POOL A 1位", "POOL B 2位"],
+  3: ["POOL A 2位", "POOL B 1位"],
   4: ["POOL D 2位", "POOL C 1位"]
 };
 
@@ -972,7 +972,7 @@ drawQuarterFinal({
   y: Y_QF,
   boxW: BOX_W,
   boxH: BOX_H,
-  title: "① 準々決勝 '26/3/13(金)",
+  title: "① 準々決勝 '26/3/14(土)",
   match: tournament.QF?.[1],
   hitTitle: "① 準々決勝"
 });
@@ -994,7 +994,7 @@ drawQuarterFinal({
   y: Y_QF,
   boxW: BOX_W,
   boxH: BOX_H,
-  title: "③ 準々決勝 '26/3/13(金)",
+  title: "③ 準々決勝 '26/3/15(日)",
   match: tournament.QF?.[3],
   hitTitle: "③ 準々決勝"
 });
@@ -1005,7 +1005,7 @@ drawQuarterFinal({
   y: Y_QF,
   boxW: BOX_W,
   boxH: BOX_H,
-  title: "④ 準々決勝 '26/3/14(土)",
+  title: "④ 準々決勝 '26/3/15(日)",
   match: tournament.QF?.[4],
   hitTitle: "④ 準々決勝"
 });
