@@ -154,40 +154,40 @@ function saveMatch(id) {
 /* =========================
    ★ QF チーム定義（追加）
 ========================= */
-const QF_POOLS_AB = [
-  "PUERTO RICO","CUBA","CANADA","PANAMA","COLOMBIA",
-  "USA","MEXICO","ITALY","UNITED KINGDOM","BRAZIL"
-];
+// const QF_POOLS_AB = [
+//   "PUERTO RICO","CUBA","CANADA","PANAMA","COLOMBIA",
+//   "USA","MEXICO","ITALY","UNITED KINGDOM","BRAZIL"
+// ];
 
-const QF_POOLS_CD = [
-  "JAPAN","AUSTRALIA","KOREA","CZECH REPUBLIC","CHINESE TAIPEI",
-  "VENEZUELA","DOMINICAN REPUBLIC","NETHERLANDS","ISRAEL","NICARAGUA"
-];
+// const QF_POOLS_CD = [
+//   "JAPAN","AUSTRALIA","KOREA","CZECH REPUBLIC","CHINESE TAIPEI",
+//   "VENEZUELA","DOMINICAN REPUBLIC","NETHERLANDS","ISRAEL","NICARAGUA"
+// ];
 
 
 /* =================================
    ★ QF Home/Away 制御プルダウン制御
 ================================== */
-function setupQFTeamSelect(row) {
-  const round = row.querySelector(".round").innerText;
-  const no    = Number(row.querySelector(".match-no").innerText);
+// function setupQFTeamSelect(row) {
+//   const round = row.querySelector(".round").innerText;
+//   const no    = Number(row.querySelector(".match-no").innerText);
 
-  if (round !== "QF") return;
+//   if (round !== "QF") return;
 
-  const homeSel = row.querySelector(".home-team");
-  const awaySel = row.querySelector(".away-team");
+//   const homeSel = row.querySelector(".home-team");
+//   const awaySel = row.querySelector(".away-team");
 
-  const teams = (no === 1 || no === 2) ? QF_POOLS_AB : QF_POOLS_CD;
+//   const teams = (no === 1 || no === 2) ? QF_POOLS_AB : QF_POOLS_CD;
 
-  [homeSel, awaySel].forEach(sel => {
-    const current = sel.value;
-    sel.innerHTML = `<option value="">---</option>`;
-    teams.forEach(t => {
-      sel.innerHTML += `<option value="${t}">${t}</option>`;
-    });
-    sel.value = current;
-  });
-}
+//   [homeSel, awaySel].forEach(sel => {
+//     const current = sel.value;
+//     sel.innerHTML = `<option value="">---</option>`;
+//     teams.forEach(t => {
+//       sel.innerHTML += `<option value="${t}">${t}</option>`;
+//     });
+//     sel.value = current;
+//   });
+// }
 
 
 /* ===========================
