@@ -592,7 +592,7 @@ drawChampionWithFlagCentered(
 } else {
   ctx.font = `bold ${FONT_LG}px sans-serif`;
   ctx.textAlign = "center";
-  ctx.fillText("未定", CENTER_X, Y_CHAMP + 70);
+  ctx.fillText("ベネゼエラ", CENTER_X, Y_CHAMP + 70);
 }
 
 // ==============================
