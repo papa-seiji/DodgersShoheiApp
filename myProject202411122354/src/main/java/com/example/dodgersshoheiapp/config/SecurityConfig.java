@@ -58,6 +58,9 @@ public class SecurityConfig {
                 // --- 認可設定 ---
                 .authorizeHttpRequests(auth -> auth
 
+                        // ✅ ★これを追加（最優先で通す）
+                        .requestMatchers("/health").permitAll()
+
                         .requestMatchers("/api/wbc/tournament/**").permitAll()
 
                         // 🔓 認証不要（入口ページ・静的リソース）
