@@ -79,7 +79,8 @@
         userInfoElement.textContent = '';
         }
     });
-    document.addEventListener('DOMContentLoaded', fetchUserInfo);
+    // ❌ これを削除 or コメントアウト
+    // document.addEventListener('DOMContentLoaded', fetchUserInfo);
 </script>
 
 <div>スマホを横にした方が見やすくなります。</div>
@@ -170,7 +171,7 @@
     <h1>Mookie Betts vs 鈴木誠也</h1>
 
     <div class="image-comparison">
-        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/Mookie_Betts.jpg" alt="ベッツ" class="player-img" />
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/%E9%88%B4%E6%9C%A8%E8%AA%A0%E4%B9%9F.jpg" alt="鈴木誠也" class="player-img" />
         <div class="stats-overlay">
             <div class="stat-row">
                 <span id="gamesPlayed-seiya">--</span>
@@ -203,7 +204,7 @@
                 <span id="ops-betts">--</span>
             </div>
         </div>
-        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/%E9%88%B4%E6%9C%A8%E8%AA%A0%E4%B9%9F.jpg" alt="鈴木誠也" class="player-img" />
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/Mookie_Betts.jpg" alt="ベッツ" class="player-img" />
     </div>
 </div>
 
@@ -430,150 +431,157 @@ stompClient.connect({}, () => {
 
     // メッセージ受信時の処理
     stompClient.subscribe('/topic/stats', (message) => {
+
+// ① まず宣言
     const data = JSON.parse(message.body);
-    const ohtani = data.ohtani.stats[0].splits[0].stat;
-    const judge = data.judge.stats[0].splits[0].stat;
-    const trout = data.trout.stats[0].splits[0].stat;
-    const edoman = data.edoman.stats[0].splits[0].stat;
-    const seiya = data.seiya.stats[0].splits[0].stat;
-    const betts = data.betts.stats[0].splits[0].stat;
-    const schwarber = data.schwarber.stats[0].splits[0].stat;
-    const teoscar = data.teoscar.stats[0].splits[0].stat;
-    const raleigh = data.raleigh.stats[0].splits[0].stat;
-    const yoshida = data.yoshida.stats[0].splits[0].stat;
+
+        // 👇 ここに追加！！
+    console.log(data.judge?.stats?.[0]?.splits);
+
+    // const data = JSON.parse(message.body);
+    const ohtani = data.ohtani?.stats?.[0]?.splits?.[0]?.stat || null;
+    const judge  = data.judge?.stats?.[0]?.splits?.[0]?.stat || null;
+    const trout = data.trout?.stats?.[0]?.splits?.[0]?.stat || null;
+    const edoman = data.edoman?.stats?.[0]?.splits?.[0]?.stat || null;
+    const seiya = data.seiya?.stats?.[0]?.splits?.[0]?.stat || null;
+    const betts = data.betts?.stats?.[0]?.splits?.[0]?.stat || null;
+    const schwarber = data.schwarber?.stats?.[0]?.splits?.[0]?.stat || null;
+    const teoscar = data.teoscar?.stats?.[0]?.splits?.[0]?.stat || null;
+    const raleigh = data.raleigh?.stats?.[0]?.splits?.[0]?.stat || null;
+    const yoshida = data.yoshida?.stats?.[0]?.splits?.[0]?.stat || null;
 
 
 
 
-      // ⏬ 大谷翔平
-    document.getElementById("gamesPlayed-right").textContent = ohtani.gamesPlayed || "--";
-    document.getElementById("avg-right").textContent = ohtani.avg || "--";
-    document.getElementById("homeRuns-right").textContent = ohtani.homeRuns || "--";
-    document.getElementById("stolenBases-right").textContent = ohtani.stolenBases || "--";
-    document.getElementById("rbi-right").textContent = ohtani.rbi || "--";
-    document.getElementById("ops-right").textContent = ohtani.ops || "--";
 
-      // ⏬ ジャッジ
-    document.getElementById("gamesPlayed-left").textContent = judge.gamesPlayed || "--";
-    document.getElementById("avg-left").textContent = judge.avg || "--";
-    document.getElementById("homeRuns-left").textContent = judge.homeRuns || "--";
-    document.getElementById("stolenBases-left").textContent = judge.stolenBases || "--";
-    document.getElementById("rbi-left").textContent = judge.rbi || "--";
-    document.getElementById("ops-left").textContent = judge.ops || "--";
+    // ⏬ 大谷翔平
+    document.getElementById("gamesPlayed-right").textContent = ohtani?.gamesPlayed ?? "--";
+    document.getElementById("avg-right").textContent = ohtani?.avg ?? "--";
+    document.getElementById("homeRuns-right").textContent = ohtani?.homeRuns ?? "--";
+    document.getElementById("stolenBases-right").textContent = ohtani?.stolenBases ?? "--";
+    document.getElementById("rbi-right").textContent = ohtani?.rbi ?? "--";
+    document.getElementById("ops-right").textContent = ohtani?.ops ?? "--";
 
-      // ⏬ トミー・エドマン
-    document.getElementById("gamesPlayed-right01").textContent = trout.gamesPlayed || "--";
-    document.getElementById("avg-right01").textContent = trout.avg || "--";
-    document.getElementById("homeRuns-right01").textContent = trout.homeRuns || "--";
-    document.getElementById("stolenBases-right01").textContent = trout.stolenBases || "--";
-    document.getElementById("rbi-right01").textContent = trout.rbi || "--";
-    document.getElementById("ops-right01").textContent = trout.ops || "--";
+    // ⏬ ジャッジ
+    document.getElementById("gamesPlayed-left").textContent = judge?.gamesPlayed ?? "--";
+    document.getElementById("avg-left").textContent = judge?.avg ?? "--";
+    document.getElementById("homeRuns-left").textContent = judge?.homeRuns ?? "--";
+    document.getElementById("stolenBases-left").textContent = judge?.stolenBases ?? "--";
+    document.getElementById("rbi-left").textContent = judge?.rbi ?? "--";
+    document.getElementById("ops-left").textContent = judge?.ops ?? "--";
 
-      // ⏬ マイク・トラウト
-    document.getElementById("gamesPlayed-left01").textContent = edoman.gamesPlayed || "--";
-    document.getElementById("avg-left01").textContent = edoman.avg || "--";
-    document.getElementById("homeRuns-left01").textContent = edoman.homeRuns || "--";
-    document.getElementById("stolenBases-left01").textContent = edoman.stolenBases || "--";
-    document.getElementById("rbi-left01").textContent = edoman.rbi || "--";
-    document.getElementById("ops-left01").textContent = edoman.ops || "--";
+    // ⏬ トミー・エドマン
+    document.getElementById("gamesPlayed-right01").textContent = trout?.gamesPlayed ?? "--";
+    document.getElementById("avg-right01").textContent = trout?.avg ?? "--";
+    document.getElementById("homeRuns-right01").textContent = trout?.homeRuns ?? "--";
+    document.getElementById("stolenBases-right01").textContent = trout?.stolenBases ?? "--";
+    document.getElementById("rbi-right01").textContent = trout?.rbi ?? "--";
+    document.getElementById("ops-right01").textContent = trout?.ops ?? "--";
 
-      // ⏬鈴木 誠也
-    document.getElementById("gamesPlayed-seiya").textContent = betts.gamesPlayed || "--";
-    document.getElementById("avg-seiya").textContent = betts.avg || "--";
-    document.getElementById("homeRuns-seiya").textContent = betts.homeRuns || "--";
-    document.getElementById("stolenBases-seiya").textContent = betts.stolenBases || "--";
-    document.getElementById("rbi-seiya").textContent = betts.rbi || "--";
-    document.getElementById("ops-seiya").textContent = betts.ops || "--";
+    // ⏬ マイク・トラウト
+    document.getElementById("gamesPlayed-left01").textContent = edoman?.gamesPlayed ?? "--";
+    document.getElementById("avg-left01").textContent = edoman?.avg ?? "--";
+    document.getElementById("homeRuns-left01").textContent = edoman?.homeRuns ?? "--";
+    document.getElementById("stolenBases-left01").textContent = edoman?.stolenBases ?? "--";
+    document.getElementById("rbi-left01").textContent = edoman?.rbi ?? "--";
+    document.getElementById("ops-left01").textContent = edoman?.ops ?? "--";
 
-      // ⏬ ムーキー・ベッツ
-    document.getElementById("gamesPlayed-betts").textContent = seiya.gamesPlayed || "--";
-    document.getElementById("avg-betts").textContent = seiya.avg || "--";
-    document.getElementById("homeRuns-betts").textContent = seiya.homeRuns || "--";
-    document.getElementById("stolenBases-betts").textContent = seiya.stolenBases || "--";
-    document.getElementById("rbi-betts").textContent = seiya.rbi || "--";
-    document.getElementById("ops-betts").textContent = seiya.ops || "--";
+    // ⏬ 鈴木誠也
+    document.getElementById("gamesPlayed-seiya").textContent = seiya?.gamesPlayed ?? "--";
+    document.getElementById("avg-seiya").textContent = seiya?.avg ?? "--";
+    document.getElementById("homeRuns-seiya").textContent = seiya?.homeRuns ?? "--";
+    document.getElementById("stolenBases-seiya").textContent = seiya?.stolenBases ?? "--";
+    document.getElementById("rbi-seiya").textContent = seiya?.rbi ?? "--";
+    document.getElementById("ops-seiya").textContent = seiya?.ops ?? "--";
 
-      // ⏬ Kyle Schwarber
-    document.getElementById("gamesPlayed-schwarber").textContent = schwarber.gamesPlayed || "--";
-    document.getElementById("avg-schwarber").textContent = schwarber.avg || "--";
-    document.getElementById("homeRuns-schwarber").textContent = schwarber.homeRuns || "--";
-    document.getElementById("stolenBases-schwarber").textContent = schwarber.stolenBases || "--";
-    document.getElementById("rbi-schwarber").textContent = schwarber.rbi || "--";
-    document.getElementById("ops-schwarber").textContent = schwarber.ops || "--";
+    // ⏬ ムーキー・ベッツ
+    document.getElementById("gamesPlayed-betts").textContent = betts?.gamesPlayed ?? "--";
+    document.getElementById("avg-betts").textContent = betts?.avg ?? "--";
+    document.getElementById("homeRuns-betts").textContent = betts?.homeRuns ?? "--";
+    document.getElementById("stolenBases-betts").textContent = betts?.stolenBases ?? "--";
+    document.getElementById("rbi-betts").textContent = betts?.rbi ?? "--";
+    document.getElementById("ops-betts").textContent = betts?.ops ?? "--";
+
+    // ⏬ Kyle Schwarber
+    document.getElementById("gamesPlayed-schwarber").textContent = schwarber?.gamesPlayed ?? "--";
+    document.getElementById("avg-schwarber").textContent = schwarber?.avg ?? "--";
+    document.getElementById("homeRuns-schwarber").textContent = schwarber?.homeRuns ?? "--";
+    document.getElementById("stolenBases-schwarber").textContent = schwarber?.stolenBases ?? "--";
+    document.getElementById("rbi-schwarber").textContent = schwarber?.rbi ?? "--";
+    document.getElementById("ops-schwarber").textContent = schwarber?.ops ?? "--";
 
     // ⏬ Teoscar Hernández
-    document.getElementById("gamesPlayed-teoscar").textContent = teoscar.gamesPlayed || "--";
-    document.getElementById("avg-teoscar").textContent = teoscar.avg || "--";
-    document.getElementById("homeRuns-teoscar").textContent = teoscar.homeRuns || "--";
-    document.getElementById("stolenBases-teoscar").textContent = teoscar.stolenBases || "--";
-    document.getElementById("rbi-teoscar").textContent = teoscar.rbi || "--";
-    document.getElementById("ops-teoscar").textContent = teoscar.ops || "--";
+    document.getElementById("gamesPlayed-teoscar").textContent = teoscar?.gamesPlayed ?? "--";
+    document.getElementById("avg-teoscar").textContent = teoscar?.avg ?? "--";
+    document.getElementById("homeRuns-teoscar").textContent = teoscar?.homeRuns ?? "--";
+    document.getElementById("stolenBases-teoscar").textContent = teoscar?.stolenBases ?? "--";
+    document.getElementById("rbi-teoscar").textContent = teoscar?.rbi ?? "--";
+    document.getElementById("ops-teoscar").textContent = teoscar?.ops ?? "--";
 
     // ⏬ Cal Raleigh
-    document.getElementById("gamesPlayed-raleigh").textContent = raleigh.gamesPlayed || "--";
-    document.getElementById("avg-raleigh").textContent = raleigh.avg || "--";
-    document.getElementById("homeRuns-raleigh").textContent = raleigh.homeRuns || "--";
-    document.getElementById("stolenBases-raleigh").textContent = raleigh.stolenBases || "--";
-    document.getElementById("rbi-raleigh").textContent = raleigh.rbi || "--";
-    document.getElementById("ops-raleigh").textContent = raleigh.ops || "--";
+    document.getElementById("gamesPlayed-raleigh").textContent = raleigh?.gamesPlayed ?? "--";
+    document.getElementById("avg-raleigh").textContent = raleigh?.avg ?? "--";
+    document.getElementById("homeRuns-raleigh").textContent = raleigh?.homeRuns ?? "--";
+    document.getElementById("stolenBases-raleigh").textContent = raleigh?.stolenBases ?? "--";
+    document.getElementById("rbi-raleigh").textContent = raleigh?.rbi ?? "--";
+    document.getElementById("ops-raleigh").textContent = raleigh?.ops ?? "--";
 
     // ⏬ 吉田正尚
-    document.getElementById("gamesPlayed-yoshida").textContent = yoshida.gamesPlayed || "--";
-    document.getElementById("avg-yoshida").textContent = yoshida.avg || "--";
-    document.getElementById("homeRuns-yoshida").textContent = yoshida.homeRuns || "--";
-    document.getElementById("stolenBases-yoshida").textContent = yoshida.stolenBases || "--";
-    document.getElementById("rbi-yoshida").textContent = yoshida.rbi || "--";
-    document.getElementById("ops-yoshida").textContent = yoshida.ops || "--";
+    document.getElementById("gamesPlayed-yoshida").textContent = yoshida?.gamesPlayed ?? "--";
+    document.getElementById("avg-yoshida").textContent = yoshida?.avg ?? "--";
+    document.getElementById("homeRuns-yoshida").textContent = yoshida?.homeRuns ?? "--";
+    document.getElementById("stolenBases-yoshida").textContent = yoshida?.stolenBases ?? "--";
+    document.getElementById("rbi-yoshida").textContent = yoshida?.rbi ?? "--";
+    document.getElementById("ops-yoshida").textContent = yoshida?.ops ?? "--";
 
 
-      // ⏬ 山本由伸
-    const yamamoto = data.yamamoto.stats[0].splits[0].stat;
-    document.getElementById("yamamoto-games").textContent = yamamoto.gamesPlayed || "--";
-    document.getElementById("yamamoto-wl").textContent = yamamoto.wins + "-" + yamamoto.losses || "--";
-    document.getElementById("yamamoto-era").textContent = yamamoto.era || "--";
-    document.getElementById("yamamoto-strikeouts").textContent = yamamoto.strikeOuts || "--";
-    document.getElementById("yamamoto-whip").textContent = yamamoto.whip || "--";
+// ⏬ 山本由伸
+const yamamoto = data.yamamoto?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("yamamoto-games").textContent = yamamoto?.gamesPlayed ?? "--";
+document.getElementById("yamamoto-wl").textContent = yamamoto ? `${yamamoto.wins}-${yamamoto.losses}` : "--";
+document.getElementById("yamamoto-era").textContent = yamamoto?.era ?? "--";
+document.getElementById("yamamoto-strikeouts").textContent = yamamoto?.strikeOuts ?? "--";
+document.getElementById("yamamoto-whip").textContent = yamamoto?.whip ?? "--";
 
-      // ⏬ 今永昇太
-    const imanaga = data.imanaga.stats[0].splits[0].stat;
-    document.getElementById("imanaga-games").textContent = imanaga.gamesPlayed || "--";
-    document.getElementById("imanaga-wl").textContent = imanaga.wins + "-" + imanaga.losses || "--";
-    document.getElementById("imanaga-era").textContent = imanaga.era || "--";
-    document.getElementById("imanaga-strikeouts").textContent = imanaga.strikeOuts || "--";
-    document.getElementById("imanaga-whip").textContent = imanaga.whip || "--";
+// ⏬ 今永昇太
+const imanaga = data.imanaga?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("imanaga-games").textContent = imanaga?.gamesPlayed ?? "--";
+document.getElementById("imanaga-wl").textContent = imanaga ? `${imanaga.wins}-${imanaga.losses}` : "--";
+document.getElementById("imanaga-era").textContent = imanaga?.era ?? "--";
+document.getElementById("imanaga-strikeouts").textContent = imanaga?.strikeOuts ?? "--";
+document.getElementById("imanaga-whip").textContent = imanaga?.whip ?? "--";
 
-      // ⏬ 菅野智之
-    const sugano = data.sugano.stats[0].splits[0].stat;
-    document.getElementById("sugano-games").textContent = sugano.gamesPlayed || "--";
-    document.getElementById("sugano-wl").textContent = sugano.wins + "-" + sugano.losses || "--";
-    document.getElementById("sugano-era").textContent = sugano.era || "--";
-    document.getElementById("sugano-strikeouts").textContent = sugano.strikeOuts || "--";
-    document.getElementById("sugano-whip").textContent = sugano.whip || "--";
+// ⏬ 菅野智之
+const sugano = data.sugano?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("sugano-games").textContent = sugano?.gamesPlayed ?? "--";
+document.getElementById("sugano-wl").textContent = sugano ? `${sugano.wins}-${sugano.losses}` : "--";
+document.getElementById("sugano-era").textContent = sugano?.era ?? "--";
+document.getElementById("sugano-strikeouts").textContent = sugano?.strikeOuts ?? "--";
+document.getElementById("sugano-whip").textContent = sugano?.whip ?? "--";
 
-      // ⏬ 佐々木朗希
-    const sasaki = data.sasaki.stats[0].splits[0].stat;
-    document.getElementById("sasaki-games").textContent = sasaki.gamesPlayed || "--";
-    document.getElementById("sasaki-wl").textContent = sasaki.wins + "-" + sasaki.losses || "--";
-    document.getElementById("sasaki-era").textContent = sasaki.era || "--";
-    document.getElementById("sasaki-strikeouts").textContent = sasaki.strikeOuts || "--";
-    document.getElementById("sasaki-whip").textContent = sasaki.whip || "--";
+// ⏬ 佐々木朗希
+const sasaki = data.sasaki?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("sasaki-games").textContent = sasaki?.gamesPlayed ?? "--";
+document.getElementById("sasaki-wl").textContent = sasaki ? `${sasaki.wins}-${sasaki.losses}` : "--";
+document.getElementById("sasaki-era").textContent = sasaki?.era ?? "--";
+document.getElementById("sasaki-strikeouts").textContent = sasaki?.strikeOuts ?? "--";
+document.getElementById("sasaki-whip").textContent = sasaki?.whip ?? "--";
 
-      // ⏬ ダルビッシュ有
-    const darvish = data.darvish.stats[0].splits[0].stat;
-    document.getElementById("darvish-games").textContent = darvish.gamesPlayed || "--";
-    document.getElementById("darvish-wl").textContent = darvish.wins + "-" + darvish.losses || "--";
-    document.getElementById("darvish-era").textContent = darvish.era || "--";
-    document.getElementById("darvish-strikeouts").textContent = darvish.strikeOuts || "--";
-    document.getElementById("darvish-whip").textContent = darvish.whip || "--";
+// ⏬ ダルビッシュ有
+const darvish = data.darvish?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("darvish-games").textContent = darvish?.gamesPlayed ?? "--";
+document.getElementById("darvish-wl").textContent = darvish ? `${darvish.wins}-${darvish.losses}` : "--";
+document.getElementById("darvish-era").textContent = darvish?.era ?? "--";
+document.getElementById("darvish-strikeouts").textContent = darvish?.strikeOuts ?? "--";
+document.getElementById("darvish-whip").textContent = darvish?.whip ?? "--";
 
-      // ⏬ Jacob Misiorowski
-    const misiorowski = data.misiorowski.stats[0].splits[0].stat;
-    document.getElementById("misiorowski-games").textContent = misiorowski.gamesPlayed || "--";
-    document.getElementById("misiorowski-wl").textContent = misiorowski.wins + "-" + misiorowski.losses || "--";
-    document.getElementById("misiorowski-era").textContent = misiorowski.era || "--";
-    document.getElementById("misiorowski-strikeouts").textContent = misiorowski.strikeOuts || "--";
-    document.getElementById("misiorowski-whip").textContent = misiorowski.whip || "--";
-
+// ⏬ Misiorowski
+const misiorowski = data.misiorowski?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("misiorowski-games").textContent = misiorowski?.gamesPlayed ?? "--";
+document.getElementById("misiorowski-wl").textContent = misiorowski ? `${misiorowski.wins}-${misiorowski.losses}` : "--";
+document.getElementById("misiorowski-era").textContent = misiorowski?.era ?? "--";
+document.getElementById("misiorowski-strikeouts").textContent = misiorowski?.strikeOuts ?? "--";
+document.getElementById("misiorowski-whip").textContent = misiorowski?.whip ?? "--";
 
     });
 
