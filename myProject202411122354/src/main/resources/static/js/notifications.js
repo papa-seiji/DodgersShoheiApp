@@ -54,13 +54,14 @@ async function registerPushSubscription(registration) {
 }
 
 // サブスクリプション情報をサーバーに送信
+// サブスクリプション情報をサーバーに送信
 async function sendSubscriptionToServer(subscription) {
     try {
-        const response = await fetch('https://letsgoohtanifromjapan.click/notifications/subscribe', { // サーバーの完全URLを指定
+        const response = await fetch('/notifications/subscribe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(subscription),
-            credentials: 'include' // Cookieやセッション情報を送信する場合
+            credentials: 'include'
         });
 
         if (response.ok) {
@@ -72,6 +73,7 @@ async function sendSubscriptionToServer(subscription) {
         console.error('Error sending subscription to server:', error);
     }
 }
+
 
 // Base64をUint8Arrayに変換する関数
 function urlBase64ToUint8Array(base64String) {
