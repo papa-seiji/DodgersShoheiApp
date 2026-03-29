@@ -343,6 +343,8 @@
 <!-- ✅ JavaScriptを最後に配置 -->
 <script>
 async function fetchGameInfo() {
+    try { // ← 追加①（ここから）
+
     const today = new Date();
     const todayStr = today.toISOString().split("T")[0]; // 今日の日付（UTC基準）
 
@@ -358,6 +360,10 @@ async function fetchGameInfo() {
     // APIを呼び出す（開発環境用）
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=${japanTodayStr}`);
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-08-13`);
+
+    if (!response.ok) { // ← 追加②（ここ）
+        throw new Error("API失敗");
+    }
 
     const data = await response.json();
 
@@ -451,7 +457,15 @@ async function fetchGameInfo() {
     const awayScore = data.away_score !== "N/A" ? data.away_score : "-";
     const homeScore = data.home_score !== "N/A" ? data.home_score : "-";
     scoreEl.innerText = `${awayScore} - ${homeScore}`;
+
+    } catch (e) { // ← 追加③（ここから）
+        console.error("MLB取得失敗:", e);
+
+        const gameDateEl = document.getElementById("mlb-game-date");
+        if (gameDateEl) gameDateEl.innerText = "取得失敗";
+    } // ← 追加④（ここまで）
 }
+
 
 // **チーム名からチームIDを取得する関数**
 function getTeamId(teamName) {
@@ -494,7 +508,10 @@ function getTeamId(teamName) {
 }
 
 // ✅ JavaScriptの最後に配置し、window.onloadで呼び出し
-window.onload = fetchGameInfo;
+// window.onload = fetchGameInfo;
+
+// ✅ 修正後
+document.addEventListener("DOMContentLoaded", fetchGameInfo);
 </script>
 
 <!-- エンド               MLB試合情報の表示エリア                         -->
