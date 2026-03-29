@@ -235,12 +235,15 @@
 <script>
     function toggleDropdown() {
         const dropdown = document.querySelector('.navbar-dropdown');
+        if (!dropdown) return;
         dropdown.classList.toggle('open');
     }
 
     // 外部クリックでドロップダウンを閉じる
     document.addEventListener('click', function (event) {
         const dropdown = document.querySelector('.navbar-dropdown');
+        if (!dropdown) return;
+
         const isClickInside = dropdown.contains(event.target);
 
         if (!isClickInside && dropdown.classList.contains('open')) {
@@ -248,19 +251,24 @@
         }
     });
 
-    // 吹き出しの制御
-// 🛠️ Navbar の吹き出しを閉じる
-function closeNavbarTooltip() {
-    document.getElementById('tooltip-navbar').style.display = 'none';
-    localStorage.setItem('hideNavbarTooltip', 'true'); // 次回以降非表示
-}
+    // Navbar の吹き出しを閉じる
+    function closeNavbarTooltip() {
+        const tooltip = document.getElementById('tooltip-navbar');
+        if (!tooltip) return;
 
-// 🛠️ Navbar の吹き出しの状態を確認
-document.addEventListener('DOMContentLoaded', function () {
-    if (localStorage.getItem('hideNavbarTooltip') === 'true') {
-        document.getElementById('tooltip-navbar').style.display = 'none';
+        tooltip.style.display = 'none';
+        localStorage.setItem('hideNavbarTooltip', 'true');
     }
-});
+
+    // Navbar の吹き出しの状態を確認
+    document.addEventListener('DOMContentLoaded', function () {
+        const tooltip = document.getElementById('tooltip-navbar');
+        if (!tooltip) return;
+
+        if (localStorage.getItem('hideNavbarTooltip') === 'true') {
+            tooltip.style.display = 'none';
+        }
+    });
 </script>
 <!--End ナビゲーションバー -->
 
@@ -1895,9 +1903,9 @@ div[class^="douga-section_"] {
  * スクロール/リサイズで自動追従。閉じるボタンで記憶。
  */
 (() => {
-  const SELECTOR = '[data-tip]';         // 対象
-  const GAP = 10;                        // 要素との隙間
-  const LS_PREFIX = 'hideTooltip-';      // 保存キーの接頭辞
+  const SELECTOR = '[data-tip]';
+  const GAP = 10;
+  const LS_PREFIX = 'hideTooltip-';
 
   function createTip(text, idForLS) {
     const tip = document.createElement('div');
@@ -1916,96 +1924,115 @@ div[class^="douga-section_"] {
     return tip;
   }
 
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
+
+  function set(el, top, left, placement) {
+    el.style.position = 'fixed';
+    el.style.top = `${Math.round(top)}px`;
+    el.style.left = `${Math.round(left)}px`;
+    el.dataset.placement = placement;
+  }
+
   function place(tip, target, pref = 'bottom') {
     const r = target.getBoundingClientRect();
-    const tw = tip.offsetWidth, th = tip.offsetHeight;
-    const vw = window.innerWidth, vh = window.innerHeight;
+    const tw = tip.offsetWidth;
+    const th = tip.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
     const orders = {
-      top:    ['top','bottom','right','left'],
-      bottom: ['bottom','top','right','left'],
-      left:   ['left','right','top','bottom'],
-      right:  ['right','left','top','bottom']
+      top: ['top', 'bottom', 'right', 'left'],
+      bottom: ['bottom', 'top', 'right', 'left'],
+      left: ['left', 'right', 'top', 'bottom'],
+      right: ['right', 'left', 'top', 'bottom']
     };
+
     const order = orders[pref] || orders.bottom;
 
     for (const p of order) {
       let top, left;
+
       if (p === 'top') {
         top = r.top - th - GAP;
-        left = r.left + (r.width - tw)/2;
-        if (top >= 0) return set(tip, top, clamp(left, 8, vw - tw - 8), p);
+        left = r.left + (r.width - tw) / 2;
+        if (top >= 0) {
+          return set(tip, top, clamp(left, 8, vw - tw - 8), p);
+        }
       } else if (p === 'bottom') {
         top = r.bottom + GAP;
-        left = r.left + (r.width - tw)/2;
-        if (top + th <= vh) return set(tip, top, clamp(left, 8, vw - tw - 8), p);
+        left = r.left + (r.width - tw) / 2;
+        if (top + th <= vh) {
+          return set(tip, top, clamp(left, 8, vw - tw - 8), p);
+        }
       } else if (p === 'left') {
-        top = r.top + (r.height - th)/2;
+        top = r.top + (r.height - th) / 2;
         left = r.left - tw - GAP;
-        if (left >= 0) return set(tip, clamp(top, 8, vh - th - 8), left, p);
+        if (left >= 0) {
+          return set(tip, clamp(top, 8, vh - th - 8), left, p);
+        }
       } else if (p === 'right') {
-        top = r.top + (r.height - th)/2;
+        top = r.top + (r.height - th) / 2;
         left = r.right + GAP;
-        if (left + tw <= vw) return set(tip, clamp(top, 8, vh - th - 8), left, p);
+        if (left + tw <= vw) {
+          return set(tip, clamp(top, 8, vh - th - 8), left, p);
+        }
       }
     }
-    // どこにも置けない時のフォールバック（中央）
-    set(tip, (vh - th)/2, (vw - tw)/2, 'bottom');
 
-function set(el, top, left, placement) {
-  el.style.position = 'fixed';
-  el.style.top = `${Math.round(top)}px`;
-  el.style.left = `${Math.round(left)}px`;
-  el.dataset.placement = placement;
-}
-    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+    // フォールバック
+    set(tip, (vh - th) / 2, (vw - tw) / 2, 'bottom');
   }
 
-  // 初期生成
   const pairs = [];
+
   document.querySelectorAll(SELECTOR).forEach(target => {
     const text = target.getAttribute('data-tip');
-    const id   = target.getAttribute('data-tip-id') || '';        // ← localStorage キー
+    const id = target.getAttribute('data-tip-id') || '';
     const pref = (target.getAttribute('data-tip-placement') || 'bottom').toLowerCase();
 
-    // すでに「非表示」記録があれば作らない
     if (id && localStorage.getItem(LS_PREFIX + id) === 'true') return;
 
     const tip = createTip(text, id);
     pairs.push({ tip, target, pref });
-    // 初回配置（tipはDOMにある必要あり）
     place(tip, target, pref);
   });
 
-  // 追従（スクロール/リサイズ）
   let ticking = false;
+
   function updateAll() {
-    pairs.forEach(({tip, target, pref}) => {
-      if (document.body.contains(tip)) place(tip, target, pref);
+    pairs.forEach(({ tip, target, pref }) => {
+      if (document.body.contains(tip)) {
+        place(tip, target, pref);
+      }
     });
     ticking = false;
   }
-  ['scroll','resize'].forEach(ev => window.addEventListener(ev, () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(updateAll); }
-  }, { passive: true }));
+
+  ['scroll', 'resize'].forEach(ev => {
+    window.addEventListener(ev, () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateAll);
+      }
+    }, { passive: true });
+  });
+
+  // DOM変化監視（要素増減・画像ロード対応）
+  const observer = new MutationObserver(() => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateAll);
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
 })();
-
-
-// DOM変化監視（要素増減・画像ロード対応）
-const observer = new MutationObserver(() => {
-  if (!ticking) {
-    ticking = true;
-    requestAnimationFrame(updateAll);
-  }
-});
-
-observer.observe(document.body, {
-  childList: true,
-  subtree: true,
-});
-
-
 </script>
-
 
 
 
@@ -2085,39 +2112,41 @@ observer.observe(document.body, {
         });
     </script>
 
-    <script>
-        // ユーザー情報を取得してヘッダーに表示
-          fetch('/auth/userinfo')
-            .then(response => {
-              if (!response.ok) {
-                // 🔴 未ログイン時は表示を消す
-                const userInfoElement = document.getElementById('user-info');
-                if (userInfoElement) {
-                  userInfoElement.textContent = '';
-                }
-                return;
-              }
-              return response.json();
-            })
-            .then(data => {
-              if (!data) return;
+<script>
+  function fetchUserInfo() {
+    // ユーザー情報を取得してヘッダーに表示
+    fetch('/auth/userinfo')
+      .then(response => {
+        if (!response.ok) {
+          // 未ログイン時は表示を消す
+          const userInfoElement = document.getElementById('user-info');
+          if (userInfoElement) {
+            userInfoElement.textContent = '';
+          }
+          return null;
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!data) return;
 
-              const userInfoElement = document.getElementById('user-info');
-              if (userInfoElement) {
-                userInfoElement.textContent =
-                  `${data.number}番 ${data.position}_${data.username}さん`;
-              }
-            })
-            .catch(() => {
-              const userInfoElement = document.getElementById('user-info');
-              if (userInfoElement) {
-                userInfoElement.textContent = '';
-              }
-            });
-        // ページロード時にユーザー情報を取得
-        document.addEventListener('DOMContentLoaded', fetchUserInfo);
-    </script>
+        const userInfoElement = document.getElementById('user-info');
+        if (userInfoElement) {
+          userInfoElement.textContent =
+            `${data.number}番 ${data.position}_${data.username}さん`;
+        }
+      })
+      .catch(() => {
+        const userInfoElement = document.getElementById('user-info');
+        if (userInfoElement) {
+          userInfoElement.textContent = '';
+        }
+      });
+  }
 
+  // ページロード時にユーザー情報を取得
+  document.addEventListener('DOMContentLoaded', fetchUserInfo);
+</script>
 
 <script>
         // モーダルを表示する関数
