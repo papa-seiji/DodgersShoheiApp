@@ -343,6 +343,8 @@
 <!-- ✅ JavaScriptを最後に配置 -->
 <script>
 async function fetchGameInfo() {
+    try { // ← 追加①（ここから）
+
     const today = new Date();
     const todayStr = today.toISOString().split("T")[0]; // 今日の日付（UTC基準）
 
@@ -358,6 +360,10 @@ async function fetchGameInfo() {
     // APIを呼び出す（開発環境用）
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=${japanTodayStr}`);
     // const response = await fetch(`http://localhost:8080/api/mlb/game?date=2025-08-13`);
+
+    if (!response.ok) { // ← 追加②（ここ）
+        throw new Error("API失敗");
+    }
 
     const data = await response.json();
 
@@ -451,7 +457,15 @@ async function fetchGameInfo() {
     const awayScore = data.away_score !== "N/A" ? data.away_score : "-";
     const homeScore = data.home_score !== "N/A" ? data.home_score : "-";
     scoreEl.innerText = `${awayScore} - ${homeScore}`;
+
+    } catch (e) { // ← 追加③（ここから）
+        console.error("MLB取得失敗:", e);
+
+        const gameDateEl = document.getElementById("mlb-game-date");
+        if (gameDateEl) gameDateEl.innerText = "取得失敗";
+    } // ← 追加④（ここまで）
 }
+
 
 // **チーム名からチームIDを取得する関数**
 function getTeamId(teamName) {
@@ -494,7 +508,25 @@ function getTeamId(teamName) {
 }
 
 // ✅ JavaScriptの最後に配置し、window.onloadで呼び出し
-window.onload = fetchGameInfo;
+// window.onload = fetchGameInfo;
+
+// ✅ 修正後
+document.addEventListener("DOMContentLoaded", fetchGameInfo);
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    if (window.location.hash) {
+        const targetId = window.location.hash;
+
+        setTimeout(() => {
+            const el = document.querySelector(targetId);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }, 500);
+    }
+
+});
 </script>
 
 <!-- エンド               MLB試合情報の表示エリア                         -->
@@ -924,7 +956,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_4">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/jlK6Tet0Iak?si=K9UKC9Dkm7wUpEa6"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/jlK6Tet0Iak?si=K9UKC9Dkm7wUpEa6"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -937,7 +971,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="hoge-hoge_landing7">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/vvR-vw5t7yY?si=oR1O03A1-G1qj9OP"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/vvR-vw5t7yY?si=oR1O03A1-G1qj9OP"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -952,7 +988,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_4">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/4ur3YDTYdoI?si=a75x-1hRhiAWFenB"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/4ur3YDTYdoI?si=a75x-1hRhiAWFenB"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -987,7 +1025,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex11">【試合ハイライト】アメリカ vs ベネズエラ</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/5DAsDxYIC4A?si=J_9OwB1Sq2XIBUQ5"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/5DAsDxYIC4A?si=J_9OwB1Sq2XIBUQ5"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1002,7 +1042,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex10">【試合ハイライト】イタリア vs ベネズエラ</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/1SKp2hBiQww?si=PBjP7ElhMVsJXlBA"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/1SKp2hBiQww?si=PBjP7ElhMVsJXlBA"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1017,7 +1059,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex09">【試合ハイライト】ドミニカvsアメリカ</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/XjjpATMN7wA?si=G_z-5RAlNykaJCym"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/XjjpATMN7wA?si=G_z-5RAlNykaJCym"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1032,7 +1076,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex08">侍ジャパン26年WBCは幕を閉じた</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/a8huaUMeve0?si=VsJ0mUyQThdtOXq_"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/a8huaUMeve0?si=VsJ0mUyQThdtOXq_"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1047,7 +1093,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex07">チェコ下し、全勝でマイアミへ！</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/FN0htJLa2MI?si=OKHlfwyWk1r0tJBj"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/FN0htJLa2MI?si=OKHlfwyWk1r0tJBj"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1062,7 +1110,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex06">豪破り3連勝 POOL C 1位通過決定！</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/qhd6r4P-FZQ?si=kfn0Li83xKTAg8mj"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/qhd6r4P-FZQ?si=kfn0Li83xKTAg8mj"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1077,7 +1127,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex05">大接戦を制し韓国を8-6で下し２連勝</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/iJePVKnQQSo?si=2BxJ7ifSH4NPW6W3"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/iJePVKnQQSo?si=2BxJ7ifSH4NPW6W3"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1092,7 +1144,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex04">大谷満塁弾!7回コールドの圧勝スタート!</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/ssWD6DMsFus?si=jRD7qNnqbW1_I7oV"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/ssWD6DMsFus?si=jRD7qNnqbW1_I7oV"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1109,7 +1163,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex03">「翔平と戦うために出場するんだ」</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/Z9tGzXv_7mI?si=AOaNiewrctLZpwXV"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/Z9tGzXv_7mI?si=AOaNiewrctLZpwXV"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1124,7 +1180,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_ex03">2026年WBC 優勝候補6カ国メンバー予想</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/ohaLZjw4He8?si=NUQYsFYvz3b9YW6I"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/ohaLZjw4He8?si=NUQYsFYvz3b9YW6I"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1156,7 +1214,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_4">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/cvnXULhNA34?si=zNeD9cSY8aNagBzk"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/cvnXULhNA34?si=zNeD9cSY8aNagBzk"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1170,7 +1230,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_4">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/UEYuTkhv_bU?si=HvOyXChBvv0IeyZq"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/UEYuTkhv_bU?si=HvOyXChBvv0IeyZq"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1184,7 +1246,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_4">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/8W17mqibyGU?playsinline=1&si=9YhkMqbSvCkd9Kpx"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/8W17mqibyGU?playsinline=1&si=9YhkMqbSvCkd9Kpx"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1200,7 +1264,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_6">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/0e7zKPfouj4?playsinline=1"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/0e7zKPfouj4?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1216,7 +1282,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_3">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/y-Y0C0Sn9U8?playsinline=1"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/y-Y0C0Sn9U8?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1241,7 +1309,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_landing1">ベースボール史上最高の１日</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/gByTMgn6JxI?playsinline=1"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/gByTMgn6JxI?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1254,7 +1324,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_landing2">【漢】スキップ・シューマッカー監督</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/yYb-0dn2-Ag?playsinline=1"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/yYb-0dn2-Ag?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1271,7 +1343,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_7">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/5SssmOnDkdY?si=DDwdlBJyoZb7EoSN"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/5SssmOnDkdY?si=DDwdlBJyoZb7EoSN"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1292,7 +1366,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_wbc1">大谷翔平 vs トラウト 決戦の一打</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/NvuHhoIHIm8?si=Gzd9Tqz4Bsj1SjVx"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/NvuHhoIHIm8?si=Gzd9Tqz4Bsj1SjVx"
           title="WBC Final Shohei vs Trout"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1309,7 +1385,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/Yy4aFbK25ic?si=6S0Qw83g6kOaTFpz"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/Yy4aFbK25ic?si=6S0Qw83g6kOaTFpz"
           title="WBC Semifinal Japan vs Mexico"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1325,7 +1403,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_9">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/exBgbcEEhqM?si=4OBy4Tt-os9Gs__w"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/exBgbcEEhqM?si=4OBy4Tt-os9Gs__w"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1339,7 +1419,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_10">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/qQgGftwSjIs?si=DAamW6hOl4HYlu_S"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/qQgGftwSjIs?si=DAamW6hOl4HYlu_S"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1353,7 +1435,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_11">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/pBPUM2sAdgc?si=RJY0zbgLprRRfLu9"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/pBPUM2sAdgc?si=RJY0zbgLprRRfLu9"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1367,7 +1451,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_12">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/ItmfThEVGtM?si=oQKQ3rmJNb322lcv"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/ItmfThEVGtM?si=oQKQ3rmJNb322lcv"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1381,7 +1467,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="douga-section_13">
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/odMisYBwvXE?si=3o7tFEVNDsxjQMYv"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/odMisYBwvXE?si=3o7tFEVNDsxjQMYv"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1454,7 +1542,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div id="hoge-hoge_landing5">MIA軍 vs LAD軍 Highlight</div>
       <div class="video-wrapper">
         <iframe
-          src="https://www.youtube.com/embed/uf4YUT5dLcM?playsinline=1"
+  loading="lazy"
+  decoding="async"
+  src="https://www.youtube.com/embed/uf4YUT5dLcM?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
