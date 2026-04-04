@@ -130,7 +130,7 @@
   margin: 0;
   white-space: pre-wrap;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 24px;
 }
 
 /* 戻る */
@@ -560,13 +560,15 @@
 <!-- ===================================== -->
 <!-- 🔥 Shohei HR 表示ブロック -->
 <!-- ===================================== -->
-<div th:if="${game != null and game.shoheiHRs != null and #lists.size(game.shoheiHRs) > 0}">
+<!-- <div th:if="${game != null and game.shoheiHRs != null and #lists.size(game.shoheiHRs) > 0}">-->
 <!-- <div th:if="${debugShoheiHRs != null and #lists.size(debugShoheiHRs) > 0}"> テスト用-->
+
+<div th:if="${g.shoheiHRs != null and #lists.size(g.shoheiHRs) > 0}">
 
     <h3>🔥 Shohei Home-Run Details</h3>
     <!-- 🔥 HR統計カード復活 -->
  <!-- <div th:each="hr : ${debugShoheiHRs}" テスト用 -->
-      <div th:each="hr : ${game.shoheiHRs}"
+      <div th:each="hr : ${g.shoheiHRs}"
       style="margin-bottom:12px;
               padding:10px 14px;
               background:#96b9dc;
@@ -593,24 +595,27 @@
 </div>
 
         <!-- HRデータをゲーム単位でJSへ渡す -->
-<script th:inline="javascript">
-    window["hrData_776496"] = [[${debugShoheiHRs}]];
-</script>
-
-<canvas id="hrCanvas-776496"
+<!--<script th:inline="javascript">
+    // window["hrData_776496"] = [[${debugShoheiHRs}]];テスト用
+    window["hrData_[[${g.gameDate}]]"] = /*[[${g.shoheiHRs} ?: []]]*/ [];
+</script>-->
+<!--//////////////////////////////////////////////////////////////////////////////修正前-->
+<!--<canvas id="hrCanvas-[[${#strings.replace(g.gameDate, '-', '')}]]"
+        width="700"
+        height="580"
+        style="background:#0b1c2d;border-radius:12px;margin-top:10px;">
+</canvas>-->
+<!--///////////////////////////////////////////////////////////////////////////////修正後-->
+<canvas th:id="|hrCanvas-${#strings.replace(g.gameDate, '-', '')}|"
         width="700"
         height="580"
         style="background:#0b1c2d;border-radius:12px;margin-top:10px;">
 </canvas>
-
-<script>
+<!--<script>
     document.addEventListener("DOMContentLoaded", function () {
-        drawHRCanvas(
-            'hrCanvas-776496',
-            window["hrData_776496"]
-        );
+        drawHRCanvas("hrCanvas-[[${g.gameDate}]]",window["hrData_[[${g.gameDate}]]"]);
     });
-</script>
+</script>-->
 </div>
 
 <!-- 新しい描画エンジン（複数対応）-->
@@ -913,6 +918,30 @@ if (window.SELECTED_DATE) {
     });
 }
 /*]]>*/
+</script>
+
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+window.hrDataMap = /*[[${hrDataMap}]]*/ {};
+
+/*]]>*/
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  if (!window.hrDataMap) return;
+
+  Object.keys(window.hrDataMap).forEach(date => {
+
+    const list = window.hrDataMap[date] || [];
+
+    drawHRCanvas("hrCanvas-" + date, list);
+  });
+
+});
 </script>
 
 </body>
