@@ -175,8 +175,6 @@ public class OhtaniGameController {
             }
         }
 
-        model.addAttribute("games", targetGames);
-
         // ===============================
         // 🔥 DEBUG MOCK Shohei HR 表示確認用
         // ===============================
@@ -202,21 +200,81 @@ public class OhtaniGameController {
         // ===============================
         // 🔥 Shohei HR 実データ注入（試合単位保持）
         // ===============================
+        ////////////////////////////////////////////////////////////////// 修正前////
+        // for (OhtaniGame game : targetGames) {
 
+        // // 念のため初期化（前回値残り防止）
+        // game.setShoheiHRs(null);
+
+        // if (game.getGamePk() != null) {
+
+        // List<Map<String, Object>> hrs =
+        // mlbGameService.getShoheiHomeRuns(game.getGamePk());
+
+        // if (hrs != null && !hrs.isEmpty()) {
+        // game.setShoheiHRs(hrs);
+        // }
+        // }
+        // }
+        ////////////////////////////////////////////////////////////////// 修正前////
+        ////////////////////////////////////////////////////////////////// 修正後////
         for (OhtaniGame game : targetGames) {
 
-            // 念のため初期化（前回値残り防止）
-            game.setShoheiHRs(null);
+            // 🔥 null禁止 → 空リストで初期化
+            game.setShoheiHRs(new ArrayList<>());
+
+            System.out.println("====================================");
+            System.out.println("DEBUG HR CHECK START");
+            System.out.println("gameDate = " + game.getGameDate());
+            System.out.println("gamePk   = " + game.getGamePk());
 
             if (game.getGamePk() != null) {
 
                 List<Map<String, Object>> hrs = mlbGameService.getShoheiHomeRuns(game.getGamePk());
 
+                // 🔥 size確認
+                System.out.println("HR LIST SIZE = " + (hrs == null ? "null" : hrs.size()));
+
                 if (hrs != null && !hrs.isEmpty()) {
+
+                    for (Map<String, Object> hr : hrs) {
+                        System.out.println("--- HR DETAIL ---");
+                        System.out.println("launchSpeed  = " + hr.get("launchSpeed"));
+                        System.out.println("launchAngle  = " + hr.get("launchAngle"));
+                        System.out.println("totalDistance= " + hr.get("totalDistance"));
+                        System.out.println("coordX       = " + hr.get("coordX"));
+                        System.out.println("coordY       = " + hr.get("coordY"));
+                    }
+
                     game.setShoheiHRs(hrs);
+
+                } else {
+                    System.out.println("⚠️ HRなし or 取得失敗");
                 }
+
+            } else {
+                System.out.println("⚠️ gamePkがNULL");
             }
+
+            System.out.println("DEBUG HR CHECK END");
+            System.out.println("====================================");
         }
+        ////////////////////////////////////////////////////////////////// 修正後////
+
+        // ===============================
+        // 🔥 ここから追加（これだけ追加）
+        // ===============================
+        Map<String, List<Map<String, Object>>> hrDataMap = new HashMap<>();
+
+        for (OhtaniGame g : targetGames) {
+            String key = g.getGameDate().toString().replace("-", "");
+            hrDataMap.put(key, g.getShoheiHRs());
+        }
+
+        model.addAttribute("hrDataMap", hrDataMap);
+        // ===============================
+        // 🔥 追加ここまで
+        // ===============================
 
         model.addAttribute("games", targetGames);
 

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -16,6 +17,13 @@ public class MLBGameService {
      * ★ 追加：日付から gamePk を取得する
      */
     public Long findGamePkByDate(String date) {
+
+        // 追加修正///////////////////////////////////////////////////////////////////////////////////
+        // 🔥 JST → MLB対策（追加）
+        LocalDate inputDate = LocalDate.parse(date);
+        LocalDate adjustedDate = inputDate.minusDays(1);
+        date = adjustedDate.toString();
+        // 追加修正///////////////////////////////////////////////////////////////////////////////////
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -43,20 +51,54 @@ public class MLBGameService {
         if (games.isEmpty()) {
             return null;
         }
+        // 修正前/////////////////////////////////////////////////////////////////////////////////////
+        // Map<String, Object> game = games.get(0);
 
-        Map<String, Object> game = games.get(0);
+        // Object gamePkObj = game.get("gamePk");
 
-        Object gamePkObj = game.get("gamePk");
+        // if (gamePkObj instanceof Integer) {
+        // return ((Integer) gamePkObj).longValue();
+        // }
 
-        if (gamePkObj instanceof Integer) {
-            return ((Integer) gamePkObj).longValue();
+        // if (gamePkObj instanceof Long) {
+        // return (Long) gamePkObj;
+        // }
+
+        // return null;
+        // 修正前/////////////////////////////////////////////////////////////////////////////////////
+        // 修正後/////////////////////////////////////////////////////////////////////////////////////
+        // 🔥 Dodgersの試合を探す
+        for (Map<String, Object> game : games) {
+
+            Map<String, Object> teams = (Map<String, Object>) game.get("teams");
+
+            Map<String, Object> home = (Map<String, Object>) teams.get("home");
+            Map<String, Object> away = (Map<String, Object>) teams.get("away");
+
+            Map<String, Object> homeTeam = (Map<String, Object>) home.get("team");
+            Map<String, Object> awayTeam = (Map<String, Object>) away.get("team");
+
+            Integer homeId = (Integer) homeTeam.get("id");
+            Integer awayId = (Integer) awayTeam.get("id");
+
+            // Dodgers = 119
+            if (homeId == 119 || awayId == 119) {
+
+                Object gamePkObj = game.get("gamePk");
+
+                if (gamePkObj instanceof Integer) {
+                    return ((Integer) gamePkObj).longValue();
+                }
+
+                if (gamePkObj instanceof Long) {
+                    return (Long) gamePkObj;
+                }
+            }
         }
 
-        if (gamePkObj instanceof Long) {
-            return (Long) gamePkObj;
-        }
-
+        // 見つからなかった場合
         return null;
+        // 修正後/////////////////////////////////////////////////////////////////////////////////////
     }
 
     // 既存メソッドはそのまま
