@@ -56,6 +56,14 @@ public class OhtaniJudgeWebSocketController {
                                 "https://statsapi.mlb.com/api/v1/people/807799/stats?stats=season&season=2026&group=hitting",
                                 Object.class);
 
+                // 打撃成績（岡本和真・村上宗隆）
+                Object okamoto = restTemplate.getForObject(
+                                "https://statsapi.mlb.com/api/v1/people/672960/stats?stats=season&season=2026&group=hitting",
+                                Object.class);
+                Object murakami = restTemplate.getForObject(
+                                "https://statsapi.mlb.com/api/v1/people/808959/stats?stats=season&season=2026&group=hitting",
+                                Object.class);
+
                 // 投手成績（山本由伸・今永昇太）
                 Object yamamoto = restTemplate.getForObject(
                                 "https://statsapi.mlb.com/api/v1/people/808967/stats?stats=season&season=2026&group=pitching",
@@ -80,6 +88,14 @@ public class OhtaniJudgeWebSocketController {
                                 "https://statsapi.mlb.com/api/v1/people/694819/stats?stats=season&season=2026&group=pitching",
                                 Object.class);
 
+                // 投手成績（大谷翔平・今井達也 ）
+                Object shohei = restTemplate.getForObject(
+                                "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2026&group=pitching",
+                                Object.class);
+                Object imai = restTemplate.getForObject(
+                                "https://statsapi.mlb.com/api/v1/people/837227/stats?stats=season&season=2026&group=pitching",
+                                Object.class);
+
                 // まとめて返す
                 Map<String, Object> statsMap = new HashMap<>();
                 statsMap.put("ohtani", ohtani);
@@ -92,6 +108,8 @@ public class OhtaniJudgeWebSocketController {
                 statsMap.put("teoscar", teoscar);
                 statsMap.put("raleigh", raleigh);
                 statsMap.put("yoshida", yoshida);
+                statsMap.put("okamoto", okamoto);
+                statsMap.put("murakami", murakami);
 
                 statsMap.put("yamamoto", yamamoto);
                 statsMap.put("imanaga", imanaga);
@@ -99,6 +117,8 @@ public class OhtaniJudgeWebSocketController {
                 statsMap.put("sasaki", sasaki);
                 statsMap.put("darvish", darvish);
                 statsMap.put("misiorowski", misiorowski);
+                statsMap.put("shohei", shohei);
+                statsMap.put("imai", imai);
 
                 return statsMap;
         }
