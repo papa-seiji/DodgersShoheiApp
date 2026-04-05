@@ -15,6 +15,9 @@ public class OhtaniJudgeController {
     private static final String OHTANI_HITTING_API = "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2026&group=hitting";
     private static final String JUDGE_HITTING_API = "https://statsapi.mlb.com/api/v1/people/592450/stats?stats=season&season=2026&group=hitting";
 
+    private static final String OKAMOTO_HITTING_API = "https://statsapi.mlb.com/api/v1/people/672960/stats?stats=season&season=2026&group=hitting";
+    private static final String MURAKAMI_HITTING_API = "https://statsapi.mlb.com/api/v1/people/808959/stats?stats=season&season=2026&group=hitting";
+
     private static final String TROUT_HITTING_API = "https://statsapi.mlb.com/api/v1/people/545361/stats?stats=season&season=2026&group=hitting";
     private static final String EDOMAN_HITTING_API = "https://statsapi.mlb.com/api/v1/people/669242/stats?stats=season&season=2026&group=hitting";
 
@@ -36,6 +39,9 @@ public class OhtaniJudgeController {
     private static final String RALEIGH_HITTING_API = "https://statsapi.mlb.com/api/v1/people/663728/stats?stats=season&season=2026&group=hitting";
     private static final String YOSHIDA_HITTING_API = "https://statsapi.mlb.com/api/v1/people/807799/stats?stats=season&season=2026&group=hitting";
 
+    private static final String SHOHEI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/660271/stats?stats=season&season=2026&group=pitching";
+    private static final String IMAI_PITCHING_API = "https://statsapi.mlb.com/api/v1/people/837227/stats?stats=season&season=2026&group=pitching";
+
     @GetMapping("/api/ohtani-vs-judge/stats")
     public ResponseEntity<Map<String, Object>> getOhtaniVsJudgeStats() {
         RestTemplate restTemplate = new RestTemplate();
@@ -46,6 +52,20 @@ public class OhtaniJudgeController {
         Map<String, Object> result = new HashMap<>();
         result.put("ohtani", ohtaniStats);
         result.put("judge", judgeStats);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/api/okamoto-vs-murakami/stats")
+    public ResponseEntity<Map<String, Object>> getOkamotoVsMurakamiStats() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Object okamotoStats = restTemplate.getForObject(OKAMOTO_HITTING_API, Object.class);
+        Object murakamiStats = restTemplate.getForObject(MURAKAMI_HITTING_API, Object.class);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("okamoto", okamotoStats);
+        result.put("murakami", murakamiStats);
 
         return ResponseEntity.ok(result);
     }
@@ -148,12 +168,25 @@ public class OhtaniJudgeController {
         return ResponseEntity.ok(result);
     }
 
-}
+    @GetMapping("/api/shohei-vs-imai/stats")
+    public ResponseEntity<Map<String, Object>> getShoheiVsImaiStats() {
+        RestTemplate restTemplate = new RestTemplate();
 
-@Controller
-class OhtaniJudgePageController {
-    @GetMapping("/ohtani-vs-judge")
-    public String showOhtaniVsJudgePage() {
-        return "ohtani_vs_judge";
+        Object shoheiStats = restTemplate.getForObject(SHOHEI_PITCHING_API, Object.class);
+        Object imaiStats = restTemplate.getForObject(IMAI_PITCHING_API, Object.class);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("shohei", shoheiStats);
+        result.put("imai", imaiStats);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Controller
+    class OhtaniJudgePageController {
+        @GetMapping("/ohtani-vs-judge")
+        public String showOhtaniVsJudgePage() {
+            return "ohtani_vs_judge";
+        }
     }
 }

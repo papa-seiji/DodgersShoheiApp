@@ -126,6 +126,47 @@
 </div>
 
 <div class="container">
+    <h1>岡本和真 vs 村上崇隆</h1>
+
+    <div class="image-comparison">
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/%E5%B2%A1%E6%9C%ACblueJays.png" alt="和真" class="player-img" />
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="gamesPlayed-left-okamoto">--</span>
+                <span class="label">出場数</span>
+                <span id="gamesPlayed-right-murakami">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="avg-left-okamoto">--</span>
+                <span class="label">打率</span>
+                <span id="avg-right-murakami">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="homeRuns-left-okamoto">--</span>
+                <span class="label">HR</span>
+                <span id="homeRuns-right-murakami">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="stolenBases-left-okamoto">--</span>
+                <span class="label">盗塁</span>
+                <span id="stolenBases-right-murakami">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="rbi-left-okamoto">--</span>
+                <span class="label">打点</span>
+                <span id="rbi-right-murakami">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="ops-left-okamoto">--</span>
+                <span class="label">OPS</span>
+                <span id="ops-right-murakami">--</span>
+            </div>
+        </div>
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/%E6%9D%91%E4%B8%8AwhiteSox.png" alt="崇隆" class="player-img" />
+    </div>
+</div>
+
+<div class="container">
     <h1>Tommy Edman vs Mike Trout</h1>
 
     <div class="image-comparison">
@@ -290,6 +331,47 @@
     </div>
 </div>
 
+<!-- 🧢 大谷翔平 vs 今井達也 ピッチング成績表示セクション -->
+<div class="container">
+    <h1>大谷翔平 vs 今井達也</h1>
+
+    <div class="image-comparison">
+        <!-- 大谷翔平の画像 -->
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/%E6%AF%94%E8%BC%83%E7%94%A8%E3%81%AE%E5%A4%A7%E8%B0%B7%E7%BF%94%E5%B9%B3%E3%83%94%E3%83%83%E3%83%81%E3%83%A3%E3%83%BC.png" alt="大谷翔平" class="player-img" />
+
+        <!-- 成績表示 -->
+        <div class="stats-overlay">
+            <div class="stat-row">
+                <span id="shohei-games">--</span>
+                <span class="label">登板数</span>
+                <span id="imai-games">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="shohei-wl">--</span>
+                <span class="label">勝-負</span>
+                <span id="imai-wl">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="shohei-era">--</span>
+                <span class="label">防御率</span>
+                <span id="imai-era">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="shohei-strikeouts">--</span>
+                <span class="label">奪三振</span>
+                <span id="imai-strikeouts">--</span>
+            </div>
+            <div class="stat-row">
+                <span id="shohei-whip">--</span>
+                <span class="label">WHIP</span>
+                <span id="imai-whip">--</span>
+            </div>
+        </div>
+
+        <!-- 今井達也の画像 -->
+        <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Ohtani-vs-Judge/%E4%BB%8A%E4%BA%95%E9%81%94%E4%B9%9FhoustonAstros.png" alt="今井達也" class="player-img" />
+    </div>
+</div>
 
 <!-- 🧢 Yamamoto vs Imanaga ピッチング成績表示セクション -->
 <div class="container">
@@ -441,6 +523,9 @@ stompClient.connect({}, () => {
     // const data = JSON.parse(message.body);
     const ohtani = data.ohtani?.stats?.[0]?.splits?.[0]?.stat || null;
     const judge  = data.judge?.stats?.[0]?.splits?.[0]?.stat || null;
+    const okamoto = data.okamoto?.stats?.[0]?.splits?.[0]?.stat || null;
+    const murakami = data.murakami?.stats?.[0]?.splits?.[0]?.stat || null;
+
     const trout = data.trout?.stats?.[0]?.splits?.[0]?.stat || null;
     const edoman = data.edoman?.stats?.[0]?.splits?.[0]?.stat || null;
     const seiya = data.seiya?.stats?.[0]?.splits?.[0]?.stat || null;
@@ -449,7 +534,6 @@ stompClient.connect({}, () => {
     const teoscar = data.teoscar?.stats?.[0]?.splits?.[0]?.stat || null;
     const raleigh = data.raleigh?.stats?.[0]?.splits?.[0]?.stat || null;
     const yoshida = data.yoshida?.stats?.[0]?.splits?.[0]?.stat || null;
-
 
 
 
@@ -469,6 +553,22 @@ stompClient.connect({}, () => {
     document.getElementById("stolenBases-left").textContent = judge?.stolenBases ?? "--";
     document.getElementById("rbi-left").textContent = judge?.rbi ?? "--";
     document.getElementById("ops-left").textContent = judge?.ops ?? "--";
+
+    // ⏬ 岡本和真
+    document.getElementById("gamesPlayed-left-okamoto").textContent = okamoto?.gamesPlayed ?? "--";
+    document.getElementById("avg-left-okamoto").textContent = okamoto?.avg ?? "--";
+    document.getElementById("homeRuns-left-okamoto").textContent = okamoto?.homeRuns ?? "--";
+    document.getElementById("stolenBases-left-okamoto").textContent = okamoto?.stolenBases ?? "--";
+    document.getElementById("rbi-left-okamoto").textContent = okamoto?.rbi ?? "--";
+    document.getElementById("ops-left-okamoto").textContent = okamoto?.ops ?? "--";
+
+    // ⏬ 村上宗隆
+    document.getElementById("gamesPlayed-right-murakami").textContent = murakami?.gamesPlayed ?? "--";
+    document.getElementById("avg-right-murakami").textContent = murakami?.avg ?? "--";
+    document.getElementById("homeRuns-right-murakami").textContent = murakami?.homeRuns ?? "--";
+    document.getElementById("stolenBases-right-murakami").textContent = murakami?.stolenBases ?? "--";
+    document.getElementById("rbi-right-murakami").textContent = murakami?.rbi ?? "--";
+    document.getElementById("ops-right-murakami").textContent = murakami?.ops ?? "--";
 
     // ⏬ トミー・エドマン
     document.getElementById("gamesPlayed-right01").textContent = trout?.gamesPlayed ?? "--";
@@ -535,6 +635,22 @@ stompClient.connect({}, () => {
     document.getElementById("ops-yoshida").textContent = yoshida?.ops ?? "--";
 
 
+// ⏬ 大谷翔平
+const shohei = data.shohei?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("shohei-games").textContent = shohei?.gamesPlayed ?? "--";
+document.getElementById("shohei-wl").textContent = shohei ? `${shohei.wins}-${shohei.losses}` : "--";
+document.getElementById("shohei-era").textContent = shohei?.era ?? "--";
+document.getElementById("shohei-strikeouts").textContent = shohei?.strikeOuts ?? "--";
+document.getElementById("shohei-whip").textContent = shohei?.whip ?? "--";
+
+// ⏬ 今井達也
+const imai = data.imai?.stats?.[0]?.splits?.[0]?.stat || null;
+document.getElementById("imai-games").textContent = imai?.gamesPlayed ?? "--";
+document.getElementById("imai-wl").textContent = imai ? `${imai.wins}-${imai.losses}` : "--";
+document.getElementById("imai-era").textContent = imai?.era ?? "--";
+document.getElementById("imai-strikeouts").textContent = imai?.strikeOuts ?? "--";
+document.getElementById("imai-whip").textContent = imai?.whip ?? "--";
+
 // ⏬ 山本由伸
 const yamamoto = data.yamamoto?.stats?.[0]?.splits?.[0]?.stat || null;
 document.getElementById("yamamoto-games").textContent = yamamoto?.gamesPlayed ?? "--";
@@ -582,6 +698,7 @@ document.getElementById("misiorowski-wl").textContent = misiorowski ? `${misioro
 document.getElementById("misiorowski-era").textContent = misiorowski?.era ?? "--";
 document.getElementById("misiorowski-strikeouts").textContent = misiorowski?.strikeOuts ?? "--";
 document.getElementById("misiorowski-whip").textContent = misiorowski?.whip ?? "--";
+
 
     });
 
