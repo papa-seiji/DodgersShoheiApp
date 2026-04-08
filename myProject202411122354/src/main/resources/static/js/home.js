@@ -6,11 +6,19 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // WebSocket初期化
-    let stompClient = null;
+    // ❌ 今
+    // let stompClient = null;
+
+    // ✅ 修正
+    window.stompClient = null;
 
     function initializeWebSocket() {
         const socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
+        // ❌ 今
+        // stompClient = Stomp.over(socket);
+
+        // ✅ 修正
+        window.stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function () {
             console.log("WebSocket connected");
@@ -89,11 +97,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 初期化
-    fetchCounterValues();         // MainCounterとSecondaryCounterを取得
-    fetchVisitorCounter();        // VisitorCounterを取得して初期表示
+    // fetchCounterValues();         // MainCounterとSecondaryCounterを取得
+    // fetchVisitorCounter();        // VisitorCounterを取得して初期表示
+    //✅ 修正
+    setTimeout(fetchCounterValues, 1000);
+    setTimeout(fetchVisitorCounter, 1200);
+
 
     // WebSocketを初期化して購読
-    initializeWebSocket();
+    // initializeWebSocket();
+
+    // ❌ 削除 or コメントアウト
+    // initializeWebSocket();
+
+    // ✅ クリック後に起動
+    // document.addEventListener("click", () => {
+    //     if (!window.__wsStarted) {
+    //         window.__wsStarted = true;
+    //         initializeWebSocket();
+    //         console.log("WebSocket遅延起動");
+    //     }
+    // }, { once: true });
+
+        document.addEventListener("click", (e) => {
+
+        // 🔥 WBCリンクなら何もしない
+            if (e.target.closest("a[href='/WorldBaseballClassic']")) {
+                return;
+            }
+
+            if (!window.__wsStarted) {
+                window.__wsStarted = true;
+                initializeWebSocket();
+                console.log("WebSocket遅延起動");
+            }
+
+            }, { once: true });
 
 });
 

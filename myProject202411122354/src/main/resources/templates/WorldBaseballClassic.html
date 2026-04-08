@@ -838,7 +838,7 @@ WBC POOL 表示切替 / 順位表示 CSS
 <!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
 <section class="video-preview-section">
   <div class="video-preview-wrapper">
-    <video id="videoChampion" class="decorative-video" autoplay muted loop playsinline>
+    <video id="videoChampion" class="decorative-video" muted loop playsinline>
       <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/worldbaseballclassic.mp4" type="video/mp4">
       お使いのブラウザは video タグをサポートしていません。
     </video>
@@ -846,6 +846,47 @@ WBC POOL 表示切替 / 順位表示 CSS
     <button id="muteChampion" class="mute-btn">🔇</button>
   </div>
 </section>
+
+<script>
+window.addEventListener("load", () => {
+
+    // 🎥 少し待ってから動画再生開始（初期ロード軽量化）
+    setTimeout(() => {
+
+        // 🎥 対象動画ID一覧
+        const videoIds = ["videoWBC", "videoWBC23", "videoChampion"];
+
+        videoIds.forEach((id, index) => {
+
+            // 🎯 1.2秒ずつズラして再生（負荷分散）
+            setTimeout(() => {
+
+                const video = document.getElementById(id);
+
+                if (!video) {
+                    console.warn(`⚠️ ${id} が見つかりません`);
+                    return;
+                }
+
+                // ✅ Safari対策
+                video.muted = true;
+                video.playsInline = true;
+
+                // ✅ 再生試行
+                video.play().then(() => {
+                    console.log(`🎥 ${id} 再生成功`);
+                }).catch(() => {
+                    console.warn(`⚠️ ${id} 再生ブロック（Safari仕様）`);
+                });
+
+            }, index * 1200); // ← 1.2秒ずつ遅延
+
+        });
+
+    }, 2000); // ← 初回遅延（3秒→2秒に調整）
+
+});
+</script>
 
 <!-- ✅ Postseason コメント＋集合写真 -->
 <section class="postseason-commentary">
@@ -1400,7 +1441,7 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
 <!-- 🎞️ 06,09 WBC プレイ動画 -->
 <section class="video-preview-section">
   <div class="video-preview-wrapper">
-    <video id="videoWBC" class="decorative-video" autoplay muted loop playsinline>
+    <video id="videoWBC" class="decorative-video" muted loop playsinline>
       <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/06_09+WBC_%E3%83%8F%E3%82%A4%E3%83%A9%E3%82%A4%E3%83%88.mp4" type="video/mp4">
       お使いのブラウザは video タグをサポートしていません。
     </video>
@@ -1412,7 +1453,7 @@ fetch("https://commons.wikimedia.org/w/api.php?action=query&titles=File:SAMURAI_
 <!-- 🎞️ '23 WBC プレイ動画 -->
 <section class="video-preview-section">
   <div class="video-preview-wrapper">
-    <video id="videoWBC23" class="decorative-video" autoplay muted loop playsinline>
+    <video id="videoWBC23" class="decorative-video" muted loop playsinline>
       <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/2023_WBC_%E3%83%8F%E3%82%A4%E3%83%A9%E3%82%A4%E3%83%88.mp4" type="video/mp4">
       お使いのブラウザは video タグをサポートしていません。
     </video>

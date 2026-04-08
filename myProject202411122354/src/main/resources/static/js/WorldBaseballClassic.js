@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         initializeTabs();
 
         // ✅ Postseason成績をロード
-        await loadPostseasonStats();
+        // await
+        loadPostseasonStats();
 
         // ✅ URLハッシュ対応（ニュースリンクからのジャンプ）
         handleHashNavigation();
@@ -28,10 +29,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupMuteControl("videoChampion", "muteChampion");
 
 // ✅ 🎬 すべての動画を確実に再生（新規追記済み）
-ensureVideoPlayback(["videoWBC", "videoWBC23", "videoChampion"]);
+// ensureVideoPlayback(["videoWBC", "videoWBC23", "videoChampion"]);
 
         // ✅ 🎬 すべての動画を確実に再生（← ここを新規追記！）
-        ensureVideoPlayback(["videoWBC", "videoChampion","videoWBC23"]);
+        // ensureVideoPlayback(["videoWBC", "videoChampion","videoWBC23"]);
 
     } catch (e) {
         console.error("Error fetching series results:", e);
@@ -91,30 +92,30 @@ function setupMuteControl(videoId, buttonId, initialVolume = 0.04) {
 
 
 // ✅ 複数動画の自動再生保証（ブラウザのautoplay制限回避）
-function ensureVideoPlayback(videoIds) {
-  videoIds.forEach(id => {
-    const video = document.getElementById(id);
-    if (!video) return;
+// function ensureVideoPlayback(videoIds) {
+//   videoIds.forEach(id => {
+//     const video = document.getElementById(id);
+//     if (!video) return;
 
-    // 自動再生がブロックされていた場合にtry-catchで再試行
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => console.log(`▶ ${id} 再生開始`))
-        .catch(err => {
-          console.warn(`⚠ ${id} の自動再生がブロックされました。ユーザー操作で再開します。`);
+//     // 自動再生がブロックされていた場合にtry-catchで再試行
+//     const playPromise = video.play();
+//     if (playPromise !== undefined) {
+//       playPromise
+//         .then(() => console.log(`▶ ${id} 再生開始`))
+//         .catch(err => {
+//           console.warn(`⚠ ${id} の自動再生がブロックされました。ユーザー操作で再開します。`);
           // 初回クリック時に再生開始
-          document.body.addEventListener(
-            "click",
-            () => {
-              video.play().then(() => console.log(`✅ ${id} 再生を手動開始`));
-            },
-            { once: true }
-          );
-        });
-    }
-  });
-}
+//           document.body.addEventListener(
+//             "click",
+//             () => {
+//               video.play().then(() => console.log(`✅ ${id} 再生を手動開始`));
+//             },
+//             { once: true }
+//           );
+//         });
+//     }
+//   });
+// }
 
 
 // ✅ フェードスライド関数（新規追加）
