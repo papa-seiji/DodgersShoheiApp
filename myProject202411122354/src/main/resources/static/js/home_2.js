@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error('Error fetching visitor counter:', error));
     }
 
-    fetchVisitorCounter();
-    initializeWebSocket();
+    setTimeout(fetchVisitorCounter, 1200);
+    // fetchVisitorCounter();
+    // initializeWebSocket();
 });

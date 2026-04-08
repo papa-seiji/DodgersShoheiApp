@@ -20,6 +20,54 @@
     <script src="/js/notifications.js"></script><!-- JavaScriptファイルを読み込む -->
     <script src="/js/news-section.js"></script><!-- JavaScriptファイルを読み込む -->
 
+<script>
+// ===============================
+// 🚀 通信完全停止制御（最優先）
+// ===============================
+let isNavigating = false;
+
+// 🔥 ① ナビゲーション検知（aタグだけじゃなく全体）
+document.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (link) {
+        isNavigating = true;
+        console.log("🚀 ナビゲーション開始 → 通信停止");
+    }
+});
+
+// 🔥 ② fetch完全ブロック
+const originalFetch = window.fetch;
+window.fetch = async function (...args) {
+    if (isNavigating) {
+        console.log("🛑 fetchキャンセル:", args[0]);
+        return new Promise(() => {}); // ← 重要：止める
+    }
+    return originalFetch.apply(this, args);
+};
+
+// 🔥 ③ setTimeoutも止める
+const originalSetTimeout = window.setTimeout;
+window.setTimeout = function (fn, delay) {
+    return originalSetTimeout(() => {
+        if (!isNavigating) {
+            fn();
+        }
+    }, delay);
+};
+
+// 🔥 ④ WebSocket停止
+window.addEventListener("beforeunload", () => {
+    isNavigating = true;
+
+    if (typeof stompClient !== "undefined" && stompClient) {
+        try {
+            stompClient.disconnect();
+            console.log("🔌 WebSocket切断");
+        } catch (e) {}
+    }
+});
+</script>
+
 <link rel="stylesheet" th:href="@{/css/toast.css}">
 <script th:src="@{/js/toast.js}" defer></script>
 <title>ドジャース最新情報｜大谷翔平・試合情報・試合速報・試合まとめ・順位【みんな日本から応援してるぜッ！】</title>
@@ -313,7 +361,9 @@
 <!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
 <section class="video-preview-section">
   <div class="video-preview-wrapper">
-    <video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>
+    <!--<video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>-->
+    <video id="postseasonVideo" class="decorative-video" muted loop playsinline>
+
       <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/2025_Dogders_WIN-Prade.mp4" type="video/mp4">
       お使いのブラウザは video タグをサポートしていません。
     </video>
@@ -322,7 +372,17 @@
   </div> -->
 </section>
 
-
+<script>
+    window.addEventListener("load", () => {
+        setTimeout(() => {
+            const video = document.getElementById("postseasonVideo");
+            if (video) {
+                video.play().catch(() => {});
+                console.log("🎥 video遅延再生");
+            }
+        }, 3000); // ← 3秒後
+    });
+</script>
 
 
 <!--                     スタート MLB試合情報の表示エリア                          -->
@@ -511,7 +571,9 @@ function getTeamId(teamName) {
 // window.onload = fetchGameInfo;
 
 // ✅ 修正後
-document.addEventListener("DOMContentLoaded", fetchGameInfo);
+// document.addEventListener("DOMContentLoaded", fetchGameInfo);
+
+setTimeout(fetchGameInfo, 1500);
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -834,11 +896,6 @@ document.addEventListener("DOMContentLoaded", function () {
         
     <script src="/js/stats.js"></script>
 
-          <!--スタート   WorldBaseballClassic を見る               -->
-      <a href="/WorldBaseballClassic" class="tokyo-archive-link">
-          <div id="MLB-POST-SEASON-2025">’26 WBC特設サイトはコチラ     　←← 押</div>
-      </a>
-      <!--エンド    WorldBaseballClassic                      -->
 
 
 <!-- ===========================🎥 DodgersShoheiApp - Video Tabs Section=========================== -->
@@ -965,7 +1022,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/jlK6Tet0Iak?si=K9UKC9Dkm7wUpEa6"
+  data-src="https://www.youtube.com/embed/jlK6Tet0Iak?si=K9UKC9Dkm7wUpEa6"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -985,7 +1042,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/kcbyBiF6CCU?si=nSSTcqiqI1_HxqBq"
+  data-src="https://www.youtube.com/embed/kcbyBiF6CCU?si=nSSTcqiqI1_HxqBq"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1002,7 +1059,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/Vj4MI8Kg6YA?si=IJ7CuN7ZB-HWfkIC"
+  data-src="https://www.youtube.com/embed/Vj4MI8Kg6YA?si=IJ7CuN7ZB-HWfkIC"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1019,7 +1076,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/UVR_2YFr5AQ?si=z_YElMC0ZhOpqcbR"
+  data-src="https://www.youtube.com/embed/UVR_2YFr5AQ?si=z_YElMC0ZhOpqcbR"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1055,13 +1112,12 @@ document.addEventListener("DOMContentLoaded", function () {
   <h3 class="shiny-text-1">World Baseball Classic 2026</h3>
   <p>開催地：サンフアン（プエルトリコ）、ヒューストン、東京、マイアミ</p>
   <p>開催期間：2026年3月5日（木）〜18日（水）</p>
-  <!--<h2>全チーム戦績は↓↓↓にて</h2>
+  <h2>全チーム戦績は↓↓↓にて</h2>
 
-      スタート   WorldBaseballClassic を見る               
       <a href="/WorldBaseballClassic" class="tokyo-archive-link">
-          <div id="MLB-POST-SEASON-2025">’26 WBC特設サイトはコチラ     　←← 押</div>-->
-      <!--</a>
-      エンド    WorldBaseballClassic                     
+          <div id="MLB-POST-SEASON-2025">’26 WBC特設サイトはコチラ     　←← 押</div>
+      </a>
+      <!--エンド    WorldBaseballClassic
 
   <h2>随時更新中!!</h2> -->
   <h3></h3>
@@ -1073,7 +1129,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/5DAsDxYIC4A?si=J_9OwB1Sq2XIBUQ5"
+  data-src="https://www.youtube.com/embed/5DAsDxYIC4A?si=J_9OwB1Sq2XIBUQ5"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1090,7 +1146,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/1SKp2hBiQww?si=PBjP7ElhMVsJXlBA"
+  data-src="https://www.youtube.com/embed/1SKp2hBiQww?si=PBjP7ElhMVsJXlBA"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1107,7 +1163,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/XjjpATMN7wA?si=G_z-5RAlNykaJCym"
+  data-src="https://www.youtube.com/embed/XjjpATMN7wA?si=G_z-5RAlNykaJCym"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1124,7 +1180,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/a8huaUMeve0?si=VsJ0mUyQThdtOXq_"
+  data-src="https://www.youtube.com/embed/a8huaUMeve0?si=VsJ0mUyQThdtOXq_"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1141,7 +1197,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/FN0htJLa2MI?si=OKHlfwyWk1r0tJBj"
+  data-src="https://www.youtube.com/embed/FN0htJLa2MI?si=OKHlfwyWk1r0tJBj"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1158,7 +1214,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/qhd6r4P-FZQ?si=kfn0Li83xKTAg8mj"
+  data-src="https://www.youtube.com/embed/qhd6r4P-FZQ?si=kfn0Li83xKTAg8mj"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1175,7 +1231,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/iJePVKnQQSo?si=2BxJ7ifSH4NPW6W3"
+  data-src="https://www.youtube.com/embed/iJePVKnQQSo?si=2BxJ7ifSH4NPW6W3"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1192,7 +1248,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/ssWD6DMsFus?si=jRD7qNnqbW1_I7oV"
+  data-src="https://www.youtube.com/embed/ssWD6DMsFus?si=jRD7qNnqbW1_I7oV"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1211,7 +1267,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/Z9tGzXv_7mI?si=AOaNiewrctLZpwXV"
+  data-src="https://www.youtube.com/embed/Z9tGzXv_7mI?si=AOaNiewrctLZpwXV"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1228,7 +1284,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/ohaLZjw4He8?si=NUQYsFYvz3b9YW6I"
+  data-src="https://www.youtube.com/embed/ohaLZjw4He8?si=NUQYsFYvz3b9YW6I"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1262,7 +1318,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/cvnXULhNA34?si=zNeD9cSY8aNagBzk"
+  data-src="https://www.youtube.com/embed/cvnXULhNA34?si=zNeD9cSY8aNagBzk"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1278,7 +1334,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/UEYuTkhv_bU?si=HvOyXChBvv0IeyZq"
+  data-src="https://www.youtube.com/embed/UEYuTkhv_bU?si=HvOyXChBvv0IeyZq"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1294,7 +1350,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/8W17mqibyGU?playsinline=1&si=9YhkMqbSvCkd9Kpx"
+  data-src="https://www.youtube.com/embed/8W17mqibyGU?playsinline=1&si=9YhkMqbSvCkd9Kpx"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1312,7 +1368,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/0e7zKPfouj4?playsinline=1"
+  data-src="https://www.youtube.com/embed/0e7zKPfouj4?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1330,7 +1386,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/y-Y0C0Sn9U8?playsinline=1"
+  data-src="https://www.youtube.com/embed/y-Y0C0Sn9U8?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1357,7 +1413,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/gByTMgn6JxI?playsinline=1"
+  data-src="https://www.youtube.com/embed/gByTMgn6JxI?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1372,7 +1428,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/yYb-0dn2-Ag?playsinline=1"
+  data-src="https://www.youtube.com/embed/yYb-0dn2-Ag?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1391,7 +1447,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/5SssmOnDkdY?si=DDwdlBJyoZb7EoSN"
+  data-src="https://www.youtube.com/embed/5SssmOnDkdY?si=DDwdlBJyoZb7EoSN"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1414,7 +1470,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/NvuHhoIHIm8?si=Gzd9Tqz4Bsj1SjVx"
+  data-src="https://www.youtube.com/embed/NvuHhoIHIm8?si=Gzd9Tqz4Bsj1SjVx"
           title="WBC Final Shohei vs Trout"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1433,7 +1489,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/Yy4aFbK25ic?si=6S0Qw83g6kOaTFpz"
+  data-src="https://www.youtube.com/embed/Yy4aFbK25ic?si=6S0Qw83g6kOaTFpz"
           title="WBC Semifinal Japan vs Mexico"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1451,7 +1507,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/exBgbcEEhqM?si=4OBy4Tt-os9Gs__w"
+  data-src="https://www.youtube.com/embed/exBgbcEEhqM?si=4OBy4Tt-os9Gs__w"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1467,7 +1523,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/qQgGftwSjIs?si=DAamW6hOl4HYlu_S"
+  data-src="https://www.youtube.com/embed/qQgGftwSjIs?si=DAamW6hOl4HYlu_S"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1483,7 +1539,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/pBPUM2sAdgc?si=RJY0zbgLprRRfLu9"
+  data-src="https://www.youtube.com/embed/pBPUM2sAdgc?si=RJY0zbgLprRRfLu9"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1499,7 +1555,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/ItmfThEVGtM?si=oQKQ3rmJNb322lcv"
+  data-src="https://www.youtube.com/embed/ItmfThEVGtM?si=oQKQ3rmJNb322lcv"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1515,7 +1571,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/odMisYBwvXE?si=3o7tFEVNDsxjQMYv"
+  data-src="https://www.youtube.com/embed/odMisYBwvXE?si=3o7tFEVNDsxjQMYv"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen></iframe>
@@ -1531,7 +1587,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="douga-section_14">
     <div class="video-wrapper">
       <iframe
-        src="https://www.youtube.com/embed/2IzD5pzmmuw?si=XQ9E9OmJ4Jx5fEzp"
+        data-src="https://www.youtube.com/embed/2IzD5pzmmuw?si=XQ9E9OmJ4Jx5fEzp"
         allowfullscreen>
       </iframe>
     </div>
@@ -1541,7 +1597,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="douga-section_15">
     <div class="video-wrapper">
       <iframe
-        src="https://www.youtube.com/embed/MaNu65kt9Mg?si=ZI8GluJfDJ-bnXKI"
+        data-src="https://www.youtube.com/embed/MaNu65kt9Mg?si=ZI8GluJfDJ-bnXKI"
         allowfullscreen>
       </iframe>
     </div>
@@ -1551,7 +1607,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="douga-section_16">
     <div class="video-wrapper">
       <iframe
-        src="https://www.youtube.com/embed/BeRXAd5ecWs?si=RF39O5521n7ie8M1"
+        data-src="https://www.youtube.com/embed/BeRXAd5ecWs?si=RF39O5521n7ie8M1"
         allowfullscreen>
       </iframe>
     </div>
@@ -1561,7 +1617,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="douga-section_17">
     <div class="video-wrapper">
       <iframe
-        src="https://www.youtube.com/embed/oQiITBsS0kY?si=fXyuoCWJzUlVAZt-"
+        data-src="https://www.youtube.com/embed/oQiITBsS0kY?si=fXyuoCWJzUlVAZt-"
         allowfullscreen>
       </iframe>
     </div>
@@ -1590,7 +1646,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <iframe
   loading="lazy"
   decoding="async"
-  src="https://www.youtube.com/embed/uf4YUT5dLcM?playsinline=1"
+  data-src="https://www.youtube.com/embed/uf4YUT5dLcM?playsinline=1"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1601,6 +1657,19 @@ document.addEventListener("DOMContentLoaded", function () {
   </div>
   <!-- =================== 面白Tab END =================== -->
 </div>
+
+<script>
+    window.addEventListener("load", () => {
+        setTimeout(() => {
+            document.querySelectorAll("iframe[data-src]").forEach(el => {
+                el.src = el.dataset.src;
+            });
+            console.log("🎥 iframe遅延ロード実行");
+        }, 7000);
+    });
+</script>
+
+
 
 <!-- ===========================
 🎨 CSS（完全安定＋iPhone対応）
