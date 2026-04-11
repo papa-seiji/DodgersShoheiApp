@@ -79,6 +79,22 @@ document.querySelectorAll(".month-calendar").forEach(calendar => {
   });
 });
 
+/* =========================
+   ②-2 現在月 自動ハイライト
+========================= */
+
+document.querySelectorAll(".month-calendar").forEach(el => {
+  el.classList.remove("is-current");
+});
+
+const now = new Date();
+const currentMonth = now.getMonth() + 1;
+
+const target = document.querySelector(`.month-calendar[data-month="${currentMonth}"]`);
+
+if (target) {
+  target.classList.add("is-current");
+}
 
 /* =========================
    ③ ShoheiIndex 定義スライド制御
