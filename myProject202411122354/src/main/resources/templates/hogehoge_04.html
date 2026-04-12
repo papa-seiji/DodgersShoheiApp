@@ -269,8 +269,296 @@
 
 }
 
+  /*<!-- ===== 🔥 Savant描画エリア // baseballsavantからピッチングの軌道情報 ===== -->*/
+/* =========================
+   🎯 Savant風ゾーン
+========================= */
+#pitch-zone {
+  position: relative;
+  width: 340px;
+    height: 413px;
+  margin: 14px auto;
+  background-color: #05050533;
+    border: 2px solid #000000;
+  border-radius: 10px;
+}
+
+/* ストライクゾーン */
+.zone-grid {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 102px;
+  height: 115px;
+  border: 2px solid #000000;
+  background-color: #ffffff;
+  z-index: 2;
+}
+
+/* 横線（2本） */
+.zone-grid::before,
+.zone-grid::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: #000;
+}
+
+/* 上1/3 */
+.zone-grid::before {
+  top: 33.33%;
+}
+
+/* 下2/3 */
+.zone-grid::after {
+  top: 66.66%;
+}
+
+/* 縦線用 */
+.zone-grid span {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: #000;
+}
+
+/* 左1/3 */
+.zone-grid span:nth-child(1) {
+  left: 33.33%;
+}
+
+/* 右2/3 */
+.zone-grid span:nth-child(2) {
+  left: 66.66%;
+}
+
+
+.pitch {
+  position: absolute;   /* ← これが無いと全部崩壊する */
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 18px;
+  pointer-events: none;
+   z-index: 3;  /* ← 最前面 */
+}
+
+
+.field-lines {
+  position: absolute;
+  left: 50%;
+  bottom: 0;                 /* ←ここが超重要 */
+  transform: translateX(-50%);
+  width: 220px;
+  height: 180px;
+  pointer-events: none;
+  z-index: 1;                /* ←ドットより下にする */
+}
+
+/* =========================
+   ホームベース
+========================= */
+.field-lines::after {
+    content: "";
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 190px;
+    height: 48px;
+    /* border: 3px solid #000; */
+    background: #fff;
+    clip-path: polygon(50% 100%, 20% 60%, 24% 0%, 76% 0%, 80% 60%);
+}
+
+
+/* =========================
+   ファールライン（左右）
+========================= */
+.field-lines .foul-line-left,
+.field-lines .foul-line-right {
+  position: absolute;
+  bottom: 0;
+  width: 2px;
+  height: 140px;
+  background: rgba(0,0,0,0.2);
+}
+
+.field-lines .foul-line-left {
+  left: 10px;
+  transform: rotate(-50deg);
+}
+
+.field-lines .foul-line-right {
+  right: 10px;
+  transform: rotate(50deg);
+}
+
+
+/* =========================
+   共通
+========================= */
+.batter-box {
+    position: absolute;
+    bottom: 1px;
+    width: 132px;
+    height: 91px;
+    border: 5px solid rgb(0 0 0);
+    clip-path: polygon(14% 0%, 93% 0%, 77% 112%, 29% 100%);
+}
+
+/* =========================
+   左
+========================= */
+.batter-box.left {
+  left: -36%;
+}
+
+/* =========================
+   右
+========================= */
+.batter-box.right {
+  right: -31%;
+}
+
+
+/* =========================
+   左バッターボックス：側面ライン
+========================= */
+.batter-box.left::before,
+.batter-box.left::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 110px;
+  background: black;
+}
+
+/* 左：左側の斜め線 */
+.batter-box.left::before {
+  left: 0;
+  bottom: 0;
+  transform: rotate(-20deg);
+  transform-origin: bottom;
+}
+
+/* 左：右側の斜め線 */
+.batter-box.left::after {
+  right: 26px;
+    bottom: 0;
+    transform: rotate(15deg);
+    transform-origin: bottom;
+    border: 2px solid rgb(0 0 0);
+}
+
+
+/* =========================
+   右バッターボックス：側面ライン
+========================= */
+.batter-box.right::before,
+.batter-box.right::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 110px;
+  background: black;
+}
+
+/* 右：左側 */
+.batter-box.right::before {
+  left: 35px;
+    bottom: 0;
+    transform: rotate(-12deg);
+    transform-origin: bottom;
+    border: 2px solid rgb(0 0 0);
+}
+
+/* 右：右側 */
+.batter-box.right::after {
+  right: 0;
+  bottom: 0;
+  transform: rotate(20deg);
+  transform-origin: bottom;
+}
+
+/*<!-- ===== 凡例（球種レジェンド）を右側に出す ===== -->*/
+/* =========================
+   🎯 レジェンド全体
+========================= */
+.pitch-legend {
+  position: absolute;
+  right: -230px;   /* ← 右に出す */
+  top: 20px;
+
+  width: 180px;
+  padding: 10px;
+
+  background: rgba(255,255,255,0.9);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* タイトル */
+.legend-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* 1行 */
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+/* 色ドット */
+.legend-item .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* =========================
+   🎨 色（JSと完全一致）
+========================= */
+.dot.ff { background: red; }
+.dot.si { background: orange; }
+.dot.fc { background: darkred; }
+
+.dot.sl { background: blue; }
+.dot.st { background: deepskyblue; }
+
+.dot.cu { background: yellow; }
+.dot.kc { background: gold; }
+
+.dot.ch { background: green; }
+.dot.fs { background: limegreen; }
+
+
+
+  /* クリック感を出す👇 */
+  .legend-item {
+    cursor: pointer;
+  }
+
+  .legend-item.active {
+    font-weight: bold;
+    opacity: 1;
+  }
+
+  .legend-item:not(.active) {
+    opacity: 0.5;
+  }
 
 </style>
+
 </head>
 
 <body>
@@ -289,6 +577,50 @@
   <div style="margin:0 auto 32px;">
     <canvas id="hogehoge04Chart" height="120"></canvas>
   </div>
+
+  <!-- ===== 🔥 Savant描画エリア // baseballsavantからピッチングの軌道情報 ===== -->
+    <div id="pitch-zone">
+
+      <div class="zone-grid">
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="field-lines">
+
+        <!-- 左バッターボックス -->
+        <div class="batter-box left"></div>
+        <!-- 右バッターボックス -->
+        <div class="batter-box right"></div>
+
+      </div>
+
+        <!-- ===== 凡例（球種レジェンド）を右側に出す ===== -->
+        <div class="pitch-legend">
+          <div class="legend-title">Pitch Type</div>
+
+            <div class="legend-item" data-type="FF"><span class="dot ff"></span> Four-seam fastball</div>
+            <div class="legend-item" data-type="SI"><span class="dot si"></span> Sinker</div>
+            <div class="legend-item" data-type="FC"><span class="dot fc"></span> Cutter</div>
+
+            <div class="legend-item" data-type="SL"><span class="dot sl"></span> Slider</div>
+            <div class="legend-item" data-type="ST"><span class="dot st"></span> Sweeper</div>
+
+            <div class="legend-item" data-type="CU"><span class="dot cu"></span> Curveball</div>
+            <div class="legend-item" data-type="KC"><span class="dot kc"></span> Knuckle Curve</div>
+
+            <div class="legend-item" data-type="CH"><span class="dot ch"></span> Changeup</div>
+            <div class="legend-item" data-type="FS"><span class="dot fs"></span> Splitter</div>
+
+        </div>
+
+
+
+    </div>
+
+
+
+
 
   <h2 class="month-title">
     <span th:text="${month}">4</span>月 登板一覧
@@ -712,6 +1044,14 @@ window.CHART_VALUES = [[${chartValues}]];
 /*]]>*/
 </script>
 
+<!-- baseballsavantからピッチングの軌道情報 Thymeleafに pitchData が渡る!これをHTMLに渡す -->
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+window.PITCH_DATA = [[${pitchData}]];
+console.log("PITCH_DATA =", window.PITCH_DATA);
+/*]]>*/
+</script>
 
 </body>
 </html>
