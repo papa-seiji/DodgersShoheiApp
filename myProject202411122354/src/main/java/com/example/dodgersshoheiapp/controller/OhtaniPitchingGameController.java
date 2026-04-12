@@ -82,6 +82,15 @@ public class OhtaniPitchingGameController {
         // ==============================
         OhtaniPitchingGame selectedGame = null;
 
+        System.out.println("selectedGame = " + selectedGame);
+
+        if (selectedGame != null) {
+            System.out.println("selectedGame date = " + selectedGame.getGameDate());
+            System.out.println("selectedGame gamePk = " + selectedGame.getGamePk());
+        } else {
+            System.out.println("❌ selectedGame is NULL");
+        }
+
         if (date != null) {
             LocalDate targetDate = LocalDate.parse(date);
 
@@ -91,6 +100,23 @@ public class OhtaniPitchingGameController {
                     .orElse(null);
         }
 
+        // baseballsavantからピッチングの軌道情報 👉 Thymeleafに pitchData が渡る!//////////////////////
+        // ==============================
+        // 🔥 pitchData 追加
+        // ==============================
+        List<Map<String, Object>> pitchData = new ArrayList<>();
+
+        if (selectedGame != null && selectedGame.getGamePk() != null) {
+            try {
+                pitchData = mlbGameService.getPitchData(selectedGame.getGamePk());
+                System.out.println("DEBUG pitchData size = " + pitchData.size());
+            } catch (Exception e) {
+                System.out.println("⚠️ pitchData取得失敗");
+                e.printStackTrace();
+            }
+        }
+
+        model.addAttribute("pitchData", pitchData);
         // ==============================
         // グラフ
         // ==============================

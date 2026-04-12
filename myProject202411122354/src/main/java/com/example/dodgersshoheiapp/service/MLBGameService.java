@@ -347,4 +347,92 @@ public class MLBGameService {
 
         return shoheiHRs;
     }
+
+    // baseballsavantからピッチングの軌道情報
+    // pitchData.coordinates.pX
+    // pitchData.coordinates.pZ
+    // details.type.code
+    // を取得する！ ↓↓↓
+
+    public List<Map<String, Object>> getPitchData(Long gamePk) {
+
+        Map<String, Object> playByPlay = getPlayByPlay(gamePk);
+
+        if (playByPlay == null)
+            return Collections.emptyList();
+
+        List<Map<String, Object>> allPlays = (List<Map<String, Object>>) playByPlay.get("allPlays");
+
+        if (allPlays == null)
+            return Collections.emptyList();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        // 🔥 大谷ID
+        final long OHTANI_ID = 660271;
+
+        for (Map<String, Object> play : allPlays) {
+
+            // =========================
+            // 🔥 ここ追加（投手判定）
+            // =========================
+            Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+            if (matchup == null)
+                continue;
+
+            Map<String, Object> pitcher = (Map<String, Object>) matchup.get("pitcher");
+            if (pitcher == null)
+                continue;
+
+            Integer pitcherId = (Integer) pitcher.get("id");
+
+            // 👉 大谷以外スキップ
+            if (pitcherId == null || pitcherId != OHTANI_ID)
+                continue;
+
+            // =========================
+            // ここから既存処理
+            // =========================
+
+            List<Map<String, Object>> events = (List<Map<String, Object>>) play.get("playEvents");
+
+            if (events == null)
+                continue;
+
+            for (Map<String, Object> e : events) {
+
+                if (!Boolean.TRUE.equals(e.get("isPitch")))
+                    continue;
+
+                Map<String, Object> pitchData = (Map<String, Object>) e.get("pitchData");
+
+                if (pitchData == null)
+                    continue;
+
+                Map<String, Object> coords = (Map<String, Object>) pitchData.get("coordinates");
+
+                if (coords == null)
+                    continue;
+
+                Double pX = (Double) coords.get("pX");
+                Double pZ = (Double) coords.get("pZ");
+
+                Map<String, Object> details = (Map<String, Object>) e.get("details");
+
+                String type = null;
+                if (details != null && details.get("type") != null) {
+                    type = (String) ((Map<String, Object>) details.get("type")).get("code");
+                }
+
+                Map<String, Object> pitch = new HashMap<>();
+                pitch.put("pX", pX);
+                pitch.put("pZ", pZ);
+                pitch.put("type", type);
+
+                result.add(pitch);
+            }
+        }
+
+        return result;
+    }
 }
