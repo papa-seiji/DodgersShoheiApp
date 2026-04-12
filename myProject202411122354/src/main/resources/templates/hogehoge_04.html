@@ -543,6 +543,20 @@
 
 
 
+  /* クリック感を出す👇 */
+  .legend-item {
+    cursor: pointer;
+  }
+
+  .legend-item.active {
+    font-weight: bold;
+    opacity: 1;
+  }
+
+  .legend-item:not(.active) {
+    opacity: 0.5;
+  }
+
 </style>
 
 </head>
@@ -585,18 +599,19 @@
         <div class="pitch-legend">
           <div class="legend-title">Pitch Type</div>
 
-          <div class="legend-item"><span class="dot ff"></span> Four-seam fastball</div>
-          <div class="legend-item"><span class="dot si"></span> Sinker</div>
-          <div class="legend-item"><span class="dot fc"></span> Cutter</div>
+            <div class="legend-item" data-type="FF"><span class="dot ff"></span> Four-seam fastball</div>
+            <div class="legend-item" data-type="SI"><span class="dot si"></span> Sinker</div>
+            <div class="legend-item" data-type="FC"><span class="dot fc"></span> Cutter</div>
 
-          <div class="legend-item"><span class="dot sl"></span> Slider</div>
-          <div class="legend-item"><span class="dot st"></span> Sweeper</div>
+            <div class="legend-item" data-type="SL"><span class="dot sl"></span> Slider</div>
+            <div class="legend-item" data-type="ST"><span class="dot st"></span> Sweeper</div>
 
-          <div class="legend-item"><span class="dot cu"></span> Curveball</div>
-          <div class="legend-item"><span class="dot kc"></span> Knuckle Curve</div>
+            <div class="legend-item" data-type="CU"><span class="dot cu"></span> Curveball</div>
+            <div class="legend-item" data-type="KC"><span class="dot kc"></span> Knuckle Curve</div>
 
-          <div class="legend-item"><span class="dot ch"></span> Changeup</div>
-          <div class="legend-item"><span class="dot fs"></span> Splitter</div>
+            <div class="legend-item" data-type="CH"><span class="dot ch"></span> Changeup</div>
+            <div class="legend-item" data-type="FS"><span class="dot fs"></span> Splitter</div>
+
         </div>
 
 

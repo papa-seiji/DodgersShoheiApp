@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // 📊 グラフ描画
   // =========================
-
   if (window.CHART_LABELS && window.CHART_VALUES) {
 
     const canvas = document.getElementById("hogehoge04Chart");
@@ -55,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // 🔥 Savant分布描画
   // =========================
-
   if (!window.PITCH_DATA || window.PITCH_DATA.length === 0) {
     console.warn("⚠️ PITCH_DATAなし");
     return;
@@ -63,14 +61,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("PITCH_DATA =", window.PITCH_DATA.length);
 
-  // 🔥 描画前にクリア（重要）
   const zone = document.getElementById("pitch-zone");
-  if (zone) zone.querySelectorAll(".pitch").forEach(e => e.remove());
+
+  // 🔥 描画前にクリア
+  if (zone) {
+    zone.querySelectorAll(".pitch").forEach(e => e.remove());
+  }
 
   window.PITCH_DATA.forEach((p, i) => {
     if (p.pX != null && p.pZ != null) {
       plotPitch(p.pX, p.pZ, p.type, i);
     }
+  });
+
+  // =========================
+  // 🎯 フィルター機能（🔥ここが今回の修正ポイント）
+  // =========================
+  document.querySelectorAll(".legend-item").forEach(item => {
+
+    item.addEventListener("click", () => {
+
+      const type = item.dataset.type;
+
+      // ON/OFFトグル
+      item.classList.toggle("active");
+
+      const activeTypes = Array.from(document.querySelectorAll(".legend-item.active"))
+        .map(el => el.dataset.type);
+
+      document.querySelectorAll(".pitch").forEach(dot => {
+
+        if (activeTypes.length === 0) {
+          // 全解除 → 全表示
+          dot.style.display = "block";
+        } else {
+          // フィルター
+          if (activeTypes.includes(dot.dataset.type)) {
+            dot.style.display = "block";
+          } else {
+            dot.style.display = "none";
+          }
+        }
+
+      });
+
+    });
+
   });
 
 });
@@ -79,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // =========================
 // 🎯 描画関数
 // =========================
-
 function plotPitch(pX, pZ, type, index) {
 
   const zone = document.getElementById("pitch-zone");
@@ -92,11 +127,9 @@ function plotPitch(pX, pZ, type, index) {
   let x = centerX + (pX * scale);
   let y = centerY - ((pZ - 2.4) * scale);
 
-
   // =========================
-  // 🔥 クランプ処理（ここを追加）pitch-zone外に出る球を→ 内側に収める（クランプ）
+  // 🔥 クランプ処理（ゾーン外 → 内側に収める）
   // =========================
-
   const padding = 10;
 
   const minX = padding;
@@ -105,14 +138,15 @@ function plotPitch(pX, pZ, type, index) {
   const minY = padding;
   const maxY = zone.clientHeight - padding;
 
-x = Math.max(minX, Math.min(x, maxX));
-y = Math.max(minY, Math.min(y, maxY));
-
-
+  x = Math.max(minX, Math.min(x, maxX));
+  y = Math.max(minY, Math.min(y, maxY));
 
   // 🔵 ドット生成
   const dot = document.createElement("div");
   dot.className = "pitch";
+
+  // 🔥 フィルター用データ埋め込み
+  dot.dataset.type = type;
 
   const color = getColor(type);
 
@@ -121,7 +155,7 @@ y = Math.max(minY, Math.min(y, maxY));
   dot.style.background = color.bg;
   dot.style.color = color.text;
 
-  // 🔥 番号表示（1〜87）
+  // 🔥 番号表示
   dot.innerText = index + 1;
 
   zone.appendChild(dot);
@@ -131,26 +165,25 @@ y = Math.max(minY, Math.min(y, maxY));
 // =========================
 // 🎨 球種カラー（完全版）
 // =========================
-
 function getColor(type) {
   switch(type) {
 
     // 🔴 速球系
-    case "FF": return { bg: "red", text: "white" };        // フォーシーム
-    case "SI": return { bg: "orange", text: "white" };     // シンカー
-    case "FC": return { bg: "darkred", text: "white" };    // カット
+    case "FF": return { bg: "red", text: "white" };
+    case "SI": return { bg: "orange", text: "white" };
+    case "FC": return { bg: "darkred", text: "white" };
 
     // 🔵 横変化
-    case "SL": return { bg: "blue", text: "white" };       // スライダー
-    case "ST": return { bg: "deepskyblue", text: "white" };// スイーパー
+    case "SL": return { bg: "blue", text: "white" };
+    case "ST": return { bg: "deepskyblue", text: "white" };
 
     // 🟡 カーブ系
-    case "CU": return { bg: "yellow", text: "black" };     // カーブ
-    case "KC": return { bg: "gold", text: "black" };       // ナックルカーブ
+    case "CU": return { bg: "yellow", text: "black" };
+    case "KC": return { bg: "gold", text: "black" };
 
     // 🟢 落ちる系
-    case "CH": return { bg: "green", text: "white" };      // チェンジアップ
-    case "FS": return { bg: "limegreen", text: "black" };  // スプリット
+    case "CH": return { bg: "green", text: "white" };
+    case "FS": return { bg: "limegreen", text: "black" };
 
     default:
       console.warn("未対応球種:", type);
