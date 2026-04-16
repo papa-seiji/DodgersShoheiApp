@@ -31,7 +31,7 @@
 .scorebook-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 19px;
   background: #fffdf6;
   box-shadow: 0 6px 16px rgba(0,0,0,0.08);
   margin-bottom: 32px;
@@ -492,16 +492,14 @@
    🎯 レジェンド全体
 ========================= */
 .pitch-legend {
-  position: absolute;
-  right: -230px;   /* ← 右に出す */
-  top: 20px;
-
-  width: 180px;
-  padding: 10px;
-
-  background: rgba(255,255,255,0.9);
-  border-radius: 6px;
-  font-size: 12px;
+    position: absolute;
+    right: -268px;
+    top: 20px;
+    width: 245px;
+    /* padding: 10px; */
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 6px;
+    font-size: 23px;
 }
 
 /* タイトル */
@@ -827,10 +825,10 @@
      )}">
   <div class="inning-stats">
     【1回】
-    SO:<span th:text="${detail.inning1So}"></span>
-    BB:<span th:text="${detail.inning1Bb}"></span>
-    OUT:<span th:text="${detail.inning1Out}"></span>
-    HIT:<span th:text="${detail.inning1Hit}"></span>
+    奪三振:<span th:text="${detail.inning1So}"></span>
+    与四球:<span th:text="${detail.inning1Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning1Out}"></span>
+    被安打:<span th:text="${detail.inning1Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning1Description}">
@@ -848,10 +846,10 @@
      )}">
   <div class="inning-stats">
     【2回】
-    SO:<span th:text="${detail.inning2So}"></span>
-    BB:<span th:text="${detail.inning2Bb}"></span>
-    OUT:<span th:text="${detail.inning2Out}"></span>
-    HIT:<span th:text="${detail.inning2Hit}"></span>
+    奪三振:<span th:text="${detail.inning2So}"></span>
+    与四球:<span th:text="${detail.inning2Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning2Out}"></span>
+    被安打:<span th:text="${detail.inning2Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning2Description}">
@@ -869,10 +867,10 @@
      )}">
   <div class="inning-stats">
     【3回】
-    SO:<span th:text="${detail.inning3So}"></span>
-    BB:<span th:text="${detail.inning3Bb}"></span>
-    OUT:<span th:text="${detail.inning3Out}"></span>
-    HIT:<span th:text="${detail.inning3Hit}"></span>
+    奪三振:<span th:text="${detail.inning3So}"></span>
+    与四球:<span th:text="${detail.inning3Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning3Out}"></span>
+    被安打:<span th:text="${detail.inning3Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning3Description}">
@@ -890,10 +888,10 @@
      )}">
   <div class="inning-stats">
     【4回】
-    SO:<span th:text="${detail.inning4So}"></span>
-    BB:<span th:text="${detail.inning4Bb}"></span>
-    OUT:<span th:text="${detail.inning4Out}"></span>
-    HIT:<span th:text="${detail.inning4Hit}"></span>
+    奪三振:<span th:text="${detail.inning4So}"></span>
+    与四球:<span th:text="${detail.inning4Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning4Out}"></span>
+    被安打:<span th:text="${detail.inning4Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning4Description}">
@@ -911,10 +909,10 @@
      )}">
   <div class="inning-stats">
     【5回】
-    SO:<span th:text="${detail.inning5So}"></span>
-    BB:<span th:text="${detail.inning5Bb}"></span>
-    OUT:<span th:text="${detail.inning5Out}"></span>
-    HIT:<span th:text="${detail.inning5Hit}"></span>
+    奪三振:<span th:text="${detail.inning5So}"></span>
+    与四球:<span th:text="${detail.inning5Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning5Out}"></span>
+    被安打:<span th:text="${detail.inning5Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning5Description}">
@@ -932,10 +930,10 @@
      )}">
   <div class="inning-stats">
     【6回】
-    SO:<span th:text="${detail.inning6So}"></span>
-    BB:<span th:text="${detail.inning6Bb}"></span>
-    OUT:<span th:text="${detail.inning6Out}"></span>
-    HIT:<span th:text="${detail.inning6Hit}"></span>
+    奪三振:<span th:text="${detail.inning6So}"></span>
+    与四球:<span th:text="${detail.inning6Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning6Out}"></span>
+    被安打:<span th:text="${detail.inning6Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning6Description}">
@@ -953,10 +951,10 @@
      )}">
   <div class="inning-stats">
     【7回】
-    SO:<span th:text="${detail.inning7So}"></span>
-    BB:<span th:text="${detail.inning7Bb}"></span>
-    OUT:<span th:text="${detail.inning7Out}"></span>
-    HIT:<span th:text="${detail.inning7Hit}"></span>
+    奪三振:<span th:text="${detail.inning7So}"></span>
+    与四球:<span th:text="${detail.inning7Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning7Out}"></span>
+    被安打:<span th:text="${detail.inning7Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning7Description}">
@@ -974,10 +972,10 @@
      )}">
   <div class="inning-stats">
     【8回】
-    SO:<span th:text="${detail.inning8So}"></span>
-    BB:<span th:text="${detail.inning8Bb}"></span>
-    OUT:<span th:text="${detail.inning8Out}"></span>
-    HIT:<span th:text="${detail.inning8Hit}"></span>
+    奪三振:<span th:text="${detail.inning8So}"></span>
+    与四球:<span th:text="${detail.inning8Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning8Out}"></span>
+    被安打:<span th:text="${detail.inning8Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning8Description}">
@@ -995,10 +993,10 @@
      )}">
   <div class="inning-stats">
     【9回】
-    SO:<span th:text="${detail.inning9So}"></span>
-    BB:<span th:text="${detail.inning9Bb}"></span>
-    OUT:<span th:text="${detail.inning9Out}"></span>
-    HIT:<span th:text="${detail.inning9Hit}"></span>
+    奪三振:<span th:text="${detail.inning9So}"></span>
+    与四球:<span th:text="${detail.inning9Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning9Out}"></span>
+    被安打:<span th:text="${detail.inning9Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning9Description}">
@@ -1016,10 +1014,10 @@
      )}">
   <div class="inning-stats">
     【10回】
-    SO:<span th:text="${detail.inning10So}"></span>
-    BB:<span th:text="${detail.inning10Bb}"></span>
-    OUT:<span th:text="${detail.inning10Out}"></span>
-    HIT:<span th:text="${detail.inning10Hit}"></span>
+    奪三振:<span th:text="${detail.inning10So}"></span>
+    与四球:<span th:text="${detail.inning10Bb}"></span>
+    OUT（打ち取る）:<span th:text="${detail.inning10Out}"></span>
+    被安打:<span th:text="${detail.inning10Hit}"></span>
   </div>
   <div class="inning-desc"
        th:text="${detail.inning10Description}">
