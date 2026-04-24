@@ -100,6 +100,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // =========================
+// 🎯 Usage集計（球種割合）
+// =========================
+
+// ① 先にカウント作る
+const usageStats = {};
+const totalPitches = window.PITCH_DATA.length;
+
+window.PITCH_DATA.forEach(p => {
+  if (!p.type) return;
+
+  if (!usageStats[p.type]) {
+    usageStats[p.type] = 1;
+  } else {
+    usageStats[p.type]++;
+  }
+});
+
+console.log("🔥 usageStats =", usageStats);
+
+// ② そのあと％計算
+const usagePercent = {};
+
+Object.keys(usageStats).forEach(type => {
+  usagePercent[type] = Math.round((usageStats[type] / totalPitches) * 100);
+});
+
+console.log("🔥 usagePercent =", usagePercent);
+
+// =========================
 // 🎯 spin表示
 // =========================
 
