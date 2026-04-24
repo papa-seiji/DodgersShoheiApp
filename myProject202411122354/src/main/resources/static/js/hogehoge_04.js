@@ -128,6 +128,45 @@ Object.keys(usageStats).forEach(type => {
 
 console.log("🔥 usagePercent =", usagePercent);
 
+
+// =========================
+// 📊 Usage 表示（赤枠部分）
+// =========================
+
+const usageContainer = document.getElementById("usage-stats");
+if (usageContainer) {
+  usageContainer.innerHTML = ""; // 初期化
+
+  // 👇🔥これ追加（Usageタイトル）
+  const usageTitle = document.createElement("div");
+  usageTitle.className = "spin-title";
+  usageTitle.textContent = "Usage（使用率）";
+  usageContainer.appendChild(usageTitle);
+
+  const order = ["FF","SI","FC","SL","ST","CU","KC","CH","FS"];
+
+  order.forEach(type => {
+    if (!usagePercent[type]) return;
+
+    const row = document.createElement("div");
+    row.className = "usage-row";
+
+    const dot = document.createElement("span");
+    dot.className = "usage-dot";
+
+    const color = getColor(type);
+    dot.style.background = color.bg;
+
+    const text = document.createElement("span");
+    text.textContent = `${usagePercent[type]}%`;
+
+    row.appendChild(dot);
+    row.appendChild(text);
+
+    usageContainer.appendChild(row);
+  });
+}
+
 // =========================
 // 🎯 spin表示
 // =========================

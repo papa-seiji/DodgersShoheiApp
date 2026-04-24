@@ -554,6 +554,35 @@
     opacity: 0.5;
   }
 
+
+/* =========================
+   RPM + Usage 横並び
+========================= */
+.stats-wrapper {
+  display: flex;
+  gap: 24px;           /* 少し広げる */
+  margin-top: 12px;
+}
+
+/* 共通ブロック */
+#spin-stats,
+#usage-stats {
+  flex: 1;
+}
+
+/* 🔥 ここ追加（超重要） */
+#spin-stats,
+#usage-stats {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 行の高さを揃える */
+.spin-row,
+.usage-row {
+  height: 20px;
+}
+
 /* // =========================
 // 🎯 spin表示
 // ========================= */
@@ -573,6 +602,7 @@
   align-items: center;
   margin-bottom: 4px;
   font-size: 20px;
+  font-weight: bold;
 }
 
 .spin-dot {
@@ -582,7 +612,35 @@
   margin-right: 6px;
 }
 
+/* // =========================
+// 🎯 usage表示
+// ========================= */
 
+.spin-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 23px;
+}
+
+#usage-stats {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.usage-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.usage-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
 
 </style>
 
@@ -643,7 +701,7 @@
 
     </div>
 
-
+<div class="stats-wrapper">
     <!-- =========================
     // 🎯 spin MAX/MIN 集計
     // ========================= -->
@@ -651,8 +709,11 @@
           <div class="spin-title">RPM Spin（回転数）</div>
         </div>
 
-
-
+    <!-- =========================
+    // 🎯 Usage
+    // ========================= -->
+        <div id="usage-stats"></div>
+</div>
 
   <h2 class="month-title">
     <span th:text="${month}">4</span>月 登板一覧
