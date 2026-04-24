@@ -540,7 +540,6 @@
 .dot.fs { background: limegreen; }
 
 
-
   /* クリック感を出す👇 */
   .legend-item {
     cursor: pointer;
@@ -555,6 +554,33 @@
     opacity: 0.5;
   }
 
+/* // =========================
+// 🎯 spin表示
+// ========================= */
+.spin-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 23px;
+}
+
+#spin-stats {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.spin-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 20px;
+}
+
+.spin-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
 </style>
 
 </head>
@@ -576,6 +602,7 @@
     <canvas id="hogehoge04Chart" height="120"></canvas>
   </div>
 
+
   <!-- ===== 🔥 Savant描画エリア // baseballsavantからピッチングの軌道情報 ===== -->
     <div id="pitch-zone">
 
@@ -595,7 +622,7 @@
 
         <!-- ===== 凡例（球種レジェンド）を右側に出す ===== -->
         <div class="pitch-legend">
-          <div class="legend-title">Pitch Type</div>
+          <div class="legend-title">Pitch Type（タッチで切替可）</div>
 
             <div class="legend-item" data-type="FF"><span class="dot ff"></span> Four-seam fastball</div>
             <div class="legend-item" data-type="SI"><span class="dot si"></span> Sinker</div>
@@ -612,11 +639,15 @@
 
         </div>
 
-
-
     </div>
 
 
+  <!-- =========================
+  // 🎯 spin MAX/MIN 集計
+  // ========================= -->
+      <div id="spin-stats">
+        <div class="spin-title">RPM Spin（回転数）</div>
+      </div>
 
 
 

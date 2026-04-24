@@ -96,7 +96,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
-console.log("🔥 spinStats =", spinStats);
+  console.log("🔥 spinStats =", spinStats);
+
+
+// =========================
+// 🎯 spin表示
+// =========================
+
+const container = document.getElementById("spin-stats");
+if (container) {
+
+  container.innerHTML = "";
+
+  // 👇🔥これ追加（タイトル復活）
+  const title = document.createElement("div");
+  title.className = "spin-title";
+  title.textContent = "RPM Spin（回転数）";
+  container.appendChild(title);
+
+  const ORDER = ["FF","SI","FC","SL","ST","CU","KC","CH","FS"];
+
+    ORDER.forEach(type => {
+
+      const stat = spinStats[type];
+      if (!stat) return;
+
+      const color = getColor(type);
+
+      const row = document.createElement("div");
+      row.className = "spin-row";
+
+      row.innerHTML = `
+        <span class="spin-dot" style="background:${color.bg};"></span>
+        MAX: ${stat.max} / MIN: ${stat.min}
+      `;
+
+      container.appendChild(row);
+
+    });
+}
+
 
 
   // =========================
