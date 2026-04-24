@@ -424,11 +424,22 @@ public class MLBGameService {
                     type = (String) ((Map<String, Object>) details.get("type")).get("code");
                 }
 
+                // =========================
+                // 🔥 spinRate取得（ここ追加）
+                // =========================
+                Integer spinRate = null;
+
+                if (pitchData.get("breaks") != null) {
+                    Map<String, Object> breaks = (Map<String, Object>) pitchData.get("breaks");
+                    spinRate = (Integer) breaks.get("spinRate");
+                }
+
                 Map<String, Object> pitch = new HashMap<>();
                 pitch.put("pX", pX);
                 pitch.put("pZ", pZ);
                 pitch.put("type", type);
-
+                // 👇これを追加
+                pitch.put("spinRate", spinRate);
                 result.add(pitch);
             }
         }
