@@ -75,6 +75,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =========================
+  // 🎯 spin MAX/MIN 集計
+  // =========================
+
+  const spinStats = {};
+
+  window.PITCH_DATA.forEach(p => {
+
+    if (!p.type || !p.spinRate) return;
+
+    if (!spinStats[p.type]) {
+      spinStats[p.type] = {
+        max: p.spinRate,
+        min: p.spinRate
+      };
+    } else {
+      spinStats[p.type].max = Math.max(spinStats[p.type].max, p.spinRate);
+      spinStats[p.type].min = Math.min(spinStats[p.type].min, p.spinRate);
+    }
+
+  });
+
+console.log("🔥 spinStats =", spinStats);
+
+
+  // =========================
   // 🎯 フィルター機能（🔥ここが今回の修正ポイント）
   // =========================
   document.querySelectorAll(".legend-item").forEach(item => {
