@@ -128,103 +128,123 @@ Object.keys(usageStats).forEach(type => {
 
 console.log("🔥 usagePercent =", usagePercent);
 
-
 // =========================
-// 📊 Usage 表示（赤枠部分）
+// 🚀 Velocity Avg 集計
 // =========================
 
+  const velocityStats = {};
+  const velocityCount = {};
+
+  window.PITCH_DATA.forEach(p => {
+    if (!p.type || !p.velocity) return;
+
+    const velo = p.velocity;
+
+    if (!velocityStats[p.type]) {
+      velocityStats[p.type] = 0;
+      velocityCount[p.type] = 0;
+    }
+
+    velocityStats[p.type] += velo;
+    velocityCount[p.type] += 1;
+  });
+
+  const velocityAvg = {};
+
+  Object.keys(velocityStats).forEach(type => {
+    velocityAvg[type] = Math.round(
+      velocityStats[type] / velocityCount[type]
+    );
+  });
+
+  // 👇これ追加
+  window.velocityAvg = velocityAvg;
+
+  console.log("🔥 velocityAvg =", velocityAvg);
+
+
+const spinContainer = document.getElementById("spin-stats");
 const usageContainer = document.getElementById("usage-stats");
-if (usageContainer) {
-  usageContainer.innerHTML = ""; // 初期化
+const velocityContainer = document.getElementById("velocity-stats");
 
-  // 👇🔥これ追加（Usageタイトル）
-  const usageTitle = document.createElement("div");
-  usageTitle.className = "spin-title";
-  usageTitle.textContent = "Usage（使用率）";
-  usageContainer.appendChild(usageTitle);
+// =========================
+// 🎯 表示ループ（ここが核心）
+// =========================
 
-  const order = ["FF","SI","FC","SL","ST","CU","KC","CH","FS"];
+const ORDER = ["FF","SI","FC","SL","ST","CU","KC","CH","FS"];
 
-  order.forEach(type => {
-    if (!usagePercent[type]) return;
-
-  const row = document.createElement("div");
-  row.className = "usage-row";
+ORDER.forEach(type => {
 
   const color = getColor(type);
 
-  // ●
-  const dot = document.createElement("span");
-  dot.className = "usage-dot";
-  dot.style.background = color.bg;
+  // ================= RPM =================
+  if (spinStats[type] !== undefined){
+    const row = document.createElement("div");
+    row.className = "spin-row";
 
-  // バー
-  const barWrapper = document.createElement("div");
-  barWrapper.className = "usage-bar-wrapper";
+    row.innerHTML = `
+      <span class="spin-dot" style="background:${color.bg};"></span>
+      MAX:${spinStats[type].max}rpm / MIN:${spinStats[type].min}rpm
+    `;
 
-  const bar = document.createElement("div");
-  bar.className = "usage-bar";
-  bar.style.background = color.bg;
-  bar.style.width = usagePercent[type] + "%"; // ←ここが核心🔥
+    spinContainer.appendChild(row);
+  }
 
-  // 数値
-  const value = document.createElement("span");
-  value.className = "usage-value";
-  value.textContent = usagePercent[type] + "%";
+  // ================= Usage =================
+  if (usagePercent[type]) {
+    const row = document.createElement("div");
+    row.className = "usage-row";
 
-  // 組み立て
-  barWrapper.appendChild(bar);
+    const bar = document.createElement("div");
+    bar.className = "usage-bar";
+    bar.style.width = usagePercent[type] + "%";
+    bar.style.background = color.bg;
 
-  row.appendChild(dot);
-  row.appendChild(barWrapper);
-  row.appendChild(value);
+    const wrapper = document.createElement("div");
+    wrapper.className = "usage-bar-wrapper";
+    wrapper.appendChild(bar);
 
-  usageContainer.appendChild(row);
-  });
-}
+    const value = document.createElement("span");
+    value.className = "usage-value";
+    value.textContent = usagePercent[type] + "%";
 
-// =========================
-// 🎯 spin表示
-// =========================
+    const dot = document.createElement("span");
+    dot.className = "usage-dot";
+    dot.style.background = color.bg;
 
-const container = document.getElementById("spin-stats");
-if (container) {
+    row.appendChild(dot);       // ← 追加
+    row.appendChild(wrapper);
+    row.appendChild(value);
 
-  container.innerHTML = "";
+    usageContainer.appendChild(row);
+  }
 
-  // 👇🔥これ追加（タイトル復活）
-  const title = document.createElement("div");
-  title.className = "spin-title";
-  title.textContent = "RPM Spin（回転数）";
-  container.appendChild(title);
+// ================= Velocity =================
+  if (velocityAvg[type] !== undefined) {
+    const row = document.createElement("div");
+    row.className = "velocity-row";
 
-  const ORDER = ["FF","SI","FC","SL","ST","CU","KC","CH","FS"];
+    // 🔥 ドット追加
+    const dot = document.createElement("span");
+    dot.className = "usage-dot";  // ← 既存CSS流用
+    dot.style.background = color.bg;
 
-    ORDER.forEach(type => {
+    // 🔥 テキスト部分
+    const text = document.createElement("span");
+    text.textContent = velocityAvg[type] + " mph";
 
-      const stat = spinStats[type];
-      if (!stat) return;
+    // 🔥 順番重要
+    row.appendChild(dot);
+    row.appendChild(text);
 
-      const color = getColor(type);
-
-      const row = document.createElement("div");
-      row.className = "spin-row";
-
-      row.innerHTML = `
-        <span class="spin-dot" style="background:${color.bg};"></span>
-        MAX: ${stat.max} / MIN: ${stat.min}
-      `;
-
-      container.appendChild(row);
-
-    });
-}
-
-
+    velocityContainer.appendChild(row);
+  }
+});
 
   // =========================
   // 🎯 フィルター機能（🔥ここが今回の修正ポイント）
   // =========================
+
   document.querySelectorAll(".legend-item").forEach(item => {
 
     item.addEventListener("click", () => {

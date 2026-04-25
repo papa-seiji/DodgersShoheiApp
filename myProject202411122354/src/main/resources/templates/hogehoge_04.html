@@ -560,8 +560,8 @@
 ========================= */
 .stats-wrapper {
   display: flex;
-  gap: 72px;
-  align-items: flex-start; ← 🔥これ重要
+  gap: 32px;
+  align-items: flex-start;
 }
 
 #spin-stats {
@@ -573,6 +573,11 @@
   max-width: 180px; ← 🔥これが効く
 }
 
+#velocity-stats {
+  /* flex: 0 0 120px; */
+}
+
+
 /* 🔥 ここ追加（超重要） */
 #spin-stats,
 #usage-stats {
@@ -583,7 +588,7 @@
 /* 行の高さを揃える */
 .spin-row,
 .usage-row {
-  /* height: 20px; */
+  height: 28px; /* ← これで完全一致 */
 }
 
 /* // =========================
@@ -687,6 +692,70 @@
     white-space: nowrap;
 }
 
+/* =========================
+   3列構造（これが正解）
+========================= */
+.stats-wrapper {
+  display: flex;
+  gap: 32px; /* 少し詰める（72は広すぎ） */
+  align-items: flex-start;
+}
+
+/* 3列それぞれ */
+#spin-stats,
+#usage-stats,
+#velocity-stats {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 幅調整（ここがキモ） */
+#spin-stats {
+  width: 308px;
+}
+
+#usage-stats {
+  width: 180px;
+}
+
+#velocity-stats {
+  width: 200px;
+  margin-top: 12px;  /* ← ここに追加🔥 */
+}
+
+.velocity-row {
+  height: 28px;  /* ← spinとusageと完全一致させる */
+  display: flex;
+  align-items: center;
+  font-size: 20px;     /* ← 追加 */
+  font-weight: bold;   /* ← 追加 */
+}
+
+/* 🔥 Velocityを完全一致させる */
+.velocity-row {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;              /* ← これが重要（ドットとの距離） */
+
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 4px;  /* ← 🔥これ追加（超重要） */
+}
+
+/* Usageと完全に揃える */
+.velocity-row span {
+  display: inline-block;
+}
+
+.spin-row,
+.usage-row,
+.velocity-row {
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
 </style>
 
 </head>
@@ -747,18 +816,20 @@
     </div>
 
 <div class="stats-wrapper">
-    <!-- =========================
-    // 🎯 spin MAX/MIN 集計
-    // ========================= -->
-        <div id="spin-stats">
-          <div class="spin-title">RPM Spin（回転数）</div>
-        </div>
 
-    <!-- =========================
-    // 🎯 Usage
-    // ========================= -->
-        <div id="usage-stats"></div>
+    <div id="spin-stats">
+      <div class="spin-title">回転数(RPM Spin)</div>
+    </div>
+
+    <div id="usage-stats">
+      <div class="spin-title">使用率(Usage)</div>
+    </div>
+
+    <div id="velocity-stats">
+      <div class="spin-title">平均球速(Avg)</div>
+    </div>
 </div>
+
 
   <h2 class="month-title">
     <span th:text="${month}">4</span>月 登板一覧
