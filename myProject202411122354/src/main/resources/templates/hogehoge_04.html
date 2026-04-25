@@ -494,7 +494,7 @@
 .pitch-legend {
     position: absolute;
     right: -268px;
-    top: 20px;
+    /* top: 20px; */
     width: 245px;
     /* padding: 10px; */
     background: rgba(255, 255, 255, 0.9);
@@ -540,7 +540,6 @@
 .dot.fs { background: limegreen; }
 
 
-
   /* クリック感を出す👇 */
   .legend-item {
     cursor: pointer;
@@ -549,11 +548,235 @@
   .legend-item.active {
     font-weight: bold;
     opacity: 1;
+    outline: 2px solid #000;
   }
 
   .legend-item:not(.active) {
     opacity: 0.5;
   }
+
+
+/* =========================
+   RPM + Usage 横並び
+========================= */
+.stats-wrapper {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-left: 30px;
+}
+
+#spin-stats {
+  flex: 0 0 auto;
+}
+
+#usage-stats {
+  flex: 1;
+  max-width: 180px; ← 🔥これが効く
+}
+
+#velocity-stats {
+  /* flex: 0 0 120px; */
+}
+
+
+/* 🔥 ここ追加（超重要） */
+#spin-stats,
+#usage-stats {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 行の高さを揃える */
+.spin-row,
+.usage-row {
+  height: 28px; /* ← これで完全一致 */
+}
+
+/* // =========================
+// 🎯 spin表示
+// ========================= */
+.spin-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 23px;
+}
+
+#spin-stats {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.spin-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.spin-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* // =========================
+// 🎯 usage表示
+// ========================= */
+
+.spin-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 23px;
+}
+
+#usage-stats {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.usage-row {
+  display: flex;
+  /* align-items: center; */
+  margin-bottom: 4px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.usage-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+
+/* =========================
+   Usageバー化
+========================= */
+
+.usage-row {
+  display: flex;
+  align-items: center;
+  gap: 4px; ← 🔥これ追加
+}
+
+.usage-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* バー外枠 */
+.usage-bar-wrapper {
+  flex: 1;
+  height: 21px;
+  background: #eee;
+  border-radius: 4px;
+  margin-right: 6px;
+  overflow: hidden;
+}
+
+/* バー本体 */
+.usage-bar {
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* 数値 */
+.usage-value {
+    font-size: 20px;
+    margin-left: 4px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* =========================
+   3列構造（これが正解）
+========================= */
+.stats-wrapper {
+  display: flex;
+  gap: 30px; /* 少し詰める（72は広すぎ） */
+  align-items: flex-start;
+  margin-top: 30px;
+}
+
+/* 3列それぞれ */
+#spin-stats,
+#usage-stats,
+#velocity-stats {
+  display: flex;
+  flex-direction: column;
+  flex: 1;   /* ←🔥これだけで均等になる */
+  min-width: 0; /* ←文字溢れ防止（地味に重要） */
+}
+
+/* 幅調整（ここがキモ） */
+/* #spin-stats {
+  width: 308px;
+}
+
+#usage-stats {
+  width: 180px;
+}
+
+#velocity-stats {
+  width: 200px;
+  margin-top: 12px;
+} */
+
+/* Velocityだけ位置補正は残す */
+#velocity-stats {
+  margin-top: 12px;
+}
+
+.velocity-row {
+  height: 28px;  /* ← spinとusageと完全一致させる */
+  display: flex;
+  align-items: center;
+  font-size: 20px;     /* ← 追加 */
+  font-weight: bold;   /* ← 追加 */
+}
+
+/* 🔥 Velocityを完全一致させる */
+.velocity-row {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;              /* ← これが重要（ドットとの距離） */
+
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 4px;  /* ← 🔥これ追加（超重要） */
+}
+
+/* Usageと完全に揃える */
+.velocity-row span {
+  display: inline-block;
+}
+
+.spin-row,
+.usage-row,
+.velocity-row {
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+
+.pitch {
+  transition: opacity 0.2s ease;
+}
+
+.spin-row,
+.usage-row,
+.velocity-row {
+  transition: opacity 0.2s ease;
+}
+
 
 </style>
 
@@ -595,7 +818,7 @@
 
         <!-- ===== 凡例（球種レジェンド）を右側に出す ===== -->
         <div class="pitch-legend">
-          <div class="legend-title">Pitch Type</div>
+          <div class="legend-title">Pitch Type<br>（タッチで切替可）</div>
 
             <div class="legend-item" data-type="FF"><span class="dot ff"></span> Four-seam fastball</div>
             <div class="legend-item" data-type="SI"><span class="dot si"></span> Sinker</div>
@@ -612,12 +835,22 @@
 
         </div>
 
-
-
     </div>
 
+<div class="stats-wrapper">
 
+    <div id="spin-stats">
+      <div class="spin-title">回転数(RPM Spin)</div>
+    </div>
 
+    <div id="usage-stats">
+      <div class="spin-title">使用率(Usage)</div>
+    </div>
+
+    <div id="velocity-stats">
+      <div class="spin-title">平均球速(Avg)</div>
+    </div>
+</div>
 
 
   <h2 class="month-title">
