@@ -494,7 +494,7 @@
 .pitch-legend {
     position: absolute;
     right: -268px;
-    top: 20px;
+    /* top: 20px; */
     width: 245px;
     /* padding: 10px; */
     background: rgba(255, 255, 255, 0.9);
@@ -548,6 +548,7 @@
   .legend-item.active {
     font-weight: bold;
     opacity: 1;
+    outline: 2px solid #000;
   }
 
   .legend-item:not(.active) {
@@ -562,6 +563,7 @@
   display: flex;
   gap: 32px;
   align-items: flex-start;
+  margin-left: 50px;
 }
 
 #spin-stats {
@@ -707,10 +709,12 @@
 #velocity-stats {
   display: flex;
   flex-direction: column;
+  flex: 1;   /* ←🔥これだけで均等になる */
+  min-width: 0; /* ←文字溢れ防止（地味に重要） */
 }
 
 /* 幅調整（ここがキモ） */
-#spin-stats {
+/* #spin-stats {
   width: 308px;
 }
 
@@ -720,7 +724,12 @@
 
 #velocity-stats {
   width: 200px;
-  margin-top: 12px;  /* ← ここに追加🔥 */
+  margin-top: 12px;
+} */
+
+/* Velocityだけ位置補正は残す */
+#velocity-stats {
+  margin-top: 12px;
 }
 
 .velocity-row {
@@ -755,6 +764,18 @@
   display: flex;
   align-items: center;
 }
+
+
+.pitch {
+  transition: opacity 0.2s ease;
+}
+
+.spin-row,
+.usage-row,
+.velocity-row {
+  transition: opacity 0.2s ease;
+}
+
 
 </style>
 
@@ -796,7 +817,7 @@
 
         <!-- ===== 凡例（球種レジェンド）を右側に出す ===== -->
         <div class="pitch-legend">
-          <div class="legend-title">Pitch Type（タッチで切替可）</div>
+          <div class="legend-title">Pitch Type<br>（タッチで切替可）</div>
 
             <div class="legend-item" data-type="FF"><span class="dot ff"></span> Four-seam fastball</div>
             <div class="legend-item" data-type="SI"><span class="dot si"></span> Sinker</div>

@@ -181,6 +181,7 @@ ORDER.forEach(type => {
   if (spinStats[type] !== undefined){
     const row = document.createElement("div");
     row.className = "spin-row";
+    row.dataset.type = type;  // ←🔥これ追加
 
     row.innerHTML = `
       <span class="spin-dot" style="background:${color.bg};"></span>
@@ -194,6 +195,7 @@ ORDER.forEach(type => {
   if (usagePercent[type]) {
     const row = document.createElement("div");
     row.className = "usage-row";
+    row.dataset.type = type;  // ←🔥これ追加
 
     const bar = document.createElement("div");
     bar.className = "usage-bar";
@@ -223,6 +225,7 @@ ORDER.forEach(type => {
   if (velocityAvg[type] !== undefined) {
     const row = document.createElement("div");
     row.className = "velocity-row";
+    row.dataset.type = type;  // ←🔥これ追加
 
     // 🔥 ドット追加
     const dot = document.createElement("span");
@@ -241,44 +244,101 @@ ORDER.forEach(type => {
   }
 });
 
-  // =========================
-  // 🎯 フィルター機能（🔥ここが今回の修正ポイント）
-  // =========================
 
-  document.querySelectorAll(".legend-item").forEach(item => {
+    // =========================
+    // 🎯 表のハイライト制御（STEP3）
+    // =========================
+    function updateTableHighlight() {
 
-    item.addEventListener("click", () => {
+      // RPM
+      document.querySelectorAll(".spin-row").forEach(row => {
+        const type = row.dataset.type;
 
-      const type = item.dataset.type;
-
-      // ON/OFFトグル
-      item.classList.toggle("active");
-
-      const activeTypes = Array.from(document.querySelectorAll(".legend-item.active"))
-        .map(el => el.dataset.type);
-
-      document.querySelectorAll(".pitch").forEach(dot => {
-
-        if (activeTypes.length === 0) {
-          // 全解除 → 全表示
-          dot.style.display = "block";
-        } else {
-          // フィルター
-          if (activeTypes.includes(dot.dataset.type)) {
-            dot.style.display = "block";
-          } else {
-            dot.style.display = "none";
-          }
-        }
-
+        row.style.opacity =
+          (!activePitchType || type === activePitchType) ? "1" : "0.05";
       });
+
+      // Usage
+      document.querySelectorAll(".usage-row").forEach(row => {
+        const type = row.dataset.type;
+
+        row.style.opacity =
+          (!activePitchType || type === activePitchType) ? "1" : "0.05";
+      });
+
+      // Velocity
+      document.querySelectorAll(".velocity-row").forEach(row => {
+        const type = row.dataset.type;
+
+        row.style.opacity =
+          (!activePitchType || type === activePitchType) ? "1" : "0.05";
+      });
+
+    }
+
+
+// =========================
+// 🎯 フィルター機能（🔥ここが今回の修正ポイント）
+// =========================
+
+document.querySelectorAll(".legend-item").forEach(item => {
+
+  item.addEventListener("click", () => {
+
+    const type = item.dataset.type;
+
+    // 🔥 STEP2：選択状態管理
+    if (activePitchType === type) {
+      activePitchType = null; // 解除
+    } else {
+      activePitchType = type;
+    }
+
+    document.querySelectorAll(".pitch").forEach(dot => {
+
+      if (!activePitchType) {
+        dot.style.display = "block";
+        dot.style.opacity = "1"; // ←🔥これ追加（リセット）
+      } else {
+        if (dot.dataset.type === activePitchType) {
+          dot.style.display = "block";
+          dot.style.opacity = "1"; // ←🔥これ追加
+        } else {
+          dot.style.display = "block";
+          dot.style.opacity = "0.1";
+        }
+      }
 
     });
 
-  });
+    // 🔥🔥🔥 ここを追加（STEP3）
+    updateTableHighlight();
 
+      // 🔥 legendの見た目制御
+      document.querySelectorAll(".legend-item").forEach(el => {
+
+        if (!activePitchType) {
+          el.style.opacity = "1";
+          el.style.fontWeight = "normal";
+        } else {
+          if (el.dataset.type === activePitchType) {
+            el.style.opacity = "1";
+            el.style.fontWeight = "bold";   // ←ここ重要
+          } else {
+            el.style.opacity = "0.3";
+            el.style.fontWeight = "normal";
+          }
+        }
+      });
+    });
+  });
 });
 
+
+  // =========================
+  // 🎯 選択中の球種（STEP2）
+  // =========================
+  let activePitchType = null;
 
 // =========================
 // 🎯 描画関数
