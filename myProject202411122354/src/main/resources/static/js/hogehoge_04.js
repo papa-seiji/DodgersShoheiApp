@@ -148,22 +148,38 @@ if (usageContainer) {
   order.forEach(type => {
     if (!usagePercent[type]) return;
 
-    const row = document.createElement("div");
-    row.className = "usage-row";
+  const row = document.createElement("div");
+  row.className = "usage-row";
 
-    const dot = document.createElement("span");
-    dot.className = "usage-dot";
+  const color = getColor(type);
 
-    const color = getColor(type);
-    dot.style.background = color.bg;
+  // ●
+  const dot = document.createElement("span");
+  dot.className = "usage-dot";
+  dot.style.background = color.bg;
 
-    const text = document.createElement("span");
-    text.textContent = `${usagePercent[type]}%`;
+  // バー
+  const barWrapper = document.createElement("div");
+  barWrapper.className = "usage-bar-wrapper";
 
-    row.appendChild(dot);
-    row.appendChild(text);
+  const bar = document.createElement("div");
+  bar.className = "usage-bar";
+  bar.style.background = color.bg;
+  bar.style.width = usagePercent[type] + "%"; // ←ここが核心🔥
 
-    usageContainer.appendChild(row);
+  // 数値
+  const value = document.createElement("span");
+  value.className = "usage-value";
+  value.textContent = usagePercent[type] + "%";
+
+  // 組み立て
+  barWrapper.appendChild(bar);
+
+  row.appendChild(dot);
+  row.appendChild(barWrapper);
+  row.appendChild(value);
+
+  usageContainer.appendChild(row);
   });
 }
 
