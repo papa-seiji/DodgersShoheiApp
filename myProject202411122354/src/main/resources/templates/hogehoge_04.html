@@ -556,149 +556,168 @@
   }
 
 
-  /* =========================
-    RPM + Usage 横並び
-  ========================= */
-  .stats-wrapper {
-    display: flex;
-    gap: 48px;
-    align-items: flex-start;
-    margin-top: 30px;
-    margin-left: 30px;
-  }
+    /* =========================
+      RPM + Usage 横並び
+    ========================= */
+    .stats-wrapper {
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+      margin-top: 30px;
+      margin-left: 20px;
+    }
 
-  /* 🔥 ここ追加（超重要） */
-  #spin-stats,
-  #usage-stats,
-  #velocity-stats,
-  #velocity-max-stats {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-  }
+    /* 🔥 列ごとの幅バランス調整（ここが今回の修正） */
+    #spin-stats {
+      display: flex;
+      flex-direction: column;
+      /* flex: 1.4;    ← 少し広め */
+      min-width: 0;
+    }
 
-  /* =========================
-    タイトル位置揃え
-  ========================= */
-  .spin-title {
-    font-weight: bold;
-    margin-bottom: 6px;
-    font-size: 23px;
-  }
+    #usage-stats {
+      display: flex;
+      flex-direction: column;
+      /* flex: 1.2;   ← 少し広め */
+      min-width: 0;
+    }
 
-  #spin-stats {
-    margin-top: 12px;
-    font-size: 12px;
-  }
+    #velocity-stats {
+      display: flex;
+      flex-direction: column;
+      /* flex: 0.9;   ← 少し狭く */
+      min-width: 0;
+    }
 
-  #usage-stats {
-    margin-top: 10px;
-    font-size: 14px;
-  }
+    #velocity-max-stats {
+      display: flex;
+      flex-direction: column;
+      /* flex: 1.0;   ← 標準 */
+      min-width: 0;
+    }
 
-  #velocity-stats,
-  #velocity-max-stats {
-    margin-top: 12px;
-  }
+    /* =========================
+      タイトル位置揃え
+    ========================= */
+    .spin-title {
+      font-weight: bold;
+      margin-bottom: 6px;
+      font-size: 23px;
+    }
 
-  /* =========================
-    RPM
-  ========================= */
-  .spin-row {
-    display: flex;
-    align-items: center;
-    height: 56px;  /* ← 🔥28 → 56 に変更 */
-    margin-bottom: 4px;
+    #spin-stats {
+      margin-top: 12px;
+      font-size: 12px;
+    }
 
-    font-size: 20px;
-    font-weight: bold;
-  }
+    #usage-stats {
+      margin-top: 10px;
+      font-size: 14px;
+    }
 
-  .spin-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 6px;
-  }
+    #velocity-stats,
+    #velocity-max-stats {
+      margin-top: 12px;
+      margin-right: -18px;
+    }
 
-  /* =========================
-    Usage
-  ========================= */
-  .usage-row {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    /* =========================
+      RPM
+    ========================= */
+    .spin-row {
+      display: flex;
+      align-items: center;
+      height: 56px;
+      margin-bottom: 4px;
 
-    height: 56px;  /* ← 🔥28 → 56 に変更 */
-    margin-bottom: 4px;
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-    font-size: 20px;
-    font-weight: bold;
-  }
+    .spin-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
 
-  .usage-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 6px;
-  }
+    /* =========================
+      Usage
+    ========================= */
+    .usage-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
 
-  /* バー外枠 */
-  .usage-bar-wrapper {
-    flex: 1;
-    height: 21px;
-    background: #eee;
-    border-radius: 4px;
-    margin-right: 6px;
-    overflow: hidden;
-  }
+      height: 56px;
+      margin-bottom: 4px;
 
-  /* バー本体 */
-  .usage-bar {
-    height: 100%;
-    border-radius: 4px;
-  }
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-  /* 数値 */
-  .usage-value {
-    font-size: 20px;
-    margin-left: 4px;
-    text-align: right;
-    white-space: nowrap;
-  }
+    .usage-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
 
-  /* =========================
-    Velocity（Avg / Max 共通）
-  ========================= */
-  .velocity-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    /* バー外枠 */
+    .usage-bar-wrapper {
+      flex: 1;
+      height: 21px;
+      background: #eee;
+      border-radius: 4px;
+      margin-right: 6px;
+      overflow: hidden;
+    }
 
-    height: 56px;  /* ← 🔥28 → 56 に変更 */
-    margin-bottom: 4px;
+    /* バー本体 */
+    .usage-bar {
+      height: 100%;
+      border-radius: 4px;
+    }
 
-    font-size: 20px;
-    font-weight: bold;
-  }
+    /* 数値 */
+    .usage-value {
+      font-size: 20px;
+      margin-left: 4px;
+      text-align: right;
+      white-space: nowrap;
+    }
 
-  .velocity-row span {
-    display: inline-block;
-  }
+    /* =========================
+      Velocity（Avg / Max 共通）
+    ========================= */
+    .velocity-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
 
-  /* =========================
-    共通アニメーション
-  ========================= */
-  .spin-row,
-  .usage-row,
-  .velocity-row {
-    transition: opacity 0.2s ease;
-  }
+      height: 56px;
+      margin-bottom: 4px;
 
-  .pitch {
-    transition: opacity 0.2s ease;
-  }
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .velocity-row span {
+      display: inline-block;
+    }
+
+    /* =========================
+      共通アニメーション
+    ========================= */
+    .spin-row,
+    .usage-row,
+    .velocity-row {
+      transition: opacity 0.2s ease;
+    }
+
+    .pitch {
+      transition: opacity 0.2s ease;
+    }
 
 </style>
 
