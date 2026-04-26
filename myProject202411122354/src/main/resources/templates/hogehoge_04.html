@@ -556,227 +556,149 @@
   }
 
 
-/* =========================
-   RPM + Usage 横並び
-========================= */
-.stats-wrapper {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-  margin-left: 30px;
-}
+  /* =========================
+    RPM + Usage 横並び
+  ========================= */
+  .stats-wrapper {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    margin-top: 30px;
+    margin-left: 30px;
+  }
 
-#spin-stats {
-  flex: 0 0 auto;
-}
+  /* 🔥 ここ追加（超重要） */
+  #spin-stats,
+  #usage-stats,
+  #velocity-stats,
+  #velocity-max-stats {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
 
-#usage-stats {
-  flex: 1;
-  max-width: 180px; ← 🔥これが効く
-}
+  /* =========================
+    タイトル位置揃え
+  ========================= */
+  .spin-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 23px;
+  }
 
-#velocity-stats {
-  /* flex: 0 0 120px; */
-}
+  #spin-stats {
+    margin-top: 12px;
+    font-size: 12px;
+  }
 
+  #usage-stats {
+    margin-top: 10px;
+    font-size: 14px;
+  }
 
-/* 🔥 ここ追加（超重要） */
-#spin-stats,
-#usage-stats {
-  display: flex;
-  flex-direction: column;
-}
+  #velocity-stats,
+  #velocity-max-stats {
+    margin-top: 12px;
+  }
 
-/* 行の高さを揃える */
-.spin-row,
-.usage-row {
-  height: 28px; /* ← これで完全一致 */
-}
+  /* =========================
+    RPM
+  ========================= */
+  .spin-row {
+    display: flex;
+    align-items: center;
+    height: 56px;  /* ← 🔥28 → 56 に変更 */
+    margin-bottom: 4px;
 
-/* // =========================
-// 🎯 spin表示
-// ========================= */
-.spin-title {
-  font-weight: bold;
-  margin-bottom: 6px;
-  font-size: 23px;
-}
-
-#spin-stats {
-  margin-top: 12px;
-  font-size: 12px;
-}
-
-.spin-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.spin-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 6px;
-}
-
-/* // =========================
-// 🎯 usage表示
-// ========================= */
-
-.spin-title {
-  font-weight: bold;
-  margin-bottom: 6px;
-  font-size: 23px;
-}
-
-#usage-stats {
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-.usage-row {
-  display: flex;
-  /* align-items: center; */
-  margin-bottom: 4px;
     font-size: 20px;
     font-weight: bold;
-}
+  }
 
-.usage-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 6px;
-}
+  .spin-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
 
+  /* =========================
+    Usage
+  ========================= */
+  .usage-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 
-/* =========================
-   Usageバー化
-========================= */
+    height: 56px;  /* ← 🔥28 → 56 に変更 */
+    margin-bottom: 4px;
 
-.usage-row {
-  display: flex;
-  align-items: center;
-  gap: 4px; ← 🔥これ追加
-}
+    font-size: 20px;
+    font-weight: bold;
+  }
 
-.usage-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 6px;
-}
+  .usage-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
 
-/* バー外枠 */
-.usage-bar-wrapper {
-  flex: 1;
-  height: 21px;
-  background: #eee;
-  border-radius: 4px;
-  margin-right: 6px;
-  overflow: hidden;
-}
+  /* バー外枠 */
+  .usage-bar-wrapper {
+    flex: 1;
+    height: 21px;
+    background: #eee;
+    border-radius: 4px;
+    margin-right: 6px;
+    overflow: hidden;
+  }
 
-/* バー本体 */
-.usage-bar {
-  height: 100%;
-  border-radius: 4px;
-}
+  /* バー本体 */
+  .usage-bar {
+    height: 100%;
+    border-radius: 4px;
+  }
 
-/* 数値 */
-.usage-value {
+  /* 数値 */
+  .usage-value {
     font-size: 20px;
     margin-left: 4px;
     text-align: right;
     white-space: nowrap;
-}
+  }
 
-/* =========================
-   3列構造（これが正解）
-========================= */
-.stats-wrapper {
-  display: flex;
-  gap: 30px; /* 少し詰める（72は広すぎ） */
-  align-items: flex-start;
-  margin-top: 30px;
-}
+  /* =========================
+    Velocity（Avg / Max 共通）
+  ========================= */
+  .velocity-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 
-/* 3列それぞれ */
-#spin-stats,
-#usage-stats,
-#velocity-stats {
-  display: flex;
-  flex-direction: column;
-  flex: 1;   /* ←🔥これだけで均等になる */
-  min-width: 0; /* ←文字溢れ防止（地味に重要） */
-}
+    height: 56px;  /* ← 🔥28 → 56 に変更 */
+    margin-bottom: 4px;
 
-/* 幅調整（ここがキモ） */
-/* #spin-stats {
-  width: 308px;
-}
+    font-size: 20px;
+    font-weight: bold;
+  }
 
-#usage-stats {
-  width: 180px;
-}
+  .velocity-row span {
+    display: inline-block;
+  }
 
-#velocity-stats {
-  width: 200px;
-  margin-top: 12px;
-} */
+  /* =========================
+    共通アニメーション
+  ========================= */
+  .spin-row,
+  .usage-row,
+  .velocity-row {
+    transition: opacity 0.2s ease;
+  }
 
-/* Velocityだけ位置補正は残す */
-#velocity-stats {
-  margin-top: 12px;
-}
-
-.velocity-row {
-  height: 28px;  /* ← spinとusageと完全一致させる */
-  display: flex;
-  align-items: center;
-  font-size: 20px;     /* ← 追加 */
-  font-weight: bold;   /* ← 追加 */
-}
-
-/* 🔥 Velocityを完全一致させる */
-.velocity-row {
-  height: 28px;
-  display: flex;
-  align-items: center;
-  gap: 6px;              /* ← これが重要（ドットとの距離） */
-
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 4px;  /* ← 🔥これ追加（超重要） */
-}
-
-/* Usageと完全に揃える */
-.velocity-row span {
-  display: inline-block;
-}
-
-.spin-row,
-.usage-row,
-.velocity-row {
-  height: 28px;
-  display: flex;
-  align-items: center;
-}
-
-
-.pitch {
-  transition: opacity 0.2s ease;
-}
-
-.spin-row,
-.usage-row,
-.velocity-row {
-  transition: opacity 0.2s ease;
-}
-
+  .pitch {
+    transition: opacity 0.2s ease;
+  }
 
 </style>
 
@@ -840,7 +762,7 @@
 <div class="stats-wrapper">
 
     <div id="spin-stats">
-      <div class="spin-title">回転数(RPM Spin)</div>
+      <div class="spin-title">回転数(Spin)</div>
     </div>
 
     <div id="usage-stats">
@@ -850,6 +772,11 @@
     <div id="velocity-stats">
       <div class="spin-title">平均球速(Avg)</div>
     </div>
+
+    <div id="velocity-max-stats">
+      <div class="spin-title">最高球速(Max)</div>
+    </div>
+
 </div>
 
 

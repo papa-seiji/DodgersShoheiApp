@@ -162,10 +162,29 @@ console.log("🔥 usagePercent =", usagePercent);
 
   console.log("🔥 velocityAvg =", velocityAvg);
 
+  // =========================
+  // 🚀 Velocity MAX 集計（🔥追加）
+  // =========================
+
+  const velocityMax = {};
+
+  window.PITCH_DATA.forEach(p => {
+    if (!p.type || !p.velocity) return;
+
+    if (!velocityMax[p.type]) {
+      velocityMax[p.type] = p.velocity;
+    } else {
+      velocityMax[p.type] = Math.max(velocityMax[p.type], p.velocity);
+    }
+  });
+
+console.log("🔥 velocityMax =", velocityMax);
+
 
 const spinContainer = document.getElementById("spin-stats");
 const usageContainer = document.getElementById("usage-stats");
 const velocityContainer = document.getElementById("velocity-stats");
+
 
 // =========================
 // 🎯 表示ループ（ここが核心）
@@ -221,7 +240,7 @@ ORDER.forEach(type => {
     usageContainer.appendChild(row);
   }
 
-// ================= Velocity =================
+// ================= Velocity 平均速度 Avg=================
   if (velocityAvg[type] !== undefined) {
     const row = document.createElement("div");
     row.className = "velocity-row";
@@ -242,6 +261,25 @@ ORDER.forEach(type => {
 
     velocityContainer.appendChild(row);
   }
+
+  // ================= Velocity MAX 最高速 =================
+    if (velocityMax[type] !== undefined) {
+      const row = document.createElement("div");
+      row.className = "velocity-row";
+      row.dataset.type = type;
+
+      const dot = document.createElement("span");
+      dot.className = "usage-dot";
+      dot.style.background = color.bg;
+
+      const text = document.createElement("span");
+      text.textContent = velocityMax[type] + " mph";
+
+      row.appendChild(dot);
+      row.appendChild(text);
+
+      document.getElementById("velocity-max-stats").appendChild(row);
+    }
 });
 
 
