@@ -7,6 +7,8 @@ import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
+import java.util.Map;// ←追加
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,14 +18,19 @@ import java.util.Objects;
 @Controller
 public class OhtaniScorebookController {
 
+    private final AdminNewsController adminNewsController;
     private final OhtaniGameRepository gameRepository;
     private final OhtaniPitchingGameRepository pitchingGameRepository;
+    private final MLBGameService mlbGameService; // ←追加
 
     public OhtaniScorebookController(
             OhtaniGameRepository gameRepository,
-            OhtaniPitchingGameRepository pitchingGameRepository) {
+            OhtaniPitchingGameRepository pitchingGameRepository, MLBGameService mlbGameService,
+            AdminNewsController adminNewsController) { // ←追加
         this.gameRepository = gameRepository;
         this.pitchingGameRepository = pitchingGameRepository;
+        this.mlbGameService = mlbGameService; // ←追加
+        this.adminNewsController = adminNewsController;
     }
 
     /**
@@ -107,6 +114,15 @@ public class OhtaniScorebookController {
 
         model.addAttribute("pitchingMonthLabels", pitchingMonthLabels);
         model.addAttribute("pitchingMonthAverages", pitchingMonthAverages);
+
+        // ============================
+        // ★ RISP 得点圏打率をhttps://baseball.yahoo.co.jp/mlb/player/2100825/rs
+        // ここから取得（Yahoo方式）
+        // ============================
+        Map<String, String> risp = mlbGameService.getRispFromYahoo();
+        System.out.println("RISP処理呼び出し開始");
+        model.addAttribute("rispAvg", risp.get("avg"));
+        model.addAttribute("rispDetail", risp.get("detail"));
 
         return "hogehoge_01";
     }

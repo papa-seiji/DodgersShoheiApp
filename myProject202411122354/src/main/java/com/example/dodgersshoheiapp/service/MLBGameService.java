@@ -459,4 +459,76 @@ public class MLBGameService {
 
         return result;
     }
+
+    // =========================
+    // 🔥 RISP 得点圏打率をhttps://baseball.yahoo.co.jp/mlb/player/2100825/rs
+    // ここから取得（Yahoo方式）webスクレイピング
+    // =========================
+    public Map<String, String> getRispFromYahoo() {
+
+        System.out.println("Yahoo取得メソッド開始");
+
+        Map<String, String> result = new HashMap<>();
+
+        try {
+            String url = "https://baseball.yahoo.co.jp/mlb/player/2100825/rs";
+
+            org.jsoup.nodes.Document doc = org.jsoup.Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0")
+                    .timeout(15000)
+                    .get();
+
+            System.out.println("Yahoo接続成功");
+
+            // =========================
+            // 🔥 「得点圏成績」セクションを探す
+            // =========================
+            org.jsoup.select.Elements headers = doc.select("h2, h3, th");
+
+            for (org.jsoup.nodes.Element header : headers) {
+
+                if (header.text().contains("得点圏成績")) {
+
+                    System.out.println("得点圏セクション発見");
+
+                    // 次のテーブル取得
+                    org.jsoup.nodes.Element table = header.parent().nextElementSibling();
+
+                    if (table == null)
+                        continue;
+
+                    org.jsoup.nodes.Element row = table.select("tbody tr").first();
+                    if (row == null)
+                        continue;
+
+                    org.jsoup.select.Elements cols = row.select("td");
+
+                    String avg = cols.get(0).text(); // 打率 (.160)
+                    String atBat = cols.get(2).text(); // 打数 (25)
+                    String hit = cols.get(3).text(); // 安打 (4)
+
+                    String detail = hit + "-" + atBat;
+
+                    System.out.println("取得成功: avg=" + avg + " detail=" + detail);
+
+                    result.put("avg", avg);
+                    result.put("detail", detail);
+
+                    return result;
+                }
+            }
+
+            // 見つからなかった場合
+            System.out.println("得点圏成績が見つからない");
+            result.put("avg", "-");
+            result.put("detail", "-");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("avg", "-");
+            result.put("detail", "-");
+        }
+
+        return result;
+    }
 }
