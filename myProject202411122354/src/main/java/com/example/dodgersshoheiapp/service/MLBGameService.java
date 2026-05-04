@@ -459,4 +459,90 @@ public class MLBGameService {
 
         return result;
     }
+
+    // =========================
+    // 🔥 シーズン得点圏打率（大谷）
+    // =========================
+    public Map<String, Object> calculateSeasonRISP(List<Long> gamePkList) {
+
+        int hit = 0;
+        int atBat = 0;
+
+        for (Long gamePk : gamePkList) {
+
+            Map<String, Object> playByPlay = getPlayByPlay(gamePk);
+
+            if (playByPlay == null)
+                continue;
+
+            List<Map<String, Object>> allPlays = (List<Map<String, Object>>) playByPlay.get("allPlays");
+
+            if (allPlays == null)
+                continue;
+
+            for (Map<String, Object> play : allPlays) {
+
+                Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+
+                if (matchup == null)
+                    continue;
+
+                // =========================
+                // 🔥 大谷だけ抽出
+                // =========================
+                Map<String, Object> batter = (Map<String, Object>) matchup.get("batter");
+
+                if (batter == null)
+                    continue;
+
+                String name = (String) batter.get("fullName");
+
+                if (!"Shohei Ohtani".equals(name))
+                    continue;
+
+                // =========================
+                // 🔥 得点圏判定
+                // =========================
+                Object second = matchup.get("postOnSecond");
+                Object third = matchup.get("postOnThird");
+
+                boolean isRISP = (second != null || third != null);
+
+                if (!isRISP)
+                    continue;
+
+                Map<String, Object> result = (Map<String, Object>) play.get("result");
+
+                if (result == null)
+                    continue;
+
+                String event = (String) result.get("event");
+
+                // =========================
+                // 🔥 打数判定
+                // =========================
+                if (List.of("Single", "Double", "Triple", "Home Run",
+                        "Groundout", "Flyout", "Strikeout").contains(event)) {
+
+                    atBat++;
+
+                    if (List.of("Single", "Double", "Triple", "Home Run").contains(event)) {
+                        hit++;
+                    }
+                }
+            }
+        }
+
+        double avg = atBat > 0 ? (double) hit / atBat : 0.0;
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("hit", hit);
+        resultMap.put("atBat", atBat);
+        resultMap.put("avg", avg);
+
+        // 🔥 デバッグ（確認用）
+        System.out.println("RISP: " + hit + "-" + atBat + " AVG=" + avg);
+
+        return resultMap;
+    }
 }
