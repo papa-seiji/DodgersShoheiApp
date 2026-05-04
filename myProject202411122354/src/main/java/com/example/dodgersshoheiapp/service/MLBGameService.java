@@ -461,167 +461,74 @@ public class MLBGameService {
     }
 
     // =========================
-    // 🔥 シーズン得点圏打率（大谷）
+    // 🔥 RISP 得点圏打率をhttps://baseball.yahoo.co.jp/mlb/player/2100825/rs
+    // ここから取得（Yahoo方式）webスクレイピング
     // =========================
-    public Map<String, Object> calculateSeasonRISP(List<Long> gamePkList) {
+    public Map<String, String> getRispFromYahoo() {
 
-        int hit = 0;
-        int atBat = 0;
+        System.out.println("Yahoo取得メソッド開始");
 
-        for (Long gamePk : gamePkList) {
+        Map<String, String> result = new HashMap<>();
 
-            Map<String, Object> playByPlay = getPlayByPlay(gamePk);
+        try {
+            String url = "https://baseball.yahoo.co.jp/mlb/player/2100825/rs";
 
-            if (playByPlay == null)
-                continue;
+            org.jsoup.nodes.Document doc = org.jsoup.Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0")
+                    .timeout(15000)
+                    .get();
 
-            List<Map<String, Object>> allPlays = (List<Map<String, Object>>) playByPlay.get("allPlays");
+            System.out.println("Yahoo接続成功");
 
-            if (allPlays == null)
-                continue;
+            // =========================
+            // 🔥 「得点圏成績」セクションを探す
+            // =========================
+            org.jsoup.select.Elements headers = doc.select("h2, h3, th");
 
-            for (Map<String, Object> play : allPlays) {
+            for (org.jsoup.nodes.Element header : headers) {
 
-                Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+                if (header.text().contains("得点圏成績")) {
 
-                if (matchup == null)
-                    continue;
+                    System.out.println("得点圏セクション発見");
 
-                // =========================
-                // 🔥 大谷だけ抽出
-                // =========================
-                Map<String, Object> batter = (Map<String, Object>) matchup.get("batter");
+                    // 次のテーブル取得
+                    org.jsoup.nodes.Element table = header.parent().nextElementSibling();
 
-                if (batter == null)
-                    continue;
+                    if (table == null)
+                        continue;
 
-                String name = (String) batter.get("fullName");
+                    org.jsoup.nodes.Element row = table.select("tbody tr").first();
+                    if (row == null)
+                        continue;
 
-                if (!"Shohei Ohtani".equals(name))
-                    continue;
+                    org.jsoup.select.Elements cols = row.select("td");
 
-                // =========================
-                // 🔥 得点圏判定
-                // =========================
-                Object second = matchup.get("postOnSecond");
-                Object third = matchup.get("postOnThird");
+                    String avg = cols.get(0).text(); // 打率 (.160)
+                    String atBat = cols.get(2).text(); // 打数 (25)
+                    String hit = cols.get(3).text(); // 安打 (4)
 
-                boolean isRISP = (second != null || third != null);
+                    String detail = hit + "-" + atBat;
 
-                if (!isRISP)
-                    continue;
+                    System.out.println("取得成功: avg=" + avg + " detail=" + detail);
 
-                Map<String, Object> result = (Map<String, Object>) play.get("result");
+                    result.put("avg", avg);
+                    result.put("detail", detail);
 
-                if (result == null)
-                    continue;
-
-                String event = (String) result.get("event");
-
-                // =========================
-                // 🔥 打数判定
-                // =========================
-                if (List.of("Single", "Double", "Triple", "Home Run",
-                        "Groundout", "Flyout", "Strikeout").contains(event)) {
-
-                    atBat++;
-
-                    if (List.of("Single", "Double", "Triple", "Home Run").contains(event)) {
-                        hit++;
-                    }
+                    return result;
                 }
             }
+
+            // 見つからなかった場合
+            System.out.println("得点圏成績が見つからない");
+            result.put("avg", "-");
+            result.put("detail", "-");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("avg", "-");
+            result.put("detail", "-");
         }
 
-        double avg = atBat > 0 ? (double) hit / atBat : 0.0;
-
-        Map<String, Object> resultMap = new HashMap<>();
-        // 🔥 Controllerとキーを完全一致させる
-        resultMap.put("hits", hit);
-        resultMap.put("atBats", atBat);
-        resultMap.put("avg", avg);
-
-        // 🔥 デバッグ（確認用）
-        System.out.println("RISP: " + hit + "-" + atBat + " AVG=" + avg);
-
-        return resultMap;
-    }
-
-    // =========================
-    // 🔥 シーズン gamePk一覧取得（3月〜今日）
-    // =========================
-    public List<Long> getSeasonGamePkList() {
-
-        List<Long> gamePkList = new ArrayList<>();
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        LocalDate start = LocalDate.of(LocalDate.now().getYear(), 3, 1); // 3月1日
-        LocalDate today = LocalDate.now();
-
-        while (!start.isAfter(today)) {
-
-            try {
-                String url = UriComponentsBuilder
-                        .fromHttpUrl(SCHEDULE_URL)
-                        .queryParam("sportId", 1)
-                        .queryParam("teamId", 119) // Dodgers
-                        .queryParam("date", start.toString())
-                        .toUriString();
-
-                Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-
-                if (response == null || !response.containsKey("dates")) {
-                    start = start.plusDays(1);
-                    continue;
-                }
-
-                List<Map<String, Object>> dates = (List<Map<String, Object>>) response.get("dates");
-
-                if (dates.isEmpty()) {
-                    start = start.plusDays(1);
-                    continue;
-                }
-
-                List<Map<String, Object>> games = (List<Map<String, Object>>) dates.get(0).get("games");
-
-                for (Map<String, Object> game : games) {
-
-                    Map<String, Object> teams = (Map<String, Object>) game.get("teams");
-
-                    Map<String, Object> home = (Map<String, Object>) teams.get("home");
-
-                    Map<String, Object> away = (Map<String, Object>) teams.get("away");
-
-                    Map<String, Object> homeTeam = (Map<String, Object>) home.get("team");
-
-                    Map<String, Object> awayTeam = (Map<String, Object>) away.get("team");
-
-                    Integer homeId = (Integer) homeTeam.get("id");
-                    Integer awayId = (Integer) awayTeam.get("id");
-
-                    // Dodgers試合だけ
-                    if (homeId == 119 || awayId == 119) {
-
-                        Object gamePkObj = game.get("gamePk");
-
-                        if (gamePkObj instanceof Integer) {
-                            gamePkList.add(((Integer) gamePkObj).longValue());
-                        } else if (gamePkObj instanceof Long) {
-                            gamePkList.add((Long) gamePkObj);
-                        }
-                    }
-                }
-
-            } catch (Exception e) {
-                System.out.println("gamePk取得エラー date=" + start);
-            }
-
-            start = start.plusDays(1);
-        }
-
-        System.out.println("取得gamePk数=" + gamePkList.size());
-
-        return gamePkList;
+        return result;
     }
 }
