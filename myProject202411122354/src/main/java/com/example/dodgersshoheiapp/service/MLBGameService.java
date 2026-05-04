@@ -545,4 +545,82 @@ public class MLBGameService {
 
         return resultMap;
     }
+
+    // =========================
+    // 🔥 シーズン gamePk一覧取得（3月〜今日）
+    // =========================
+    public List<Long> getSeasonGamePkList() {
+
+        List<Long> gamePkList = new ArrayList<>();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        LocalDate start = LocalDate.of(LocalDate.now().getYear(), 3, 1); // 3月1日
+        LocalDate today = LocalDate.now();
+
+        while (!start.isAfter(today)) {
+
+            try {
+                String url = UriComponentsBuilder
+                        .fromHttpUrl(SCHEDULE_URL)
+                        .queryParam("sportId", 1)
+                        .queryParam("teamId", 119) // Dodgers
+                        .queryParam("date", start.toString())
+                        .toUriString();
+
+                Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+                if (response == null || !response.containsKey("dates")) {
+                    start = start.plusDays(1);
+                    continue;
+                }
+
+                List<Map<String, Object>> dates = (List<Map<String, Object>>) response.get("dates");
+
+                if (dates.isEmpty()) {
+                    start = start.plusDays(1);
+                    continue;
+                }
+
+                List<Map<String, Object>> games = (List<Map<String, Object>>) dates.get(0).get("games");
+
+                for (Map<String, Object> game : games) {
+
+                    Map<String, Object> teams = (Map<String, Object>) game.get("teams");
+
+                    Map<String, Object> home = (Map<String, Object>) teams.get("home");
+
+                    Map<String, Object> away = (Map<String, Object>) teams.get("away");
+
+                    Map<String, Object> homeTeam = (Map<String, Object>) home.get("team");
+
+                    Map<String, Object> awayTeam = (Map<String, Object>) away.get("team");
+
+                    Integer homeId = (Integer) homeTeam.get("id");
+                    Integer awayId = (Integer) awayTeam.get("id");
+
+                    // Dodgers試合だけ
+                    if (homeId == 119 || awayId == 119) {
+
+                        Object gamePkObj = game.get("gamePk");
+
+                        if (gamePkObj instanceof Integer) {
+                            gamePkList.add(((Integer) gamePkObj).longValue());
+                        } else if (gamePkObj instanceof Long) {
+                            gamePkList.add((Long) gamePkObj);
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("gamePk取得エラー date=" + start);
+            }
+
+            start = start.plusDays(1);
+        }
+
+        System.out.println("取得gamePk数=" + gamePkList.size());
+
+        return gamePkList;
+    }
 }
