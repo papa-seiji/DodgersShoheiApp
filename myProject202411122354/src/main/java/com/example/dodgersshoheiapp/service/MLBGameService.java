@@ -536,8 +536,9 @@ public class MLBGameService {
         double avg = atBat > 0 ? (double) hit / atBat : 0.0;
 
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("hit", hit);
-        resultMap.put("atBat", atBat);
+        // 🔥 Controllerとキーを完全一致させる
+        resultMap.put("hits", hit);
+        resultMap.put("atBats", atBat);
         resultMap.put("avg", avg);
 
         // 🔥 デバッグ（確認用）

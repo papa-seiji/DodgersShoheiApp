@@ -119,8 +119,16 @@
                     <div><strong>盗塁:　</strong> <span id="stolenBases"></span></div>
                     <div><strong>打点:　</strong> <span id="rbi"></span></div>
                     <div><strong>OPS:　</strong> <span id="ops"></span></div>
+                    <div>
+                      <strong>得点圏打率（RISP）:</strong>
+                      <span th:text="${rispAvg}">.000</span>
+                      (
+                      <span th:text="${rispHits}">0</span>
+                      -
+                      <span th:text="${rispAtBats}">0</span>
+                      )
+                    </div>
                 </div>
-
 </div>
 
 

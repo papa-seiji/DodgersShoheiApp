@@ -7,6 +7,8 @@ import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
+import java.util.Map;// ←追加
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,14 +18,19 @@ import java.util.Objects;
 @Controller
 public class OhtaniScorebookController {
 
+    private final AdminNewsController adminNewsController;
     private final OhtaniGameRepository gameRepository;
     private final OhtaniPitchingGameRepository pitchingGameRepository;
+    private final MLBGameService mlbGameService; // ←追加
 
     public OhtaniScorebookController(
             OhtaniGameRepository gameRepository,
-            OhtaniPitchingGameRepository pitchingGameRepository) {
+            OhtaniPitchingGameRepository pitchingGameRepository, MLBGameService mlbGameService,
+            AdminNewsController adminNewsController) { // ←追加
         this.gameRepository = gameRepository;
         this.pitchingGameRepository = pitchingGameRepository;
+        this.mlbGameService = mlbGameService; // ←追加
+        this.adminNewsController = adminNewsController;
     }
 
     /**
@@ -107,6 +114,32 @@ public class OhtaniScorebookController {
 
         model.addAttribute("pitchingMonthLabels", pitchingMonthLabels);
         model.addAttribute("pitchingMonthAverages", pitchingMonthAverages);
+
+        // ✅ ③ RISP処理追加（ここが本体🔥）👉 挿入位置：showSeasonOverview()
+        // の最後（return直前）////////////////////////
+        // ============================
+        // ★ RISP（得点圏打率）追加
+        // ============================
+
+        List<Long> gamePkList = mlbGameService.getSeasonGamePkList();
+
+        Map<String, Object> risp = mlbGameService.calculateSeasonRISP(gamePkList);
+
+        // 桁数が長すぎる（表示フォーマット問題(例）0.5517241379310345）これを修正対応
+        double avg = (double) risp.get("avg");
+
+        // 小数点3桁に整形（.318形式）
+        String rispAvgFormatted = String.format("%.3f", avg);
+
+        // 先頭の0を削る（0.318 → .318）
+        if (rispAvgFormatted.startsWith("0")) {
+            rispAvgFormatted = rispAvgFormatted.substring(1);
+        }
+
+        model.addAttribute("rispAvg", rispAvgFormatted);
+        // model.addAttribute("rispAvg", risp.get("avg"));
+        model.addAttribute("rispHits", risp.get("hits"));
+        model.addAttribute("rispAtBats", risp.get("atBats"));
 
         return "hogehoge_01";
     }
