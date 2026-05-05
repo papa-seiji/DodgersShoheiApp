@@ -287,6 +287,7 @@ public class OhtaniScorebookController {
     @GetMapping("/batting/filter")
     public String showBattingFilter(
             @RequestParam(required = false) String hand,
+            @RequestParam(required = false) String result, // ★追加
             Model model) {
 
         // 🔥 ALL（明示的に選んだ時だけ）
@@ -296,7 +297,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsAllAvg", vsAll.get("avg"));
             model.addAttribute("vsAllDetail", vsAll.get("detail"));
-            model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs());
+            model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs(result));
         }
 
         // 右
@@ -306,7 +307,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsRAvg", vsR.get("avg"));
             model.addAttribute("vsRDetail", vsR.get("detail"));
-            model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs());
+            model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs(result));
         }
 
         // 左
@@ -316,7 +317,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsLAvg", vsL.get("avg"));
             model.addAttribute("vsLDetail", vsL.get("detail"));
-            model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs());
+            model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs(result));
         }
 
         return "batting_filter";

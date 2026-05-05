@@ -6,111 +6,125 @@
 </head>
 <body>
 
-    <h2>Batting Filter（試作）</h2>
+<h2>Batting Filter（試作）</h2>
 
-    <hr>
+<hr>
 
-    <!-- 🔽 フィルタUI -->
-    <h3>フィルタ</h3>
-    <form action="/batting/filter" method="get">
-        <label>投手タイプ：</label>
+<!-- 🔽 フィルタUI -->
+<h3>フィルタ</h3>
+<form action="/batting/filter" method="get">
 
-        <select name="hand">
-            <option value="ALL" th:selected="${param.hand == null or param.hand[0] == 'ALL'}">ALL</option>
-            <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
-            <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
-        </select>
+    <label>投手タイプ：</label>
+    <select name="hand">
+        <option value="ALL" th:selected="${param.hand == null or param.hand[0] == 'ALL'}">ALL</option>
+        <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
+        <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
+    </select>
 
-        <button type="submit">検索</button>
+    <!-- 🔥 ここ追加 -->
+    <label>打席結果：</label>
+    <select name="result">
+        <option value="" th:selected="${param.result == null or param.result[0] == ''}">ALL</option>
+        <option value="HIT" th:selected="${param.result != null and param.result[0] == 'HIT'}">HIT</option>
+        <option value="OUT" th:selected="${param.result != null and param.result[0] == 'OUT'}">OUT</option>
+        <option value="BB"  th:selected="${param.result != null and param.result[0] == 'BB'}">BB</option>
+        <option value="HR"  th:selected="${param.result != null and param.result[0] == 'HR'}">HR</option>
+        <option value="SO"  th:selected="${param.result != null and param.result[0] == 'SO'}">SO</option>
+        <option value="Err" th:selected="${param.result != null and param.result[0] == 'Err'}">Err</option>
+        <option value="SF"  th:selected="${param.result != null and param.result[0] == 'SF'}">SF</option>
+        <option value="FC"  th:selected="${param.result != null and param.result[0] == 'FC'}">FC</option>
+    </select>
 
-        <!-- クリア -->
-        <button type="button" onclick="location.href='/batting/filter'">
-            クリア
-        </button>
-    </form>
+    <button type="submit">検索</button>
 
-    <hr>
+    <!-- クリア -->
+    <button type="button" onclick="location.href='/batting/filter'">
+        クリア
+    </button>
+</form>
 
-    <!-- =========================
-        🔥 対ALL（メイン表示）
-    ========================== -->
-    <div th:if="${vsAllAvg != null}">
-        <h3>対ALLピッチャー打率</h3>
+<hr>
+
+<!-- =========================
+    🔥 対ALL（メイン表示）
+========================= -->
+<div th:if="${vsAllAvg != null}">
+    <h3>対ALLピッチャー打率</h3>
+    <p>
+        VS ALL: <span th:text="${vsAllAvg}"></span>
+        (<span th:text="${vsAllDetail}"></span>)
+    </p>
+</div>
+
+<div th:if="${vsAllLogs != null}">
+    <h3>打席ログ（対ALL）</h3>
+
+    <div th:each="log : ${vsAllLogs}">
         <p>
-            VS ALL: <span th:text="${vsAllAvg}"></span>
-            (<span th:text="${vsAllDetail}"></span>)
+            <span th:text="${log.game_date}"></span>
+            <span th:text="${log.opponent}"></span>
+            <span th:text="${log.pitcher}"></span>
+            （<span th:text="${log.hand}"></span>）
+            →
+            <span th:text="${log.result}"></span>：
+            <span th:text="${log.description}"></span>
         </p>
     </div>
+</div>
 
-    <div th:if="${vsAllLogs != null}">
-        <h3>打席ログ（対ALL）</h3>
+<!-- =========================
+    右（単体表示時のみ）
+========================= -->
+<div th:if="${vsRAvg != null}">
+    <h3>対右ピッチャー打率</h3>
+    <p>
+        VS R: <span th:text="${vsRAvg}"></span>
+        (<span th:text="${vsRDetail}"></span>)
+    </p>
+</div>
 
-        <div th:each="log : ${vsAllLogs}">
-            <p>
-                <span th:text="${log.game_date}"></span>
-                <span th:text="${log.opponent}"></span>  <!-- ★追加 -->
-                <span th:text="${log.pitcher}"></span>
-                （<span th:text="${log.hand}"></span>）
-                →
-                <span th:text="${log.result}"></span>：
-                <span th:text="${log.description}"></span>
-            </p>
-        </div>
-    </div>
+<div th:if="${vsRLogs != null}">
+    <h3>打席ログ（対右）</h3>
 
-    <!-- =========================
-        右（単体表示時のみ）
-    ========================== -->
-    <div th:if="${vsRAvg != null}">
-        <h3>対右ピッチャー打率</h3>
+    <div th:each="log : ${vsRLogs}">
         <p>
-            VS R: <span th:text="${vsRAvg}"></span>
-            (<span th:text="${vsRDetail}"></span>)
+            <span th:text="${log.game_date}"></span>
+            <span th:text="${log.opponent}"></span>
+            <span th:text="${log.pitcher}"></span>
+            （<span th:text="${log.hand}"></span>）
+            →
+            <span th:text="${log.result}"></span>：
+            <span th:text="${log.description}"></span>
         </p>
     </div>
+</div>
 
-    <div th:if="${vsRLogs != null}">
-        <h3>打席ログ（対右）</h3>
+<!-- =========================
+    左（単体表示時のみ）
+========================= -->
+<div th:if="${vsLAvg != null}">
+    <h3>対左ピッチャー打率</h3>
+    <p>
+        VS L: <span th:text="${vsLAvg}"></span>
+        (<span th:text="${vsLDetail}"></span>)
+    </p>
+</div>
 
-        <div th:each="log : ${vsRLogs}">
-            <p>
-                <span th:text="${log.game_date}"></span>
-                <span th:text="${log.opponent}"></span>  <!-- ★追加 -->
-                <span th:text="${log.pitcher}"></span>
-                （<span th:text="${log.hand}"></span>）
-                →
-                <span th:text="${log.result}"></span>：
-                <span th:text="${log.description}"></span>
-            </p>
-        </div>
-    </div>
+<div th:if="${vsLLogs != null}">
+    <h3>打席ログ（対左）</h3>
 
-    <!-- =========================
-        左（単体表示時のみ）
-    ========================== -->
-    <div th:if="${vsLAvg != null}">
-        <h3>対左ピッチャー打率</h3>
+    <div th:each="log : ${vsLLogs}">
         <p>
-            VS L: <span th:text="${vsLAvg}"></span>
-            (<span th:text="${vsLDetail}"></span>)
+            <span th:text="${log.game_date}"></span>
+            <span th:text="${log.opponent}"></span>
+            <span th:text="${log.pitcher}"></span>
+            （<span th:text="${log.hand}"></span>）
+            →
+            <span th:text="${log.result}"></span>：
+            <span th:text="${log.description}"></span>
         </p>
     </div>
-
-    <div th:if="${vsLLogs != null}">
-        <h3>打席ログ（対左）</h3>
-
-        <div th:each="log : ${vsLLogs}">
-            <p>
-                <span th:text="${log.game_date}"></span>
-                <span th:text="${log.opponent}"></span>  <!-- ★追加 -->
-                <span th:text="${log.pitcher}"></span>
-                （<span th:text="${log.hand}"></span>）
-                →
-                <span th:text="${log.result}"></span>：
-                <span th:text="${log.description}"></span>
-            </p>
-        </div>
-    </div>
+</div>
 
 </body>
 </html>

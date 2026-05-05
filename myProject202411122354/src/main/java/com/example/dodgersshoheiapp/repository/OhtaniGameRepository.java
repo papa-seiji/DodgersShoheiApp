@@ -340,10 +340,10 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対右ピッチャー（ログ取得）修正版
+     * ★ 対右ピッチャー（ログ取得）修正版（result対応・空文字対応）
      * ============================================
      */
-    public List<Map<String, Object>> getVsRightLogs() {
+    public List<Map<String, Object>> getVsRightLogs(String result) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
@@ -357,6 +357,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'R'
+                        AND ( ? IS NULL OR ? = '' OR d.pa1_result = ? )
 
                         UNION ALL
 
@@ -369,6 +370,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'R'
+                        AND ( ? IS NULL OR ? = '' OR d.pa2_result = ? )
 
                         UNION ALL
 
@@ -381,6 +383,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'R'
+                        AND ( ? IS NULL OR ? = '' OR d.pa3_result = ? )
 
                         UNION ALL
 
@@ -393,6 +396,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'R'
+                        AND ( ? IS NULL OR ? = '' OR d.pa4_result = ? )
 
                         UNION ALL
 
@@ -405,6 +409,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'R'
+                        AND ( ? IS NULL OR ? = '' OR d.pa5_result = ? )
 
                         UNION ALL
 
@@ -417,11 +422,19 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'R'
+                        AND ( ? IS NULL OR ? = '' OR d.pa6_result = ? )
                     ) t
                     ORDER BY game_date DESC
                 """;
 
-        return jdbcTemplate.queryForList(sql);
+        return jdbcTemplate.queryForList(
+                sql,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result);
     }
 
     /**
@@ -463,10 +476,10 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対左ピッチャー👉 logs（修正版）
+     * ★ 対左ピッチャー（ログ取得）修正版（result対応・空文字対応）
      * ============================================
      */
-    public List<Map<String, Object>> getVsLeftLogs() {
+    public List<Map<String, Object>> getVsLeftLogs(String result) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
@@ -480,6 +493,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'L'
+                        AND ( ? IS NULL OR ? = '' OR d.pa1_result = ? )
 
                         UNION ALL
 
@@ -492,6 +506,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'L'
+                        AND ( ? IS NULL OR ? = '' OR d.pa2_result = ? )
 
                         UNION ALL
 
@@ -504,6 +519,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'L'
+                        AND ( ? IS NULL OR ? = '' OR d.pa3_result = ? )
 
                         UNION ALL
 
@@ -516,6 +532,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'L'
+                        AND ( ? IS NULL OR ? = '' OR d.pa4_result = ? )
 
                         UNION ALL
 
@@ -528,6 +545,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'L'
+                        AND ( ? IS NULL OR ? = '' OR d.pa5_result = ? )
 
                         UNION ALL
 
@@ -540,11 +558,19 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'L'
+                        AND ( ? IS NULL OR ? = '' OR d.pa6_result = ? )
                     ) t
                     ORDER BY game_date DESC
                 """;
 
-        return jdbcTemplate.queryForList(sql);
+        return jdbcTemplate.queryForList(
+                sql,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result);
     }
 
     /**
@@ -586,10 +612,10 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対ALLログ
+     * ★ 対ALLログ（resultフィルタ対応・空文字対応）
      * ============================================
      */
-    public List<Map<String, Object>> getVsAllLogs() {
+    public List<Map<String, Object>> getVsAllLogs(String result) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
@@ -602,6 +628,7 @@ public class OhtaniGameRepository {
                             d.pa1_description AS description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE ( ? IS NULL OR ? = '' OR d.pa1_result = ? )
 
                         UNION ALL
 
@@ -613,6 +640,7 @@ public class OhtaniGameRepository {
                             d.pa2_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE ( ? IS NULL OR ? = '' OR d.pa2_result = ? )
 
                         UNION ALL
 
@@ -624,6 +652,7 @@ public class OhtaniGameRepository {
                             d.pa3_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE ( ? IS NULL OR ? = '' OR d.pa3_result = ? )
 
                         UNION ALL
 
@@ -635,6 +664,7 @@ public class OhtaniGameRepository {
                             d.pa4_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE ( ? IS NULL OR ? = '' OR d.pa4_result = ? )
 
                         UNION ALL
 
@@ -646,6 +676,7 @@ public class OhtaniGameRepository {
                             d.pa5_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE ( ? IS NULL OR ? = '' OR d.pa5_result = ? )
 
                         UNION ALL
 
@@ -657,10 +688,18 @@ public class OhtaniGameRepository {
                             d.pa6_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE ( ? IS NULL OR ? = '' OR d.pa6_result = ? )
                     ) t
                     ORDER BY game_date DESC
                 """;
 
-        return jdbcTemplate.queryForList(sql);
+        return jdbcTemplate.queryForList(
+                sql,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result,
+                result, result, result);
     }
 }
