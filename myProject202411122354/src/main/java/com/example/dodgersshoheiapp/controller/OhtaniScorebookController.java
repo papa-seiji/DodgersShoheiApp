@@ -300,6 +300,17 @@ public class OhtaniScorebookController {
             model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs());
         }
 
+        if ("L".equals(hand)) {
+
+            Map<String, String> vsL = mlbGameService.getVsLeftStatsFormatted();
+
+            model.addAttribute("vsLAvg", vsL.get("avg"));
+            model.addAttribute("vsLDetail", vsL.get("detail"));
+
+            // バッティングログ取得
+            model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs());
+        }
+
         return "batting_filter";
     }
 }

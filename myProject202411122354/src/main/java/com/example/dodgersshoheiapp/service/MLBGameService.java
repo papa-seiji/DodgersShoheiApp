@@ -630,4 +630,34 @@ public class MLBGameService {
     public List<Map<String, Object>> getVsRightLogs() {
         return ohtaniGameRepository.getVsRightLogs();
     }
+
+    /**
+     * ============================================
+     * ★ 対左ピッチャー
+     * ============================================
+     */
+    public Map<String, String> getVsLeftStatsFormatted() {
+
+        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStats();
+
+        int hits = ((Number) stats.get("hits")).intValue();
+        int atBats = ((Number) stats.get("at_bats")).intValue();
+
+        Double avg = stats.get("avg") != null
+                ? ((Number) stats.get("avg")).doubleValue()
+                : 0.0;
+
+        String avgStr = String.format("%.3f", avg).replace("0.", ".");
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        return result;
+    }
+
+    public List<Map<String, Object>> getVsLeftLogs() {
+        return ohtaniGameRepository.getVsLeftLogs();
+    }
 }

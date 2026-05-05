@@ -306,7 +306,6 @@ public class OhtaniGameRepository {
      * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり
      * ============================================
      */
-
     public Map<String, Object> getVsRightStats() {
 
         String sql = """
@@ -397,6 +396,123 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'R'
+                    ) t
+                    ORDER BY game_date DESC
+                """;
+
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 対左ピッチャー打率（VS L）「avgだけ」になってる
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStats() {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE pa1_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details WHERE pa2_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details WHERE pa3_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details WHERE pa4_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details WHERE pa5_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details WHERE pa6_pitcher_hand = 'L'
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 対左ピッチャー👉 logs（修正版）
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsLeftLogs() {
+
+        String sql = """
+                    SELECT game_date, pitcher, hand, result, description
+                    FROM (
+                        SELECT g.game_date,
+                            d.pa1_pitcher AS pitcher,
+                            d.pa1_pitcher_hand AS hand,
+                            d.pa1_result AS result,
+                            d.pa1_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa1_pitcher_hand = 'L'
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            d.pa2_pitcher AS pitcher,
+                            d.pa2_pitcher_hand AS hand,
+                            d.pa2_result AS result,
+                            d.pa2_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa2_pitcher_hand = 'L'
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            d.pa3_pitcher AS pitcher,
+                            d.pa3_pitcher_hand AS hand,
+                            d.pa3_result AS result,
+                            d.pa3_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa3_pitcher_hand = 'L'
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            d.pa4_pitcher AS pitcher,
+                            d.pa4_pitcher_hand AS hand,
+                            d.pa4_result AS result,
+                            d.pa4_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa4_pitcher_hand = 'L'
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            d.pa5_pitcher AS pitcher,
+                            d.pa5_pitcher_hand AS hand,
+                            d.pa5_result AS result,
+                            d.pa5_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa5_pitcher_hand = 'L'
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            d.pa6_pitcher AS pitcher,
+                            d.pa6_pitcher_hand AS hand,
+                            d.pa6_result AS result,
+                            d.pa6_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa6_pitcher_hand = 'L'
                     ) t
                     ORDER BY game_date DESC
                 """;
