@@ -119,8 +119,17 @@ public class OhtaniScorebookController {
         // ★ RISP 得点圏打率をhttps://baseball.yahoo.co.jp/mlb/player/2100825/rs
         // ここから取得（Yahoo方式）
         // ============================
-        Map<String, String> risp = mlbGameService.getRispFromYahoo();
+        // Map<String, String> risp = mlbGameService.getRispFromYahoo();
+        // System.out.println("RISP処理呼び出し開始");
+        // model.addAttribute("rispAvg", risp.get("avg"));
+        // model.addAttribute("rispDetail", risp.get("detail"));
+
+        // ============================
+        // ★ RISP 得点圏打率をohtani_game_details
+        // ここから取得（自前DB）
+        // ============================
         System.out.println("RISP処理呼び出し開始");
+        Map<String, Object> risp = mlbGameService.getRispFromDB();
         model.addAttribute("rispAvg", risp.get("avg"));
         model.addAttribute("rispDetail", risp.get("detail"));
 

@@ -4,14 +4,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.example.dodgersshoheiapp.repository.OhtaniGameRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class MLBGameService {
 
     private final String BASE_URL = "https://statsapi.mlb.com/api/v1/schedule/games/";
     private final String SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule";
+    private final OhtaniGameRepository ohtaniGameRepository;
 
     /**
      * ★ 追加：日付から gamePk を取得する
@@ -528,6 +534,49 @@ public class MLBGameService {
             result.put("avg", "-");
             result.put("detail", "-");
         }
+
+        return result;
+    }
+
+    /**
+     * ============================================
+     * ★ 得点圏打率（RISP）取得（DB版）
+     * ============================================
+     */
+    public Map<String, Object> getRispFromDB() {
+
+        Map<String, Object> raw = ohtaniGameRepository.getRispStats();
+
+        Map<String, Object> result = new HashMap<>();
+
+        // =========================
+        // 🔥 null対策（超重要）
+        // =========================
+        int hits = raw.get("hits") != null ? ((Number) raw.get("hits")).intValue() : 0;
+        int atBats = raw.get("at_bats") != null ? ((Number) raw.get("at_bats")).intValue() : 0;
+        double avg = raw.get("avg") != null ? ((Number) raw.get("avg")).doubleValue() : 0.0;
+
+        // =========================
+        // 🔥 表示用フォーマット
+        // =========================
+
+        // 👉 .160形式にする
+        String avgStr = String.format("%.3f", avg);
+
+        if (avgStr.startsWith("0")) {
+            avgStr = avgStr.substring(1);
+        }
+
+        // 👉 4-25形式
+        String detail = hits + "-" + atBats;
+
+        // =========================
+        // 🔥 modelに渡す値
+        // =========================
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        System.out.println("RISP(DB): " + avgStr + " (" + detail + ")");
 
         return result;
     }
