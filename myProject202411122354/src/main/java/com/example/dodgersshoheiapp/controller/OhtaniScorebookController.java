@@ -7,6 +7,8 @@ import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
 
 import lombok.RequiredArgsConstructor;
@@ -279,16 +281,24 @@ public class OhtaniScorebookController {
 
     /**
      * ============================================
-     * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり batting_filter.htmlとバインディングしている！
+     * ★ バッティングフィルタ（投手タイプ選択）
      * ============================================
      */
     @GetMapping("/batting/filter")
-    public String showBattingFilter(Model model) {
+    public String showBattingFilter(
+            @RequestParam(required = false) String hand,
+            Model model) {
 
-        Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+        if ("R".equals(hand)) {
 
-        model.addAttribute("vsRAvg", vsR.get("avg"));
-        model.addAttribute("vsRDetail", vsR.get("detail"));
+            Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+
+            model.addAttribute("vsRAvg", vsR.get("avg"));
+            model.addAttribute("vsRDetail", vsR.get("detail"));
+
+            // バッティングログ取得
+            model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs());
+        }
 
         return "batting_filter";
     }

@@ -621,4 +621,13 @@ public class MLBGameService {
 
         return result;
     }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー👉 ログ表示
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsRightLogs() {
+        return ohtaniGameRepository.getVsRightLogs();
+    }
 }

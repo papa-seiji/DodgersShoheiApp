@@ -1,3 +1,43 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Batting Filter</title>
+</head>
+<body>
+
+    <h2>Batting Filter（試作）</h2>
+
+    <hr> -->
+
+    <!-- 🔽 今回の目的（対右打率表示）対右ピッチャー👉 hits / at_bats も取る必要あり VS R: .211（19-90） -->
+<!-- <div>
+        <h3>対右ピッチャー打率</h3>
+        <p>
+            VS R: <span th:text="${vsRAvg}"></span>
+            (<span th:text="${vsRDetail}"></span>)
+        </p>
+    </div>
+
+    <hr>
+
+        <h3>打席ログ（対右）</h3>
+
+    <div th:each="log : ${vsRLogs}">
+        <p>
+            <span th:text="${log.game_date}"></span>
+            <span th:text="${log.pitcher}"></span>
+            （<span th:text="${log.hand}"></span>）
+            →
+            <span th:text="${log.result}"></span>：
+            <span th:text="${log.description}"></span>
+        </p>
+    </div>
+
+</body>
+</html>-->
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,13 +50,53 @@
 
     <hr>
 
-    <!-- 🔽 今回の目的（対右打率表示）対右ピッチャー👉 hits / at_bats も取る必要あり VS R: .211（19-90） -->
-    <div>
+    <!-- 🔽 フィルタUI追加 -->
+    <h3>フィルタ</h3>
+    <form action="/batting/filter" method="get">
+        <label>投手タイプ：</label>
+
+            <!--👉 選択した値を保持（R選んだらRのまま）-->
+                <select name="hand">
+                    <option value="" th:selected="${param.hand == null or param.hand[0] == ''}">ALL</option>
+                    <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
+                    <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
+                </select>
+
+                <button type="submit">検索</button>
+
+                <!-- 🔽 追加（クリアボタン） -->
+                <button type="button" onclick="location.href='/batting/filter'">
+                    クリア
+                </button>
+    </form>
+
+    <hr>
+
+    <!-- 🔽 対右打率（条件付き表示） -->
+    <div th:if="${vsRAvg != null}">
         <h3>対右ピッチャー打率</h3>
         <p>
             VS R: <span th:text="${vsRAvg}"></span>
             (<span th:text="${vsRDetail}"></span>)
         </p>
+    </div>
+
+    <hr>
+
+    <!-- 🔽 打席ログ（条件付き表示） -->
+    <div th:if="${vsRLogs != null}">
+        <h3>打席ログ（対右）</h3>
+
+        <div th:each="log : ${vsRLogs}">
+            <p>
+                <span th:text="${log.game_date}"></span>
+                <span th:text="${log.pitcher}"></span>
+                （<span th:text="${log.hand}"></span>）
+                →
+                <span th:text="${log.result}"></span>：
+                <span th:text="${log.description}"></span>
+            </p>
+        </div>
     </div>
 
 </body>
