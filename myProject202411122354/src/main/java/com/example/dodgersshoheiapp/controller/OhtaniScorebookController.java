@@ -288,6 +288,7 @@ public class OhtaniScorebookController {
     public String showBattingFilter(
             @RequestParam(required = false) String hand,
             @RequestParam(required = false) String result, // ★追加
+            @RequestParam(required = false) String opponent, // ★追加
             Model model) {
 
         // 🔥 ALL（明示的に選んだ時だけ）
@@ -297,7 +298,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsAllAvg", vsAll.get("avg"));
             model.addAttribute("vsAllDetail", vsAll.get("detail"));
-            model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs(result));
+            model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs(result, opponent));
         }
 
         // 右
@@ -307,7 +308,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsRAvg", vsR.get("avg"));
             model.addAttribute("vsRDetail", vsR.get("detail"));
-            model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs(result));
+            model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs(result, opponent));
         }
 
         // 左
@@ -317,8 +318,14 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsLAvg", vsL.get("avg"));
             model.addAttribute("vsLDetail", vsL.get("detail"));
-            model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs(result));
+            model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs(result, opponent));
         }
+
+        // ★ チーム一覧を取得
+        List<String> opponents = mlbGameService.getAllOpponents();
+
+        // ★ 画面へ渡す
+        model.addAttribute("opponents", opponents);
 
         return "batting_filter";
     }

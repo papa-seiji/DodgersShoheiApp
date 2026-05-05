@@ -340,101 +340,85 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対右ピッチャー（ログ取得）修正版（result対応・空文字対応）
+     * ★ 対右ピッチャー（ログ取得）完全版（result＋opponent＋CAST対応）
      * ============================================
      */
-    public List<Map<String, Object>> getVsRightLogs(String result) {
+
+    public List<Map<String, Object>> getVsRightLogs(String result, String opponent) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
                     FROM (
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa1_pitcher AS pitcher,
-                            d.pa1_pitcher_hand AS hand,
-                            d.pa1_result AS result,
-                            d.pa1_description AS description
+                        SELECT g.game_date, g.opponent,
+                               d.pa1_pitcher AS pitcher, d.pa1_pitcher_hand AS hand,
+                               d.pa1_result AS result, d.pa1_description AS description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'R'
-                        AND ( ? IS NULL OR ? = '' OR d.pa1_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa2_pitcher,
-                            d.pa2_pitcher_hand,
-                            d.pa2_result,
-                            d.pa2_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa2_pitcher, d.pa2_pitcher_hand,
+                               d.pa2_result, d.pa2_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'R'
-                        AND ( ? IS NULL OR ? = '' OR d.pa2_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa3_pitcher,
-                            d.pa3_pitcher_hand,
-                            d.pa3_result,
-                            d.pa3_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa3_pitcher, d.pa3_pitcher_hand,
+                               d.pa3_result, d.pa3_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'R'
-                        AND ( ? IS NULL OR ? = '' OR d.pa3_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa4_pitcher,
-                            d.pa4_pitcher_hand,
-                            d.pa4_result,
-                            d.pa4_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa4_pitcher, d.pa4_pitcher_hand,
+                               d.pa4_result, d.pa4_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'R'
-                        AND ( ? IS NULL OR ? = '' OR d.pa4_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa5_pitcher,
-                            d.pa5_pitcher_hand,
-                            d.pa5_result,
-                            d.pa5_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa5_pitcher, d.pa5_pitcher_hand,
+                               d.pa5_result, d.pa5_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'R'
-                        AND ( ? IS NULL OR ? = '' OR d.pa5_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa6_pitcher,
-                            d.pa6_pitcher_hand,
-                            d.pa6_result,
-                            d.pa6_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa6_pitcher, d.pa6_pitcher_hand,
+                               d.pa6_result, d.pa6_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'R'
-                        AND ( ? IS NULL OR ? = '' OR d.pa6_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                     ) t
                     ORDER BY game_date DESC
                 """;
 
         return jdbcTemplate.queryForList(
                 sql,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result);
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent);
     }
 
     /**
@@ -476,101 +460,84 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対左ピッチャー（ログ取得）修正版（result対応・空文字対応）
+     * ★ 対左ピッチャー（ログ取得）完全版（result＋opponent＋CAST対応）
      * ============================================
      */
-    public List<Map<String, Object>> getVsLeftLogs(String result) {
+    public List<Map<String, Object>> getVsLeftLogs(String result, String opponent) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
                     FROM (
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa1_pitcher AS pitcher,
-                            d.pa1_pitcher_hand AS hand,
-                            d.pa1_result AS result,
-                            d.pa1_description AS description
+                        SELECT g.game_date, g.opponent,
+                               d.pa1_pitcher AS pitcher, d.pa1_pitcher_hand AS hand,
+                               d.pa1_result AS result, d.pa1_description AS description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'L'
-                        AND ( ? IS NULL OR ? = '' OR d.pa1_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa2_pitcher,
-                            d.pa2_pitcher_hand,
-                            d.pa2_result,
-                            d.pa2_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa2_pitcher, d.pa2_pitcher_hand,
+                               d.pa2_result, d.pa2_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'L'
-                        AND ( ? IS NULL OR ? = '' OR d.pa2_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa3_pitcher,
-                            d.pa3_pitcher_hand,
-                            d.pa3_result,
-                            d.pa3_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa3_pitcher, d.pa3_pitcher_hand,
+                               d.pa3_result, d.pa3_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'L'
-                        AND ( ? IS NULL OR ? = '' OR d.pa3_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa4_pitcher,
-                            d.pa4_pitcher_hand,
-                            d.pa4_result,
-                            d.pa4_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa4_pitcher, d.pa4_pitcher_hand,
+                               d.pa4_result, d.pa4_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'L'
-                        AND ( ? IS NULL OR ? = '' OR d.pa4_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa5_pitcher,
-                            d.pa5_pitcher_hand,
-                            d.pa5_result,
-                            d.pa5_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa5_pitcher, d.pa5_pitcher_hand,
+                               d.pa5_result, d.pa5_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'L'
-                        AND ( ? IS NULL OR ? = '' OR d.pa5_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa6_pitcher,
-                            d.pa6_pitcher_hand,
-                            d.pa6_result,
-                            d.pa6_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
+                        SELECT g.game_date, g.opponent,
+                               d.pa6_pitcher, d.pa6_pitcher_hand,
+                               d.pa6_result, d.pa6_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'L'
-                        AND ( ? IS NULL OR ? = '' OR d.pa6_result = ? )
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                     ) t
                     ORDER BY game_date DESC
                 """;
 
         return jdbcTemplate.queryForList(
                 sql,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result);
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent);
     }
 
     /**
@@ -612,94 +579,93 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対ALLログ（resultフィルタ対応・空文字対応）
+     * ★ 対ALLログ（完全版：result＋opponent＋CAST対応）
      * ============================================
      */
-    public List<Map<String, Object>> getVsAllLogs(String result) {
+    public List<Map<String, Object>> getVsAllLogs(String result, String opponent) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
                     FROM (
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa1_pitcher AS pitcher,
-                            d.pa1_pitcher_hand AS hand,
-                            d.pa1_result AS result,
-                            d.pa1_description AS description
+                        SELECT g.game_date, g.opponent,
+                               d.pa1_pitcher AS pitcher, d.pa1_pitcher_hand AS hand,
+                               d.pa1_result AS result, d.pa1_description AS description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE ( ? IS NULL OR ? = '' OR d.pa1_result = ? )
+                        WHERE (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa2_pitcher,
-                            d.pa2_pitcher_hand,
-                            d.pa2_result,
-                            d.pa2_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE ( ? IS NULL OR ? = '' OR d.pa2_result = ? )
+                        SELECT g.game_date, g.opponent,
+                               d.pa2_pitcher, d.pa2_pitcher_hand,
+                               d.pa2_result, d.pa2_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa3_pitcher,
-                            d.pa3_pitcher_hand,
-                            d.pa3_result,
-                            d.pa3_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE ( ? IS NULL OR ? = '' OR d.pa3_result = ? )
+                        SELECT g.game_date, g.opponent,
+                               d.pa3_pitcher, d.pa3_pitcher_hand,
+                               d.pa3_result, d.pa3_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa4_pitcher,
-                            d.pa4_pitcher_hand,
-                            d.pa4_result,
-                            d.pa4_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE ( ? IS NULL OR ? = '' OR d.pa4_result = ? )
+                        SELECT g.game_date, g.opponent,
+                               d.pa4_pitcher, d.pa4_pitcher_hand,
+                               d.pa4_result, d.pa4_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa5_pitcher,
-                            d.pa5_pitcher_hand,
-                            d.pa5_result,
-                            d.pa5_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE ( ? IS NULL OR ? = '' OR d.pa5_result = ? )
+                        SELECT g.game_date, g.opponent,
+                               d.pa5_pitcher, d.pa5_pitcher_hand,
+                               d.pa5_result, d.pa5_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
 
                         UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa6_pitcher,
-                            d.pa6_pitcher_hand,
-                            d.pa6_result,
-                            d.pa6_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE ( ? IS NULL OR ? = '' OR d.pa6_result = ? )
+                        SELECT g.game_date, g.opponent,
+                               d.pa6_pitcher, d.pa6_pitcher_hand,
+                               d.pa6_result, d.pa6_description
+                        FROM ohtani_game_details d JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                     ) t
                     ORDER BY game_date DESC
                 """;
 
         return jdbcTemplate.queryForList(
                 sql,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result,
-                result, result, result);
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent,
+                result, result, result, opponent, opponent, opponent);
+    }
+
+    /**
+     * ============================================
+     * ★ 対戦チーム一覧取得（重複なし）
+     * ============================================
+     */
+    public List<String> getAllOpponents() {
+
+        String sql = """
+                    SELECT DISTINCT opponent
+                    FROM ohtani_games
+                    ORDER BY opponent
+                """;
+
+        return jdbcTemplate.queryForList(sql, String.class);
     }
 }
