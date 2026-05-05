@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
 
@@ -289,6 +290,7 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String hand,
             @RequestParam(required = false) String result, // ★追加
             @RequestParam(required = false) String opponent, // ★追加
+            @RequestParam(required = false) String pitcher, // ★追加
             Model model) {
 
         // 🔥 ALL（明示的に選んだ時だけ）
@@ -298,7 +300,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsAllAvg", vsAll.get("avg"));
             model.addAttribute("vsAllDetail", vsAll.get("detail"));
-            model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs(result, opponent));
+            model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs(result, opponent, pitcher)); // ★追加
         }
 
         // 右
@@ -308,7 +310,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsRAvg", vsR.get("avg"));
             model.addAttribute("vsRDetail", vsR.get("detail"));
-            model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs(result, opponent));
+            model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs(result, opponent, pitcher)); // ★追加
         }
 
         // 左
@@ -318,7 +320,7 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsLAvg", vsL.get("avg"));
             model.addAttribute("vsLDetail", vsL.get("detail"));
-            model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs(result, opponent));
+            model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs(result, opponent, pitcher)); // ★追加
         }
 
         // ★ チーム一覧を取得
@@ -328,5 +330,18 @@ public class OhtaniScorebookController {
         model.addAttribute("opponents", opponents);
 
         return "batting_filter";
+    }
+
+    /**
+     * ============================================
+     * ★ 投手サジェストAPI
+     * ============================================
+     */
+    @GetMapping("/api/pitchers")
+    @ResponseBody
+    public List<String> searchPitchers(
+            @RequestParam String keyword) {
+
+        return mlbGameService.searchPitchers(keyword);
     }
 }

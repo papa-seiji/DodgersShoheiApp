@@ -627,8 +627,8 @@ public class MLBGameService {
      * ★ 対右ピッチャー👉 ログ表示
      * ============================================
      */
-    public List<Map<String, Object>> getVsRightLogs(String result, String opponent) {
-        return ohtaniGameRepository.getVsRightLogs(result, opponent);
+    public List<Map<String, Object>> getVsRightLogs(String result, String opponent, String pitcher) {
+        return ohtaniGameRepository.getVsRightLogs(result, opponent, pitcher);
     }
 
     /**
@@ -657,8 +657,8 @@ public class MLBGameService {
         return result;
     }
 
-    public List<Map<String, Object>> getVsLeftLogs(String result, String opponent) {
-        return ohtaniGameRepository.getVsLeftLogs(result, opponent);
+    public List<Map<String, Object>> getVsLeftLogs(String result, String opponent, String pitcher) {
+        return ohtaniGameRepository.getVsLeftLogs(result, opponent, pitcher);
     }
 
     /**
@@ -691,8 +691,8 @@ public class MLBGameService {
      * ★ 対ALLログ（Service）
      * ============================================
      */
-    public List<Map<String, Object>> getVsAllLogs(String result, String opponent) {
-        return ohtaniGameRepository.getVsAllLogs(result, opponent);
+    public List<Map<String, Object>> getVsAllLogs(String result, String opponent, String pitcher) {
+        return ohtaniGameRepository.getVsAllLogs(result, opponent, pitcher);
     }
 
     /**
@@ -711,5 +711,14 @@ public class MLBGameService {
      */
     public List<String> getAllOpponents() {
         return ohtaniGameRepository.getAllOpponents();
+    }
+
+    /**
+     * ============================================
+     * ★ 投手サジェスト検索（Service）
+     * ============================================
+     */
+    public List<String> searchPitchers(String keyword) {
+        return ohtaniGameRepository.searchPitchers(keyword);
     }
 }
