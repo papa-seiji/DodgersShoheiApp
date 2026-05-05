@@ -202,8 +202,66 @@
                 input.focus();
 
                 const list = document.getElementById("pitcherSuggestions");
-                if (list) list.innerHTML = "";
-}    </script>
+                if (list) list.innerHTML = "";}
+    </script>
+
+    <label>球種：</label>
+        <select name="pitchType">
+            <option value=""
+                th:selected="${param.pitchType == null or param.pitchType[0] == ''}">
+                ALL
+            </option>
+
+            <option value="Four-Seam"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Four-Seam'}">
+                Four-Seam
+            </option>
+
+            <option value="Sinker"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Sinker'}">
+                Sinker
+            </option>
+
+            <option value="Cutter"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Cutter'}">
+                Cutter
+            </option>
+
+            <option value="Slider"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Slider'}">
+                Slider
+            </option>
+
+            <option value="Sweeper"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Sweeper'}">
+                Sweeper
+            </option>
+
+            <option value="Splitter"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Splitter'}">
+                Splitter
+            </option>
+
+            <option value="Curve"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Curve'}">
+                Curve
+            </option>
+
+            <option value="Curveball"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Curveball'}">
+                Curveball
+            </option>
+
+            <option value="Slurve"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Slurve'}">
+                Slurve
+            </option>
+
+            <option value="Changeup"
+                th:selected="${param.pitchType != null and param.pitchType[0] == 'Changeup'}">
+                Changeup
+            </option>
+        </select>
 
     <button type="submit">検索</button>
 

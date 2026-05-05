@@ -340,14 +340,15 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対右ピッチャー（ログ取得）修正版
-     * （既存CAST維持＋pitcher条件だけ追加）
+     * ★ 対右ピッチャー（ログ取得）最終版
+     * （CAST維持＋result＋opponent＋pitcher＋pitchType）
      * ============================================
      */
     public List<Map<String, Object>> getVsRightLogs(
             String result,
             String opponent,
-            String pitcher) {
+            String pitcher,
+            String pitchType) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
@@ -362,19 +363,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'R'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa1_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa1_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -389,19 +388,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'R'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa2_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa2_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -416,19 +413,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'R'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa3_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa3_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -443,19 +438,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'R'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa4_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa4_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -470,19 +463,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'R'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa5_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa5_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -497,19 +488,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'R'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa6_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa6_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
                     ) t
                     ORDER BY game_date DESC
@@ -522,31 +511,37 @@ public class OhtaniGameRepository {
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa2
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa3
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa4
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa5
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa6
                 result, result, result,
                 opponent, opponent, opponent,
-                pitcher, pitcher, pitcher);
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType);
     }
 
     /**
@@ -588,14 +583,15 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対左ピッチャー（ログ取得）修正版
-     * （既存CAST維持＋pitcher条件だけ追加）
+     * ★ 対左ピッチャー（ログ取得）最終版
+     * （CAST維持＋result＋opponent＋pitcher＋pitchType）
      * ============================================
      */
     public List<Map<String, Object>> getVsLeftLogs(
             String result,
             String opponent,
-            String pitcher) {
+            String pitcher,
+            String pitchType) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
@@ -610,19 +606,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'L'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa1_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa1_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -637,19 +631,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'L'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa2_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa2_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -664,19 +656,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'L'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa3_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa3_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -691,19 +681,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'L'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa4_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa4_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -718,19 +706,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'L'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa5_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa5_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -745,19 +731,17 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'L'
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa6_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa6_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
                     ) t
                     ORDER BY game_date DESC
@@ -770,31 +754,37 @@ public class OhtaniGameRepository {
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa2
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa3
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa4
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa5
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa6
                 result, result, result,
                 opponent, opponent, opponent,
-                pitcher, pitcher, pitcher);
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType);
     }
 
     /**
@@ -836,14 +826,15 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 対ALLログ（修正版）
-     * （既存CAST維持＋pitcher条件だけ追加）
+     * ★ 対ALLログ（最終版）
+     * （CAST維持＋result＋opponent＋pitcher＋pitchType）
      * ============================================
      */
     public List<Map<String, Object>> getVsAllLogs(
             String result,
             String opponent,
-            String pitcher) {
+            String pitcher,
+            String pitchType) {
 
         String sql = """
                     SELECT game_date, opponent, pitcher, hand, result, description
@@ -857,19 +848,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa1_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa1_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -883,19 +872,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa2_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa2_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -909,19 +896,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa3_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa3_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -935,19 +920,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa4_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa4_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -961,19 +944,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa5_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa5_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
 
                         UNION ALL
@@ -987,19 +968,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa6_result = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR g.opponent = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT)
                         )
                         AND (
-                            CAST(? AS TEXT) IS NULL
-                            OR CAST(? AS TEXT) = ''
-                            OR d.pa6_pitcher = CAST(? AS TEXT)
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT)
+                        )
+                        AND (
+                            CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = ''
+                            OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
                         )
                     ) t
                     ORDER BY game_date DESC
@@ -1012,31 +991,37 @@ public class OhtaniGameRepository {
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa2
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa3
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa4
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa5
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
 
                 // pa6
                 result, result, result,
                 opponent, opponent, opponent,
-                pitcher, pitcher, pitcher);
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType);
     }
 
     /**

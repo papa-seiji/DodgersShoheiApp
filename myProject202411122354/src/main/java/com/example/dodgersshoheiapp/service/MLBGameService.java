@@ -627,8 +627,14 @@ public class MLBGameService {
      * ★ 対右ピッチャー👉 ログ表示
      * ============================================
      */
-    public List<Map<String, Object>> getVsRightLogs(String result, String opponent, String pitcher) {
-        return ohtaniGameRepository.getVsRightLogs(result, opponent, pitcher);
+    public List<Map<String, Object>> getVsRightLogs(
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType) {
+
+        return ohtaniGameRepository.getVsRightLogs(
+                result, opponent, pitcher, pitchType);
     }
 
     /**
@@ -657,8 +663,19 @@ public class MLBGameService {
         return result;
     }
 
-    public List<Map<String, Object>> getVsLeftLogs(String result, String opponent, String pitcher) {
-        return ohtaniGameRepository.getVsLeftLogs(result, opponent, pitcher);
+    /**
+     * ============================================
+     * ★ 対左ログ
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsLeftLogs(
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType) {
+
+        return ohtaniGameRepository.getVsLeftLogs(
+                result, opponent, pitcher, pitchType);
     }
 
     /**
@@ -691,8 +708,14 @@ public class MLBGameService {
      * ★ 対ALLログ（Service）
      * ============================================
      */
-    public List<Map<String, Object>> getVsAllLogs(String result, String opponent, String pitcher) {
-        return ohtaniGameRepository.getVsAllLogs(result, opponent, pitcher);
+    public List<Map<String, Object>> getVsAllLogs(
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType) {
+
+        return ohtaniGameRepository.getVsAllLogs(
+                result, opponent, pitcher, pitchType);
     }
 
     /**
