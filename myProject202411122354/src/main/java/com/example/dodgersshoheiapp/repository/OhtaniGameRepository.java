@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;// ←追加
 
 @Repository
 @RequiredArgsConstructor
@@ -228,4 +229,40 @@ public class OhtaniGameRepository {
         jdbcTemplate.update(sql, gamePk, gameId);
     }
 
+    /**
+     * ============================================
+     * ★ 得点圏打率（RISP）取得
+     * ============================================
+     */
+    public Map<String, Object> getRispStats() {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE pa1_description LIKE '%得点圏にランナー有%'
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details WHERE pa2_description LIKE '%得点圏にランナー有%'
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details WHERE pa3_description LIKE '%得点圏にランナー有%'
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details WHERE pa4_description LIKE '%得点圏にランナー有%'
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details WHERE pa5_description LIKE '%得点圏にランナー有%'
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details WHERE pa6_description LIKE '%得点圏にランナー有%'
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(sql);
+    }
 }
