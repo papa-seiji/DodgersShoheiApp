@@ -519,4 +519,100 @@ public class OhtaniGameRepository {
 
         return jdbcTemplate.queryForList(sql);
     }
+
+    /**
+     * ============================================
+     * ★ 対ALLピッチャー打率（内部）
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStats() {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALLログ
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsAllLogs() {
+
+        String sql = """
+                    SELECT game_date, pitcher, hand, result, description
+                    FROM (
+                        SELECT g.game_date,
+                            d.pa1_pitcher AS pitcher,
+                            d.pa1_pitcher_hand AS hand,
+                            d.pa1_result AS result,
+                            d.pa1_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT g.game_date, d.pa2_pitcher, d.pa2_pitcher_hand,
+                            d.pa2_result, d.pa2_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT g.game_date, d.pa3_pitcher, d.pa3_pitcher_hand,
+                            d.pa3_result, d.pa3_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT g.game_date, d.pa4_pitcher, d.pa4_pitcher_hand,
+                            d.pa4_result, d.pa4_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT g.game_date, d.pa5_pitcher, d.pa5_pitcher_hand,
+                            d.pa5_result, d.pa5_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT g.game_date, d.pa6_pitcher, d.pa6_pitcher_hand,
+                            d.pa6_result, d.pa6_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                    ) t
+                    ORDER BY game_date DESC
+                """;
+
+        return jdbcTemplate.queryForList(sql);
+    }
 }

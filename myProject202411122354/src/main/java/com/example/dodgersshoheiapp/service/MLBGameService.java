@@ -660,4 +660,47 @@ public class MLBGameService {
     public List<Map<String, Object>> getVsLeftLogs() {
         return ohtaniGameRepository.getVsLeftLogs();
     }
+
+    /**
+     * ============================================
+     * ★ 対ALLピッチャー打率（VS ALL）
+     * ============================================
+     */
+    public Map<String, String> getVsAllStatsFormatted() {
+
+        Map<String, Object> result = getVsAllStats();
+
+        int hits = ((Number) result.get("hits")).intValue();
+        int atBats = ((Number) result.get("at_bats")).intValue();
+        Number avgNum = (Number) result.get("avg");
+        Double avg = (avgNum != null) ? avgNum.doubleValue() : null;
+
+        String avgStr = (avg != null)
+                ? String.format("%.3f", avg).replace("0.", ".")
+                : ".000";
+
+        Map<String, String> formatted = new HashMap<>();
+        formatted.put("avg", avgStr);
+        formatted.put("detail", hits + "-" + atBats);
+
+        return formatted;
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALLログ（Service）
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsAllLogs() {
+        return ohtaniGameRepository.getVsAllLogs();
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALLピッチャー打率（Repository呼び出し）
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStats() {
+        return ohtaniGameRepository.getVsAllStats();
+    }
 }

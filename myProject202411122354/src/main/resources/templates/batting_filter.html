@@ -16,7 +16,7 @@
         <label>投手タイプ：</label>
 
         <select name="hand">
-            <option value="" th:selected="${param.hand == null or param.hand[0] == ''}">ALL</option>
+            <option value="ALL" th:selected="${param.hand == null or param.hand[0] == 'ALL'}">ALL</option>
             <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
             <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
         </select>
@@ -31,7 +31,35 @@
 
     <hr>
 
-    <!-- 🔽 対右 -->
+    <!-- =========================
+        🔥 対ALL（メイン表示）
+    ========================== -->
+    <div th:if="${vsAllAvg != null}">
+        <h3>対ALLピッチャー打率</h3>
+        <p>
+            VS ALL: <span th:text="${vsAllAvg}"></span>
+            (<span th:text="${vsAllDetail}"></span>)
+        </p>
+    </div>
+
+    <div th:if="${vsAllLogs != null}">
+        <h3>打席ログ（対ALL）</h3>
+
+        <div th:each="log : ${vsAllLogs}">
+            <p>
+                <span th:text="${log.game_date}"></span>
+                <span th:text="${log.pitcher}"></span>
+                （<span th:text="${log.hand}"></span>）
+                →
+                <span th:text="${log.result}"></span>：
+                <span th:text="${log.description}"></span>
+            </p>
+        </div>
+    </div>
+
+    <!-- =========================
+        右（単体表示時のみ）
+    ========================== -->
     <div th:if="${vsRAvg != null}">
         <h3>対右ピッチャー打率</h3>
         <p>
@@ -55,9 +83,9 @@
         </div>
     </div>
 
-    <hr>
-
-    <!-- 🔽 対左（追加） -->
+    <!-- =========================
+        左（単体表示時のみ）
+    ========================== -->
     <div th:if="${vsLAvg != null}">
         <h3>対左ピッチャー打率</h3>
         <p>

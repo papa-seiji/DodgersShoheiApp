@@ -289,25 +289,44 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String hand,
             Model model) {
 
+        // 👉 初期アクセス対策
+        if (hand == null) {
+            hand = "ALL";
+        }
+
+        // =========================
+        // 🔥 ALL（専用表示）
+        // =========================
+        if ("ALL".equals(hand)) {
+
+            Map<String, String> vsAll = mlbGameService.getVsAllStatsFormatted();
+
+            model.addAttribute("vsAllAvg", vsAll.get("avg"));
+            model.addAttribute("vsAllDetail", vsAll.get("detail"));
+            model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs());
+        }
+
+        // =========================
+        // 右
+        // =========================
         if ("R".equals(hand)) {
 
             Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
 
             model.addAttribute("vsRAvg", vsR.get("avg"));
             model.addAttribute("vsRDetail", vsR.get("detail"));
-
-            // バッティングログ取得
             model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs());
         }
 
+        // =========================
+        // 左
+        // =========================
         if ("L".equals(hand)) {
 
             Map<String, String> vsL = mlbGameService.getVsLeftStatsFormatted();
 
             model.addAttribute("vsLAvg", vsL.get("avg"));
             model.addAttribute("vsLDetail", vsL.get("detail"));
-
-            // バッティングログ取得
             model.addAttribute("vsLLogs", mlbGameService.getVsLeftLogs());
         }
 
