@@ -289,14 +289,7 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String hand,
             Model model) {
 
-        // 👉 初期アクセス対策
-        if (hand == null) {
-            hand = "ALL";
-        }
-
-        // =========================
-        // 🔥 ALL（専用表示）
-        // =========================
+        // 🔥 ALL（明示的に選んだ時だけ）
         if ("ALL".equals(hand)) {
 
             Map<String, String> vsAll = mlbGameService.getVsAllStatsFormatted();
@@ -306,9 +299,7 @@ public class OhtaniScorebookController {
             model.addAttribute("vsAllLogs", mlbGameService.getVsAllLogs());
         }
 
-        // =========================
         // 右
-        // =========================
         if ("R".equals(hand)) {
 
             Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
@@ -318,9 +309,7 @@ public class OhtaniScorebookController {
             model.addAttribute("vsRLogs", mlbGameService.getVsRightLogs());
         }
 
-        // =========================
         // 左
-        // =========================
         if ("L".equals(hand)) {
 
             Map<String, String> vsL = mlbGameService.getVsLeftStatsFormatted();

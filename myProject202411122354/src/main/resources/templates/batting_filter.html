@@ -48,6 +48,7 @@
         <div th:each="log : ${vsAllLogs}">
             <p>
                 <span th:text="${log.game_date}"></span>
+                <span th:text="${log.opponent}"></span>  <!-- ★追加 -->
                 <span th:text="${log.pitcher}"></span>
                 （<span th:text="${log.hand}"></span>）
                 →
@@ -74,6 +75,7 @@
         <div th:each="log : ${vsRLogs}">
             <p>
                 <span th:text="${log.game_date}"></span>
+                <span th:text="${log.opponent}"></span>  <!-- ★追加 -->
                 <span th:text="${log.pitcher}"></span>
                 （<span th:text="${log.hand}"></span>）
                 →
@@ -100,6 +102,7 @@
         <div th:each="log : ${vsLLogs}">
             <p>
                 <span th:text="${log.game_date}"></span>
+                <span th:text="${log.opponent}"></span>  <!-- ★追加 -->
                 <span th:text="${log.pitcher}"></span>
                 （<span th:text="${log.hand}"></span>）
                 →
