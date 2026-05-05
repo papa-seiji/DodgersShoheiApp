@@ -265,4 +265,77 @@ public class OhtaniGameRepository {
 
         return jdbcTemplate.queryForMap(sql);
     }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー打率（VS R）「avgだけ」になってる
+     * ============================================
+     */
+    public Double getVsRightAvg() {
+
+        String sql = """
+                    SELECT
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE pa1_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details WHERE pa2_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details WHERE pa3_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details WHERE pa4_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details WHERE pa5_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details WHERE pa6_pitcher_hand = 'R'
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForObject(sql, Double.class);
+    }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり
+     * ============================================
+     */
+
+    public Map<String, Object> getVsRightStats() {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE pa1_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details WHERE pa2_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details WHERE pa3_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details WHERE pa4_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details WHERE pa5_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details WHERE pa6_pitcher_hand = 'R'
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(sql);
+    }
 }

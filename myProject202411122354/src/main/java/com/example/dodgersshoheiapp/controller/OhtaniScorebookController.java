@@ -8,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
+
+import lombok.RequiredArgsConstructor;
+
 import java.util.Map;// ←追加
 
 import java.time.LocalDate;
@@ -132,6 +135,12 @@ public class OhtaniScorebookController {
         Map<String, Object> risp = mlbGameService.getRispFromDB();
         model.addAttribute("rispAvg", risp.get("avg"));
         model.addAttribute("rispDetail", risp.get("detail"));
+
+        System.out.println("対右投手処理呼び出し開始");
+        // model.addAttribute("vsRAvg", mlbGameService.getVsRightAvgFormatted());
+        Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+        model.addAttribute("vsRAvg", vsR.get("avg"));
+        model.addAttribute("vsRDetail", vsR.get("detail"));
 
         return "hogehoge_01";
     }
@@ -266,5 +275,21 @@ public class OhtaniScorebookController {
             case -2 -> "🧊";
             default -> "";
         };
+    }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり batting_filter.htmlとバインディングしている！
+     * ============================================
+     */
+    @GetMapping("/batting/filter")
+    public String showBattingFilter(Model model) {
+
+        Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+
+        model.addAttribute("vsRAvg", vsR.get("avg"));
+        model.addAttribute("vsRDetail", vsR.get("detail"));
+
+        return "batting_filter";
     }
 }

@@ -580,4 +580,45 @@ public class MLBGameService {
 
         return result;
     }
+
+    // =========================
+    // 🔥 DBの 0.211 を👉 「.211」形式にする
+    // =========================
+    public String getVsRightAvgFormatted() {
+
+        Double avg = ohtaniGameRepository.getVsRightAvg();
+
+        // null対策
+        if (avg == null) {
+            return ".000";
+        }
+
+        // 0.211 → ".211"
+        return String.format("%.3f", avg).replace("0.", ".");
+    }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり
+     * ============================================
+     */
+    public Map<String, String> getVsRightStatsFormatted() {
+
+        Map<String, Object> stats = ohtaniGameRepository.getVsRightStats();
+
+        int hits = ((Number) stats.get("hits")).intValue();
+        int atBats = ((Number) stats.get("at_bats")).intValue();
+        Double avg = stats.get("avg") != null
+                ? ((Number) stats.get("avg")).doubleValue()
+                : 0.0;
+
+        String avgStr = (avg == null) ? ".000" : String.format("%.3f", avg).replace("0.", ".");
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        return result;
+    }
 }

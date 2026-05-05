@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Batting Filter</title>
+</head>
+<body>
+
+    <h2>Batting Filter（試作）</h2>
+
+    <hr>
+
+    <!-- 🔽 今回の目的（対右打率表示）対右ピッチャー👉 hits / at_bats も取る必要あり VS R: .211（19-90） -->
+    <div>
+        <h3>対右ピッチャー打率</h3>
+        <p>
+            VS R: <span th:text="${vsRAvg}"></span>
+            (<span th:text="${vsRDetail}"></span>)
+        </p>
+    </div>
+
+</body>
+</html>
