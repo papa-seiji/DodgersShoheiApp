@@ -124,6 +124,26 @@
         font-size: 13px;
     }
 
+    /* ============================================
+    投手左右 warning
+    ============================================ */
+
+    .pitcher-warning {
+        margin-top: 8px;
+        padding: 10px 14px;
+
+        border-radius: 8px;
+
+        background: rgba(255, 180, 0, 0.15);
+        border: 1px solid rgba(255, 180, 0, 0.4);
+
+        color: #d97706;
+
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+
 </style>
 
 </head>
@@ -176,12 +196,11 @@
         </select>
 
     <!-- /**
-     * ============================================
-     * ★ 投手サジェスト検索（Service）
-     * ============================================
-     */-->
+    * ============================================
+    * ★ 投手サジェスト検索（Service）
+    * ============================================
+    */-->
         <div class="input-clear-wrapper">
-
             <label class="label00">投手名：</label>
 
             <input type="text"
@@ -196,6 +215,15 @@
             <!-- ★サジェスト（ここに移動が重要） -->
             <ul id="pitcherSuggestions"></ul>
 
+            <!-- ============================================
+                ★ 投手左右 warning
+            ============================================ -->
+            <div th:if="${pitcherWarning}"
+                class="pitcher-warning">
+
+                ⚠ <span th:text="${pitcherWarning}"></span>
+
+            </div>
         </div>
 
     <script>

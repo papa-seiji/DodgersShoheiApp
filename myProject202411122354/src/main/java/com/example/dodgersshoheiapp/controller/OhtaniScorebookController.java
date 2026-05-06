@@ -302,9 +302,18 @@ public class OhtaniScorebookController {
             Map<String, String> vsAll;
 
             // ============================================
-            // ★ opponent 指定時は opponent別AVG
+            // ★ pitcher 指定時（最優先）
             // ============================================
-            if (opponent != null
+            if (pitcher != null
+                    && !pitcher.isBlank()) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsByPitcherFormatted(pitcher);
+
+                // ============================================
+                // ★ opponent 指定時
+                // ============================================
+            } else if (opponent != null
                     && !opponent.isBlank()
                     && !"ALL".equals(opponent)) {
 
@@ -339,9 +348,18 @@ public class OhtaniScorebookController {
             Map<String, String> vsR;
 
             // ============================================
-            // ★ opponent 指定時は opponent別AVG
+            // ★ pitcher 指定時（最優先）
             // ============================================
-            if (opponent != null
+            if (pitcher != null
+                    && !pitcher.isBlank()) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsByPitcherFormatted(pitcher);
+
+                // ============================================
+                // ★ opponent 指定時
+                // ============================================
+            } else if (opponent != null
                     && !opponent.isBlank()
                     && !"ALL".equals(opponent)) {
 
@@ -376,9 +394,18 @@ public class OhtaniScorebookController {
             Map<String, String> vsL;
 
             // ============================================
-            // ★ opponent 指定時は opponent別AVG
+            // ★ pitcher 指定時（最優先）
             // ============================================
-            if (opponent != null
+            if (pitcher != null
+                    && !pitcher.isBlank()) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsByPitcherFormatted(pitcher);
+
+                // ============================================
+                // ★ opponent 指定時
+                // ============================================
+            } else if (opponent != null
                     && !opponent.isBlank()
                     && !"ALL".equals(opponent)) {
 
@@ -409,6 +436,35 @@ public class OhtaniScorebookController {
 
         // ★ チーム一覧を取得
         List<String> opponents = mlbGameService.getAllOpponents();
+
+        /*
+         * ============================================
+         * ★ 投手左右チェック（左右が違えば警告を出して再入力を促す）
+         * ============================================
+         */
+        if (pitcher != null && !pitcher.isBlank()
+                && hand != null && !hand.isBlank()
+                && !"ALL".equals(hand)) {
+
+            String pitcherHand = mlbGameService.getPitcherHand(pitcher);
+
+            // ★ R選択なのに左投手
+            if ("R".equals(hand) && "L".equals(pitcherHand)) {
+
+                model.addAttribute(
+                        "pitcherWarning",
+                        pitcher + " は左投手です");
+
+            }
+
+            // ★ L選択なのに右投手
+            if ("L".equals(hand) && "R".equals(pitcherHand)) {
+
+                model.addAttribute(
+                        "pitcherWarning",
+                        pitcher + " は右投手です");
+            }
+        }
 
         // ★ 画面へ渡す
         model.addAttribute("opponents", opponents);

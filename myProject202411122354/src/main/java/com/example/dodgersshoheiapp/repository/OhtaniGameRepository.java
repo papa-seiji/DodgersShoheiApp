@@ -449,6 +449,97 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対右投手 × 投手別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStatsByPitcher(String pitcher) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'R'
+                        AND pa1_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'R'
+                        AND pa2_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'R'
+                        AND pa3_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'R'
+                        AND pa4_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'R'
+                        AND pa5_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'R'
+                        AND pa6_pitcher = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+    }
+
+    /**
+     * ============================================
      * ★ 対右ピッチャー（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
      * ============================================
@@ -778,6 +869,97 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対左投手 × 投手別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStatsByPitcher(String pitcher) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'L'
+                        AND pa1_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'L'
+                        AND pa2_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'L'
+                        AND pa3_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'L'
+                        AND pa4_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'L'
+                        AND pa5_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'L'
+                        AND pa6_pitcher = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+    }
+
+    /**
+     * ============================================
      * ★ 対左ピッチャー（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
      * ============================================
@@ -1095,6 +1277,91 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対ALL × 投手別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStatsByPitcher(String pitcher) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+    }
+
+    /**
+     * ============================================
      * ★ ALL（左右両方）（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
      * ============================================
@@ -1345,5 +1612,62 @@ public class OhtaniGameRepository {
                 """;
 
         return jdbcTemplate.queryForList(sql, String.class, "%" + keyword + "%");
+    }
+
+    /**
+     * ============================================
+     * ★ 投手の左右取得（左右が違えば警告を出して再入力を促す）
+     * ============================================
+     */
+    public String getPitcherHand(String pitcher) {
+
+        String sql = """
+                    SELECT hand
+                    FROM (
+                        SELECT pa1_pitcher AS pitcher,
+                            pa1_pitcher_hand AS hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa2_pitcher,
+                            pa2_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa3_pitcher,
+                            pa3_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa4_pitcher,
+                            pa4_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa5_pitcher,
+                            pa5_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa6_pitcher,
+                            pa6_pitcher_hand
+                        FROM ohtani_game_details
+                    ) t
+                    WHERE pitcher = ?
+                    AND hand IS NOT NULL
+                    LIMIT 1
+                """;
+
+        List<String> result = jdbcTemplate.queryForList(
+                sql,
+                String.class,
+                pitcher);
+
+        return result.isEmpty() ? null : result.get(0);
     }
 }
