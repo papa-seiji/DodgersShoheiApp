@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -739,6 +741,104 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ description から mph 抽出
+     * ============================================
+     */
+    private Double extractMph(String text) {
+
+        if (text == null || text.isBlank()) {
+            return null;
+        }
+
+        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*)mph");
+
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+
+            try {
+                return Double.parseDouble(matcher.group(1));
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * ============================================
+     * ★ 対右投手 × 球速帯 AVG
+     * ============================================
+     */
+    public Map<String, String> getVsRightStatsBySpeedFormatted(
+            Integer speedMin,
+            Integer speedMax) {
+
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsRightLogs(
+                null,
+                null,
+                null,
+                null,
+                speedMin,
+                speedMax);
+
+        int hits = 0;
+        int atBats = 0;
+
+        for (Map<String, Object> row : logs) {
+
+            String result = (String) row.get("result");
+
+            String description = (String) row.get("description");
+
+            Double mph = extractMph(description);
+
+            // ★ mph抽出失敗は除外
+            if (mph == null) {
+                continue;
+            }
+
+            // ★ speed範囲外は除外
+            if (mph < speedMin || mph > speedMax) {
+                continue;
+            }
+
+            // ★ AVG分母
+            if (!"BB".equals(result)
+                    && !"SF".equals(result)
+                    && result != null) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(result)
+                    || "HR".equals(result)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
+
+        String avgStr = String.format("%.3f", avg)
+                .replace("0.", ".");
+
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
+    }
+
+    /**
+     * ============================================
      * ★ 対左ピッチャー
      * ============================================
      */
@@ -880,6 +980,77 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 対左投手 × 球速帯 AVG
+     * ============================================
+     */
+    public Map<String, String> getVsLeftStatsBySpeedFormatted(
+            Integer speedMin,
+            Integer speedMax) {
+
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsLeftLogs(
+                null,
+                null,
+                null,
+                null,
+                speedMin,
+                speedMax);
+
+        int hits = 0;
+        int atBats = 0;
+
+        for (Map<String, Object> row : logs) {
+
+            String result = (String) row.get("result");
+
+            String description = (String) row.get("description");
+
+            Double mph = extractMph(description);
+
+            // ★ mph抽出失敗は除外
+            if (mph == null) {
+                continue;
+            }
+
+            // ★ speed範囲外は除外
+            if (mph < speedMin || mph > speedMax) {
+                continue;
+            }
+
+            // ★ AVG分母
+            if (!"BB".equals(result)
+                    && !"SF".equals(result)
+                    && result != null) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(result)
+                    || "HR".equals(result)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
+
+        String avgStr = String.format("%.3f", avg)
+                .replace("0.", ".");
+
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
+    }
+
+    /**
+     * ============================================
      * ★ 対ALLピッチャー打率（VS ALL）
      * ============================================
      */
@@ -994,6 +1165,77 @@ public class MLBGameService {
         result.put("detail", detail);
 
         return result;
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALL投手 × 球速帯 AVG
+     * ============================================
+     */
+    public Map<String, String> getVsAllStatsBySpeedFormatted(
+            Integer speedMin,
+            Integer speedMax) {
+
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsAllLogs(
+                null,
+                null,
+                null,
+                null,
+                speedMin,
+                speedMax);
+
+        int hits = 0;
+        int atBats = 0;
+
+        for (Map<String, Object> row : logs) {
+
+            String result = (String) row.get("result");
+
+            String description = (String) row.get("description");
+
+            Double mph = extractMph(description);
+
+            // ★ mph抽出失敗は除外
+            if (mph == null) {
+                continue;
+            }
+
+            // ★ speed範囲外は除外
+            if (mph < speedMin || mph > speedMax) {
+                continue;
+            }
+
+            // ★ AVG分母
+            if (!"BB".equals(result)
+                    && !"SF".equals(result)
+                    && result != null) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(result)
+                    || "HR".equals(result)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
+
+        String avgStr = String.format("%.3f", avg)
+                .replace("0.", ".");
+
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
     }
 
     /**

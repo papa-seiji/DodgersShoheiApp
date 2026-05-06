@@ -131,18 +131,31 @@
     .pitcher-warning {
         margin-top: 8px;
         padding: 10px 14px;
-
         border-radius: 8px;
-
         background: rgba(255, 180, 0, 0.15);
         border: 1px solid rgba(255, 180, 0, 0.4);
-
         color: #d97706;
-
         font-size: 13px;
         font-weight: 600;
     }
 
+    /* ============================================
+    球速レンジ AVG説明
+    ============================================ */
+
+    .speed-range-info {
+        margin-top: 8px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: rgba(255, 180, 0, 0.15);
+        border: 1px solid rgba(255, 180, 0, 0.4);
+        color: #d97706;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-block;
+        max-width: 589px;
+        line-height: 1.6;
+    }
 
 </style>
 
@@ -335,6 +348,16 @@
 
         <label>球速レンジ</label>
 
+            <!-- ============================================
+                ★ 球速レンジ AVG説明
+            ============================================ -->
+            <div class="speed-range-info">
+
+                ※ 球速レンジによるAVG変動は、
+                「投手タイプ＋球速レンジのみ」の組み合わせ時に適用されます。
+
+            </div>
+
         <div class="speed-range-wrap">
 
             <!-- MIN -->
@@ -368,7 +391,9 @@
             <span class="mph-label">mph</span>
 
         </div>
+
     </div>
+
         <button type="submit">検索</button>
 
         <!-- クリア -->
