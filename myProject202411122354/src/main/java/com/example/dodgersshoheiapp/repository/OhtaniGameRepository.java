@@ -340,6 +340,115 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対右投手 × 対戦チーム別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStatsByOpponent(String opponent) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT
+                            pa1_result AS result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa1_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa2_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa2_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa3_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa3_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa4_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa4_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa5_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa5_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa6_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa6_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent);
+    }
+
+    /**
+     * ============================================
      * ★ 対右ピッチャー（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
      * ============================================
@@ -560,6 +669,115 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対左投手 × 対戦チーム別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStatsByOpponent(String opponent) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT
+                            pa1_result AS result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa1_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa2_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa2_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa3_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa3_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa4_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa4_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa5_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa5_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa6_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa6_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent);
+    }
+
+    /**
+     * ============================================
      * ★ 対左ピッチャー（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
      * ============================================
@@ -776,6 +994,103 @@ public class OhtaniGameRepository {
                 """;
 
         return jdbcTemplate.queryForMap(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALL × 対戦チーム別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStatsByOpponent(String opponent) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent);
     }
 
     /**

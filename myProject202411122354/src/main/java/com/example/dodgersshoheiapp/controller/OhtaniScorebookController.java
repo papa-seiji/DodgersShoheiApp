@@ -299,7 +299,26 @@ public class OhtaniScorebookController {
         // 🔥 ALL（明示的に選んだ時だけ）
         if ("ALL".equals(hand)) {
 
-            Map<String, String> vsAll = mlbGameService.getVsAllStatsFormatted();
+            Map<String, String> vsAll;
+
+            // ============================================
+            // ★ opponent 指定時は opponent別AVG
+            // ============================================
+            if (opponent != null
+                    && !opponent.isBlank()
+                    && !"ALL".equals(opponent)) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsByOpponentFormatted(opponent);
+
+            } else {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsFormatted();
+            }
+
+            model.addAttribute("vsAllAvg", vsAll.get("avg"));
+            model.addAttribute("vsAllDetail", vsAll.get("detail"));
 
             model.addAttribute("vsAllAvg", vsAll.get("avg"));
             model.addAttribute("vsAllDetail", vsAll.get("detail"));
@@ -317,7 +336,26 @@ public class OhtaniScorebookController {
         // 右
         if ("R".equals(hand)) {
 
-            Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+            Map<String, String> vsR;
+
+            // ============================================
+            // ★ opponent 指定時は opponent別AVG
+            // ============================================
+            if (opponent != null
+                    && !opponent.isBlank()
+                    && !"ALL".equals(opponent)) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsByOpponentFormatted(opponent);
+
+            } else {
+
+                vsR = mlbGameService
+                        .getVsRightStatsFormatted();
+            }
+
+            model.addAttribute("vsRAvg", vsR.get("avg"));
+            model.addAttribute("vsRDetail", vsR.get("detail"));
 
             model.addAttribute("vsRAvg", vsR.get("avg"));
             model.addAttribute("vsRDetail", vsR.get("detail"));
@@ -335,7 +373,26 @@ public class OhtaniScorebookController {
         // 左
         if ("L".equals(hand)) {
 
-            Map<String, String> vsL = mlbGameService.getVsLeftStatsFormatted();
+            Map<String, String> vsL;
+
+            // ============================================
+            // ★ opponent 指定時は opponent別AVG
+            // ============================================
+            if (opponent != null
+                    && !opponent.isBlank()
+                    && !"ALL".equals(opponent)) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsByOpponentFormatted(opponent);
+
+            } else {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsFormatted();
+            }
+
+            model.addAttribute("vsLAvg", vsL.get("avg"));
+            model.addAttribute("vsLDetail", vsL.get("detail"));
 
             model.addAttribute("vsLAvg", vsL.get("avg"));
             model.addAttribute("vsLDetail", vsL.get("detail"));
