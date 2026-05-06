@@ -7,7 +7,13 @@ import com.example.dodgersshoheiapp.repository.OhtaniPitchingGameRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
+
+import lombok.RequiredArgsConstructor;
+
 import java.util.Map;// ←追加
 
 import java.time.LocalDate;
@@ -132,6 +138,12 @@ public class OhtaniScorebookController {
         Map<String, Object> risp = mlbGameService.getRispFromDB();
         model.addAttribute("rispAvg", risp.get("avg"));
         model.addAttribute("rispDetail", risp.get("detail"));
+
+        System.out.println("対右投手処理呼び出し開始");
+        // model.addAttribute("vsRAvg", mlbGameService.getVsRightAvgFormatted());
+        Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+        model.addAttribute("vsRAvg", vsR.get("avg"));
+        model.addAttribute("vsRDetail", vsR.get("detail"));
 
         return "hogehoge_01";
     }
@@ -266,5 +278,295 @@ public class OhtaniScorebookController {
             case -2 -> "🧊";
             default -> "";
         };
+    }
+
+    /**
+     * ============================================
+     * ★ バッティングフィルタ（投手タイプ選択）
+     * ============================================
+     */
+    @GetMapping("/batting/filter")
+    public String showBattingFilter(
+            @RequestParam(required = false) String hand,
+            @RequestParam(required = false) String result, // ★追加
+            @RequestParam(required = false) String opponent, // ★追加
+            @RequestParam(required = false) String pitcher, // ★追加
+            @RequestParam(required = false) String pitchType, // ★追加
+            @RequestParam(required = false) Integer speedMin, // ★追加
+            @RequestParam(required = false) Integer speedMax, // ★追加
+            Model model) {
+
+        // 🔥 ALL（明示的に選んだ時だけ）
+        if ("ALL".equals(hand)) {
+
+            Map<String, String> vsAll;
+
+            // ============================================
+            // ★ pitcher 指定時（最優先）
+            // ============================================
+            if (pitcher != null
+                    && !pitcher.isBlank()) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsByPitcherFormatted(pitcher);
+
+                // ============================================
+                // ★ 球速帯分析モード
+                // ============================================
+            } else if (speedMin != null
+                    && speedMax != null
+                    && (pitchType == null
+                            || pitchType.isBlank()
+                            || "ALL".equals(pitchType))
+                    && (opponent == null
+                            || opponent.isBlank()
+                            || "ALL".equals(opponent))) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsBySpeedFormatted(
+                                speedMin,
+                                speedMax);
+
+                // ============================================
+                // ★ pitchType 指定時
+                // ============================================
+            } else if (pitchType != null
+                    && !pitchType.isBlank()
+                    && !"ALL".equals(pitchType)) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsByPitchTypeFormatted(pitchType);
+
+                // ============================================
+                // ★ opponent 指定時
+                // ============================================
+            } else if (opponent != null
+                    && !opponent.isBlank()
+                    && !"ALL".equals(opponent)) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsByOpponentFormatted(opponent);
+
+            } else {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsFormatted();
+            }
+
+            model.addAttribute("vsAllAvg", vsAll.get("avg"));
+            model.addAttribute("vsAllDetail", vsAll.get("detail"));
+
+            model.addAttribute("vsAllAvg", vsAll.get("avg"));
+            model.addAttribute("vsAllDetail", vsAll.get("detail"));
+            // ★ここ修正
+            model.addAttribute("vsAllLogs",
+                    mlbGameService.getVsAllLogs(
+                            result,
+                            opponent,
+                            pitcher,
+                            pitchType,
+                            speedMin,
+                            speedMax));
+        }
+
+        // 右
+        if ("R".equals(hand)) {
+
+            Map<String, String> vsR;
+
+            // ============================================
+            // ★ pitcher 指定時（最優先）
+            // ============================================
+            if (pitcher != null
+                    && !pitcher.isBlank()) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsByPitcherFormatted(pitcher);
+
+                // ============================================
+                // ★ 球速帯分析モード
+                // 条件：
+                // ・speed指定あり
+                // ・pitchType=ALL
+                // ・opponent=ALL
+                // ============================================
+            } else if (speedMin != null
+                    && speedMax != null
+                    && (pitchType == null
+                            || pitchType.isBlank()
+                            || "ALL".equals(pitchType))
+                    && (opponent == null
+                            || opponent.isBlank()
+                            || "ALL".equals(opponent))) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsBySpeedFormatted(
+                                speedMin,
+                                speedMax);
+
+                // ============================================
+                // ★ pitchType 指定時
+                // ============================================
+            } else if (pitchType != null
+                    && !pitchType.isBlank()
+                    && !"ALL".equals(pitchType)) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsByPitchTypeFormatted(pitchType);
+
+                // ============================================
+                // ★ opponent 指定時
+                // ============================================
+            } else if (opponent != null
+                    && !opponent.isBlank()
+                    && !"ALL".equals(opponent)) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsByOpponentFormatted(opponent);
+
+            } else {
+
+                vsR = mlbGameService
+                        .getVsRightStatsFormatted();
+            }
+
+            model.addAttribute("vsRAvg", vsR.get("avg"));
+            model.addAttribute("vsRDetail", vsR.get("detail"));
+
+            model.addAttribute("vsRAvg", vsR.get("avg"));
+            model.addAttribute("vsRDetail", vsR.get("detail"));
+            // ★ここ修正
+            model.addAttribute("vsRLogs",
+                    mlbGameService.getVsRightLogs(
+                            result,
+                            opponent,
+                            pitcher,
+                            pitchType,
+                            speedMin,
+                            speedMax));
+        }
+
+        // 左
+        if ("L".equals(hand)) {
+
+            Map<String, String> vsL;
+
+            // ============================================
+            // ★ pitcher 指定時（最優先）
+            // ============================================
+            if (pitcher != null
+                    && !pitcher.isBlank()) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsByPitcherFormatted(pitcher);
+
+                // ============================================
+                // ★ 球速帯分析モード
+                // ============================================
+            } else if (speedMin != null
+                    && speedMax != null
+                    && (pitchType == null
+                            || pitchType.isBlank()
+                            || "ALL".equals(pitchType))
+                    && (opponent == null
+                            || opponent.isBlank()
+                            || "ALL".equals(opponent))) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsBySpeedFormatted(
+                                speedMin,
+                                speedMax);
+
+                // ============================================
+                // ★ pitchType 指定時
+                // ============================================
+            } else if (pitchType != null
+                    && !pitchType.isBlank()
+                    && !"ALL".equals(pitchType)) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsByPitchTypeFormatted(pitchType);
+
+                // ============================================
+                // ★ opponent 指定時
+                // ============================================
+            } else if (opponent != null
+                    && !opponent.isBlank()
+                    && !"ALL".equals(opponent)) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsByOpponentFormatted(opponent);
+
+            } else {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsFormatted();
+            }
+
+            model.addAttribute("vsLAvg", vsL.get("avg"));
+            model.addAttribute("vsLDetail", vsL.get("detail"));
+
+            model.addAttribute("vsLAvg", vsL.get("avg"));
+            model.addAttribute("vsLDetail", vsL.get("detail"));
+            // ★ここ修正
+            model.addAttribute("vsLLogs",
+                    mlbGameService.getVsLeftLogs(
+                            result,
+                            opponent,
+                            pitcher,
+                            pitchType,
+                            speedMin,
+                            speedMax));
+        }
+
+        // ★ チーム一覧を取得
+        List<String> opponents = mlbGameService.getAllOpponents();
+
+        /*
+         * ============================================
+         * ★ 投手左右チェック（左右が違えば警告を出して再入力を促す）
+         * ============================================
+         */
+        if (pitcher != null && !pitcher.isBlank()
+                && hand != null && !hand.isBlank()
+                && !"ALL".equals(hand)) {
+
+            String pitcherHand = mlbGameService.getPitcherHand(pitcher);
+
+            // ★ R選択なのに左投手
+            if ("R".equals(hand) && "L".equals(pitcherHand)) {
+
+                model.addAttribute(
+                        "pitcherWarning",
+                        pitcher + " は左投手です");
+
+            }
+
+            // ★ L選択なのに右投手
+            if ("L".equals(hand) && "R".equals(pitcherHand)) {
+
+                model.addAttribute(
+                        "pitcherWarning",
+                        pitcher + " は右投手です");
+            }
+        }
+
+        // ★ 画面へ渡す
+        model.addAttribute("opponents", opponents);
+
+        return "batting_filter";
+    }
+
+    /**
+     * ============================================
+     * ★ 投手サジェストAPI
+     * ============================================
+     */
+    @GetMapping("/api/pitchers")
+    @ResponseBody
+    public List<String> searchPitchers(
+            @RequestParam String keyword) {
+
+        return mlbGameService.searchPitchers(keyword);
     }
 }

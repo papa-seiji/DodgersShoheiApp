@@ -265,4 +265,1676 @@ public class OhtaniGameRepository {
 
         return jdbcTemplate.queryForMap(sql);
     }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー打率（VS R）「avgだけ」になってる
+     * ============================================
+     */
+    public Double getVsRightAvg() {
+
+        String sql = """
+                    SELECT
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE pa1_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details WHERE pa2_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details WHERE pa3_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details WHERE pa4_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details WHERE pa5_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details WHERE pa6_pitcher_hand = 'R'
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForObject(sql, Double.class);
+    }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStats() {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE pa1_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details WHERE pa2_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details WHERE pa3_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details WHERE pa4_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details WHERE pa5_pitcher_hand = 'R'
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details WHERE pa6_pitcher_hand = 'R'
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 対右投手 × 対戦チーム別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStatsByOpponent(String opponent) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT
+                            pa1_result AS result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa1_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa2_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa2_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa3_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa3_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa4_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa4_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa5_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa5_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa6_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa6_pitcher_hand = 'R'
+                        AND g.opponent = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent);
+    }
+
+    /**
+     * ============================================
+     * ★ 対右投手 × 投手別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStatsByPitcher(String pitcher) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'R'
+                        AND pa1_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'R'
+                        AND pa2_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'R'
+                        AND pa3_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'R'
+                        AND pa4_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'R'
+                        AND pa5_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'R'
+                        AND pa6_pitcher = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+    }
+
+    /**
+     * ============================================
+     * ★ 対右投手 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStatsByPitchType(String pitchType) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'R'
+                        AND pa1_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'R'
+                        AND pa2_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'R'
+                        AND pa3_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'R'
+                        AND pa4_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'R'
+                        AND pa5_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'R'
+                        AND pa6_description LIKE '%' || ? || '%'
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType);
+    }
+
+    /**
+     * ============================================
+     * ★ 対右ピッチャー（ログ取得）最終版
+     * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsRightLogs(
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
+
+        String sql = """
+                    SELECT game_date, opponent, pitcher, hand, result, description
+                    FROM (
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa1_pitcher AS pitcher,
+                            d.pa1_pitcher_hand AS hand,
+                            d.pa1_result AS result,
+                            d.pa1_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa1_pitcher_hand = 'R'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa2_pitcher, d.pa2_pitcher_hand, d.pa2_result, d.pa2_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa2_pitcher_hand = 'R'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa3_pitcher, d.pa3_pitcher_hand, d.pa3_result, d.pa3_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa3_pitcher_hand = 'R'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa4_pitcher, d.pa4_pitcher_hand, d.pa4_result, d.pa4_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa4_pitcher_hand = 'R'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa5_pitcher, d.pa5_pitcher_hand, d.pa5_result, d.pa5_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa5_pitcher_hand = 'R'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa6_pitcher, d.pa6_pitcher_hand, d.pa6_result, d.pa6_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa6_pitcher_hand = 'R'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+                    ) t
+                    ORDER BY game_date DESC
+                """;
+
+        return jdbcTemplate.queryForList(
+                sql,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax);
+    }
+
+    /**
+     * ============================================
+     * ★ 対左ピッチャー打率（VS L）「avgだけ」になってる
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStats() {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE pa1_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details WHERE pa2_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details WHERE pa3_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details WHERE pa4_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details WHERE pa5_pitcher_hand = 'L'
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details WHERE pa6_pitcher_hand = 'L'
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 対左投手 × 対戦チーム別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStatsByOpponent(String opponent) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT
+                            pa1_result AS result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa1_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa2_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa2_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa3_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa3_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa4_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa4_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa5_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa5_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT
+                            pa6_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE pa6_pitcher_hand = 'L'
+                        AND g.opponent = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent);
+    }
+
+    /**
+     * ============================================
+     * ★ 対左投手 × 投手別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStatsByPitcher(String pitcher) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'L'
+                        AND pa1_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'L'
+                        AND pa2_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'L'
+                        AND pa3_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'L'
+                        AND pa4_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'L'
+                        AND pa5_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'L'
+                        AND pa6_pitcher = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+    }
+
+    /**
+     * ============================================
+     * ★ 対左投手 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStatsByPitchType(String pitchType) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'L'
+                        AND pa1_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'L'
+                        AND pa2_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'L'
+                        AND pa3_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'L'
+                        AND pa4_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'L'
+                        AND pa5_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'L'
+                        AND pa6_description LIKE '%' || ? || '%'
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType);
+    }
+
+    /**
+     * ============================================
+     * ★ 対左ピッチャー（ログ取得）最終版
+     * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsLeftLogs(
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
+
+        String sql = """
+                    SELECT game_date, opponent, pitcher, hand, result, description
+                    FROM (
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa1_pitcher AS pitcher,
+                            d.pa1_pitcher_hand AS hand,
+                            d.pa1_result AS result,
+                            d.pa1_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa1_pitcher_hand = 'L'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa2_pitcher, d.pa2_pitcher_hand, d.pa2_result, d.pa2_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa2_pitcher_hand = 'L'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa3_pitcher, d.pa3_pitcher_hand, d.pa3_result, d.pa3_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa3_pitcher_hand = 'L'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa4_pitcher, d.pa4_pitcher_hand, d.pa4_result, d.pa4_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa4_pitcher_hand = 'L'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa5_pitcher, d.pa5_pitcher_hand, d.pa5_result, d.pa5_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa5_pitcher_hand = 'L'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date, g.opponent, d.pa6_pitcher, d.pa6_pitcher_hand, d.pa6_result, d.pa6_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE d.pa6_pitcher_hand = 'L'
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+                    ) t
+                    ORDER BY game_date DESC
+                """;
+
+        return jdbcTemplate.queryForList(
+                sql,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax);
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALLピッチャー打率（内部）
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStats() {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                0
+                            )
+                        , 3) AS avg
+                    FROM (
+                        SELECT pa1_result AS result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa2_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa3_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa4_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa5_result FROM ohtani_game_details
+                        UNION ALL
+                        SELECT pa6_result FROM ohtani_game_details
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALL × 対戦チーム別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStatsByOpponent(String opponent) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+                        WHERE g.opponent = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent,
+                opponent);
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALL × 投手別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStatsByPitcher(String pitcher) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher = ?
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher = ?
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALL × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStatsByPitchType(String pitchType) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_description LIKE '%' || ? || '%'
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType);
+    }
+
+    /**
+     * ============================================
+     * ★ ALL（左右両方）（ログ取得）最終版
+     * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
+     * ============================================
+     */
+    public List<Map<String, Object>> getVsAllLogs(
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
+
+        String sql = """
+                    SELECT game_date, opponent, pitcher, hand, result, description
+                    FROM (
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa1_pitcher AS pitcher,
+                            d.pa1_pitcher_hand AS hand,
+                            d.pa1_result AS result,
+                            d.pa1_description AS description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE 1=1
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa2_pitcher,
+                            d.pa2_pitcher_hand,
+                            d.pa2_result,
+                            d.pa2_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE 1=1
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa3_pitcher,
+                            d.pa3_pitcher_hand,
+                            d.pa3_result,
+                            d.pa3_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE 1=1
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa4_pitcher,
+                            d.pa4_pitcher_hand,
+                            d.pa4_result,
+                            d.pa4_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE 1=1
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa5_pitcher,
+                            d.pa5_pitcher_hand,
+                            d.pa5_result,
+                            d.pa5_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE 1=1
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+
+                        UNION ALL
+
+                        SELECT g.game_date,
+                            g.opponent,
+                            d.pa6_pitcher,
+                            d.pa6_pitcher_hand,
+                            d.pa6_result,
+                            d.pa6_description
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g ON d.game_id = g.id
+                        WHERE 1=1
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
+                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                        )
+                    ) t
+                    ORDER BY game_date DESC
+                """;
+
+        return jdbcTemplate.queryForList(
+                sql,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                result, result, result,
+                opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax);
+    }
+
+    /**
+     * ============================================
+     * ★ 対戦チーム一覧取得（重複なし）
+     * ============================================
+     */
+    public List<String> getAllOpponents() {
+
+        String sql = """
+                    SELECT DISTINCT opponent
+                    FROM ohtani_games
+                    ORDER BY opponent
+                """;
+
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    /**
+     * ============================================
+     * ★ 投手サジェスト検索（部分一致）
+     * ============================================
+     */
+    public List<String> searchPitchers(String keyword) {
+
+        String sql = """
+                    SELECT DISTINCT pitcher FROM (
+                        SELECT pa1_pitcher AS pitcher FROM ohtani_game_details
+                        UNION
+                        SELECT pa2_pitcher FROM ohtani_game_details
+                        UNION
+                        SELECT pa3_pitcher FROM ohtani_game_details
+                        UNION
+                        SELECT pa4_pitcher FROM ohtani_game_details
+                        UNION
+                        SELECT pa5_pitcher FROM ohtani_game_details
+                        UNION
+                        SELECT pa6_pitcher FROM ohtani_game_details
+                    ) t
+                    WHERE pitcher IS NOT NULL
+                    AND LOWER(pitcher) LIKE LOWER(?)
+                    ORDER BY pitcher
+                    LIMIT 10
+                """;
+
+        return jdbcTemplate.queryForList(sql, String.class, "%" + keyword + "%");
+    }
+
+    /**
+     * ============================================
+     * ★ 投手の左右取得（左右が違えば警告を出して再入力を促す）
+     * ============================================
+     */
+    public String getPitcherHand(String pitcher) {
+
+        String sql = """
+                    SELECT hand
+                    FROM (
+                        SELECT pa1_pitcher AS pitcher,
+                            pa1_pitcher_hand AS hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa2_pitcher,
+                            pa2_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa3_pitcher,
+                            pa3_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa4_pitcher,
+                            pa4_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa5_pitcher,
+                            pa5_pitcher_hand
+                        FROM ohtani_game_details
+
+                        UNION ALL
+
+                        SELECT pa6_pitcher,
+                            pa6_pitcher_hand
+                        FROM ohtani_game_details
+                    ) t
+                    WHERE pitcher = ?
+                    AND hand IS NOT NULL
+                    LIMIT 1
+                """;
+
+        List<String> result = jdbcTemplate.queryForList(
+                sql,
+                String.class,
+                pitcher);
+
+        return result.isEmpty() ? null : result.get(0);
+    }
 }
