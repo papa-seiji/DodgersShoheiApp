@@ -84,6 +84,8 @@ public class SecurityConfig {
                                 "/hogehoge_02",
                                 "/hogehoge_03",
                                 "/hogehoge_04",
+                                "/batting/filter",
+                                "/api/pitchers",
 
                                 // 認証関連
                                 "/auth/login",
