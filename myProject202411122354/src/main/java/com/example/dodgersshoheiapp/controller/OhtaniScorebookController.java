@@ -292,6 +292,8 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String opponent, // ★追加
             @RequestParam(required = false) String pitcher, // ★追加
             @RequestParam(required = false) String pitchType, // ★追加
+            @RequestParam(required = false) Integer speedMin, // ★追加
+            @RequestParam(required = false) Integer speedMax, // ★追加
             Model model) {
 
         // 🔥 ALL（明示的に選んだ時だけ）
@@ -303,7 +305,13 @@ public class OhtaniScorebookController {
             model.addAttribute("vsAllDetail", vsAll.get("detail"));
             // ★ここ修正
             model.addAttribute("vsAllLogs",
-                    mlbGameService.getVsAllLogs(result, opponent, pitcher, pitchType));
+                    mlbGameService.getVsAllLogs(
+                            result,
+                            opponent,
+                            pitcher,
+                            pitchType,
+                            speedMin,
+                            speedMax));
         }
 
         // 右
@@ -315,7 +323,13 @@ public class OhtaniScorebookController {
             model.addAttribute("vsRDetail", vsR.get("detail"));
             // ★ここ修正
             model.addAttribute("vsRLogs",
-                    mlbGameService.getVsRightLogs(result, opponent, pitcher, pitchType));
+                    mlbGameService.getVsRightLogs(
+                            result,
+                            opponent,
+                            pitcher,
+                            pitchType,
+                            speedMin,
+                            speedMax));
         }
 
         // 左
@@ -327,7 +341,13 @@ public class OhtaniScorebookController {
             model.addAttribute("vsLDetail", vsL.get("detail"));
             // ★ここ修正
             model.addAttribute("vsLLogs",
-                    mlbGameService.getVsLeftLogs(result, opponent, pitcher, pitchType));
+                    mlbGameService.getVsLeftLogs(
+                            result,
+                            opponent,
+                            pitcher,
+                            pitchType,
+                            speedMin,
+                            speedMax));
         }
 
         // ★ チーム一覧を取得

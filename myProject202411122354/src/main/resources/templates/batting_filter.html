@@ -86,7 +86,43 @@
     display: block;
 }
 
+/* ============================================
+　球速レンジ（ドラムロール版）
+============================================ */
 
+    .speed-range-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* select 化 */
+    .speed-select {
+        width: 90px;
+        height: 38px;
+        padding: 6px 10px;
+
+        /* ↓ あなたの既存色は維持 */
+        /* background: #111; */
+        color: #020202;
+        border: 1px solid #444;
+
+        border-radius: 6px;
+        font-size: 14px;
+
+        appearance: auto;
+        -webkit-appearance: menulist;
+        -moz-appearance: menulist;
+    }
+
+    .range-separator {
+        color: #000000;
+    }
+
+    .mph-label {
+        color: #000000;
+        font-size: 13px;
+    }
 
 </style>
 
@@ -263,15 +299,57 @@
             </option>
         </select>
 
-    <button type="submit">検索</button>
+<!-- ============================================
+        ★ 球速レンジフィルタ（ドラムロール版）
+    ============================================ -->
 
-    <!-- クリア -->
-    <button type="button" onclick="location.href='/batting/filter'">
-        クリア
-    </button>
-</form>
+    <div class="filter-group">
 
-<hr>
+        <label>球速レンジ</label>
+
+        <div class="speed-range-wrap">
+
+            <!-- MIN -->
+            <select name="speedMin" class="speed-select">
+
+                <option value="">MIN</option>
+
+                <option th:each="i : ${#numbers.sequence(50, 110)}"
+                        th:value="${i}"
+                        th:text="${i}"
+                        th:selected="${param.speedMin != null and param.speedMin[0] == #strings.toString(i)}">
+                </option>
+
+            </select>
+
+            <span class="range-separator">〜</span>
+
+            <!-- MAX -->
+            <select name="speedMax" class="speed-select">
+
+                <option value="">MAX</option>
+
+                <option th:each="i : ${#numbers.sequence(50, 110)}"
+                        th:value="${i}"
+                        th:text="${i}"
+                        th:selected="${param.speedMax != null and param.speedMax[0] == #strings.toString(i)}">
+                </option>
+
+            </select>
+
+            <span class="mph-label">mph</span>
+
+        </div>
+    </div>
+        <button type="submit">検索</button>
+
+        <!-- クリア -->
+        <button type="button" onclick="location.href='/batting/filter'">
+            クリア
+        </button>
+    </form>
+
+    <hr>
 
 <!-- =========================
     🔥 対ALL（メイン表示）

@@ -631,10 +631,17 @@ public class MLBGameService {
             String result,
             String opponent,
             String pitcher,
-            String pitchType) {
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
 
         return ohtaniGameRepository.getVsRightLogs(
-                result, opponent, pitcher, pitchType);
+                result,
+                opponent,
+                pitcher,
+                pitchType,
+                speedMin,
+                speedMax);
     }
 
     /**
@@ -672,10 +679,17 @@ public class MLBGameService {
             String result,
             String opponent,
             String pitcher,
-            String pitchType) {
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
 
         return ohtaniGameRepository.getVsLeftLogs(
-                result, opponent, pitcher, pitchType);
+                result,
+                opponent,
+                pitcher,
+                pitchType,
+                speedMin,
+                speedMax);
     }
 
     /**
@@ -712,10 +726,17 @@ public class MLBGameService {
             String result,
             String opponent,
             String pitcher,
-            String pitchType) {
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
 
         return ohtaniGameRepository.getVsAllLogs(
-                result, opponent, pitcher, pitchType);
+                result,
+                opponent,
+                pitcher,
+                pitchType,
+                speedMin,
+                speedMax);
     }
 
     /**
