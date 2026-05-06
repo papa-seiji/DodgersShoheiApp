@@ -540,6 +540,97 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対右投手 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStatsByPitchType(String pitchType) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'R'
+                        AND pa1_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'R'
+                        AND pa2_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'R'
+                        AND pa3_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'R'
+                        AND pa4_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'R'
+                        AND pa5_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'R'
+                        AND pa6_description LIKE '%' || ? || '%'
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType);
+    }
+
+    /**
+     * ============================================
      * ★ 対右ピッチャー（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
      * ============================================
@@ -960,6 +1051,97 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対左投手 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsLeftStatsByPitchType(String pitchType) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_pitcher_hand = 'L'
+                        AND pa1_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_pitcher_hand = 'L'
+                        AND pa2_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_pitcher_hand = 'L'
+                        AND pa3_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_pitcher_hand = 'L'
+                        AND pa4_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_pitcher_hand = 'L'
+                        AND pa5_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_pitcher_hand = 'L'
+                        AND pa6_description LIKE '%' || ? || '%'
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType);
+    }
+
+    /**
+     * ============================================
      * ★ 対左ピッチャー（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
      * ============================================
@@ -1358,6 +1540,91 @@ public class OhtaniGameRepository {
                 pitcher,
                 pitcher,
                 pitcher);
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALL × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsAllStatsByPitchType(String pitchType) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_description LIKE '%' || ? || '%'
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_description LIKE '%' || ? || '%'
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType);
     }
 
     /**

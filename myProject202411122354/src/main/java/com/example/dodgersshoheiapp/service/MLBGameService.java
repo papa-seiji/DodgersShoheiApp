@@ -686,6 +686,37 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 対右投手 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, String> getVsRightStatsByPitchTypeFormatted(String pitchType) {
+
+        Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitchType(pitchType);
+
+        int hits = stats.get("hits") != null
+                ? ((Number) stats.get("hits")).intValue()
+                : 0;
+
+        int atBats = stats.get("at_bats") != null
+                ? ((Number) stats.get("at_bats")).intValue()
+                : 0;
+
+        Double avg = stats.get("avg") != null
+                ? ((Number) stats.get("avg")).doubleValue()
+                : 0.0;
+
+        String avgStr = String.format("%.3f", avg).replace("0.", ".");
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        return result;
+    }
+
+    /**
+     * ============================================
      * ★ 対右ピッチャー👉 ログ表示
      * ============================================
      */
@@ -796,6 +827,37 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 対左投手 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, String> getVsLeftStatsByPitchTypeFormatted(String pitchType) {
+
+        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByPitchType(pitchType);
+
+        int hits = stats.get("hits") != null
+                ? ((Number) stats.get("hits")).intValue()
+                : 0;
+
+        int atBats = stats.get("at_bats") != null
+                ? ((Number) stats.get("at_bats")).intValue()
+                : 0;
+
+        Double avg = stats.get("avg") != null
+                ? ((Number) stats.get("avg")).doubleValue()
+                : 0.0;
+
+        String avgStr = String.format("%.3f", avg).replace("0.", ".");
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        return result;
+    }
+
+    /**
+     * ============================================
      * ★ 対左ログ
      * ============================================
      */
@@ -880,6 +942,37 @@ public class MLBGameService {
     public Map<String, String> getVsAllStatsByPitcherFormatted(String pitcher) {
 
         Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByPitcher(pitcher);
+
+        int hits = stats.get("hits") != null
+                ? ((Number) stats.get("hits")).intValue()
+                : 0;
+
+        int atBats = stats.get("at_bats") != null
+                ? ((Number) stats.get("at_bats")).intValue()
+                : 0;
+
+        Double avg = stats.get("avg") != null
+                ? ((Number) stats.get("avg")).doubleValue()
+                : 0.0;
+
+        String avgStr = String.format("%.3f", avg).replace("0.", ".");
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> result = new HashMap<>();
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        return result;
+    }
+
+    /**
+     * ============================================
+     * ★ 対ALL × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, String> getVsAllStatsByPitchTypeFormatted(String pitchType) {
+
+        Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByPitchType(pitchType);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()

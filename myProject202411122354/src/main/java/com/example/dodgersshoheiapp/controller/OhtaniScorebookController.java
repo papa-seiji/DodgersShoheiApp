@@ -311,6 +311,16 @@ public class OhtaniScorebookController {
                         .getVsAllStatsByPitcherFormatted(pitcher);
 
                 // ============================================
+                // ★ pitchType 指定時
+                // ============================================
+            } else if (pitchType != null
+                    && !pitchType.isBlank()
+                    && !"ALL".equals(pitchType)) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsByPitchTypeFormatted(pitchType);
+
+                // ============================================
                 // ★ opponent 指定時
                 // ============================================
             } else if (opponent != null
@@ -357,6 +367,16 @@ public class OhtaniScorebookController {
                         .getVsRightStatsByPitcherFormatted(pitcher);
 
                 // ============================================
+                // ★ pitchType 指定時
+                // ============================================
+            } else if (pitchType != null
+                    && !pitchType.isBlank()
+                    && !"ALL".equals(pitchType)) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsByPitchTypeFormatted(pitchType);
+
+                // ============================================
                 // ★ opponent 指定時
                 // ============================================
             } else if (opponent != null
@@ -401,6 +421,16 @@ public class OhtaniScorebookController {
 
                 vsL = mlbGameService
                         .getVsLeftStatsByPitcherFormatted(pitcher);
+
+                // ============================================
+                // ★ pitchType 指定時
+                // ============================================
+            } else if (pitchType != null
+                    && !pitchType.isBlank()
+                    && !"ALL".equals(pitchType)) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsByPitchTypeFormatted(pitchType);
 
                 // ============================================
                 // ★ opponent 指定時
