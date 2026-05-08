@@ -147,9 +147,9 @@
                         Curve
                     </option>
 
-                    <option value="Curveball"
-                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Curveball'}">
-                        Curveball
+                    <option value="Knuckle_Curve"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Knuckle_Curve'}">
+                        Knuckle_Curve
                     </option>
 
                     <option value="Slurve"
@@ -304,21 +304,78 @@
 </div>
 
 
-        <div th:if="${vsAllLogs != null}">
-            <h3>打席ログ（対ALL）</h3>
+<!-- =========================
+    🔥 打席ログ（対ALL）
+========================= -->
+<div th:if="${vsAllLogs != null}" class="log-section">
 
-            <div th:each="log : ${vsAllLogs}">
-                <p>
-                    <span th:text="${log.game_date}"></span>
-                    <span th:text="${log.opponent}"></span>
+    <h3 class="log-title">打席ログ（対ALL）</h3>
+
+    <div class="table-wrapper">
+
+        <table class="batting-log-table">
+
+            <thead>
+            <tr>
+                <th>日付</th>
+                <th>対戦</th>
+                <th>投手</th>
+                <th>球種(球速)</th>
+                <th>結果</th>
+                <th>説明</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="log : ${vsAllLogs}">
+
+                <td th:text="${log.game_date}"></td>
+
+                <td th:text="${log.opponent}"></td>
+
+                <td>
                     <span th:text="${log.pitcher}"></span>
                     （<span th:text="${log.hand}"></span>）
-                    →
-                    <span th:text="${log.result}"></span>：
-                    <span th:text="${log.description}"></span>
-                </p>
-            </div>
-        </div>
+                </td>
+
+                <td class="pitch-cell">
+
+                    <span class="velo">
+                        84.1mph
+                    </span>
+
+                    <span class="pitch-badge sweeper">
+                        Sweeper
+                    </span>
+
+                </td>
+
+                <td>
+                    <span class="result-badge"
+                        th:classappend="${log.result}">
+
+                        <span th:text="${log.result}"></span>
+
+                    </span>
+                </td>
+
+                <td>
+                    <span class="desc-text"
+                        th:classappend="${log.result}"
+                        th:text="${log.description}">
+                    </span>
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
 
         <!-- =========================
             右（単体表示時のみ）
