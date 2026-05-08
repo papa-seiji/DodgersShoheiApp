@@ -9,7 +9,13 @@
 
     <div class="batting-filter-page">
 
-        <h2>Batting Filter（試作）</h2>
+        <h2 class="filter-main-title">
+            Batting Filter
+        </h2>
+
+        <p class="filter-sub-title">
+            大谷翔平の打撃成績を様々な条件でフィルタリングできます
+        </p>
         <a href="/hogehoge_01" class="back-button">← 前の画面に戻る</a>
         <hr>
 
@@ -103,9 +109,9 @@
                 </div>
 
 
-        <div class="filter-group">
+            <div class="filter-group pitch-type-group">
+                <label>球種：</label>
 
-            <label>球種：</label>
                 <select name="pitchType">
                     <option value=""
                         th:selected="${param.pitchType == null or param.pitchType[0] == ''}">

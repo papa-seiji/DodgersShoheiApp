@@ -143,8 +143,8 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: rgba(255,255,255,0.55);
-    font-size: 12px;
+    color: rgb(0 212 255);
+    font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.02em;
     line-height: 1.6;
@@ -207,6 +207,37 @@ body {
 }
 
 /* ============================================
+▼ タイトル
+============================================ */
+.filter-main-title{
+
+    margin:0;
+
+    font-size:42px;
+    font-weight:900;
+
+    letter-spacing:-0.02em;
+
+    color:#ffffff;
+}
+
+/* ============================================
+▼ サブタイトル
+============================================ */
+.filter-sub-title{
+
+    margin-top:8px;
+    margin-bottom:24px;
+
+    color:rgba(255,255,255,0.62);
+
+    font-size:15px;
+    font-weight:500;
+
+    letter-spacing:0.02em;
+}
+
+/* ============================================
 ▼ Filter Panel
 ============================================ */
 .filter-panel {
@@ -249,15 +280,73 @@ body {
     gap: 6px;
 }
 
-/* ============================================
-▼ 投手名ブロック
-============================================ */
-.pitcher-group {
-    position: relative;
-    min-width: 260px;
 
-    /* ▼ 横に広がる */
-    flex: 1;
+/* ============================================
+▼ 上段5項目 高さ統一
+投手タイプ / 打席結果 / チーム /
+投手名 / 球種
+============================================ */
+.filter-group select,
+.filter-group input{
+
+    height:48px;
+
+    border-radius:12px;
+
+    background:#101a30;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:#ffffff;
+
+    padding:0 14px;
+
+    font-size:15px;
+    font-weight:600;
+
+    box-sizing:border-box;
+
+    box-shadow:
+        inset 0 0 12px rgba(255,255,255,0.03);
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+/* hover */
+.filter-group select:hover,
+.filter-group input:hover{
+
+    border-color:
+        rgba(139,92,246,.45);
+}
+
+/* focus */
+.filter-group select:focus,
+.filter-group input:focus{
+
+    outline:none;
+
+    border-color:#8b5cf6;
+
+    box-shadow:
+        0 0 0 3px rgba(139,92,246,.15);
+}
+
+/* ============================================
+▼ 投手名 / 球種 幅調整
+============================================ */
+.pitcher-group,
+.pitch-type-group {
+
+    position:relative;
+
+    width:40%;
+
+    min-width:240px;
+
+    flex:none;
 }
 
 /* ============================================
@@ -751,7 +840,7 @@ body {
         display:flex;
         justify-content:flex-end;
         gap:12px;
-        margin-top:-71px;
+        margin-top:-80px;
     }
 
     .search-btn{
@@ -766,6 +855,8 @@ body {
         color:#fff;
         font-weight:700;
         cursor:pointer;
+        height: 50px;
+        width: 100px;
     }
 
     .filter-clear-btn{
@@ -776,173 +867,41 @@ body {
         color:#cbd5e1;
         background:rgba(255,255,255,.04);
         cursor:pointer;
+        height: 50px;
+        width: 100px;
     }
-
-
-    /* ========================================
-    球速レンジスライダー
-    ======================================== */
-    .speed-slider-area{
-        display:flex;
-        align-items:center;
-        gap:16px;
-        margin-top:18px;
-        width:100%;
-        flex-wrap:nowrap;
-    }
-
-    .speed-value-box{
-        width:68px;
-        height:42px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        border-radius:10px;
-        background:rgba(255,255,255,.04);
-        border:1px solid rgba(255,255,255,.12);
-        font-size:15px;
-        font-weight:700;
-        color:#f8fafc;
-        backdrop-filter:blur(10px);
-    }
-
-    .slider-track-wrap{
-        position:relative;
-        flex:1;
-        min-width:180px;
-        max-width:420px;
-        height:28px;
-        display:flex;
-        align-items:center;
-    }
-
-    /* 紫グラデライン */
-    .slider-track{
-        position:absolute;
-
-        top:50%;
-        transform:translateY(-50%);
-
-        height:6px;
-        border-radius:999px;
-
-        background:
-            linear-gradient(
-                90deg,
-                #60a5fa 0%,
-                #8b5cf6 50%,
-                #d946ef 100%
-            );
-
-        box-shadow:
-            0 0 12px rgba(139,92,246,.45);
-    }
-
-    /* range本体 */
-    .slider-track-wrap input[type="range"]{
-        position:absolute;
-        width:100%;
-        margin:0;
-        background:transparent;
-        pointer-events:none;
-        appearance:none;
-        -webkit-appearance:none;
-    }
-
-    /* スライドつまみ */
-    .slider-track-wrap input[type="range"]::-webkit-slider-thumb{
-        appearance:none;
-        -webkit-appearance:none;
-
-        width:18px;
-        height:18px;
-        border-radius:50%;
-
-        background:#ffffff;
-        border:2px solid #8b5cf6;
-
-        cursor:pointer;
-        pointer-events:auto;
-
-        box-shadow:
-            0 0 10px rgba(139,92,246,.7);
-
-        transition:.2s;
-    }
-
-    .slider-track-wrap input[type="range"]::-webkit-slider-thumb:hover{
-        transform:scale(1.08);
-    }
-
-    /* Firefox */
-    .slider-track-wrap input[type="range"]::-moz-range-thumb{
-        width:18px;
-        height:18px;
-        border:none;
-        border-radius:50%;
-        background:#fff;
-        cursor:pointer;
-        pointer-events:auto;
-    }
-
-    /* mph */
-    .speed-slider-area .mph-label{
-        font-size:14px;
-        font-weight:700;
-        color:#cbd5e1;
-    }
-
-
-/* ========================================
-ドラムロール
-======================================== */
-    .speed-drum-select{
-
-        width:72px;
-        height:42px;
-
-        border-radius:12px;
-
-        background:#131d35;
-        color:white;
-
-        border:1px solid rgba(255,255,255,0.08);
-
-        text-align:center;
-
-        font-size:18px;
-        font-weight:700;
-
-        box-shadow:
-            inset 0 0 10px rgba(255,255,255,0.03),
-            0 0 12px rgba(120,80,255,0.15);
-
-    }
-
 
 /* ============================================
-▼ 球速 inline
+▼ 球速レンジ 横並び
 ============================================ */
 .speed-inline-row{
+
     display:flex;
     align-items:center;
-    gap:14px;
-    margin-top:10px;
+    gap:12px;
+
+    width:100%;
+
+    margin-top:12px;
 }
 
 /* ============================================
-▼ slider area
+▼ 左ラベル
 ============================================ */
-.speed-slider-area{
+.speed-inline-label{
 
-    width:200px;   /* ← ここ重要 */
-    min-width:200px;
+    color:#ffffff;
 
-    flex:none;
+    font-size:15px;
+    font-weight:700;
+
+    white-space:nowrap;
+
+    flex-shrink:0;
 }
 
 /* ============================================
-▼ drum select
+▼ ドラムロール
 ============================================ */
 .speed-drum-select{
 
@@ -958,41 +917,67 @@ body {
 
     text-align:center;
 
-    font-size:18px;
+    font-size:16px;
     font-weight:700;
+
+    padding:0 8px;
 
     box-shadow:
         inset 0 0 10px rgba(255,255,255,0.03),
         0 0 12px rgba(120,80,255,0.15);
+
+    flex-shrink:0;
 }
 
 /* ============================================
-▼ separator
+▼ 〜
 ============================================ */
 .speed-separator{
+
     color:white;
-    font-size:20px;
+
+    font-size:18px;
     font-weight:700;
+
+    flex-shrink:0;
 }
 
 /* ============================================
 ▼ mph
 ============================================ */
 .mph-label{
+
     color:white;
-    font-size:18px;
+
+    font-size:15px;
     font-weight:700;
-    margin-right:8px;
+
+    flex-shrink:0;
+}
+
+/* ============================================
+▼ スライダーエリア
+============================================ */
+.speed-slider-area{
+
+    width:260px;
+
+    display:flex;
+    align-items:center;
+
+    flex-shrink:0;
 }
 
 /* ============================================
 ▼ slider wrap
 ============================================ */
 .slider-track-wrap{
+
     position:relative;
+
     width:100%;
-    height:42px;
-    margin-top: -8px;
+    height:24px;
+
     display:flex;
     align-items:center;
 }
@@ -1004,18 +989,22 @@ body {
 
     position:absolute;
 
+    top:50%;
+    transform:translateY(-50%);
+
     height:6px;
 
     border-radius:999px;
 
-    background:linear-gradient(
-        90deg,
-        #7cb4ff,
-        #d14dff
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #7cb4ff,
+            #d14dff
+        );
 
-    top:50%;
-    transform:translateY(-50%);
+    box-shadow:
+        0 0 12px rgba(139,92,246,.45);
 
     z-index:1;
 }
@@ -1029,20 +1018,26 @@ body {
 
     width:100%;
 
-    pointer-events:none;
-
     appearance:none;
+    -webkit-appearance:none;
+
     background:none;
+
+    pointer-events:none;
 
     z-index:2;
 }
 
+/* ============================================
+▼ thumb
+============================================ */
 .slider-track-wrap input[type="range"]::-webkit-slider-thumb{
 
     appearance:none;
+    -webkit-appearance:none;
 
-    width:22px;
-    height:22px;
+    width:20px;
+    height:20px;
 
     border-radius:50%;
 
@@ -1050,142 +1045,42 @@ body {
 
     border:none;
 
-    box-shadow:
-        0 0 10px rgba(255,255,255,0.7);
-
     pointer-events:auto;
 
     cursor:pointer;
-}
-
-/* ============================================
-▼ 横並びラベル
-============================================ */
-.speed-inline-label{
-
-    color:white;
-
-    font-size:15px;
-    font-weight:700;
-
-    white-space:nowrap;
-
-    margin-right:6px;
-}
-
-
-/* ============================================
-▼ 共通 select / input
-============================================ */
-.filter-group select,
-.filter-group input{
-
-    height:44px;
-
-    border-radius:10px;
-
-    background:#111a30;
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    color:white;
-
-    padding:0 14px;
-
-    font-size:15px;
-    font-weight:600;
 
     box-shadow:
-        inset 0 0 10px rgba(255,255,255,0.03);
-
-    transition:0.2s;
-}
-
-/* hover */
-.filter-group select:hover,
-.filter-group input:hover{
-
-    border-color:
-        rgba(180,120,255,0.4);
-}
-
-/* focus */
-.filter-group select:focus,
-.filter-group input:focus{
-
-    outline:none;
-
-    border-color:#a855f7;
-
-    box-shadow:
-        0 0 0 3px rgba(168,85,247,0.15);
-}
-
-/* ============================================
-▼ pitcher / pitchType 幅調整
-============================================ */
-.pitcher-group,
-.pitch-type-group{
-
-    width:48%;
+        0 0 10px rgba(255,255,255,0.7);
 }
 
 /* ============================================
 ▼ mobile
 ============================================ */
-@media (max-width: 768px) {
+@media (max-width:768px){
 
-    /* ▼ filterを縦積み */
-    .filter-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
+    .speed-inline-row{
+
+        flex-wrap:wrap;
+        gap:8px;
     }
 
-    /* ▼ 各groupを100% */
-    .filter-group {
-        width: 100%;
+    .speed-slider-area{
+
+        width:180px;
     }
 
-    /* ▼ input/select横幅 */
-    .filter-group input,
-    .filter-group select {
-        width: 100%;
+    .speed-drum-select{
+
+        width:54px;
+        height:32px;
+
+        font-size:12px;
+
+        border-radius:8px;
     }
 
-    /* ▼ 投手名横幅 */
-    .pitcher-group {
-        min-width: 100%;
+    .mph-label{
+
+        font-size:12px;
     }
-
-    /* ▼ 球速折返し */
-    .speed-range-wrap {
-        flex-wrap: wrap;
-    }
-}
-
-/* ============================================
-▼ mobile
-============================================ */
-@media (max-width: 768px) {
-
-    .speed-drum-select {
-
-        width: 54px;
-        height: 32px;
-
-        font-size: 12px;
-
-        border-radius: 8px;
-
-        padding: 0 4px;
-
-        transform: scale(0.78);
-        transform-origin: center;
-    }
-
-    .speed-drum-select option {
-        font-size: 12px;
-    }
-
 }
