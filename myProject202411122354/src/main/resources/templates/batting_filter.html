@@ -9,51 +9,54 @@
 
     <div class="batting-filter-page">
 
-            <h2>Batting Filter（試作）</h2>
+        <h2>Batting Filter（試作）</h2>
         <a href="/hogehoge_01" class="back-button">← 前の画面に戻る</a>
         <hr>
 
         <!-- 🔽 フィルタUI -->
-        <h3>フィルタ</h3>
-        <form action="/batting/filter" method="get">
+        <div class="filter-panel">
 
-            <label>投手タイプ：</label>
-            <select name="hand">
-                <option value="ALL" th:selected="${param.hand == null or param.hand[0] == 'ALL'}">ALL</option>
-                <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
-                <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
-            </select>
+            <h3>フィルタ</h3>
 
-            <!-- 🔥 ここ追加 -->
-            <label>打席結果：</label>
-            <select name="result">
-                <option value="" th:selected="${param.result == null or param.result[0] == ''}">ALL</option>
-                <option value="HIT" th:selected="${param.result != null and param.result[0] == 'HIT'}">HIT</option>
-                <option value="OUT" th:selected="${param.result != null and param.result[0] == 'OUT'}">OUT</option>
-                <option value="BB"  th:selected="${param.result != null and param.result[0] == 'BB'}">BB</option>
-                <option value="HR"  th:selected="${param.result != null and param.result[0] == 'HR'}">HR</option>
-                <option value="SO"  th:selected="${param.result != null and param.result[0] == 'SO'}">SO</option>
-                <option value="Err" th:selected="${param.result != null and param.result[0] == 'Err'}">Err</option>
-                <option value="SF"  th:selected="${param.result != null and param.result[0] == 'SF'}">SF</option>
-                <option value="FC"  th:selected="${param.result != null and param.result[0] == 'FC'}">FC</option>
-            </select>
+            <form action="/batting/filter" method="get">
 
-            <label>チーム：</label>
-                <select name="opponent">
-
-                    <!-- ALL -->
-                    <option value="" th:selected="${param.opponent == null or param.opponent[0] == ''}">
-                        ALL
-                    </option>
-
-                    <!-- ★ DBからループ -->
-                    <option th:each="op : ${opponents}"
-                            th:value="${op}"
-                            th:text="${op}"
-                            th:selected="${param.opponent != null and param.opponent[0] == op}">
-                    </option>
-
+                <label>投手タイプ：</label>
+                <select name="hand">
+                    <option value="ALL" th:selected="${param.hand == null or param.hand[0] == 'ALL'}">ALL</option>
+                    <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
+                    <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
                 </select>
+
+                <!-- 🔥 ここ追加 -->
+                <label>打席結果：</label>
+                <select name="result">
+                    <option value="" th:selected="${param.result == null or param.result[0] == ''}">ALL</option>
+                    <option value="HIT" th:selected="${param.result != null and param.result[0] == 'HIT'}">HIT</option>
+                    <option value="OUT" th:selected="${param.result != null and param.result[0] == 'OUT'}">OUT</option>
+                    <option value="BB"  th:selected="${param.result != null and param.result[0] == 'BB'}">BB</option>
+                    <option value="HR"  th:selected="${param.result != null and param.result[0] == 'HR'}">HR</option>
+                    <option value="SO"  th:selected="${param.result != null and param.result[0] == 'SO'}">SO</option>
+                    <option value="Err" th:selected="${param.result != null and param.result[0] == 'Err'}">Err</option>
+                    <option value="SF"  th:selected="${param.result != null and param.result[0] == 'SF'}">SF</option>
+                    <option value="FC"  th:selected="${param.result != null and param.result[0] == 'FC'}">FC</option>
+                </select>
+
+                <label>チーム：</label>
+                    <select name="opponent">
+
+                        <!-- ALL -->
+                        <option value="" th:selected="${param.opponent == null or param.opponent[0] == ''}">
+                            ALL
+                        </option>
+
+                        <!-- ★ DBからループ -->
+                        <option th:each="op : ${opponents}"
+                                th:value="${op}"
+                                th:text="${op}"
+                                th:selected="${param.opponent != null and param.opponent[0] == op}">
+                        </option>
+
+                    </select>
 
             <!-- /**
             * ============================================
@@ -247,9 +250,10 @@
                 <button type="button" onclick="location.href='/batting/filter'">
                     クリア
                 </button>
-            </form>
 
-            <hr>
+            </form>
+        </div>
+        <hr>
 
         <!-- =========================
             🔥 対ALL（メイン表示）

@@ -168,3 +168,56 @@
 
         box-sizing: border-box;
     }
+
+    /* ============================================
+        Body Theme
+    ============================================ */
+
+    body {
+
+        margin: 0;
+
+        color: #f3f4f6;
+
+        background:
+            linear-gradient(
+                180deg,
+                #061326 0%,
+                #081a33 45%,
+                #0a1020 100%
+            );
+
+        font-family:
+            "Inter",
+            "Noto Sans JP",
+            sans-serif;
+
+        min-height: 100vh;
+    }
+
+
+    /* ============================================
+        Filter Panel
+    ============================================ */
+
+    .filter-panel {
+
+        margin-top: 24px;
+
+        padding: 24px;
+
+        border-radius: 20px;
+
+        background:
+            rgba(15, 23, 42, 0.72);
+
+        border:
+            1px solid rgba(255, 255, 255, 0.08);
+
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.35);
+
+        backdrop-filter: blur(12px);
+
+        -webkit-backdrop-filter: blur(12px);
+    }
