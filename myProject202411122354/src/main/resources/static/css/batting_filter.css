@@ -149,3 +149,22 @@
         max-width: 589px;
         line-height: 1.6;
     }
+
+    /* ============================================
+    Layout Container
+    ============================================ */
+
+    .batting-filter-page {
+
+        width: 100%;
+        max-width: 1400px;
+
+        margin: 0 auto;
+
+        padding:
+            24px
+            20px
+            80px;
+
+        box-sizing: border-box;
+    }
