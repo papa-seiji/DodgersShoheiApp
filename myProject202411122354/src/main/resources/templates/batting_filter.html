@@ -166,68 +166,303 @@
 
 
         <!-- ============================================
-                ★ 球速レンジフィルタ（ドラムロール版）
-            ============================================ -->
-
+            球速レンジフィルタ（ドラムロール版）
+        ============================================ -->
         <div class="filter-row speed-filter-row">
 
             <div class="filter-group speed-filter-group">
 
-                <label>球速レンジ</label>
-
-                    <!-- ============================================
-                        ★ 球速レンジ AVG説明
-                    ============================================ -->
-                    <div class="speed-range-info">
-
-                        ※ 球速レンジによるAVG変動は、
-                        「投手タイプ＋球速レンジのみ」の組み合わせ時に適用されます。
-
-                    </div>
-
-                <div class="speed-range-wrap">
+                <!-- ============================================
+                    ▼ 横一列エリア
+                ============================================ -->
+                <div class="speed-inline-row">
+                    <label>球速レンジ</label>
 
                     <!-- MIN -->
-                    <select name="speedMin" class="speed-select">
+                    <select id="speedMinSelect"
+                            name="speedMin"
+                            class="speed-drum-select">
 
-                        <option value="">MIN</option>
-
-                        <option th:each="i : ${#numbers.sequence(50, 110)}"
+                        <option th:each="i : ${#numbers.sequence(50,110)}"
                                 th:value="${i}"
                                 th:text="${i}"
-                                th:selected="${param.speedMin != null and param.speedMin[0] == #strings.toString(i)}">
+                                th:selected="${param.speedMin != null ? param.speedMin[0] == #strings.toString(i) : i == 50}">
                         </option>
 
                     </select>
 
-                    <span class="range-separator">〜</span>
+                    <span class="speed-separator">〜</span>
 
                     <!-- MAX -->
-                    <select name="speedMax" class="speed-select">
+                    <select id="speedMaxSelect"
+                            name="speedMax"
+                            class="speed-drum-select">
 
-                        <option value="">MAX</option>
-
-                        <option th:each="i : ${#numbers.sequence(50, 110)}"
+                        <option th:each="i : ${#numbers.sequence(50,110)}"
                                 th:value="${i}"
                                 th:text="${i}"
-                                th:selected="${param.speedMax != null and param.speedMax[0] == #strings.toString(i)}">
+                                th:selected="${param.speedMax != null ? param.speedMax[0] == #strings.toString(i) : i == 110}">
                         </option>
 
                     </select>
 
                     <span class="mph-label">mph</span>
 
+                    <!-- ============================================
+                        ▼ スライダー
+                    ============================================ -->
+                    <div class="speed-slider-area">
+
+                        <div class="slider-track-wrap">
+
+                            <input type="range"
+                                id="speedMinRange"
+                                min="50"
+                                max="110"
+                                th:value="${param.speedMin != null ? param.speedMin[0] : 50}">
+
+                            <input type="range"
+                                id="speedMaxRange"
+                                min="50"
+                                max="110"
+                                th:value="${param.speedMax != null ? param.speedMax[0] : 110}">
+
+                            <div class="slider-track"></div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
+                <!-- ============================================
+                    AVG説明
+                ============================================ -->
+                <div class="speed-range-info">
+
+                    ※ 球速レンジによるAVG変動は、
+                    「投手タイプ＋球速レンジのみ」の組み合わせ時に適用されます。
+
+                </div>
+
+                    <div class="filter-action-group">
+                        <button type="submit"
+                                class="search-btn">
+                            検索
+                        </button>
+                        <button type="button"
+                                class="filter-clear-btn"
+                                onclick="clearFilters()">
+                            クリア
+                        </button>
+                    </div>
+
+
+
             </div>
+
+
+
+
+
+
         </div>
 
-                <button type="submit">検索</button>
 
-                <!-- クリア -->
-                <button type="button" onclick="location.href='/batting/filter'">
-                    クリア
-                </button>
+<script>
+
+    const minRange = document.getElementById("speedMinRange");
+    const maxRange = document.getElementById("speedMaxRange");
+
+    // ▼ ドラムロール
+    const speedMinSelect =
+        document.getElementById("speedMinSelect");
+
+    const speedMaxSelect =
+        document.getElementById("speedMaxSelect");
+
+    // ▼ 既存
+    const minLabel =
+        document.getElementById("speedMinLabel");
+
+    const maxLabel =
+        document.getElementById("speedMaxLabel");
+
+    const sliderTrack =
+        document.querySelector(".slider-track");
+
+    function updateSpeedSlider(){
+
+        let minVal = parseInt(minRange.value);
+        let maxVal = parseInt(maxRange.value);
+
+        // ====================================
+        // MIN > MAX 防止
+        // ====================================
+
+        if(minVal > maxVal - 1){
+
+            minVal = maxVal - 1;
+            minRange.value = minVal;
+
+        }
+
+        if(maxVal < minVal + 1){
+
+            maxVal = minVal + 1;
+            maxRange.value = maxVal;
+
+        }
+
+        // ====================================
+        // ▼ ドラムロール同期
+        // ====================================
+
+        if(speedMinSelect){
+            speedMinSelect.value = minVal;
+        }
+
+        if(speedMaxSelect){
+            speedMaxSelect.value = maxVal;
+        }
+
+        // ====================================
+        // ▼ 旧label互換（残してOK）
+        // ====================================
+
+        if(minLabel){
+            minLabel.textContent = minVal;
+        }
+
+        if(maxLabel){
+            maxLabel.textContent = maxVal;
+        }
+
+        // ====================================
+        // ▼ 位置計算
+        // ====================================
+
+        const min = parseInt(minRange.min);
+        const max = parseInt(minRange.max);
+
+        const leftPercent =
+            ((minVal - min) / (max - min)) * 100;
+
+        const rightPercent =
+            ((maxVal - min) / (max - min)) * 100;
+
+        sliderTrack.style.left =
+            leftPercent + "%";
+
+        sliderTrack.style.width =
+            (rightPercent - leftPercent) + "%";
+    }
+
+    // ====================================
+    // ▼ スライダー操作
+    // ====================================
+
+    minRange.addEventListener(
+        "input",
+        updateSpeedSlider
+    );
+
+    maxRange.addEventListener(
+        "input",
+        updateSpeedSlider
+    );
+
+    // ====================================
+    // ▼ ドラムロール操作
+    // ====================================
+
+    if(speedMinSelect){
+
+        speedMinSelect.addEventListener(
+            "change",
+            () => {
+
+                minRange.value =
+                    speedMinSelect.value;
+
+                updateSpeedSlider();
+
+            }
+        );
+    }
+
+    if(speedMaxSelect){
+
+        speedMaxSelect.addEventListener(
+            "change",
+            () => {
+
+                maxRange.value =
+                    speedMaxSelect.value;
+
+                updateSpeedSlider();
+
+            }
+        );
+    }
+
+    // ====================================
+    // 初期描画
+    // ====================================
+
+    updateSpeedSlider();
+
+</script>
+
+<script>
+
+    function clearFilters(){
+
+        // ====================================
+        // ▼ スライダー初期化
+        // ====================================
+
+        const minRange =
+            document.getElementById("speedMinRange");
+
+        const maxRange =
+            document.getElementById("speedMaxRange");
+
+        const speedMinSelect =
+            document.getElementById("speedMinSelect");
+
+        const speedMaxSelect =
+            document.getElementById("speedMaxSelect");
+
+        if(minRange){
+            minRange.value = 50;
+        }
+
+        if(maxRange){
+            maxRange.value = 110;
+        }
+
+        // ====================================
+        // ▼ ドラムロール初期化
+        // ====================================
+
+        if(speedMinSelect){
+            speedMinSelect.value = 50;
+        }
+
+        if(speedMaxSelect){
+            speedMaxSelect.value = 110;
+        }
+
+        // ====================================
+        // ▼ URL遷移
+        // ====================================
+
+        window.location.href = "/batting/filter";
+    }
+
+</script>
+
 
             </form>
         </div>
