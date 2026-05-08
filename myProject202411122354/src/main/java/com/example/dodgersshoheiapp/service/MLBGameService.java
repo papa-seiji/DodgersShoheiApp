@@ -730,13 +730,31 @@ public class MLBGameService {
             Integer speedMin,
             Integer speedMax) {
 
-        return ohtaniGameRepository.getVsRightLogs(
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsRightLogs(
                 result,
                 opponent,
                 pitcher,
                 pitchType,
                 speedMin,
                 speedMax);
+
+        // ============================================
+        // ★ 球速・球種 inject
+        // ============================================
+        for (Map<String, Object> row : logs) {
+
+            String description = (String) row.get("description");
+
+            row.put(
+                    "pitchSpeed",
+                    extractPitchSpeed(description));
+
+            row.put(
+                    "pitchType",
+                    extractPitchType(description));
+        }
+
+        return logs;
     }
 
     /**
@@ -969,13 +987,31 @@ public class MLBGameService {
             Integer speedMin,
             Integer speedMax) {
 
-        return ohtaniGameRepository.getVsLeftLogs(
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsLeftLogs(
                 result,
                 opponent,
                 pitcher,
                 pitchType,
                 speedMin,
                 speedMax);
+
+        // ============================================
+        // ★ 球速・球種 inject
+        // ============================================
+        for (Map<String, Object> row : logs) {
+
+            String description = (String) row.get("description");
+
+            row.put(
+                    "pitchSpeed",
+                    extractPitchSpeed(description));
+
+            row.put(
+                    "pitchType",
+                    extractPitchType(description));
+        }
+
+        return logs;
     }
 
     /**
@@ -1251,13 +1287,31 @@ public class MLBGameService {
             Integer speedMin,
             Integer speedMax) {
 
-        return ohtaniGameRepository.getVsAllLogs(
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsAllLogs(
                 result,
                 opponent,
                 pitcher,
                 pitchType,
                 speedMin,
                 speedMax);
+
+        // ============================================
+        // ★ 球速・球種 inject
+        // ============================================
+        for (Map<String, Object> row : logs) {
+
+            String description = (String) row.get("description");
+
+            row.put(
+                    "pitchSpeed",
+                    extractPitchSpeed(description));
+
+            row.put(
+                    "pitchType",
+                    extractPitchType(description));
+        }
+
+        return logs;
     }
 
     /**
@@ -1295,5 +1349,57 @@ public class MLBGameService {
     public String getPitcherHand(String pitcher) {
 
         return ohtaniGameRepository.getPitcherHand(pitcher);
+    }
+
+    // ============================================
+    // ★ description から球速取得
+    // ============================================
+    private String extractPitchSpeed(String description) {
+
+        if (description == null) {
+            return "-";
+        }
+
+        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*)mph");
+
+        Matcher matcher = pattern.matcher(description);
+
+        if (matcher.find()) {
+            return matcher.group(1) + "mph";
+        }
+
+        return "-";
+    }
+
+    // ============================================
+    // ★ description から球種取得
+    // ============================================
+    private String extractPitchType(String description) {
+
+        if (description == null) {
+            return "-";
+        }
+
+        String[] pitchTypes = {
+                "Four-Seam",
+                "Sinker",
+                "Sweeper",
+                "Slider",
+                "Curve",
+                "Cutter",
+                "Splitter",
+                "Changeup",
+                "Knuckle Curve",
+                "Sweeping Curve"
+        };
+
+        for (String type : pitchTypes) {
+
+            if (description.contains(type)) {
+                return type;
+            }
+        }
+
+        return "-";
     }
 }

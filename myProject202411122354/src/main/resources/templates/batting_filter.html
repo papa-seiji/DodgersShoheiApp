@@ -234,204 +234,287 @@
         <hr>
 
 
+    <!-- =========================
+        🔥 対ALL（メイン表示）
+    ========================= -->
+    <!-- =========================================
+        AVG CARD AREA
+    ========================================= -->
+    <div class="avg-card-wrap">
+
+        <!-- 対ALL -->
+        <div class="avg-card"
+            th:if="${vsAllAvg != null}">
+
+            <div class="avg-card-title">
+                対ALLピッチャー打率
+            </div>
+
+            <div class="avg-card-value">
+                <span th:text="${vsAllAvg}"></span>
+            </div>
+
+            <div class="avg-card-detail">
+                <span th:text="${vsAllDetail}"></span>
+            </div>
+        </div>
+
+        <!-- 対右 -->
+        <div class="avg-card"
+            th:if="${vsRAvg != null}">
+
+            <div class="avg-card-title">
+                対右ピッチャー打率
+            </div>
+
+            <div class="avg-card-value">
+                <span th:text="${vsRAvg}"></span>
+            </div>
+
+            <div class="avg-card-detail">
+                <span th:text="${vsRDetail}"></span>
+            </div>
+        </div>
+
+        <!-- 対左 -->
+        <div class="avg-card"
+            th:if="${vsLAvg != null}">
+
+            <div class="avg-card-title">
+                対左ピッチャー打率
+            </div>
+
+            <div class="avg-card-value">
+                <span th:text="${vsLAvg}"></span>
+            </div>
+
+            <div class="avg-card-detail">
+                <span th:text="${vsLDetail}"></span>
+            </div>
+        </div>
+
+    </div>
+
+
         <!-- =========================
-            🔥 対ALL（メイン表示）
+            🔥 打席ログ（対ALL）
         ========================= -->
-        <!-- <div th:if="${vsAllAvg != null}">
-            <h3>対ALLピッチャー打率</h3>
-            <p>
-                VS ALL: <span th:text="${vsAllAvg}"></span>
-                (<span th:text="${vsAllDetail}"></span>)
-            </p>
-        </div> -->
+        <div th:if="${vsAllLogs != null}" class="log-section">
 
-<!-- =========================================
-     AVG CARD AREA
-========================================= -->
-<div class="avg-card-wrap">
+            <h3 class="log-title">打席ログ（対ALL）</h3>
 
-    <!-- 対ALL -->
-    <div class="avg-card"
-         th:if="${vsAllAvg != null}">
+            <div class="table-wrapper">
 
-        <div class="avg-card-title">
-            対ALLピッチャー打率
+                <table class="batting-log-table">
+
+                    <thead>
+                    <tr>
+                        <th>日付</th>
+                        <th>対戦</th>
+                        <th>投手</th>
+                        <th>球種(球速)</th>
+                        <th>結果</th>
+                        <th>説明</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="log : ${vsAllLogs}">
+
+                        <td th:text="${log.game_date}"></td>
+
+                        <td th:text="${log.opponent}"></td>
+
+                        <td>
+                            <span th:text="${log.pitcher}"></span>
+                            （<span th:text="${log.hand}"></span>）
+                        </td>
+
+                        <td class="pitch-cell">
+
+                            <span class="velo"
+                                th:text="${log.pitchSpeed}">
+                            </span>
+
+                            <span class="pitch-badge"
+                                th:text="${log.pitchType}">
+                            </span>
+
+                        </td>
+
+                        <td>
+                            <span class="result-badge"
+                                th:classappend="${log.result}">
+
+                                <span th:text="${log.result}"></span>
+
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="desc-text"
+                                th:classappend="${log.result}"
+                                th:text="${log.description}">
+                            </span>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
-
-        <div class="avg-card-value">
-            <span th:text="${vsAllAvg}"></span>
-        </div>
-
-        <div class="avg-card-detail">
-            <span th:text="${vsAllDetail}"></span>
-        </div>
-    </div>
-
-    <!-- 対右 -->
-    <div class="avg-card"
-         th:if="${vsRAvg != null}">
-
-        <div class="avg-card-title">
-            対右ピッチャー打率
-        </div>
-
-        <div class="avg-card-value">
-            <span th:text="${vsRAvg}"></span>
-        </div>
-
-        <div class="avg-card-detail">
-            <span th:text="${vsRDetail}"></span>
-        </div>
-    </div>
-
-    <!-- 対左 -->
-    <div class="avg-card"
-         th:if="${vsLAvg != null}">
-
-        <div class="avg-card-title">
-            対左ピッチャー打率
-        </div>
-
-        <div class="avg-card-value">
-            <span th:text="${vsLAvg}"></span>
-        </div>
-
-        <div class="avg-card-detail">
-            <span th:text="${vsLDetail}"></span>
-        </div>
-    </div>
-
-</div>
-
-
-<!-- =========================
-    🔥 打席ログ（対ALL）
-========================= -->
-<div th:if="${vsAllLogs != null}" class="log-section">
-
-    <h3 class="log-title">打席ログ（対ALL）</h3>
-
-    <div class="table-wrapper">
-
-        <table class="batting-log-table">
-
-            <thead>
-            <tr>
-                <th>日付</th>
-                <th>対戦</th>
-                <th>投手</th>
-                <th>球種(球速)</th>
-                <th>結果</th>
-                <th>説明</th>
-            </tr>
-            </thead>
-
-            <tbody>
-
-            <tr th:each="log : ${vsAllLogs}">
-
-                <td th:text="${log.game_date}"></td>
-
-                <td th:text="${log.opponent}"></td>
-
-                <td>
-                    <span th:text="${log.pitcher}"></span>
-                    （<span th:text="${log.hand}"></span>）
-                </td>
-
-                <td class="pitch-cell">
-
-                    <span class="velo">
-                        84.1mph
-                    </span>
-
-                    <span class="pitch-badge sweeper">
-                        Sweeper
-                    </span>
-
-                </td>
-
-                <td>
-                    <span class="result-badge"
-                        th:classappend="${log.result}">
-
-                        <span th:text="${log.result}"></span>
-
-                    </span>
-                </td>
-
-                <td>
-                    <span class="desc-text"
-                        th:classappend="${log.result}"
-                        th:text="${log.description}">
-                    </span>
-                </td>
-            </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
 
         <!-- =========================
             右（単体表示時のみ）
         ========================= -->
-        <!-- <div th:if="${vsRAvg != null}">
-            <h3>対右ピッチャー打率</h3>
-            <p>
-                VS R: <span th:text="${vsRAvg}"></span>
-                (<span th:text="${vsRDetail}"></span>)
-            </p>
-        </div> -->
-
         <div th:if="${vsRLogs != null}">
+
             <h3>打席ログ（対右）</h3>
 
-            <div th:each="log : ${vsRLogs}">
-                <p>
-                    <span th:text="${log.game_date}"></span>
-                    <span th:text="${log.opponent}"></span>
-                    <span th:text="${log.pitcher}"></span>
-                    （<span th:text="${log.hand}"></span>）
-                    →
-                    <span th:text="${log.result}"></span>：
-                    <span th:text="${log.description}"></span>
-                </p>
-            </div>
+            <table class="batting-log-table">
+
+                <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>TEAM</th>
+                    <th>PITCHER</th>
+                    <th>PITCH</th>
+                    <th>RESULT</th>
+                    <th>DESCRIPTION</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="log : ${vsRLogs}">
+
+                    <td th:text="${log.game_date}"></td>
+
+                    <td th:text="${log.opponent}"></td>
+
+                    <td>
+                        <span th:text="${log.pitcher}"></span>
+                        (<span th:text="${log.hand}"></span>)
+                    </td>
+
+                    <td class="pitch-cell">
+
+                        <span class="velo"
+                            th:text="${log.pitchSpeed}">
+                        </span>
+
+                        <span class="pitch-badge"
+                            th:text="${log.pitchType}">
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="result-badge"
+                            th:classappend="${log.result}">
+
+                            <span th:text="${log.result}"></span>
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="desc-text"
+                            th:classappend="${log.result}"
+                            th:text="${log.description}">
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
         </div>
+
 
         <!-- =========================
             左（単体表示時のみ）
         ========================= -->
-        <!-- <div th:if="${vsLAvg != null}">
-            <h3>対左ピッチャー打率</h3>
-            <p>
-                VS L: <span th:text="${vsLAvg}"></span>
-                (<span th:text="${vsLDetail}"></span>)
-            </p>
-        </div> -->
-
         <div th:if="${vsLLogs != null}">
+
             <h3>打席ログ（対左）</h3>
 
-            <div th:each="log : ${vsLLogs}">
-                <p>
-                    <span th:text="${log.game_date}"></span>
-                    <span th:text="${log.opponent}"></span>
-                    <span th:text="${log.pitcher}"></span>
-                    （<span th:text="${log.hand}"></span>）
-                    →
-                    <span th:text="${log.result}"></span>：
-                    <span th:text="${log.description}"></span>
-                </p>
-            </div>
-        </div>
-    </div>
+            <table class="batting-log-table">
 
+                <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>TEAM</th>
+                    <th>PITCHER</th>
+                    <th>PITCH</th>
+                    <th>RESULT</th>
+                    <th>DESCRIPTION</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="log : ${vsLLogs}">
+
+                    <td th:text="${log.game_date}"></td>
+
+                    <td th:text="${log.opponent}"></td>
+
+                    <td>
+                        <span th:text="${log.pitcher}"></span>
+                        (<span th:text="${log.hand}"></span>)
+                    </td>
+
+                    <td class="pitch-cell">
+
+                        <span class="velo"
+                            th:text="${log.pitchSpeed}">
+                        </span>
+
+                        <span class="pitch-badge"
+                            th:classappend="${#strings.toLowerCase(#strings.replace(log.pitchType,' ','-'))}"
+                            th:text="${log.pitchType}">
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="result-badge"
+                            th:classappend="${log.result}">
+
+                            <span th:text="${log.result}"></span>
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="desc-text"
+                            th:classappend="${log.result}"
+                            th:text="${log.description}">
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
 
 <!-- /**
 * ============================================

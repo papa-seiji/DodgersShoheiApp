@@ -659,6 +659,66 @@ body {
     border-bottom:none;
 }
 
+
+    /* =========================
+    PITCH TYPE COLORS
+    ========================= */
+
+    /* Four-Seam */
+    .pitch-badge.four-seam{
+        background:#7f1d1d;
+        color:#fecaca;
+    }
+
+    /* Sinker */
+    .pitch-badge.sinker{
+        background:#78350f;
+        color:#fde68a;
+    }
+
+    /* Sweeper */
+    .pitch-badge.sweeper{
+        background:#312e81;
+        color:#c7d2fe;
+    }
+
+    /* Slider */
+    .pitch-badge.slider{
+        background:#0f766e;
+        color:#ccfbf1;
+    }
+
+    /* Cutter */
+    .pitch-badge.cutter{
+        background:#92400e;
+        color:#fde68a;
+    }
+
+    /* Curve */
+    .pitch-badge.curve{
+        background:#1e3a8a;
+        color:#bfdbfe;
+    }
+
+    /* Knuckle Curve */
+    .pitch-badge.knuckle-curve{
+        background:#581c87;
+        color:#e9d5ff;
+    }
+
+    /* Splitter */
+    .pitch-badge.splitter{
+        background:#4c1d95;
+        color:#e9d5ff;
+    }
+
+    /* Changeup */
+    .pitch-badge.changeup{
+        background:#14532d;
+        color:#bbf7d0;
+    }
+
+
 /* ============================================
 ▼ mobile
 ============================================ */
