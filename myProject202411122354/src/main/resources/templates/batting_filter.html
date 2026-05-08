@@ -233,16 +233,76 @@
         </div>
         <hr>
 
+
         <!-- =========================
             🔥 対ALL（メイン表示）
         ========================= -->
-        <div th:if="${vsAllAvg != null}">
+        <!-- <div th:if="${vsAllAvg != null}">
             <h3>対ALLピッチャー打率</h3>
             <p>
                 VS ALL: <span th:text="${vsAllAvg}"></span>
                 (<span th:text="${vsAllDetail}"></span>)
             </p>
+        </div> -->
+
+<!-- =========================================
+     AVG CARD AREA
+========================================= -->
+<div class="avg-card-wrap">
+
+    <!-- 対ALL -->
+    <div class="avg-card"
+         th:if="${vsAllAvg != null}">
+
+        <div class="avg-card-title">
+            対ALLピッチャー打率
         </div>
+
+        <div class="avg-card-value">
+            <span th:text="${vsAllAvg}"></span>
+        </div>
+
+        <div class="avg-card-detail">
+            <span th:text="${vsAllDetail}"></span>
+        </div>
+    </div>
+
+    <!-- 対右 -->
+    <div class="avg-card"
+         th:if="${vsRAvg != null}">
+
+        <div class="avg-card-title">
+            対右ピッチャー打率
+        </div>
+
+        <div class="avg-card-value">
+            <span th:text="${vsRAvg}"></span>
+        </div>
+
+        <div class="avg-card-detail">
+            <span th:text="${vsRDetail}"></span>
+        </div>
+    </div>
+
+    <!-- 対左 -->
+    <div class="avg-card"
+         th:if="${vsLAvg != null}">
+
+        <div class="avg-card-title">
+            対左ピッチャー打率
+        </div>
+
+        <div class="avg-card-value">
+            <span th:text="${vsLAvg}"></span>
+        </div>
+
+        <div class="avg-card-detail">
+            <span th:text="${vsLDetail}"></span>
+        </div>
+    </div>
+
+</div>
+
 
         <div th:if="${vsAllLogs != null}">
             <h3>打席ログ（対ALL）</h3>
@@ -263,13 +323,13 @@
         <!-- =========================
             右（単体表示時のみ）
         ========================= -->
-        <div th:if="${vsRAvg != null}">
+        <!-- <div th:if="${vsRAvg != null}">
             <h3>対右ピッチャー打率</h3>
             <p>
                 VS R: <span th:text="${vsRAvg}"></span>
                 (<span th:text="${vsRDetail}"></span>)
             </p>
-        </div>
+        </div> -->
 
         <div th:if="${vsRLogs != null}">
             <h3>打席ログ（対右）</h3>
@@ -290,13 +350,13 @@
         <!-- =========================
             左（単体表示時のみ）
         ========================= -->
-        <div th:if="${vsLAvg != null}">
+        <!-- <div th:if="${vsLAvg != null}">
             <h3>対左ピッチャー打率</h3>
             <p>
                 VS L: <span th:text="${vsLAvg}"></span>
                 (<span th:text="${vsLDetail}"></span>)
             </p>
-        </div>
+        </div> -->
 
         <div th:if="${vsLLogs != null}">
             <h3>打席ログ（対左）</h3>
