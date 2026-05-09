@@ -493,10 +493,74 @@ body {
 
     opacity:0;
     transition:opacity 0.25s ease;
+
+    pointer-events: none;
 }
 
 .avg-card:hover::before{
     opacity:1;
+}
+
+
+.avg-card.my-filter-card1,
+.avg-card.my-filter-card2 {
+    background: linear-gradient(
+        180deg,
+        #2d0a57 0%,
+        #1a0838 100%
+    );
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:0 4px 18px rgba(160, 80, 255, 0.18);
+}
+
+.avg-card.my-filter-card1:hover,
+.avg-card.my-filter-card2:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 24px rgba(180, 90, 255, 0.35);
+    transition: all 0.22s ease;
+}
+
+.avg-card-title1,
+.avg-card-title2{
+    font-size: 21px;
+    letter-spacing: 0.5px;
+}
+
+#myFilterCard1Value,
+#myFilterCard2Value{
+    font-size: 37px;
+    /* font-weight: 900; */
+    line-height: 1;
+    color: #ffffff;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+    pointer-events: auto;
+    position: relative;
+    z-index: 10;
+}
+
+.avg-card-save-btn1,
+.avg-card-save-btn2{
+    color: #ffffff;
+    background: linear-gradient(
+    180deg,
+    #ff3b82 0%,
+    #8a1248 100%
+);
+    width: 183px;
+    height: 45px;
+    font-size: 20px;
+    font-weight: 900;
+    border: none;
+    border-radius: 12px;
+    box-shadow:
+        0 4px 14px rgba(255, 50, 120, 0.35);
+}
+
+.avg-card-detail1,
+.avg-card-detail2{
+    font-size: 20px;
 }
 
 /* =========================================
@@ -520,6 +584,10 @@ body {
     color:#ffffff;
     margin-bottom:14px;
     letter-spacing:1px;
+
+        pointer-events: auto;
+    position: relative;
+    z-index: 10;
 }
 
 /* =========================================
@@ -543,6 +611,7 @@ body {
     opacity:0.92;
 
     filter:drop-shadow(0 0 12px rgba(255,255,255,0.12));
+    pointer-events: none;
 }
 
 /* 対右 */
@@ -983,6 +1052,7 @@ body {
         cursor:pointer;
         height: 50px;
         width: 100px;
+        font-size: 24px;
     }
 
     .filter-clear-btn{
@@ -1336,6 +1406,8 @@ body {
 
     font-size:14px;
 }
+
+
 
 /* =========================================
     mobile

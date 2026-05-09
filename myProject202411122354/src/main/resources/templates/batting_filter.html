@@ -17,7 +17,7 @@
             <!-- ★ 使い方ガイド -->
             <button type="button" class="guide-button">ⓘ 使い方ガイド</button>
         </div>
-        <a href="/hogehoge_01" class="back-button">← 前の画面に戻る</a>
+        <a href="/hogehoge_01" class="back-button" style="color: #ffffff;">← 前の画面に戻る</a>
         <hr>
 
         <!-- 🔽 フィルタUI -->
@@ -477,39 +477,6 @@
             ★ AVG CARD AREA
             ============================================ -->
             <div class="avg-card-wrap">
-
-                <!-- 対右 -->
-                <div class="avg-card">
-                    <div class="avg-card-title">
-                        対右ピッチャー打率
-                    </div>
-
-                    <div class="avg-card-value">
-                        .262
-                    </div>
-
-                    <div class="avg-card-detail">
-                        17-65
-                    </div>
-                    <span class="avg-icon right-icon">R</span>
-                </div>
-
-                <!-- 対左 -->
-                <div class="avg-card">
-                    <div class="avg-card-title">
-                        対左ピッチャー打率
-                    </div>
-
-                    <div class="avg-card-value">
-                        .273
-                    </div>
-
-                    <div class="avg-card-detail">
-                        6-22
-                    </div>
-                    <span class="avg-icon left-icon">L</span>
-                </div>
-
                 <!-- 得点圏 -->
                 <div class="avg-card">
                     <div class="avg-card-title">
@@ -524,6 +491,64 @@
                         27-110
                     </div>
                     <span class="avg-icon risp-icon">👤</span>
+                </div>
+
+                <!-- MY FILTER ① -->
+                <div class="avg-card my-filter-card1"
+                    onclick="loadFilterCard1()">
+
+                    <div class="avg-card-title1">
+                        MY ショートカット①
+                    </div>
+
+                    <div class="avg-card-value"
+                        id="myFilterCard1Value">
+                        SAVE
+                    </div>
+
+                    <button
+                        type="button"
+                        class="avg-card-save-btn1"
+                        onclick="saveFilterCard1(event)">
+                        SAVE
+                    </button>
+
+                    <div class="avg-card-detail1"
+                        id="myFilterCard1Detail">
+                        未保存
+                    </div>
+
+                    <span class="avg-icon">⭐</span>
+
+                </div>
+
+                <!-- MY FILTER ② -->
+                <div class="avg-card my-filter-card2"
+                    onclick="loadFilterCard2()">
+
+                    <div class="avg-card-title1">
+                        MY ショートカット②
+                    </div>
+
+                    <div class="avg-card-value"
+                        id="myFilterCard2Value">
+                        SAVE
+                    </div>
+
+                    <button
+                        type="button"
+                        class="avg-card-save-btn2"
+                        onclick="saveFilterCard2(event)">
+                        SAVE
+                    </button>
+
+                    <div class="avg-card-detail2"
+                        id="myFilterCard2Detail">
+                        未保存
+                    </div>
+
+                    <span class="avg-icon">⭐</span>
+
                 </div>
 
             </div>
@@ -1002,6 +1027,244 @@
         }
 
     });
+
+</script>
+
+
+
+<!--============================================
+// ★ MY FILTER① SAVE文字を押せるようにする
+// ============================================-->
+<script>
+
+    function saveFilterCard1(event) {
+
+        // ★ カード側クリックを止める
+        event.stopPropagation();
+
+        const filter = {
+            hand: document.querySelector('[name="hand"]').value,
+            result: document.querySelector('[name="result"]').value,
+            opponent: document.querySelector('[name="opponent"]').value,
+            pitcher: document.querySelector('[name="pitcher"]').value,
+            pitchType: document.querySelector('[name="pitchType"]').value,
+            speedMin: document.querySelector('[name="speedMin"]').value,
+            speedMax: document.querySelector('[name="speedMax"]').value
+        };
+
+        localStorage.setItem(
+            "battingFilterCard1",
+            JSON.stringify(filter)
+        );
+
+        alert("MY FILTER① に保存しました");
+    }
+
+</script>
+
+<!--============================================
+// ★ MY FILTER① + ② 保存済みカード化
+// ============================================-->
+<script>
+
+    window.addEventListener("DOMContentLoaded", () => {
+
+        // ============================================
+        // ★ MY FILTER① 復元表示
+        // ============================================
+
+        const saved =
+            localStorage.getItem("battingFilterCard1");
+
+        if (saved) {
+
+            const filter = JSON.parse(saved);
+
+            const title =
+                filter.opponent
+                || filter.pitcher
+                || "MY FILTER";
+
+            document.getElementById("myFilterCard1Value")
+                .textContent = title;
+
+            document.getElementById("myFilterCard1Detail")
+                .innerHTML =
+                    (filter.hand || "ALL")
+                    + " / "
+                    + (filter.pitcher || "ALL")
+                    + "<br>"
+                    + (filter.speedMin || "50")
+                    + "-"
+                    + (filter.speedMax || "110")
+                    + "mph";
+        }
+
+        // ============================================
+        // ★ MY FILTER② 復元表示
+        // ============================================
+
+        const saved2 =
+            localStorage.getItem("battingFilterCard2");
+
+        if (saved2) {
+
+            const filter2 = JSON.parse(saved2);
+
+            const title2 =
+                filter2.opponent
+                || filter2.pitcher
+                || "MY FILTER";
+
+            document.getElementById("myFilterCard2Value")
+                .textContent = title2;
+
+            document.getElementById("myFilterCard2Detail")
+                .innerHTML =
+                    (filter2.hand || "ALL")
+                    + " / "
+                    + (filter2.pitcher || "ALL")
+                    + "<br>"
+                    + (filter2.speedMin || "50")
+                    + "-"
+                    + (filter2.speedMax || "110")
+                    + "mph";
+        }
+
+    });
+
+    // ============================================
+    // ★ MY FILTER① LOAD
+    // ============================================
+
+    function loadFilterCard1() {
+
+        const saved =
+            localStorage.getItem("battingFilterCard1");
+
+        if (!saved) {
+            alert("保存データなし");
+            return;
+        }
+
+        const filter = JSON.parse(saved);
+
+        document.querySelector('[name="hand"]').value =
+            filter.hand || "ALL";
+
+        document.querySelector('[name="result"]').value =
+            filter.result || "";
+
+        document.querySelector('[name="opponent"]').value =
+            filter.opponent || "";
+
+        document.querySelector('[name="pitcher"]').value =
+            filter.pitcher || "";
+
+        document.querySelector('[name="pitchType"]').value =
+            filter.pitchType || "ALL";
+
+        document.querySelector('[name="speedMin"]').value =
+            filter.speedMin || 50;
+
+        document.querySelector('[name="speedMax"]').value =
+            filter.speedMax || 110;
+
+        // ★ 自動検索
+        // document.querySelector('form').submit();
+    }
+
+</script>
+
+<!--============================================
+// ★ MY FILTER② SAVE
+// ============================================-->
+<script>
+
+    function saveFilterCard2(event) {
+
+        event.stopPropagation();
+
+        const filter = {
+            hand: document.querySelector('[name="hand"]').value,
+            result: document.querySelector('[name="result"]').value,
+            opponent: document.querySelector('[name="opponent"]').value,
+            pitcher: document.querySelector('[name="pitcher"]').value,
+            pitchType: document.querySelector('[name="pitchType"]').value,
+            speedMin: document.querySelector('[name="speedMin"]').value,
+            speedMax: document.querySelector('[name="speedMax"]').value
+        };
+
+        localStorage.setItem(
+            "battingFilterCard2",
+            JSON.stringify(filter)
+        );
+
+        const title =
+            filter.opponent
+            || filter.pitcher
+            || "MY FILTER";
+
+        document.getElementById("myFilterCard2Value")
+            .textContent = title;
+
+        document.getElementById("myFilterCard2Detail")
+            .innerHTML =
+                (filter.hand || "ALL")
+                + " / "
+                + (filter.pitcher || "ALL")
+                + "<br>"
+                + (filter.speedMin || "50")
+                + "-"
+                + (filter.speedMax || "110")
+                + "mph";
+
+        alert("MY FILTER② に保存しました");
+    }
+
+</script>
+
+<!--============================================
+// ★ MY FILTER② LOAD
+// ============================================-->
+<script>
+
+    function loadFilterCard2() {
+
+        const saved =
+            localStorage.getItem("battingFilterCard2");
+
+        if (!saved) {
+            alert("保存データなし");
+            return;
+        }
+
+        const filter = JSON.parse(saved);
+
+        document.querySelector('[name="hand"]').value =
+            filter.hand || "ALL";
+
+        document.querySelector('[name="result"]').value =
+            filter.result || "";
+
+        document.querySelector('[name="opponent"]').value =
+            filter.opponent || "";
+
+        document.querySelector('[name="pitcher"]').value =
+            filter.pitcher || "";
+
+        document.querySelector('[name="pitchType"]').value =
+            filter.pitchType || "ALL";
+
+        document.querySelector('[name="speedMin"]').value =
+            filter.speedMin || 50;
+
+        document.querySelector('[name="speedMax"]').value =
+            filter.speedMax || 110;
+
+        // ★ 自動検索
+        // document.querySelector('form').submit();
+    }
 
 </script>
 </body>
