@@ -443,18 +443,24 @@ body {
     AVG CARD AREA
 ========================================= */
 .avg-card-wrap{
-    display:flex;
-    gap:20px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap:9px;
+
     margin:40px 0 32px;
-    flex-wrap:nowrap;
 }
 
 /* =========================================
     AVG CARD
 ========================================= */
 .avg-card{
-    flex:1;
-    min-width:220px;
+    /* width:100%; */
+
+    min-width:0;;
     background:rgba(8,18,51,0.92);
     border:1px solid rgba(255,255,255,0.08);
     border-radius:18px;
@@ -567,17 +573,22 @@ body {
 /* =========================================
     スマホ
 ========================================= */
-@media (max-width: 768px){
+@media (max-width:768px){
 
     .avg-card-wrap{
-        flex-direction:column;
+
+        grid-template-columns:1fr;
+
         gap:14px;
     }
 
     .avg-card{
+
         width:100%;
-        min-width:auto;
+        min-width:0;
+
         padding:18px;
+
         border-radius:16px;
     }
 
@@ -585,7 +596,6 @@ body {
         font-size:40px;
     }
 }
-
 
 /* =========================
     TABLE HEADER STICKY
@@ -1301,40 +1311,253 @@ body {
 /* =========================================
     SECTION
 ========================================= */
-.guide-section{
+    .guide-section{
+        margin-bottom:28px;
+        padding:20px;
+        border-radius:18px;
+        background:
+            rgba(255,255,255,0.03);
+        border:
+            1px solid rgba(255,255,255,0.06);
+    }
 
-    margin-bottom:28px;
+    .guide-section h4{
+        margin:0 0 12px;
+        color:white;
+        font-size:18px;
+        font-weight:800;
+    }
 
-    padding:20px;
+    .guide-section p{
+        margin:0;
+        color:#b7c3df;
+        line-height:1.8;
+        font-size:14px;
+    }
 
-    border-radius:18px;
+/* =========================================
+    SEARCH LOADING
+    検索押下時：検索中...ボタン回転
+========================================= */
 
-    background:
-        rgba(255,255,255,0.03);
+.search-btn.loading{
 
-    border:
-        1px solid rgba(255,255,255,0.06);
+    opacity:0.7;
+    cursor:wait;
+    pointer-events:none;
+    transform:scale(0.98);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    /* ★追加 */
+    min-width:150px;
+    white-space:nowrap;
+
+    position:relative;
 }
 
-.guide-section h4{
+/* spinner */
+.search-btn.loading::after{
 
-    margin:0 0 12px;
+    content:"";
+
+    width:16px;
+    height:16px;
+
+    border:2px solid rgba(255,255,255,0.35);
+    border-top:2px solid #ffffff;
+
+    border-radius:50%;
+
+    animation:spin 0.8s linear infinite;
+}
+
+/* 回転 */
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================================
+    batting log area
+========================================= */
+.batting-log-area{
+
+    margin-top:28px;
+
+    background:rgba(10,18,40,0.95);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:20px;
+
+    padding:24px;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.35);
+}
+
+/* タイトル */
+.batting-log-title{
+
+    font-size:22px;
+
+    margin-bottom:18px;
+
+    color:#ffffff;
+}
+
+
+
+/* =========================================
+    RISP LOG CARD
+========================================= */
+.risp-log-card{
+
+    padding:18px 20px;
+
+    margin-bottom:14px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,0.025);
+
+    border:
+        1px solid rgba(255,255,255,0.05);
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+/* hover */
+.risp-log-card:hover{
+
+    background:
+        rgba(59,130,246,0.06);
+
+    border-color:
+        rgba(59,130,246,0.18);
+
+    transform:
+        translateY(-1px);
+}
+
+/* =========================================
+    TOP
+========================================= */
+.risp-log-top{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-bottom:10px;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+/* 日付 */
+.log-date{
+
+    color:#94a3b8;
+}
+
+/* チーム */
+.log-team{
+
+    color:#dbeafe;
+}
+
+/* =========================================
+    MIDDLE
+========================================= */
+.risp-log-middle{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    margin-bottom:12px;
+}
+
+/* 投手 */
+.log-pitcher{
+
+    color:#ffffff;
+
+    font-size:15px;
+    font-weight:700;
+}
+
+/* RESULT */
+.log-result{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    min-width:52px;
+
+    padding:4px 10px;
+
+    border-radius:999px;
+
+    font-size:11px;
+    font-weight:800;
 
     color:white;
 
-    font-size:18px;
-    font-weight:800;
+    background:#334155;
 }
 
-.guide-section p{
+/* HIT */
+.log-result.HIT{
+    background:#059669;
+}
 
-    margin:0;
+/* OUT */
+.log-result.OUT{
+    background:#475569;
+}
 
-    color:#b7c3df;
+/* SO */
+.log-result.SO{
+    background:#b91c1c;
+}
+
+/* BB */
+.log-result.BB{
+    background:#2563eb;
+}
+
+/* HR */
+.log-result.HR{
+    background:#9333ea;
+}
+
+/* =========================================
+    DESCRIPTION
+========================================= */
+.risp-log-desc{
+
+    color:#dbe7ff;
+
+    font-size:13px;
 
     line-height:1.8;
-
-    font-size:14px;
 }
 
 /* =========================================

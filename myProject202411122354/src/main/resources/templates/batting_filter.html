@@ -263,18 +263,8 @@
                             クリア
                         </button>
                     </div>
-
-
-
             </div>
-
-
-
-
-
-
         </div>
-
 
 <script>
 
@@ -473,61 +463,6 @@
 
             </form>
 
-            <!-- ============================================
-            ★ AVG CARD AREA
-            ============================================ -->
-            <div class="avg-card-wrap">
-
-                <!-- 対右 -->
-                <div class="avg-card">
-                    <div class="avg-card-title">
-                        対右ピッチャー打率
-                    </div>
-
-                    <div class="avg-card-value">
-                        .262
-                    </div>
-
-                    <div class="avg-card-detail">
-                        17-65
-                    </div>
-                    <span class="avg-icon right-icon">R</span>
-                </div>
-
-                <!-- 対左 -->
-                <div class="avg-card">
-                    <div class="avg-card-title">
-                        対左ピッチャー打率
-                    </div>
-
-                    <div class="avg-card-value">
-                        .273
-                    </div>
-
-                    <div class="avg-card-detail">
-                        6-22
-                    </div>
-                    <span class="avg-icon left-icon">L</span>
-                </div>
-
-                <!-- 得点圏 -->
-                <div class="avg-card">
-                    <div class="avg-card-title">
-                        得点圏打率
-                    </div>
-
-                    <div class="avg-card-value">
-                        .245
-                    </div>
-
-                    <div class="avg-card-detail">
-                        27-110
-                    </div>
-                    <span class="avg-icon risp-icon">👤</span>
-                </div>
-
-            </div>
-        </div>
         <hr>
 
 
@@ -541,6 +476,7 @@
 
         <!-- 対ALL -->
         <div class="avg-card"
+            data-filter="ALL"
             th:if="${vsAllAvg != null}">
 
             <div class="avg-card-title">
@@ -556,8 +492,32 @@
             </div>
         </div>
 
+
+        <!-- 得点圏 -->
+            <div class="avg-card avg-card-link"
+                onclick="location.href='/batting/filter?mode=RISP'">
+
+                <div class="avg-card-title">
+                    得点圏打率
+                </div>
+
+                <div class="avg-card-value">
+                    .245
+                </div>
+
+                <div class="avg-card-detail">
+                    27-110
+                </div>
+
+                <span class="avg-icon risp-icon">👤</span>
+
+            </div>
+
+
+
         <!-- 対右 -->
         <div class="avg-card"
+            data-filter="R"
             th:if="${vsRAvg != null}">
 
             <div class="avg-card-title">
@@ -571,10 +531,12 @@
             <div class="avg-card-detail">
                 <span th:text="${vsRDetail}"></span>
             </div>
+            <span class="avg-icon right-icon">R</span>
         </div>
 
         <!-- 対左 -->
         <div class="avg-card"
+            data-filter="L"
             th:if="${vsLAvg != null}">
 
             <div class="avg-card-title">
@@ -588,15 +550,103 @@
             <div class="avg-card-detail">
                 <span th:text="${vsLDetail}"></span>
             </div>
+            <span class="avg-icon left-icon">L</span>
         </div>
 
     </div>
 
 
+<!-- =========================
+    🔥 打席ログ（得点圏）
+========================= -->
+    <div th:if="${mode == 'RISP'}"
+        class="log-section">
+
+    <h3 class="log-title">打席ログ（得点圏）</h3>
+
+    <div class="table-wrapper">
+
+        <table class="batting-log-table">
+
+            <thead>
+            <tr>
+                <th>日付</th>
+                <th>対戦</th>
+                <th>投手</th>
+                <th>球種(球速)</th>
+                <th>結果</th>
+                <th>説明</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="log : ${rispLogs}">
+
+                <!-- 日付 -->
+                <td th:text="${log.game_date}"></td>
+
+                <!-- チーム -->
+                <td th:text="${log.opponent}"></td>
+
+                <!-- 投手 -->
+                <td>
+                    <span th:text="${log.pitcher}"></span>
+                    （<span th:text="${log.hand}"></span>）
+                </td>
+
+                <!-- 球種 -->
+                <td class="pitch-cell">
+
+                    <span class="velo"
+                        th:text="${log['pitch_speed'] + 'mph'}">
+                    </span>
+
+                    <span class="pitch-badge"
+                        th:class="'pitch-tag ' + ${#strings.toLowerCase(#strings.replace(log['pitch_type'],' ','-'))}"
+                        th:text="${log['pitch_type']}">
+                    </span>
+
+                </td>
+
+                <!-- 結果 -->
+                <td>
+
+                    <span class="result-badge"
+                        th:classappend="${log.result}">
+
+                        <span th:text="${log.result}"></span>
+
+                    </span>
+
+                </td>
+
+                <!-- 説明 -->
+                <td>
+
+                    <span class="desc-text"
+                        th:classappend="${log.result}"
+                        th:text="${log.description}">
+                    </span>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
         <!-- =========================
             🔥 打席ログ（対ALL）
         ========================= -->
-        <div th:if="${vsAllLogs != null}" class="log-section">
+        <div th:if="${mode != 'RISP' and vsAllLogs != null}"
+            class="log-section">
 
             <h3 class="log-title">打席ログ（対ALL）</h3>
 
@@ -619,7 +669,7 @@
 
                     <tr th:each="log : ${vsAllLogs}">
 
-                        <td th:text="${log.game_date}"></td>
+                        <td th:text="${log['game_date']}"></td>
 
                         <td th:text="${log.opponent}"></td>
 
@@ -668,7 +718,7 @@
         <!-- =========================
             右（単体表示時のみ）
         ========================= -->
-        <div th:if="${vsRLogs != null}">
+        <div th:if="${mode != 'RISP' and vsRLogs != null}">
 
             <h3>打席ログ（対右）</h3>
 
@@ -742,7 +792,7 @@
         <!-- =========================
             左（単体表示時のみ）
         ========================= -->
-        <div th:if="${vsLLogs != null}">
+        <div th:if="${mode != 'RISP' and vsLLogs != null}">
 
             <h3>打席ログ（対左）</h3>
 
@@ -1002,6 +1052,45 @@
         }
 
     });
+
+</script>
+
+<script>
+
+    /* =========================================
+        SEARCH LOADING 検索中ローディング 検索押下時：検索中...ボタン回転。
+    ========================================= */
+
+    const filterForm =
+        document.querySelector("form");
+
+    const searchButton =
+        document.querySelector(".search-btn");
+
+    if(filterForm && searchButton){
+
+        filterForm.addEventListener("submit", (e) => {
+
+            e.preventDefault();
+
+            searchButton.disabled = true;
+
+            searchButton.classList.add("loading");
+
+            searchButton.innerHTML =
+                "検索中...";
+
+            console.log("loading start");
+
+            setTimeout(() => {
+
+                filterForm.submit();
+
+            }, 400);
+
+        });
+
+    }
 
 </script>
 </body>

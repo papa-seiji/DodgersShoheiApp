@@ -294,6 +294,7 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String pitchType, // ★追加
             @RequestParam(required = false) Integer speedMin, // ★追加
             @RequestParam(required = false) Integer speedMax, // ★追加
+            @RequestParam(required = false) String mode, // ★追加 batting_filter.htmlの得点圏カード用のロジック
             Model model) {
 
         // 🔥 ALL（明示的に選んだ時だけ）
@@ -553,6 +554,51 @@ public class OhtaniScorebookController {
 
         // ★ 画面へ渡す
         model.addAttribute("opponents", opponents);
+
+        /*
+         * =========================================
+         * RISPモード時でもAVGカード表示
+         * =========================================
+         */
+        if ("RISP".equals(mode)
+                || hand == null
+                || hand.isBlank()
+                || "ALL".equals(hand)) {
+
+            // 対右
+            Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+
+            model.addAttribute("vsRAvg", vsR.get("avg"));
+            model.addAttribute("vsRDetail", vsR.get("detail"));
+
+            // 対左
+            Map<String, String> vsL = mlbGameService.getVsLeftStatsFormatted();
+
+            model.addAttribute("vsLAvg", vsL.get("avg"));
+            model.addAttribute("vsLDetail", vsL.get("detail"));
+
+            // 対ALL
+            Map<String, String> vsAll = mlbGameService.getVsAllStatsFormatted();
+
+            model.addAttribute("vsAllAvg", vsAll.get("avg"));
+            model.addAttribute("vsAllDetail", vsAll.get("detail"));
+        }
+
+        /*
+         * =========================================
+         * ログモード
+         * =========================================
+         */
+        model.addAttribute("mode", mode);
+
+        /*
+         * =========================================
+         * 得点圏ログ（RISP）
+         * =========================================
+         */
+        model.addAttribute(
+                "rispLogs",
+                gameRepository.getRispLogs());
 
         return "batting_filter";
     }
