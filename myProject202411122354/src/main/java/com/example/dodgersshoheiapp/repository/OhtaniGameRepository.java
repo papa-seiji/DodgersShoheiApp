@@ -769,17 +769,18 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'R'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa1_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa1_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa1_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ?
+                                    AND ?
                             )
                         )
 
@@ -789,17 +790,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'R'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa2_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa2_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa2_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -809,17 +810,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'R'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa3_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa3_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa3_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -829,17 +830,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'R'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa4_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa4_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa4_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -849,17 +850,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'R'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa5_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa5_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa5_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -869,17 +870,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'R'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa6_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa6_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa6_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
                     ) t
@@ -1280,17 +1281,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa1_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa1_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa1_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa1_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1300,17 +1301,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa2_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa2_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa2_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa2_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1320,17 +1321,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa3_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa3_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa3_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa3_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1340,17 +1341,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa4_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa4_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa4_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa4_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1360,17 +1361,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa5_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa5_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa5_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa5_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1380,17 +1381,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE d.pa6_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa6_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa6_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa6_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
                     ) t
@@ -1767,17 +1768,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa1_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa1_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa1_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1792,17 +1793,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa2_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa2_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa2_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1817,17 +1818,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa3_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa3_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa3_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1842,17 +1843,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa4_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa4_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa4_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1867,17 +1868,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa5_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa5_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa5_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
 
@@ -1892,17 +1893,17 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details d
                         JOIN ohtani_games g ON d.game_id = g.id
                         WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        AND (? IS NULL OR ? = '' OR d.pa6_result = ?)
+                        AND (? IS NULL OR ? = '' OR g.opponent = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa6_pitcher = ?)
+                        AND (? IS NULL OR ? = '' OR d.pa6_description LIKE '%' || ? || '%')
                         AND (
-                            CAST(? AS NUMERIC) IS NULL
-                            OR CAST(? AS NUMERIC) IS NULL
+                            ? IS NULL
+                            OR ? = ''
                             OR (
                                 substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
                                 AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                    BETWEEN ? AND ?
                             )
                         )
                     ) t

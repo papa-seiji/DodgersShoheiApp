@@ -292,13 +292,32 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String opponent, // ★追加
             @RequestParam(required = false) String pitcher, // ★追加
             @RequestParam(required = false) String pitchType, // ★追加
-            @RequestParam(required = false) Integer speedMin, // ★追加
-            @RequestParam(required = false) Integer speedMax, // ★追加
+            @RequestParam(required = false) String speedMin, // ★追加
+            @RequestParam(required = false) String speedMax, // ★追加
             @RequestParam(required = false) String mode, // ★追加 batting_filter.htmlの得点圏カード用のロジック
             Model model) {
 
-        // 🔥 ALL（明示的に選んだ時だけ）
-        if ("ALL".equals(hand)) {
+        Integer speedMinValue = null;
+        Integer speedMaxValue = null;
+
+        if (speedMin != null
+                && !speedMin.isBlank()
+                && !"50".equals(speedMin)) {
+
+            speedMinValue = Integer.parseInt(speedMin);
+        }
+
+        if (speedMax != null
+                && !speedMax.isBlank()
+                && !"110".equals(speedMax)) {
+
+            speedMaxValue = Integer.parseInt(speedMax);
+        }
+
+        // 🔥 ALL
+        if (hand == null
+                || hand.isBlank()
+                || "ALL".equals(hand)) {
 
             Map<String, String> vsAll;
 
@@ -310,23 +329,6 @@ public class OhtaniScorebookController {
 
                 vsAll = mlbGameService
                         .getVsAllStatsByPitcherFormatted(pitcher);
-
-                // ============================================
-                // ★ 球速帯分析モード
-                // ============================================
-            } else if (speedMin != null
-                    && speedMax != null
-                    && (pitchType == null
-                            || pitchType.isBlank()
-                            || "ALL".equals(pitchType))
-                    && (opponent == null
-                            || opponent.isBlank()
-                            || "ALL".equals(opponent))) {
-
-                vsAll = mlbGameService
-                        .getVsAllStatsBySpeedFormatted(
-                                speedMin,
-                                speedMax);
 
                 // ============================================
                 // ★ pitchType 指定時
@@ -348,6 +350,23 @@ public class OhtaniScorebookController {
                 vsAll = mlbGameService
                         .getVsAllStatsByOpponentFormatted(opponent);
 
+                // ============================================
+                // ★ 球速帯分析モード
+                // ============================================
+            } else if (speedMinValue != null
+                    && speedMaxValue != null
+                    && (pitchType == null
+                            || pitchType.isBlank()
+                            || "ALL".equals(pitchType))
+                    && (opponent == null
+                            || opponent.isBlank()
+                            || "ALL".equals(opponent))) {
+
+                vsAll = mlbGameService
+                        .getVsAllStatsBySpeedFormatted(
+                                speedMinValue,
+                                speedMaxValue);
+
             } else {
 
                 vsAll = mlbGameService
@@ -366,8 +385,8 @@ public class OhtaniScorebookController {
                             opponent,
                             pitcher,
                             pitchType,
-                            speedMin,
-                            speedMax));
+                            speedMinValue,
+                            speedMaxValue));
         }
 
         // 右
@@ -383,27 +402,6 @@ public class OhtaniScorebookController {
 
                 vsR = mlbGameService
                         .getVsRightStatsByPitcherFormatted(pitcher);
-
-                // ============================================
-                // ★ 球速帯分析モード
-                // 条件：
-                // ・speed指定あり
-                // ・pitchType=ALL
-                // ・opponent=ALL
-                // ============================================
-            } else if (speedMin != null
-                    && speedMax != null
-                    && (pitchType == null
-                            || pitchType.isBlank()
-                            || "ALL".equals(pitchType))
-                    && (opponent == null
-                            || opponent.isBlank()
-                            || "ALL".equals(opponent))) {
-
-                vsR = mlbGameService
-                        .getVsRightStatsBySpeedFormatted(
-                                speedMin,
-                                speedMax);
 
                 // ============================================
                 // ★ pitchType 指定時
@@ -425,6 +423,27 @@ public class OhtaniScorebookController {
                 vsR = mlbGameService
                         .getVsRightStatsByOpponentFormatted(opponent);
 
+                // ============================================
+                // ★ 球速帯分析モード
+                // 条件：
+                // ・speed指定あり
+                // ・pitchType=ALL
+                // ・opponent=ALL
+                // ============================================
+            } else if (speedMinValue != null
+                    && speedMaxValue != null
+                    && (pitchType == null
+                            || pitchType.isBlank()
+                            || "ALL".equals(pitchType))
+                    && (opponent == null
+                            || opponent.isBlank()
+                            || "ALL".equals(opponent))) {
+
+                vsR = mlbGameService
+                        .getVsRightStatsBySpeedFormatted(
+                                speedMinValue,
+                                speedMaxValue);
+
             } else {
 
                 vsR = mlbGameService
@@ -436,15 +455,35 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsRAvg", vsR.get("avg"));
             model.addAttribute("vsRDetail", vsR.get("detail"));
-            // ★ここ修正
-            model.addAttribute("vsRLogs",
-                    mlbGameService.getVsRightLogs(
-                            result,
-                            opponent,
-                            pitcher,
-                            pitchType,
-                            speedMin,
-                            speedMax));
+
+            // ============================================
+            // ★ ログ取得
+            // speed未指定時のNULL型推論エラー対策
+            // ============================================
+
+            if (speedMinValue != null
+                    && speedMaxValue != null) {
+
+                model.addAttribute("vsRLogs",
+                        mlbGameService.getVsRightLogs(
+                                result,
+                                opponent,
+                                pitcher,
+                                pitchType,
+                                speedMinValue,
+                                speedMaxValue));
+
+            } else {
+
+                model.addAttribute("vsRLogs",
+                        mlbGameService.getVsRightLogs(
+                                result,
+                                opponent,
+                                pitcher,
+                                pitchType,
+                                null,
+                                null));
+            }
         }
 
         // 左
@@ -460,23 +499,6 @@ public class OhtaniScorebookController {
 
                 vsL = mlbGameService
                         .getVsLeftStatsByPitcherFormatted(pitcher);
-
-                // ============================================
-                // ★ 球速帯分析モード
-                // ============================================
-            } else if (speedMin != null
-                    && speedMax != null
-                    && (pitchType == null
-                            || pitchType.isBlank()
-                            || "ALL".equals(pitchType))
-                    && (opponent == null
-                            || opponent.isBlank()
-                            || "ALL".equals(opponent))) {
-
-                vsL = mlbGameService
-                        .getVsLeftStatsBySpeedFormatted(
-                                speedMin,
-                                speedMax);
 
                 // ============================================
                 // ★ pitchType 指定時
@@ -498,6 +520,23 @@ public class OhtaniScorebookController {
                 vsL = mlbGameService
                         .getVsLeftStatsByOpponentFormatted(opponent);
 
+                // ============================================
+                // ★ 球速帯分析モード
+                // ============================================
+            } else if (speedMinValue != null
+                    && speedMaxValue != null
+                    && (pitchType == null
+                            || pitchType.isBlank()
+                            || "ALL".equals(pitchType))
+                    && (opponent == null
+                            || opponent.isBlank()
+                            || "ALL".equals(opponent))) {
+
+                vsL = mlbGameService
+                        .getVsLeftStatsBySpeedFormatted(
+                                speedMinValue,
+                                speedMaxValue);
+
             } else {
 
                 vsL = mlbGameService
@@ -509,16 +548,36 @@ public class OhtaniScorebookController {
 
             model.addAttribute("vsLAvg", vsL.get("avg"));
             model.addAttribute("vsLDetail", vsL.get("detail"));
-            // ★ここ修正
-            model.addAttribute("vsLLogs",
-                    mlbGameService.getVsLeftLogs(
-                            result,
-                            opponent,
-                            pitcher,
-                            pitchType,
-                            speedMin,
-                            speedMax));
-        }
+
+            // ============================================
+            // ★ ログ取得
+            // speed未指定時のNULL型推論エラー対策
+            // ============================================
+
+            if (speedMinValue != null
+                    && speedMaxValue != null) {
+
+                model.addAttribute("vsLLogs",
+                        mlbGameService.getVsLeftLogs(
+                                result,
+                                opponent,
+                                pitcher,
+                                pitchType,
+                                speedMinValue,
+                                speedMaxValue));
+
+            } else {
+
+                model.addAttribute("vsLLogs",
+                        mlbGameService.getVsLeftLogs(
+                                result,
+                                opponent,
+                                pitcher,
+                                pitchType,
+                                null,
+                                null));
+            }
+        } // ← ★これを追加（Lブロック閉じ）
 
         // ★ チーム一覧を取得
         List<String> opponents = mlbGameService.getAllOpponents();
@@ -560,29 +619,29 @@ public class OhtaniScorebookController {
          * RISPモード時でもAVGカード表示
          * =========================================
          */
-        if ("RISP".equals(mode)
-                || hand == null
-                || hand.isBlank()
-                || "ALL".equals(hand)) {
+        // if ("RISP".equals(mode)
+        // || hand == null
+        // || hand.isBlank()
+        // || "ALL".equals(hand)) {
 
-            // 対右
-            Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+        // // 対右
+        // Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
 
-            model.addAttribute("vsRAvg", vsR.get("avg"));
-            model.addAttribute("vsRDetail", vsR.get("detail"));
+        // model.addAttribute("vsRAvg", vsR.get("avg"));
+        // model.addAttribute("vsRDetail", vsR.get("detail"));
 
-            // 対左
-            Map<String, String> vsL = mlbGameService.getVsLeftStatsFormatted();
+        // // 対左
+        // Map<String, String> vsL = mlbGameService.getVsLeftStatsFormatted();
 
-            model.addAttribute("vsLAvg", vsL.get("avg"));
-            model.addAttribute("vsLDetail", vsL.get("detail"));
+        // model.addAttribute("vsLAvg", vsL.get("avg"));
+        // model.addAttribute("vsLDetail", vsL.get("detail"));
 
-            // 対ALL
-            Map<String, String> vsAll = mlbGameService.getVsAllStatsFormatted();
+        // // 対ALL
+        // Map<String, String> vsAll = mlbGameService.getVsAllStatsFormatted();
 
-            model.addAttribute("vsAllAvg", vsAll.get("avg"));
-            model.addAttribute("vsAllDetail", vsAll.get("detail"));
-        }
+        // model.addAttribute("vsAllAvg", vsAll.get("avg"));
+        // model.addAttribute("vsAllDetail", vsAll.get("detail"));
+        // }
 
         /*
          * =========================================
@@ -596,6 +655,7 @@ public class OhtaniScorebookController {
          * 得点圏ログ（RISP）
          * =========================================
          */
+
         model.addAttribute(
                 "rispLogs",
                 gameRepository.getRispLogs());
