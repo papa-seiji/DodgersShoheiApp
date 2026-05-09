@@ -1657,6 +1657,7 @@ public class OhtaniGameRepository {
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        /*
                         AND (
                             CAST(? AS NUMERIC) IS NULL
                             OR CAST(? AS NUMERIC) IS NULL
@@ -1666,6 +1667,7 @@ public class OhtaniGameRepository {
                                     BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
                             )
                         )
+                        */
 
                         UNION ALL
 
@@ -1682,6 +1684,7 @@ public class OhtaniGameRepository {
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        /*
                         AND (
                             CAST(? AS NUMERIC) IS NULL
                             OR CAST(? AS NUMERIC) IS NULL
@@ -1691,6 +1694,7 @@ public class OhtaniGameRepository {
                                     BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
                             )
                         )
+                        */
 
                         UNION ALL
 
@@ -1707,6 +1711,7 @@ public class OhtaniGameRepository {
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        /*
                         AND (
                             CAST(? AS NUMERIC) IS NULL
                             OR CAST(? AS NUMERIC) IS NULL
@@ -1716,6 +1721,7 @@ public class OhtaniGameRepository {
                                     BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
                             )
                         )
+                        */
 
                         UNION ALL
 
@@ -1732,6 +1738,7 @@ public class OhtaniGameRepository {
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        /*
                         AND (
                             CAST(? AS NUMERIC) IS NULL
                             OR CAST(? AS NUMERIC) IS NULL
@@ -1741,6 +1748,7 @@ public class OhtaniGameRepository {
                                     BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
                             )
                         )
+                        */
 
                         UNION ALL
 
@@ -1757,6 +1765,7 @@ public class OhtaniGameRepository {
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        /*
                         AND (
                             CAST(? AS NUMERIC) IS NULL
                             OR CAST(? AS NUMERIC) IS NULL
@@ -1766,6 +1775,7 @@ public class OhtaniGameRepository {
                                     BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
                             )
                         )
+                        */
 
                         UNION ALL
 
@@ -1782,6 +1792,7 @@ public class OhtaniGameRepository {
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
                         AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
+                        /*
                         AND (
                             CAST(? AS NUMERIC) IS NULL
                             OR CAST(? AS NUMERIC) IS NULL
@@ -1790,7 +1801,7 @@ public class OhtaniGameRepository {
                                 AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
                                     BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
                             )
-                        )
+                        )*/
                     ) t
                     ORDER BY game_date DESC
                 """;
@@ -1802,37 +1813,31 @@ public class OhtaniGameRepository {
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType,
-                speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType,
-                speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType,
-                speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType,
-                speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType,
-                speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
-                speedMin, speedMax, speedMin, speedMax);
+                pitchType, pitchType, pitchType);
     }
 
     /**
