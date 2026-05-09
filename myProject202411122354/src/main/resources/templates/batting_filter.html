@@ -9,13 +9,14 @@
 
     <div class="batting-filter-page">
 
-        <h2 class="filter-main-title">
-            Batting Filter
-        </h2>
-
-        <p class="filter-sub-title">
-            大谷翔平の打撃成績を様々な条件でフィルタリングできます
-        </p>
+        <div class="filter-header-row">
+            <div>
+                <h2 class="filter-main-title">Batting Filter</h2>
+                <p class="filter-sub-title">大谷翔平の打撃成績を様々な条件でフィルタリングできます</p>
+            </div>
+            <!-- ★ 使い方ガイド -->
+            <button type="button" class="guide-button">ⓘ 使い方ガイド</button>
+        </div>
         <a href="/hogehoge_01" class="back-button">← 前の画面に戻る</a>
         <hr>
 
@@ -490,6 +491,7 @@
                     <div class="avg-card-detail">
                         17-65
                     </div>
+                    <span class="avg-icon right-icon">R</span>
                 </div>
 
                 <!-- 対左 -->
@@ -505,6 +507,7 @@
                     <div class="avg-card-detail">
                         6-22
                     </div>
+                    <span class="avg-icon left-icon">L</span>
                 </div>
 
                 <!-- 得点圏 -->
@@ -520,6 +523,7 @@
                     <div class="avg-card-detail">
                         27-110
                     </div>
+                    <span class="avg-icon risp-icon">👤</span>
                 </div>
 
             </div>
@@ -860,5 +864,145 @@
             if (list) list.innerHTML = "";}
 </script>
 
+        <!-- =========================================
+            GUIDE MODAL
+        ========================================= -->
+        <div
+            id="guideModal"
+            class="guide-modal-overlay">
+
+            <div class="guide-modal">
+
+                <!-- header -->
+                <div class="guide-modal-header">
+
+                    <h3>Batting Filter ガイド</h3>
+
+                    <button
+                        type="button"
+                        id="closeGuideModal"
+                        class="guide-close-button">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+                <!-- body -->
+                <div class="guide-modal-body">
+
+                    <!-- 投手タイプ -->
+                    <div class="guide-section">
+                        <h4>⚾ 投手タイプ</h4>
+                        <p>
+                            右投手・左投手別に
+                            大谷翔平の打撃成績を確認できます。
+                        </p>
+                    </div>
+
+                    <!-- 打席結果 -->
+                    <div class="guide-section">
+                        <h4>📊 打席結果</h4>
+                        <p>
+                            HIT / HR / BB / SO など、
+                            結果別に打席を絞り込みできます。
+                        </p>
+                    </div>
+
+                    <!-- チーム -->
+                    <div class="guide-section">
+                        <h4>🏟 チーム</h4>
+                        <p>
+                            対戦チームごとの
+                            打撃傾向を確認できます。
+                        </p>
+                    </div>
+
+                    <!-- 投手名 -->
+                    <div class="guide-section">
+                        <h4>👤 投手名</h4>
+                        <p>
+                            特定投手との対戦成績を検索できます。<br>
+                            例：今永昇太、Logan Webb、 Jacob deGromなど今季対戦した投手であれば 1文字づつ入力ごとに補完し候補表示します(サジェスト検索機能)
+                        </p>
+                    </div>
+
+                    <!-- 球種 -->
+                    <div class="guide-section">
+                        <h4>🌀 球種</h4>
+                        <p>
+                            Sweeper / Splitter / Four-Seam など、
+                            球種別に打撃結果を絞り込みできます。
+                        </p>
+                    </div>
+
+                    <!-- 球速レンジ -->
+                    <div class="guide-section">
+                        <h4>🚀 球速レンジ</h4>
+                        <p>
+                            指定した球速帯に対する
+                            打撃結果のみを抽出します。<br>
+                            ドラムロールまたは
+                            スライダーで調整できます。
+                        </p>
+                    </div>
+
+                    <!-- 検索のコツ -->
+                    <div class="guide-section">
+                        <h4>💡 検索のコツ</h4>
+                        <p>
+                            「左投手 + Sweeper + 95mph以上」など、
+                            条件を組み合わせることで
+                            傾向分析ができます。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+<script>
+
+    /* =========================================
+        GUIDE MODAL 使い方ガイド
+    ========================================= */
+
+    const guideButton =
+        document.querySelector(".guide-button");
+
+    const guideModal =
+        document.getElementById("guideModal");
+
+    const closeGuideModal =
+        document.getElementById("closeGuideModal");
+
+    /* open */
+    guideButton.addEventListener("click", () => {
+
+        guideModal.classList.add("show");
+
+    });
+
+    /* close button */
+    closeGuideModal.addEventListener("click", () => {
+
+        guideModal.classList.remove("show");
+
+    });
+
+    /* overlay click */
+    guideModal.addEventListener("click", (e) => {
+
+        if(e.target === guideModal){
+
+            guideModal.classList.remove("show");
+
+        }
+
+    });
+
+</script>
 </body>
 </html>
