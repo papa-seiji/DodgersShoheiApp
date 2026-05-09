@@ -442,8 +442,8 @@ public class OhtaniScorebookController {
                             opponent,
                             pitcher,
                             pitchType,
-                            null,
-                            null));
+                            speedMin,
+                            speedMax));
         }
 
         // 左
@@ -515,8 +515,8 @@ public class OhtaniScorebookController {
                             opponent,
                             pitcher,
                             pitchType,
-                            null,
-                            null));
+                            speedMin,
+                            speedMax));
         }
 
         // ★ チーム一覧を取得
