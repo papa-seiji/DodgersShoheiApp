@@ -372,8 +372,8 @@ body {
 .avg-card-wrap{
     display:flex;
     gap:20px;
-    margin:24px 0 32px;
-    flex-wrap:wrap;
+    margin:40px 0 32px;
+    flex-wrap:nowrap;
 }
 
 /* =========================================
