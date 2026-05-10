@@ -383,6 +383,13 @@ public class OhtaniScorebookController {
                 rispAll.get("detail"));
 
         // ============================================
+        // ★ RISPログ ---------------------------------batting/filter用
+        // ============================================
+        model.addAttribute(
+                "rispLogs",
+                mlbGameService.getRispLogs());
+
+        // ============================================
         // ★ 右
         // ============================================
 

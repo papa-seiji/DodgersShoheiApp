@@ -1954,6 +1954,155 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ RISPログ取得---------------------------------batting/filter用
+     * ============================================
+     */
+    public List<Map<String, Object>> getRispLogs() {
+
+        String sql = """
+                    SELECT
+                        game_date,
+                        opponent,
+                        pitcher,
+                        hand,
+
+                        substring(description FROM '([0-9]+\\.?[0-9]*)mph')
+                            AS "pitchSpeed",
+
+                        CASE
+                            WHEN description LIKE '%Four-Seam%' THEN 'Four-Seam'
+                            WHEN description LIKE '%Sinker%' THEN 'Sinker'
+                            WHEN description LIKE '%Sweeper%' THEN 'Sweeper'
+                            WHEN description LIKE '%Slider%' THEN 'Slider'
+                            WHEN description LIKE '%Splitter%' THEN 'Splitter'
+                            WHEN description LIKE '%Cutter%' THEN 'Cutter'
+                            WHEN description LIKE '%Knuckle Curve%' THEN 'Knuckle Curve'
+                            WHEN description LIKE '%Slurve%' THEN 'Slurve'
+                            WHEN description LIKE '%Changeup%' THEN 'Changeup'
+                            ELSE '-'
+                        END AS "pitchType",
+
+                        result,
+                        description
+
+                    FROM (
+                        SELECT
+                            g.game_date,
+                            g.opponent,
+
+                            d.pa1_pitcher AS pitcher,
+                            d.pa1_pitcher_hand AS hand,
+
+                            d.pa1_result AS result,
+                            d.pa1_description AS description
+
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE d.pa1_description LIKE '%得点圏にランナー有%'
+
+                        UNION ALL
+
+                        SELECT
+                            g.game_date,
+                            g.opponent,
+
+                            d.pa2_pitcher,
+                            d.pa2_pitcher_hand,
+
+                            d.pa2_result,
+                            d.pa2_description
+
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE d.pa2_description LIKE '%得点圏にランナー有%'
+
+                        UNION ALL
+
+                        SELECT
+                            g.game_date,
+                            g.opponent,
+
+                            d.pa3_pitcher,
+                            d.pa3_pitcher_hand,
+
+                            d.pa3_result,
+                            d.pa3_description
+
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE d.pa3_description LIKE '%得点圏にランナー有%'
+
+                        UNION ALL
+
+                        SELECT
+                            g.game_date,
+                            g.opponent,
+
+                            d.pa4_pitcher,
+                            d.pa4_pitcher_hand,
+
+                            d.pa4_result,
+                            d.pa4_description
+
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE d.pa4_description LIKE '%得点圏にランナー有%'
+
+                        UNION ALL
+
+                        SELECT
+                            g.game_date,
+                            g.opponent,
+
+                            d.pa5_pitcher,
+                            d.pa5_pitcher_hand,
+
+                            d.pa5_result,
+                            d.pa5_description
+
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE d.pa5_description LIKE '%得点圏にランナー有%'
+
+                        UNION ALL
+
+                        SELECT
+                            g.game_date,
+                            g.opponent,
+
+                            d.pa6_pitcher,
+                            d.pa6_pitcher_hand,
+
+                            d.pa6_result,
+                            d.pa6_description
+
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE d.pa6_description LIKE '%得点圏にランナー有%'
+                    ) t
+
+                    ORDER BY game_date DESC
+
+                    LIMIT 30
+                """;
+
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    /**
+     * ============================================
      * ★ 対戦チーム一覧取得（重複なし）
      * ============================================
      */

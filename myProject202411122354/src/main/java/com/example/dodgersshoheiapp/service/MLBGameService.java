@@ -1454,4 +1454,13 @@ public class MLBGameService {
         return result;
     }
 
+    /**
+     * ============================================
+     * ★ RISPログ取得---------------------------------batting/filter用
+     * ============================================
+     */
+    public List<Map<String, Object>> getRispLogs() {
+
+        return ohtaniGameRepository.getRispLogs();
+    }
 }
