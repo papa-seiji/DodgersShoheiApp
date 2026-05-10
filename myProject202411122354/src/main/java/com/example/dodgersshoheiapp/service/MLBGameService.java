@@ -542,7 +542,7 @@ public class MLBGameService {
 
     /**
      * ============================================
-     * ★ 得点圏打率（RISP）取得（DB版）
+     * ★ 得点圏打率（RISP）取得（DB版）--------hogehoge_01.html用
      * ============================================
      */
     public Map<String, Object> getRispFromDB() {
@@ -730,13 +730,31 @@ public class MLBGameService {
             Integer speedMin,
             Integer speedMax) {
 
-        return ohtaniGameRepository.getVsRightLogs(
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsRightLogs(
                 result,
                 opponent,
                 pitcher,
                 pitchType,
                 speedMin,
                 speedMax);
+
+        // ============================================
+        // ★ 球速・球種 inject
+        // ============================================
+        for (Map<String, Object> row : logs) {
+
+            String description = (String) row.get("description");
+
+            row.put(
+                    "pitchSpeed",
+                    extractPitchSpeed(description));
+
+            row.put(
+                    "pitchType",
+                    extractPitchType(description));
+        }
+
+        return logs;
     }
 
     /**
@@ -969,13 +987,31 @@ public class MLBGameService {
             Integer speedMin,
             Integer speedMax) {
 
-        return ohtaniGameRepository.getVsLeftLogs(
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsLeftLogs(
                 result,
                 opponent,
                 pitcher,
                 pitchType,
                 speedMin,
                 speedMax);
+
+        // ============================================
+        // ★ 球速・球種 inject
+        // ============================================
+        for (Map<String, Object> row : logs) {
+
+            String description = (String) row.get("description");
+
+            row.put(
+                    "pitchSpeed",
+                    extractPitchSpeed(description));
+
+            row.put(
+                    "pitchType",
+                    extractPitchType(description));
+        }
+
+        return logs;
     }
 
     /**
@@ -1251,13 +1287,31 @@ public class MLBGameService {
             Integer speedMin,
             Integer speedMax) {
 
-        return ohtaniGameRepository.getVsAllLogs(
+        List<Map<String, Object>> logs = ohtaniGameRepository.getVsAllLogs(
                 result,
                 opponent,
                 pitcher,
                 pitchType,
                 speedMin,
                 speedMax);
+
+        // ============================================
+        // ★ 球速・球種 inject
+        // ============================================
+        for (Map<String, Object> row : logs) {
+
+            String description = (String) row.get("description");
+
+            row.put(
+                    "pitchSpeed",
+                    extractPitchSpeed(description));
+
+            row.put(
+                    "pitchType",
+                    extractPitchType(description));
+        }
+
+        return logs;
     }
 
     /**
@@ -1295,5 +1349,118 @@ public class MLBGameService {
     public String getPitcherHand(String pitcher) {
 
         return ohtaniGameRepository.getPitcherHand(pitcher);
+    }
+
+    // ============================================
+    // ★ description から球速取得
+    // ============================================
+    private String extractPitchSpeed(String description) {
+
+        if (description == null) {
+            return "-";
+        }
+
+        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*)mph");
+
+        Matcher matcher = pattern.matcher(description);
+
+        if (matcher.find()) {
+            return matcher.group(1) + "mph";
+        }
+
+        return "-";
+    }
+
+    // ============================================
+    // ★ description から球種取得
+    // ============================================
+    private String extractPitchType(String description) {
+
+        if (description == null) {
+            return "-";
+        }
+
+        String[] pitchTypes = {
+                "Four-Seam",
+                "Sinker",
+                "Sweeper",
+                "Slider",
+                "Curve",
+                "Cutter",
+                "Splitter",
+                "Changeup",
+                "Knuckle Curve",
+                "Sweeping Curve"
+        };
+
+        for (String type : pitchTypes) {
+
+            if (description.contains(type)) {
+                return type;
+            }
+        }
+
+        return "-";
+    }
+
+    /**
+     * ============================================
+     * ★ 得点圏打率（RISP）取得（左右対応版）--------batting/filter用
+     * ============================================
+     */
+    public Map<String, Object> getRispFromDBByHand(String pitcherHand) {
+
+        Map<String, Object> raw = ohtaniGameRepository.getRispStatsByHand(pitcherHand);
+
+        Map<String, Object> result = new HashMap<>();
+
+        // =========================
+        // ★ null対策
+        // =========================
+        int hits = raw.get("hits") != null
+                ? ((Number) raw.get("hits")).intValue()
+                : 0;
+
+        int atBats = raw.get("at_bats") != null
+                ? ((Number) raw.get("at_bats")).intValue()
+                : 0;
+
+        double avg = raw.get("avg") != null
+                ? ((Number) raw.get("avg")).doubleValue()
+                : 0.0;
+
+        // =========================
+        // ★ .214形式
+        // =========================
+        String avgStr = String.format("%.3f", avg);
+
+        if (avgStr.startsWith("0")) {
+            avgStr = avgStr.substring(1);
+        }
+
+        // =========================
+        // ★ 6-28形式
+        // =========================
+        String detail = hits + "-" + atBats;
+
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        System.out.println(
+                "RISP(" + pitcherHand + "): "
+                        + avgStr
+                        + " (" + detail + ")");
+
+        return result;
+    }
+
+    /**
+     * ============================================
+     * ★ RISPログ取得---------------------------------batting/filter用
+     * ============================================
+     */
+    public List<Map<String, Object>> getRispLogs(String pitcherHand) {
+
+        return ohtaniGameRepository.getRispLogs(pitcherHand);
     }
 }

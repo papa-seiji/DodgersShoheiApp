@@ -294,6 +294,8 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String pitchType, // ★追加
             @RequestParam(required = false) Integer speedMin, // ★追加
             @RequestParam(required = false) Integer speedMax, // ★追加
+
+            @RequestParam(required = false) String pitcherHand, // RISP系 ★追加
             Model model) {
 
         // 🔥 ALL（明示的に選んだ時だけ）
@@ -369,7 +371,30 @@ public class OhtaniScorebookController {
                             speedMax));
         }
 
-        // 右
+        // ============================================
+        // ★ RISP（ALL）---------------------------------batting/filter用
+        // ============================================
+        Map<String, Object> rispAll = mlbGameService.getRispFromDBByHand(null);
+
+        model.addAttribute(
+                "rispAllAvg",
+                rispAll.get("avg"));
+
+        model.addAttribute(
+                "rispAllDetail",
+                rispAll.get("detail"));
+
+        // ============================================
+        // ★ RISPログ ---------------------------------batting/filter用
+        // ============================================
+        model.addAttribute(
+                "rispLogs",
+                mlbGameService.getRispLogs(pitcherHand));
+
+        // ============================================
+        // ★ 右
+        // ============================================
+
         if ("R".equals(hand)) {
 
             Map<String, String> vsR;
@@ -446,7 +471,10 @@ public class OhtaniScorebookController {
                             speedMax));
         }
 
-        // 左
+        // ============================================
+        // ★ 左
+        // ============================================
+
         if ("L".equals(hand)) {
 
             Map<String, String> vsL;
@@ -531,10 +559,11 @@ public class OhtaniScorebookController {
                 && hand != null && !hand.isBlank()
                 && !"ALL".equals(hand)) {
 
-            String pitcherHand = mlbGameService.getPitcherHand(pitcher);
+            String actualPitcherHand = mlbGameService.getPitcherHand(pitcher);
 
             // ★ R選択なのに左投手
-            if ("R".equals(hand) && "L".equals(pitcherHand)) {
+            if ("R".equals(hand)
+                    && "L".equals(actualPitcherHand)) {
 
                 model.addAttribute(
                         "pitcherWarning",
@@ -543,7 +572,8 @@ public class OhtaniScorebookController {
             }
 
             // ★ L選択なのに右投手
-            if ("L".equals(hand) && "R".equals(pitcherHand)) {
+            if ("L".equals(hand)
+                    && "R".equals(actualPitcherHand)) {
 
                 model.addAttribute(
                         "pitcherWarning",
@@ -569,4 +599,5 @@ public class OhtaniScorebookController {
 
         return mlbGameService.searchPitchers(keyword);
     }
+
 }

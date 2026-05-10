@@ -1,489 +1,1450 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Batting Filter</title>
-
-<style>
-/* ============================================
-▼ 投手サジェスト候補リスト全体（★位置固定追加）
-============================================ */
-#pitcherSuggestions {
-    border: 1px solid #ccc;
-    max-width: 200px;
-    list-style: none;
-    padding: 0;
-    margin: 2px 0 0 0;     /* ★少し下に余白 */
-
-    /* ★ここから追加（ズレ防止） */
-    position: absolute;
-    top: 100%;             /* inputの真下 */
-    left: 0;
-    width: 100%;           /* inputと同じ幅 */
-    background: #fff;
-    z-index: 1000;
-    max-height: 150px;
-    overflow-y: auto;
-}
-
-/* ============================================
-▼ 候補1行ごとのスタイル
-============================================ */
-#pitcherSuggestions li {
-    padding: 5px;
-    cursor: pointer;
-}
-
-/* ============================================
-▼ ホバー時
-============================================ */
-#pitcherSuggestions li:hover {
-    background: #eee;
-}
-
-/* ============================================
-▼ 入力欄＋クリアボタンのラッパー
-============================================ */
-.input-clear-wrapper {
-    position: relative;
-    display: inline-flex;   /* ← ここ変更 */
-    align-items: center;    /* 縦中央揃え */
-    gap: 5px;               /* labelとinputの間隔 */
-    /* width: 200px; */
-}
-.label00{
-    width: 95px;
-}
-/* ============================================
-▼ 入力欄
-============================================ */
-.input-clear-wrapper input {
-    padding-right: 25px;
-
-    /* ★追加：wrapperにフィット */
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ============================================
-▼ ✖（クリアボタン）
-============================================ */
-.clear-btn {
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 12px;
-    color: #000000;
-    display: none;
-}
-
-/* ============================================
-▼ ホバー時のみ✖表示
-============================================ */
-.input-clear-wrapper:hover .clear-btn {
-    display: block;
-}
-
-/* ============================================
-　球速レンジ（ドラムロール版）
-============================================ */
-
-    .speed-range-wrap {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    /* select 化 */
-    .speed-select {
-        width: 90px;
-        height: 38px;
-        padding: 6px 10px;
-
-        /* ↓ あなたの既存色は維持 */
-        /* background: #111; */
-        color: #020202;
-        border: 1px solid #444;
-
-        border-radius: 6px;
-        font-size: 14px;
-
-        appearance: auto;
-        -webkit-appearance: menulist;
-        -moz-appearance: menulist;
-    }
-
-    .range-separator {
-        color: #000000;
-    }
-
-    .mph-label {
-        color: #000000;
-        font-size: 13px;
-    }
-
-    /* ============================================
-    投手左右 warning
-    ============================================ */
-
-    .pitcher-warning {
-        margin-top: 8px;
-        padding: 10px 14px;
-        border-radius: 8px;
-        background: rgba(255, 180, 0, 0.15);
-        border: 1px solid rgba(255, 180, 0, 0.4);
-        color: #d97706;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    /* ============================================
-    球速レンジ AVG説明
-    ============================================ */
-
-    .speed-range-info {
-        margin-top: 8px;
-        padding: 10px 14px;
-        border-radius: 8px;
-        background: rgba(255, 180, 0, 0.15);
-        border: 1px solid rgba(255, 180, 0, 0.4);
-        color: #d97706;
-        font-size: 13px;
-        font-weight: 600;
-        display: inline-block;
-        max-width: 589px;
-        line-height: 1.6;
-    }
-
-</style>
-
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Batting Filter</title>
+        <link rel="stylesheet" th:href="@{/css/batting_filter.css}">
+    </head>
 <body>
 
-<h2>Batting Filter（試作）</h2>
-<a href="/hogehoge_01" class="back-button">← 前の画面に戻る</a>
-<hr>
+    <div class="batting-filter-page">
 
-<!-- 🔽 フィルタUI -->
-<h3>フィルタ</h3>
-<form action="/batting/filter" method="get">
+        <div class="filter-header-row">
+            <div id="Analysis">
+                <h2 class="filter-main-title">Batting Filter</h2>
+                <p class="filter-sub-title">大谷翔平の打撃成績を様々な条件でフィルタリングできます</p>
+            </div>
+            <!-- ★ 使い方ガイド -->
+            <button type="button" class="guide-button">ⓘ 使い方ガイド</button>
+        </div>
+        <a href="/hogehoge_01" class="back-button" style="color: #ffffff;">← 前の画面に戻る</a>
+        <hr>
 
-    <label>投手タイプ：</label>
-    <select name="hand">
-        <option value="ALL" th:selected="${param.hand == null or param.hand[0] == 'ALL'}">ALL</option>
-        <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
-        <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
-    </select>
+        <!-- 🔽 フィルタUI -->
+        <div class="filter-panel">
 
-    <!-- 🔥 ここ追加 -->
-    <label>打席結果：</label>
-    <select name="result">
-        <option value="" th:selected="${param.result == null or param.result[0] == ''}">ALL</option>
-        <option value="HIT" th:selected="${param.result != null and param.result[0] == 'HIT'}">HIT</option>
-        <option value="OUT" th:selected="${param.result != null and param.result[0] == 'OUT'}">OUT</option>
-        <option value="BB"  th:selected="${param.result != null and param.result[0] == 'BB'}">BB</option>
-        <option value="HR"  th:selected="${param.result != null and param.result[0] == 'HR'}">HR</option>
-        <option value="SO"  th:selected="${param.result != null and param.result[0] == 'SO'}">SO</option>
-        <option value="Err" th:selected="${param.result != null and param.result[0] == 'Err'}">Err</option>
-        <option value="SF"  th:selected="${param.result != null and param.result[0] == 'SF'}">SF</option>
-        <option value="FC"  th:selected="${param.result != null and param.result[0] == 'FC'}">FC</option>
-    </select>
+            <h3>フィルタ</h3>
+            <form action="/batting/filter" method="get">
 
-    <label>チーム：</label>
-        <select name="opponent">
+            <div class="filter-row">
 
-            <!-- ALL -->
-            <option value="" th:selected="${param.opponent == null or param.opponent[0] == ''}">
-                ALL
-            </option>
+                <!-- 投手タイプ -->
+                <div class="filter-group">
+                    <label>投手タイプ：</label>
+                        <select name="hand">
+                            <option value="ALL" th:selected="${param.hand == null or param.hand[0] == 'ALL'}">ALL</option>
+                            <option value="R" th:selected="${param.hand != null and param.hand[0] == 'R'}">右</option>
+                            <option value="L" th:selected="${param.hand != null and param.hand[0] == 'L'}">左</option>
+                        </select>
+                </div>
 
-            <!-- ★ DBからループ -->
-            <option th:each="op : ${opponents}"
-                    th:value="${op}"
-                    th:text="${op}"
-                    th:selected="${param.opponent != null and param.opponent[0] == op}">
-            </option>
 
-        </select>
+                <!-- 打席結果 -->
+                <div class="filter-group">
+                    <label>打席結果：</label>
+                    <select name="result">
+                        <option value="" th:selected="${param.result == null or param.result[0] == ''}">ALL</option>
+                        <option value="HIT" th:selected="${param.result != null and param.result[0] == 'HIT'}">HIT</option>
+                        <option value="OUT" th:selected="${param.result != null and param.result[0] == 'OUT'}">OUT</option>
+                        <option value="BB"  th:selected="${param.result != null and param.result[0] == 'BB'}">BB</option>
+                        <option value="HR"  th:selected="${param.result != null and param.result[0] == 'HR'}">HR</option>
+                        <option value="SO"  th:selected="${param.result != null and param.result[0] == 'SO'}">SO</option>
+                        <option value="Err" th:selected="${param.result != null and param.result[0] == 'Err'}">Err</option>
+                        <option value="SF"  th:selected="${param.result != null and param.result[0] == 'SF'}">SF</option>
+                        <option value="FC"  th:selected="${param.result != null and param.result[0] == 'FC'}">FC</option>
+                    </select>
+                </div>
 
-    <!-- /**
-    * ============================================
-    * ★ 投手サジェスト検索（Service）
-    * ============================================
-    */-->
-        <div class="input-clear-wrapper">
-            <label class="label00">投手名：</label>
 
-            <input type="text"
-                name="pitcher"
-                id="pitcherInput"
-                th:value="${param.pitcher}"
-                placeholder="投手名">
+                <!-- チーム： -->
+                <div class="filter-group">
+                    <label>チーム：</label>
+                        <select name="opponent">
 
-            <!-- ✖クリアボタン -->
-            <span class="clear-btn" onclick="clearPitcher()">✖</span>
+                            <!-- ALL -->
+                            <option value="" th:selected="${param.opponent == null or param.opponent[0] == ''}">
+                                ALL
+                            </option>
 
-            <!-- ★サジェスト（ここに移動が重要） -->
-            <ul id="pitcherSuggestions"></ul>
+                            <!-- ★ DBからループ -->
+                            <option th:each="op : ${opponents}"
+                                    th:value="${op}"
+                                    th:text="${op}"
+                                    th:selected="${param.opponent != null and param.opponent[0] == op}">
+                            </option>
+
+                        </select>
+                </div>
+            </div>
+
+
+            <!-- /**
+            * ============================================
+            * ★ 投手サジェスト検索（Service）
+            * ============================================
+            */-->
+                <div class="filter-group pitcher-group">
+                    <label class="label00">投手名：</label>
+
+                    <input type="text"
+                        name="pitcher"
+                        id="pitcherInput"
+                        th:value="${param.pitcher}"
+                        placeholder="投手名">
+
+                    <!-- ✖クリアボタン -->
+                    <span class="clear-btn" onclick="clearPitcher()">✖</span>
+
+                    <!-- ★サジェスト（ここに移動が重要） -->
+                    <ul id="pitcherSuggestions"></ul>
+
+                    <!-- ============================================
+                        ★ 投手左右 warning
+                    ============================================ -->
+                    <div th:if="${pitcherWarning}"
+                        class="pitcher-warning">
+
+                        ⚠ <span th:text="${pitcherWarning}"></span>
+
+                    </div>
+                </div>
+
+
+            <div class="filter-group pitch-type-group">
+                <label>球種：</label>
+
+                <select name="pitchType">
+                    <option value=""
+                        th:selected="${param.pitchType == null or param.pitchType[0] == ''}">
+                        ALL
+                    </option>
+
+                    <option value="Four-Seam"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Four-Seam'}">
+                        Four-Seam
+                    </option>
+
+                    <option value="Sinker"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Sinker'}">
+                        Sinker
+                    </option>
+
+                    <option value="Cutter"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Cutter'}">
+                        Cutter
+                    </option>
+
+                    <option value="Slider"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Slider'}">
+                        Slider
+                    </option>
+
+                    <option value="Sweeper"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Sweeper'}">
+                        Sweeper
+                    </option>
+
+                    <option value="Splitter"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Splitter'}">
+                        Splitter
+                    </option>
+
+                    <option value="Curve"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Curve'}">
+                        Curve
+                    </option>
+
+                    <option value="Knuckle_Curve"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Knuckle_Curve'}">
+                        Knuckle_Curve
+                    </option>
+
+                    <option value="Slurve"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Slurve'}">
+                        Slurve
+                    </option>
+
+                    <option value="Changeup"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Changeup'}">
+                        Changeup
+                    </option>
+                </select>
+        </div>
+
+
+        <!-- ============================================
+            球速レンジフィルタ（ドラムロール版）
+        ============================================ -->
+        <div class="filter-row speed-filter-row">
+
+            <div class="filter-group speed-filter-group">
+
+                <!-- ============================================
+                    ▼ 横一列エリア
+                ============================================ -->
+                <div class="speed-inline-row">
+                    <label>球速レンジ</label>
+
+                    <!-- MIN -->
+                    <select id="speedMinSelect"
+                            name="speedMin"
+                            class="speed-drum-select">
+
+                        <option th:each="i : ${#numbers.sequence(50,110)}"
+                                th:value="${i}"
+                                th:text="${i}"
+                                th:selected="${param.speedMin != null ? param.speedMin[0] == #strings.toString(i) : i == 50}">
+                        </option>
+
+                    </select>
+
+                    <span class="speed-separator">〜</span>
+
+                    <!-- MAX -->
+                    <select id="speedMaxSelect"
+                            name="speedMax"
+                            class="speed-drum-select">
+
+                        <option th:each="i : ${#numbers.sequence(50,110)}"
+                                th:value="${i}"
+                                th:text="${i}"
+                                th:selected="${param.speedMax != null ? param.speedMax[0] == #strings.toString(i) : i == 110}">
+                        </option>
+
+                    </select>
+
+                    <span class="mph-label">mph</span>
+
+                    <!-- ============================================
+                        ▼ スライダー
+                    ============================================ -->
+                    <div class="speed-slider-area">
+
+                        <div class="slider-track-wrap">
+
+                            <input type="range"
+                                id="speedMinRange"
+                                min="50"
+                                max="110"
+                                th:value="${param.speedMin != null ? param.speedMin[0] : 50}">
+
+                            <input type="range"
+                                id="speedMaxRange"
+                                min="50"
+                                max="110"
+                                th:value="${param.speedMax != null ? param.speedMax[0] : 110}">
+
+                            <div class="slider-track"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ============================================
+                    AVG説明
+                ============================================ -->
+                <div class="speed-range-info">
+
+                    ※ 球速レンジによるAVG変動は、
+                    「投手タイプ＋球速レンジのみ」の組み合わせ時に適用されます。
+
+                </div>
+
+                    <div class="filter-action-group">
+                        <button type="submit"
+                                class="search-btn">
+                            検索
+                        </button>
+
+                        <!-- ============================================
+                            🔥 LOADING OVERLAY
+                        ============================================ -->
+                        <div id="loading-overlay">
+                            <div class="loading-box">
+                                <div class="loading-spinner"></div>
+                                <div class="loading-text">
+                                    検索中...
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button"
+                                class="filter-clear-btn"
+                                onclick="clearFilters()">
+                            クリア
+                        </button>
+                    </div>
+
+
+
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+<script>
+
+    const minRange = document.getElementById("speedMinRange");
+    const maxRange = document.getElementById("speedMaxRange");
+
+    // ▼ ドラムロール
+    const speedMinSelect =
+        document.getElementById("speedMinSelect");
+
+    const speedMaxSelect =
+        document.getElementById("speedMaxSelect");
+
+    // ▼ 既存
+    const minLabel =
+        document.getElementById("speedMinLabel");
+
+    const maxLabel =
+        document.getElementById("speedMaxLabel");
+
+    const sliderTrack =
+        document.querySelector(".slider-track");
+
+    function updateSpeedSlider(){
+
+        let minVal = parseInt(minRange.value);
+        let maxVal = parseInt(maxRange.value);
+
+        // ====================================
+        // MIN > MAX 防止
+        // ====================================
+
+        if(minVal > maxVal - 1){
+
+            minVal = maxVal - 1;
+            minRange.value = minVal;
+
+        }
+
+        if(maxVal < minVal + 1){
+
+            maxVal = minVal + 1;
+            maxRange.value = maxVal;
+
+        }
+
+        // ====================================
+        // ▼ ドラムロール同期
+        // ====================================
+
+        if(speedMinSelect){
+            speedMinSelect.value = minVal;
+        }
+
+        if(speedMaxSelect){
+            speedMaxSelect.value = maxVal;
+        }
+
+        // ====================================
+        // ▼ 旧label互換（残してOK）
+        // ====================================
+
+        if(minLabel){
+            minLabel.textContent = minVal;
+        }
+
+        if(maxLabel){
+            maxLabel.textContent = maxVal;
+        }
+
+        // ====================================
+        // ▼ 位置計算
+        // ====================================
+
+        const min = parseInt(minRange.min);
+        const max = parseInt(minRange.max);
+
+        const leftPercent =
+            ((minVal - min) / (max - min)) * 100;
+
+        const rightPercent =
+            ((maxVal - min) / (max - min)) * 100;
+
+        sliderTrack.style.left =
+            leftPercent + "%";
+
+        sliderTrack.style.width =
+            (rightPercent - leftPercent) + "%";
+    }
+
+    // ====================================
+    // ▼ スライダー操作
+    // ====================================
+
+    minRange.addEventListener(
+        "input",
+        updateSpeedSlider
+    );
+
+    maxRange.addEventListener(
+        "input",
+        updateSpeedSlider
+    );
+
+    // ====================================
+    // ▼ ドラムロール操作
+    // ====================================
+
+    if(speedMinSelect){
+
+        speedMinSelect.addEventListener(
+            "change",
+            () => {
+
+                minRange.value =
+                    speedMinSelect.value;
+
+                updateSpeedSlider();
+
+            }
+        );
+    }
+
+    if(speedMaxSelect){
+
+        speedMaxSelect.addEventListener(
+            "change",
+            () => {
+
+                maxRange.value =
+                    speedMaxSelect.value;
+
+                updateSpeedSlider();
+
+            }
+        );
+    }
+
+    // ====================================
+    // 初期描画
+    // ====================================
+
+    updateSpeedSlider();
+
+</script>
+
+<script>
+
+    function clearFilters(){
+
+        // ====================================
+        // ▼ スライダー初期化
+        // ====================================
+
+        const minRange =
+            document.getElementById("speedMinRange");
+
+        const maxRange =
+            document.getElementById("speedMaxRange");
+
+        const speedMinSelect =
+            document.getElementById("speedMinSelect");
+
+        const speedMaxSelect =
+            document.getElementById("speedMaxSelect");
+
+        if(minRange){
+            minRange.value = 50;
+        }
+
+        if(maxRange){
+            maxRange.value = 110;
+        }
+
+        // ====================================
+        // ▼ ドラムロール初期化
+        // ====================================
+
+        if(speedMinSelect){
+            speedMinSelect.value = 50;
+        }
+
+        if(speedMaxSelect){
+            speedMaxSelect.value = 110;
+        }
+
+        // ====================================
+        // ▼ URL遷移
+        // ====================================
+
+        window.location.href = "/batting/filter";
+    }
+
+</script>
+
+
+            </form>
 
             <!-- ============================================
-                ★ 投手左右 warning
+            ★ AVG CARD AREA
             ============================================ -->
-            <div th:if="${pitcherWarning}"
-                class="pitcher-warning">
+            <div class="avg-card-wrap">
+                <!-- 得点圏 -->
+                <div id="risp-card" class="avg-card">
+                    <div class="avg-card-title">
+                        '26 得点圏打率
+                    </div>
 
-                ⚠ <span th:text="${pitcherWarning}"></span>
+                    <div class="avg-card-title">
+                        　　　　　　　　　　　ここをクリックで[ON/OFF]切替
+                    </div>
+
+
+                    <div class="avg-card-value">
+                        <span th:text="${rispAllAvg}"></span>
+                    </div>
+
+                    <div class="avg-card-detail">
+                        <span th:text="${rispAllDetail}"></span>
+                    </div>
+                    <span class="avg-icon risp-icon">👤</span>
+                </div>
+
+                <!-- MY FILTER ① -->
+                <div class="avg-card my-filter-card1"
+                    onclick="loadFilterCard1()">
+
+                    <div class="avg-card-title1">
+                        MY ショートカット①
+                    </div>
+
+                    <div class="avg-card-value"
+                        id="myFilterCard1Value">
+                        SAVE
+                    </div>
+
+                    <button
+                        type="button"
+                        class="avg-card-save-btn1"
+                        onclick="saveFilterCard1(event)">
+                        SAVE
+                    </button>
+
+                    <div class="avg-card-detail1"
+                        id="myFilterCard1Detail">
+                        未保存
+                    </div>
+
+                    <span class="avg-icon">⭐</span>
+
+                </div>
+
+                <!-- MY FILTER ② -->
+                <div class="avg-card my-filter-card2"
+                    onclick="loadFilterCard2()">
+
+                    <div class="avg-card-title1">
+                        MY ショートカット②
+                    </div>
+
+                    <div class="avg-card-value"
+                        id="myFilterCard2Value">
+                        SAVE
+                    </div>
+
+                    <button
+                        type="button"
+                        class="avg-card-save-btn2"
+                        onclick="saveFilterCard2(event)">
+                        SAVE
+                    </button>
+
+                    <div class="avg-card-detail2"
+                        id="myFilterCard2Detail">
+                        未保存
+                    </div>
+
+                    <span class="avg-icon">⭐</span>
+
+                </div>
 
             </div>
         </div>
+        <hr>
 
-    <script>
-            const input = document.getElementById("pitcherInput");
-            const list = document.getElementById("pitcherSuggestions");
 
-            input.addEventListener("input", async () => {
+    <!-- =========================
+        🔥 対ALL（メイン表示）
+    ========================= -->
+    <!-- =========================================
+        AVG CARD AREA
+    ========================================= -->
+    <div class="avg-card-wrap">
 
-                const keyword = input.value;
+        <!-- 対ALL -->
+        <div class="avg-card"
+            th:if="${vsAllAvg != null}">
 
-                if (keyword.length < 1) {
-                    list.innerHTML = "";
-                    return;
-                }
+            <div class="avg-card-title">
+                対ALLピッチャー打率
+            </div>
 
-                const res = await fetch(`/api/pitchers?keyword=${keyword}`);
-                const data = await res.json();
+            <div class="avg-card-value">
+                <span th:text="${vsAllAvg}"></span>
+            </div>
 
+            <div class="avg-card-detail">
+                <span th:text="${vsAllDetail}"></span>
+            </div>
+        </div>
+
+        <!-- 対右 -->
+        <div class="avg-card"
+            th:if="${vsRAvg != null}">
+
+            <div class="avg-card-title">
+                対右ピッチャー打率
+            </div>
+
+            <div class="avg-card-value">
+                <span th:text="${vsRAvg}"></span>
+            </div>
+
+            <div class="avg-card-detail">
+                <span th:text="${vsRDetail}"></span>
+            </div>
+        </div>
+
+        <!-- 対左 -->
+        <div class="avg-card"
+            th:if="${vsLAvg != null}">
+
+            <div class="avg-card-title">
+                対左ピッチャー打率
+            </div>
+
+            <div class="avg-card-value">
+                <span th:text="${vsLAvg}"></span>
+            </div>
+
+            <div class="avg-card-detail">
+                <span th:text="${vsLDetail}"></span>
+            </div>
+        </div>
+
+    </div>
+
+
+<!-- =========================
+    🔥 RISPログ　---------------------------------batting/filter用
+========================= -->
+<div id="risp-log-section" th:if="${rispLogs != null}" class="log-section" style="display:none;"><!-- これで初期非表示になります。-->
+<h3 class="log-title">得点圏打席ログ</h3>
+    <div class="table-wrapper">
+        <table class="batting-log-table">
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>対戦</th>
+                    <th>投手</th>
+                    <th>球種(球速)</th>
+                    <th>結果</th>
+                    <th>説明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="log : ${rispLogs}">
+                    <td th:text="${log.game_date}"></td>
+                    <td th:text="${log.opponent}"></td>
+                    <td>
+                        <span th:text="${log.pitcher}"></span>
+                        （<span th:text="${log.hand}"></span>）
+                    </td>
+                    <td class="pitch-cell">
+                        <span class="velo" th:text="${log.pitchSpeed}"></span>
+                        <span class="pitch-badge" th:text="${log.pitchType}"></span>
+                    </td>
+                    <td>
+                        <span class="result-badge" th:classappend="${log.result}">
+                            <span th:text="${log.result}"></span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="desc-text" th:classappend="${log.result}" th:text="${log.description}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+        <!-- =========================
+            🔥 打席ログ（対ALL）
+        ========================= -->
+        <!-- 初期(RISPログ非表示) > RISPカード押下(表示) > もう1回押下(非表示) -->
+        <div id="vsall-log-section" th:if="${vsAllLogs != null}" class="log-section">
+
+            <h3 class="log-title">打席ログ（対ALL）</h3>
+
+            <div class="table-wrapper">
+
+                <table class="batting-log-table">
+
+                    <thead>
+                    <tr>
+                        <th>日付</th>
+                        <th>対戦</th>
+                        <th>投手</th>
+                        <th>球種(球速)</th>
+                        <th>結果</th>
+                        <th>説明</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="log : ${vsAllLogs}">
+
+                        <td th:text="${log.game_date}"></td>
+
+                        <td th:text="${log.opponent}"></td>
+
+                        <td>
+                            <span th:text="${log.pitcher}"></span>
+                            （<span th:text="${log.hand}"></span>）
+                        </td>
+
+                        <td class="pitch-cell">
+
+                            <span class="velo"
+                                th:text="${log.pitchSpeed}">
+                            </span>
+
+                            <span class="pitch-badge"
+                                th:text="${log.pitchType}">
+                            </span>
+
+                        </td>
+
+                        <td>
+                            <span class="result-badge"
+                                th:classappend="${log.result}">
+
+                                <span th:text="${log.result}"></span>
+
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="desc-text"
+                                th:classappend="${log.result}"
+                                th:text="${log.description}">
+                            </span>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- =========================
+            右（単体表示時のみ）
+        ========================= -->
+        <div th:if="${vsRLogs != null}">
+
+            <h3>打席ログ（対右）</h3>
+
+            <table class="batting-log-table">
+
+                <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>TEAM</th>
+                    <th>PITCHER</th>
+                    <th>PITCH</th>
+                    <th>RESULT</th>
+                    <th>DESCRIPTION</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="log : ${vsRLogs}">
+
+                    <td th:text="${log.game_date}"></td>
+
+                    <td th:text="${log.opponent}"></td>
+
+                    <td>
+                        <span th:text="${log.pitcher}"></span>
+                        (<span th:text="${log.hand}"></span>)
+                    </td>
+
+                    <td class="pitch-cell">
+
+                        <span class="velo"
+                            th:text="${log.pitchSpeed}">
+                        </span>
+
+                        <span class="pitch-badge"
+                            th:text="${log.pitchType}">
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="result-badge"
+                            th:classappend="${log.result}">
+
+                            <span th:text="${log.result}"></span>
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="desc-text"
+                            th:classappend="${log.result}"
+                            th:text="${log.description}">
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =========================
+            左（単体表示時のみ）
+        ========================= -->
+        <div th:if="${vsLLogs != null}">
+
+            <h3>打席ログ（対左）</h3>
+
+            <table class="batting-log-table">
+
+                <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>TEAM</th>
+                    <th>PITCHER</th>
+                    <th>PITCH</th>
+                    <th>RESULT</th>
+                    <th>DESCRIPTION</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="log : ${vsLLogs}">
+
+                    <td th:text="${log.game_date}"></td>
+
+                    <td th:text="${log.opponent}"></td>
+
+                    <td>
+                        <span th:text="${log.pitcher}"></span>
+                        (<span th:text="${log.hand}"></span>)
+                    </td>
+
+                    <td class="pitch-cell">
+
+                        <span class="velo"
+                            th:text="${log.pitchSpeed}">
+                        </span>
+
+                        <span class="pitch-badge"
+                            th:classappend="${#strings.toLowerCase(#strings.replace(log.pitchType,' ','-'))}"
+                            th:text="${log.pitchType}">
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="result-badge"
+                            th:classappend="${log.result}">
+
+                            <span th:text="${log.result}"></span>
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="desc-text"
+                            th:classappend="${log.result}"
+                            th:text="${log.description}">
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+<!-- /**
+* ============================================
+* ★ 投手サジェスト検索（Service）
+* ============================================
+*/-->
+<script>
+        const input = document.getElementById("pitcherInput");
+        const list = document.getElementById("pitcherSuggestions");
+
+        input.addEventListener("input", async () => {
+
+            const keyword = input.value;
+
+            if (keyword.length < 1) {
                 list.innerHTML = "";
+                return;
+            }
 
-                data.forEach(name => {
-                    const li = document.createElement("li");
-                    li.textContent = name;
+            const res = await fetch(`/api/pitchers?keyword=${keyword}`);
+            const data = await res.json();
 
-                    // 👉 クリックで入力反映
-                    li.addEventListener("click", () => {
-                        input.value = name;
-                        list.innerHTML = "";
-                    });
+            list.innerHTML = "";
 
-                    list.appendChild(li);
+            data.forEach(name => {
+                const li = document.createElement("li");
+                li.textContent = name;
+
+                // 👉 クリックで入力反映
+                li.addEventListener("click", () => {
+                    input.value = name;
+                    list.innerHTML = "";
                 });
+
+                list.appendChild(li);
             });
-    </script>
-
-    <script>
-            function clearPitcher() {
-                const input = document.getElementById("pitcherInput");
-                input.value = "";
-                input.focus();
-
-                const list = document.getElementById("pitcherSuggestions");
-                if (list) list.innerHTML = "";}
-    </script>
-
-    <label>球種：</label>
-        <select name="pitchType">
-            <option value=""
-                th:selected="${param.pitchType == null or param.pitchType[0] == ''}">
-                ALL
-            </option>
-
-            <option value="Four-Seam"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Four-Seam'}">
-                Four-Seam
-            </option>
-
-            <option value="Sinker"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Sinker'}">
-                Sinker
-            </option>
-
-            <option value="Cutter"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Cutter'}">
-                Cutter
-            </option>
-
-            <option value="Slider"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Slider'}">
-                Slider
-            </option>
-
-            <option value="Sweeper"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Sweeper'}">
-                Sweeper
-            </option>
-
-            <option value="Splitter"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Splitter'}">
-                Splitter
-            </option>
-
-            <option value="Curve"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Curve'}">
-                Curve
-            </option>
-
-            <option value="Curveball"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Curveball'}">
-                Curveball
-            </option>
-
-            <option value="Slurve"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Slurve'}">
-                Slurve
-            </option>
-
-            <option value="Changeup"
-                th:selected="${param.pitchType != null and param.pitchType[0] == 'Changeup'}">
-                Changeup
-            </option>
-        </select>
+        });
+</script>
 
 <!-- ============================================
-        ★ 球速レンジフィルタ（ドラムロール版）
-    ============================================ -->
+    ★ 投手左右 warning
+============================================ -->
+<script>
+        function clearPitcher() {
+            const input = document.getElementById("pitcherInput");
+            input.value = "";
+            input.focus();
 
-    <div class="filter-group">
+            const list = document.getElementById("pitcherSuggestions");
+            if (list) list.innerHTML = "";}
+</script>
 
-        <label>球速レンジ</label>
+        <!-- =========================================
+            GUIDE MODAL
+        ========================================= -->
+        <div
+            id="guideModal"
+            class="guide-modal-overlay">
 
-            <!-- ============================================
-                ★ 球速レンジ AVG説明
-            ============================================ -->
-            <div class="speed-range-info">
+            <div class="guide-modal">
 
-                ※ 球速レンジによるAVG変動は、
-                「投手タイプ＋球速レンジのみ」の組み合わせ時に適用されます。
+                <!-- header -->
+                <div class="guide-modal-header">
+
+                    <h3>Batting Filter ガイド</h3>
+
+                    <button
+                        type="button"
+                        id="closeGuideModal"
+                        class="guide-close-button">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+                <!-- body -->
+                <div class="guide-modal-body">
+
+                    <!-- 投手タイプ -->
+                    <div class="guide-section">
+                        <h4>⚾ 投手タイプ</h4>
+                        <p>
+                            右投手・左投手別に
+                            大谷翔平の打撃成績を確認できます。
+                        </p>
+                    </div>
+
+                    <!-- 打席結果 -->
+                    <div class="guide-section">
+                        <h4>📊 打席結果</h4>
+                        <p>
+                            HIT / HR / BB / SO など、
+                            結果別に打席を絞り込みできます。
+                        </p>
+                    </div>
+
+                    <!-- チーム -->
+                    <div class="guide-section">
+                        <h4>🏟 チーム</h4>
+                        <p>
+                            対戦チームごとの
+                            打撃傾向を確認できます。
+                        </p>
+                    </div>
+
+                    <!-- 投手名 -->
+                    <div class="guide-section">
+                        <h4>👤 投手名</h4>
+                        <p>
+                            特定投手との対戦成績を検索できます。<br>
+                            例：今永昇太、Logan Webb、 Jacob deGromなど今季対戦した投手であれば 1文字づつ入力ごとに補完し候補表示します(サジェスト検索機能)
+                        </p>
+                    </div>
+
+                    <!-- 球種 -->
+                    <div class="guide-section">
+                        <h4>🌀 球種</h4>
+                        <p>
+                            Sweeper / Splitter / Four-Seam など、
+                            球種別に打撃結果を絞り込みできます。
+                        </p>
+                    </div>
+
+                    <!-- 球速レンジ -->
+                    <div class="guide-section">
+                        <h4>🚀 球速レンジ</h4>
+                        <p>
+                            指定した球速帯に対する
+                            打撃結果のみを抽出します。<br>
+                            ドラムロールまたは
+                            スライダーで調整できます。
+                        </p>
+                    </div>
+
+                    <!-- 得点圏打率カード -->
+                    <div class="guide-section">
+                        <h4>🔥 得点圏打率カード</h4>
+                        <p>
+                            「得点圏打率」カードをクリックすると、
+                            得点圏打席ログを
+                            ON / OFF 切替表示できます。<br><br>
+                            投手タイプ（ALL / 右 / 左）や
+                            各種フィルタ条件に応じて、
+                            表示される得点圏ログも切り替わります。
+                        </p>
+                    </div>
+
+                    <!-- MYショートカット -->
+                    <div class="guide-section">
+                        <h4>⭐ MY ショートカットカード</h4>
+                        <p>
+                            よく使う検索条件を
+                            MYショートカット①②へ保存できます。<br><br>
+                            【保存方法】<br>
+                            ① フィルタ条件を設定<br>
+                            ② カード内の「SAVE」ボタン押下<br><br>
+                            【使用方法】<br>
+                            ① 保存済みカードをクリック<br>
+                            ② 「検索」ボタン押下<br><br>
+                            保存内容はブラウザに保持されます。
+                        </p>
+
+                    </div>
+                    <!-- 検索のコツ -->
+                    <div class="guide-section">
+                        <h4>💡 検索のコツ</h4>
+                        <p>
+                            「左投手 + Sweeper + 95mph以上」など、
+                            条件を組み合わせることで
+                            傾向分析ができます。
+                        </p>
+                    </div>
+                </div>
 
             </div>
 
-        <div class="speed-range-wrap">
-
-            <!-- MIN -->
-            <select name="speedMin" class="speed-select">
-
-                <option value="">MIN</option>
-
-                <option th:each="i : ${#numbers.sequence(50, 110)}"
-                        th:value="${i}"
-                        th:text="${i}"
-                        th:selected="${param.speedMin != null and param.speedMin[0] == #strings.toString(i)}">
-                </option>
-
-            </select>
-
-            <span class="range-separator">〜</span>
-
-            <!-- MAX -->
-            <select name="speedMax" class="speed-select">
-
-                <option value="">MAX</option>
-
-                <option th:each="i : ${#numbers.sequence(50, 110)}"
-                        th:value="${i}"
-                        th:text="${i}"
-                        th:selected="${param.speedMax != null and param.speedMax[0] == #strings.toString(i)}">
-                </option>
-
-            </select>
-
-            <span class="mph-label">mph</span>
-
         </div>
 
-    </div>
+<script>
 
-        <button type="submit">検索</button>
+    /* =========================================
+        GUIDE MODAL 使い方ガイド
+    ========================================= */
 
-        <!-- クリア -->
-        <button type="button" onclick="location.href='/batting/filter'">
-            クリア
-        </button>
-    </form>
+    const guideButton =
+        document.querySelector(".guide-button");
 
-    <hr>
+    const guideModal =
+        document.getElementById("guideModal");
+
+    const closeGuideModal =
+        document.getElementById("closeGuideModal");
+
+    /* open */
+    guideButton.addEventListener("click", () => {
+
+        guideModal.classList.add("show");
+
+    });
+
+    /* close button */
+    closeGuideModal.addEventListener("click", () => {
+
+        guideModal.classList.remove("show");
+
+    });
+
+    /* overlay click */
+    guideModal.addEventListener("click", (e) => {
+
+        if(e.target === guideModal){
+
+            guideModal.classList.remove("show");
+
+        }
+
+    });
+
+</script>
+
+
+
+<!--============================================
+// ★ MY FILTER① SAVE文字を押せるようにする
+// ============================================-->
+<script>
+
+    function saveFilterCard1(event) {
+
+        // ★ カード側クリックを止める
+        event.stopPropagation();
+
+        const filter = {
+            hand: document.querySelector('[name="hand"]').value,
+            result: document.querySelector('[name="result"]').value,
+            opponent: document.querySelector('[name="opponent"]').value,
+            pitcher: document.querySelector('[name="pitcher"]').value,
+            pitchType: document.querySelector('[name="pitchType"]').value,
+            speedMin: document.querySelector('[name="speedMin"]').value,
+            speedMax: document.querySelector('[name="speedMax"]').value
+        };
+
+        localStorage.setItem(
+            "battingFilterCard1",
+            JSON.stringify(filter)
+        );
+
+        alert("MY FILTER① に保存しました");
+    }
+
+</script>
+
+<!--============================================
+// ★ MY FILTER① + ② 保存済みカード化
+// ============================================-->
+<script>
+
+    window.addEventListener("DOMContentLoaded", () => {
+
+        // ============================================
+        // ★ MY FILTER① 復元表示
+        // ============================================
+
+        const saved =
+            localStorage.getItem("battingFilterCard1");
+
+        if (saved) {
+
+            const filter = JSON.parse(saved);
+
+            const title =
+                filter.opponent
+                || filter.pitcher
+                || "MY FILTER";
+
+            document.getElementById("myFilterCard1Value")
+                .textContent = title;
+
+            document.getElementById("myFilterCard1Detail")
+                .innerHTML =
+                    (filter.hand || "ALL")
+                    + " / "
+                    + (filter.pitcher || "ALL")
+                    + "<br>"
+                    + (filter.speedMin || "50")
+                    + "-"
+                    + (filter.speedMax || "110")
+                    + "mph";
+        }
+
+        // ============================================
+        // ★ MY FILTER② 復元表示
+        // ============================================
+
+        const saved2 =
+            localStorage.getItem("battingFilterCard2");
+
+        if (saved2) {
+
+            const filter2 = JSON.parse(saved2);
+
+            const title2 =
+                filter2.opponent
+                || filter2.pitcher
+                || "MY FILTER";
+
+            document.getElementById("myFilterCard2Value")
+                .textContent = title2;
+
+            document.getElementById("myFilterCard2Detail")
+                .innerHTML =
+                    (filter2.hand || "ALL")
+                    + " / "
+                    + (filter2.pitcher || "ALL")
+                    + "<br>"
+                    + (filter2.speedMin || "50")
+                    + "-"
+                    + (filter2.speedMax || "110")
+                    + "mph";
+        }
+
+    });
+
+    // ============================================
+    // ★ MY FILTER① LOAD
+    // ============================================
+
+    function loadFilterCard1() {
+
+        const saved =
+            localStorage.getItem("battingFilterCard1");
+
+        if (!saved) {
+            alert("保存データなし");
+            return;
+        }
+
+        const filter = JSON.parse(saved);
+
+        document.querySelector('[name="hand"]').value =
+            filter.hand || "ALL";
+
+        document.querySelector('[name="result"]').value =
+            filter.result || "";
+
+        document.querySelector('[name="opponent"]').value =
+            filter.opponent || "";
+
+        document.querySelector('[name="pitcher"]').value =
+            filter.pitcher || "";
+
+        document.querySelector('[name="pitchType"]').value =
+            filter.pitchType || "ALL";
+
+        document.querySelector('[name="speedMin"]').value =
+            filter.speedMin || 50;
+
+        document.querySelector('[name="speedMax"]').value =
+            filter.speedMax || 110;
+
+        // ★ 自動検索
+        // document.querySelector('form').submit();
+    }
+
+</script>
+
+<!--============================================
+// ★ MY FILTER② SAVE
+// ============================================-->
+<script>
+
+    function saveFilterCard2(event) {
+
+        event.stopPropagation();
+
+        const filter = {
+            hand: document.querySelector('[name="hand"]').value,
+            result: document.querySelector('[name="result"]').value,
+            opponent: document.querySelector('[name="opponent"]').value,
+            pitcher: document.querySelector('[name="pitcher"]').value,
+            pitchType: document.querySelector('[name="pitchType"]').value,
+            speedMin: document.querySelector('[name="speedMin"]').value,
+            speedMax: document.querySelector('[name="speedMax"]').value
+        };
+
+        localStorage.setItem(
+            "battingFilterCard2",
+            JSON.stringify(filter)
+        );
+
+        const title =
+            filter.opponent
+            || filter.pitcher
+            || "MY FILTER";
+
+        document.getElementById("myFilterCard2Value")
+            .textContent = title;
+
+        document.getElementById("myFilterCard2Detail")
+            .innerHTML =
+                (filter.hand || "ALL")
+                + " / "
+                + (filter.pitcher || "ALL")
+                + "<br>"
+                + (filter.speedMin || "50")
+                + "-"
+                + (filter.speedMax || "110")
+                + "mph";
+
+        alert("MY FILTER② に保存しました");
+    }
+
+</script>
+
+<!--============================================
+// ★ MY FILTER② LOAD
+// ============================================-->
+<script>
+
+    function loadFilterCard2() {
+
+        const saved =
+            localStorage.getItem("battingFilterCard2");
+
+        if (!saved) {
+            alert("保存データなし");
+            return;
+        }
+
+        const filter = JSON.parse(saved);
+
+        document.querySelector('[name="hand"]').value =
+            filter.hand || "ALL";
+
+        document.querySelector('[name="result"]').value =
+            filter.result || "";
+
+        document.querySelector('[name="opponent"]').value =
+            filter.opponent || "";
+
+        document.querySelector('[name="pitcher"]').value =
+            filter.pitcher || "";
+
+        document.querySelector('[name="pitchType"]').value =
+            filter.pitchType || "ALL";
+
+        document.querySelector('[name="speedMin"]').value =
+            filter.speedMin || 50;
+
+        document.querySelector('[name="speedMax"]').value =
+            filter.speedMax || 110;
+
+        // ★ 自動検索
+        // document.querySelector('form').submit();
+    }
+
+</script>
 
 <!-- =========================
-    🔥 対ALL（メイン表示）
+    🔥 RISPログ　切替発火装置---------------------------------batting/filter用
 ========================= -->
-<div th:if="${vsAllAvg != null}">
-    <h3>対ALLピッチャー打率</h3>
-    <p>
-        VS ALL: <span th:text="${vsAllAvg}"></span>
-        (<span th:text="${vsAllDetail}"></span>)
-    </p>
-</div>
+<script>
 
-<div th:if="${vsAllLogs != null}">
-    <h3>打席ログ（対ALL）</h3>
+    document.addEventListener("DOMContentLoaded", () => {
 
-    <div th:each="log : ${vsAllLogs}">
-        <p>
-            <span th:text="${log.game_date}"></span>
-            <span th:text="${log.opponent}"></span>
-            <span th:text="${log.pitcher}"></span>
-            （<span th:text="${log.hand}"></span>）
-            →
-            <span th:text="${log.result}"></span>：
-            <span th:text="${log.description}"></span>
-        </p>
-    </div>
-</div>
+        const rispCard =
+            document.getElementById("risp-card");
 
-<!-- =========================
-    右（単体表示時のみ）
-========================= -->
-<div th:if="${vsRAvg != null}">
-    <h3>対右ピッチャー打率</h3>
-    <p>
-        VS R: <span th:text="${vsRAvg}"></span>
-        (<span th:text="${vsRDetail}"></span>)
-    </p>
-</div>
+        const rispLog =
+            document.getElementById("risp-log-section");
 
-<div th:if="${vsRLogs != null}">
-    <h3>打席ログ（対右）</h3>
+        const searchButton =
+            document.querySelector("button[type='submit']");
 
-    <div th:each="log : ${vsRLogs}">
-        <p>
-            <span th:text="${log.game_date}"></span>
-            <span th:text="${log.opponent}"></span>
-            <span th:text="${log.pitcher}"></span>
-            （<span th:text="${log.hand}"></span>）
-            →
-            <span th:text="${log.result}"></span>：
-            <span th:text="${log.description}"></span>
-        </p>
-    </div>
-</div>
+        if (rispCard && rispLog) {
 
-<!-- =========================
-    左（単体表示時のみ）
-========================= -->
-<div th:if="${vsLAvg != null}">
-    <h3>対左ピッチャー打率</h3>
-    <p>
-        VS L: <span th:text="${vsLAvg}"></span>
-        (<span th:text="${vsLDetail}"></span>)
-    </p>
-</div>
+            rispCard.addEventListener("click", () => {
 
-<div th:if="${vsLLogs != null}">
-    <h3>打席ログ（対左）</h3>
+                const isVisible =
+                    rispLog.style.display === "block";
 
-    <div th:each="log : ${vsLLogs}">
-        <p>
-            <span th:text="${log.game_date}"></span>
-            <span th:text="${log.opponent}"></span>
-            <span th:text="${log.pitcher}"></span>
-            （<span th:text="${log.hand}"></span>）
-            →
-            <span th:text="${log.result}"></span>：
-            <span th:text="${log.description}"></span>
-        </p>
-    </div>
-</div>
+                rispLog.style.display =
+                    isVisible ? "none" : "block";
+            });
 
+            // 🔥 通常検索時はRISPログを閉じる
+            if (searchButton) {
+
+                searchButton.addEventListener("click", () => {
+
+                    rispLog.style.display = "none";
+                });
+            }
+        }
+    });
+
+</script>
+
+<!-- ============================================
+    🔥 SEARCH LOADING
+============================================ -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const form =
+            document.querySelector("form");
+
+        const overlay =
+            document.getElementById("loading-overlay");
+
+        if(form && overlay){
+
+            form.addEventListener("submit", (e) => {
+
+                // ====================================
+                // 二重送信防止
+                // ====================================
+
+                e.preventDefault();
+
+                // ====================================
+                // ローディング表示
+                // ====================================
+
+                overlay.style.display = "flex";
+
+                // ====================================
+                // 4秒後にsubmit
+                // ====================================
+
+                setTimeout(() => {
+
+                    form.submit();
+
+                }, 2700);
+
+            });
+
+        }
+
+    });
+
+</script>
 </body>
 </html>

@@ -1,0 +1,1579 @@
+/* ============================================
+▼ 投手サジェスト候補リスト
+============================================ */
+#pitcherSuggestions {
+    border: 1px solid #ccc;
+    max-width: 200px;
+    list-style: none;
+    padding: 0;
+    margin: 2px 0 0 0;
+
+    /* ▼ input直下固定 */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+
+    background: #fff;
+    z-index: 1000;
+
+    /* ▼ 候補が増えた時スクロール */
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* ============================================
+▼ 候補1行
+============================================ */
+#pitcherSuggestions li {
+    padding: 5px;
+    cursor: pointer;
+
+    color: #111827; /* ▼ 候補文字色 */
+}
+
+/* ▼ hover */
+#pitcherSuggestions li:hover {
+    background: #e5e7eb;
+    color: #000;
+}
+
+/* ============================================
+▼ 投手入力wrapper
+============================================ */
+.input-clear-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ▼ label幅固定 */
+.label00 {
+    width: 95px;
+}
+
+/* ============================================
+▼ 投手入力欄
+============================================ */
+.input-clear-wrapper input {
+    width: 100%;
+    padding-right: 25px;
+    box-sizing: border-box;
+}
+
+/* ============================================
+▼ ✖クリアボタン
+============================================ */
+.clear-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 12px;
+    color: #000000;
+    display: none;
+}
+
+/* ▼ hover時のみ表示 */
+.input-clear-wrapper:hover .clear-btn {
+    display: block;
+}
+
+/* ============================================
+▼ 球速レンジwrapper
+============================================ */
+.speed-range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ============================================
+▼ 球速select
+============================================ */
+.speed-select {
+    width: 90px;
+    height: 38px;
+    padding: 6px 10px;
+    color: #020202;
+    border: 1px solid #444;
+    border-radius: 6px;
+    font-size: 14px;
+
+    /* ▼ selectネイティブ表示 */
+    appearance: auto;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+}
+
+/* ▼ 〜 */
+.range-separator {
+    color: #ffffff;
+}
+
+/* ▼ mph */
+.mph-label {
+    color: #ffffff;
+    font-size: 13px;
+}
+
+/* ============================================
+▼ 投手左右 warning
+============================================ */
+.pitcher-warning {
+    margin-top: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+
+    background: rgba(255, 180, 0, 0.15);
+    border: 1px solid rgba(255, 180, 0, 0.4);
+
+    color: #d97706;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ============================================
+▼ 球速レンジ AVG説明
+============================================ */
+.speed-range-info {
+    /* margin-top: 14px; */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgb(0 212 255);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+}
+
+/* ▼ アイコン */
+.speed-info-icon{
+
+    color:#94a3b8;
+
+    font-size:12px;
+    font-weight:700;
+
+    flex-shrink:0;
+}
+
+/* ▼ テキスト */
+.speed-info-text{
+
+    color:rgba(255,255,255,0.42);
+}
+
+
+/* ============================================
+▼ ページ全体wrapper
+============================================ */
+.batting-filter-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    /* ▼ 左右余白 */
+    padding: 24px 20px 80px;
+
+    box-sizing: border-box;
+}
+
+/* ============================================
+▼ Body Theme
+============================================ */
+body {
+    margin: 0;
+    color: #f3f4f6;
+
+    /* ▼ ダークグラデ */
+    background:
+        linear-gradient(
+            180deg,
+            #061326 0%,
+            #081a33 45%,
+            #0a1020 100%
+        );
+
+    font-family:
+        "Inter",
+        "Noto Sans JP",
+        sans-serif;
+
+    min-height: 100vh;
+}
+
+/* ============================================
+▼ タイトル
+============================================ */
+.filter-main-title{
+    margin:0;
+    font-size:42px;
+    font-weight:900;
+    letter-spacing:-0.02em;
+    color:#ffffff;
+}
+
+/* =========================================
+    HEADER ROW
+========================================= */
+.filter-header-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    margin-bottom:12px;
+}
+
+/* =========================================
+    GUIDE BUTTON
+========================================= */
+.guide-button{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    padding:12px 18px;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20,33,70,0.92),
+            rgba(12,22,48,0.96)
+        );
+
+    border:
+        1px solid rgba(124,92,255,0.28);
+
+    color:#ffffff;
+    font-size:14px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 24px rgba(0,0,0,0.35),
+        0 0 20px rgba(124,92,255,0.12);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+
+    backdrop-filter:blur(12px);
+}
+
+/* hover */
+.guide-button:hover{
+    transform:translateY(-2px);
+
+    border-color:
+        rgba(167,139,250,0.7);
+
+    box-shadow:
+        0 18px 34px rgba(0,0,0,0.45),
+        0 0 28px rgba(124,92,255,0.28);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(28,42,88,0.96),
+            rgba(15,27,58,1)
+        );
+}
+
+/* icon */
+.guide-button i{
+    font-size:15px;
+    color:#c4b5fd;
+}
+
+/* ============================================
+▼ サブタイトル
+============================================ */
+.filter-sub-title{
+
+    margin-top:8px;
+    margin-bottom:24px;
+
+    color:rgba(255,255,255,0.62);
+
+    font-size:15px;
+    font-weight:500;
+
+    letter-spacing:0.02em;
+}
+
+/* ============================================
+▼ Filter Panel
+============================================ */
+.filter-panel {
+    margin-top: 24px;
+    padding: 24px;
+    border-radius: 20px;
+
+    /* ▼ glass */
+    background: rgba(15, 23, 42, 0.72);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ============================================
+▼ フィルタ行
+============================================ */
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    /* ▼ select高さ揃え */
+    align-items: flex-end;
+
+    margin-bottom: 18px;
+}
+
+/* ============================================
+▼ 各フィルタグループ
+============================================ */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+
+/* ============================================
+▼ 上段5項目 高さ統一
+投手タイプ / 打席結果 / チーム /
+投手名 / 球種
+============================================ */
+.filter-group select,
+.filter-group input{
+
+    height:48px;
+
+    border-radius:12px;
+
+    background:#101a30;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:#ffffff;
+
+    padding:0 14px;
+
+    font-size:15px;
+    font-weight:600;
+
+    box-sizing:border-box;
+
+    box-shadow:
+        inset 0 0 12px rgba(255,255,255,0.03);
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+/* hover */
+.filter-group select:hover,
+.filter-group input:hover{
+
+    border-color:
+        rgba(139,92,246,.45);
+}
+
+/* focus */
+.filter-group select:focus,
+.filter-group input:focus{
+
+    outline:none;
+
+    border-color:#8b5cf6;
+
+    box-shadow:
+        0 0 0 3px rgba(139,92,246,.15);
+}
+
+/* ============================================
+▼ 投手名 / 球種 幅調整
+============================================ */
+.pitcher-group,
+.pitch-type-group {
+
+    position:relative;
+
+    width:40%;
+
+    min-width:240px;
+
+    flex:none;
+}
+
+/* ============================================
+▼ 球速レンジ専用行
+============================================ */
+.speed-filter-row{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+/* ▼ 球速グループ横幅 */
+.speed-filter-group {
+    width: 100%;
+}
+
+
+/* =========================================
+    AVG CARD AREA
+========================================= */
+.avg-card-wrap{
+    display:flex;
+    gap:20px;
+    margin:40px 0 32px;
+    flex-wrap:nowrap;
+}
+
+/* =========================================
+    AVG CARD
+========================================= */
+.avg-card{
+    flex:1;
+    min-width:220px;
+    background:rgba(8,18,51,0.92);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:22px 24px;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.35),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+/* hover */
+.avg-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(124,92,255,0.35);
+    box-shadow:
+        0 18px 40px rgba(0,0,0,0.45),
+        0 0 24px rgba(124,92,255,0.18);
+}
+
+.avg-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.06),
+            transparent 40%
+        );
+
+    opacity:0;
+    transition:opacity 0.25s ease;
+
+    pointer-events: none;
+}
+
+.avg-card:hover::before{
+    opacity:1;
+}
+
+
+.avg-card.my-filter-card1,
+.avg-card.my-filter-card2 {
+    background: linear-gradient(
+        180deg,
+        #2d0a57 0%,
+        #1a0838 100%
+    );
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:0 4px 18px rgba(160, 80, 255, 0.18);
+}
+
+.avg-card.my-filter-card1:hover,
+.avg-card.my-filter-card2:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 24px rgba(180, 90, 255, 0.35);
+    transition: all 0.22s ease;
+}
+
+.avg-card-title1,
+.avg-card-title2{
+    font-size: 21px;
+    letter-spacing: 0.5px;
+}
+
+#myFilterCard1Value,
+#myFilterCard2Value{
+    font-size: 37px;
+    /* font-weight: 900; */
+    line-height: 1;
+    color: #ffffff;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+    pointer-events: auto;
+    position: relative;
+    z-index: 10;
+}
+
+.avg-card-save-btn1,
+.avg-card-save-btn2{
+    color: #ffffff;
+    background: linear-gradient(
+    180deg,
+    #ff3b82 0%,
+    #8a1248 100%
+);
+    width: 183px;
+    height: 45px;
+    font-size: 20px;
+    font-weight: 900;
+    border: none;
+    border-radius: 12px;
+    box-shadow:
+        0 4px 14px rgba(255, 50, 120, 0.35);
+}
+
+.avg-card-detail1,
+.avg-card-detail2{
+    font-size: 20px;
+}
+
+/* =========================================
+    タイトル
+========================================= */
+.avg-card-title{
+    font-size: 21px;
+    font-weight: bold;
+    color: #ff7979;
+    /* margin-bottom: 14px; */
+    letter-spacing: 0.4px;
+}
+
+/* =========================================
+    打率数値
+========================================= */
+.avg-card-value{
+    font-size:48px;
+    font-weight:900;
+    line-height:1;
+    color:#ffffff;
+    margin-bottom:14px;
+    letter-spacing:1px;
+
+        pointer-events: auto;
+    position: relative;
+    z-index: 10;
+}
+
+/* =========================================
+    打数詳細
+========================================= */
+.avg-card-detail{
+    font-size:15px;
+    color:#8ea0c9;
+    font-weight:600;
+}
+
+/* =========================================
+    AVG ICON 👤🔥
+========================================= */
+.avg-icon{
+    position:absolute;
+    right:20px;
+    bottom:18px;
+
+    font-size:42px;
+    opacity:0.92;
+
+    filter:drop-shadow(0 0 12px rgba(255,255,255,0.12));
+    pointer-events: none;
+}
+
+/* 対右 */
+.right-icon{
+    color:#4f7cff;
+    font-weight: bold;
+}
+
+/* 対左 */
+.left-icon{
+    color:#36d978;
+    font-weight: bold;
+}
+
+/* 得点圏 */
+.risp-icon{
+    color:#a855f7;
+    font-weight: bold;
+}
+
+
+/* =========================================
+    スマホ
+========================================= */
+@media (max-width: 768px){
+
+    .avg-card-wrap{
+        flex-direction:column;
+        gap:14px;
+    }
+
+    .avg-card{
+        width:100%;
+        min-width:auto;
+        padding:18px;
+        border-radius:16px;
+    }
+
+    .avg-card-value{
+        font-size:40px;
+    }
+}
+
+
+/* =========================
+    TABLE HEADER STICKY
+========================= */
+.batting-log-table thead th{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:#081427;
+    box-shadow:0 2px 0 rgba(255,255,255,0.04);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:#9fb3d9;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+/* =========================================
+    打席ログ table
+========================================= */
+.batting-log-table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:13px;
+}
+
+.batting-log-table th{
+    padding:10px 8px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+    text-align:left;
+    color:#dbe7ff;
+    font-weight:700;
+    background:rgba(255,255,255,0.03);
+}
+
+/* table 行間調整 */
+.batting-log-table td{
+    padding:12px 10px;
+    line-height:1.7;
+}
+
+/* 説明列 */
+.batting-log-table td:nth-child(6){
+    color:#dbe7ff;
+    font-size:12px;
+}
+
+/* 結果列 */
+.batting-log-table td:nth-child(5){
+    text-align:center;
+}
+
+/* 日付 */
+.batting-log-table th:nth-child(1),
+.batting-log-table td:nth-child(1){
+    width:90px;
+}
+
+/* 対戦 */
+.batting-log-table th:nth-child(2),
+.batting-log-table td:nth-child(2){
+    width:120px;
+}
+
+/* 投手 */
+.batting-log-table th:nth-child(3),
+.batting-log-table td:nth-child(3){
+    width:110px;
+}
+
+/* 球速/球種 */
+/* =========================
+    PITCH COLUMN
+========================= */
+.batting-log-table th:nth-child(4),
+.batting-log-table td:nth-child(4){
+    width:180px;
+    min-width:180px;
+}
+
+/* 結果 */
+/* =========================
+    RESULT COLUMN
+========================= */
+.batting-log-table th:nth-child(5),
+.batting-log-table td:nth-child(5){
+    width:72px;
+    min-width:72px;
+    text-align:center;
+}
+
+/* 説明 */
+.batting-log-table th:nth-child(6),
+.batting-log-table td:nth-child(6){
+    width:auto;
+}
+
+/* hover */
+.batting-log-table tbody tr:hover{
+    background:rgba(255,255,255,0.04);
+}
+
+
+/* =========================
+    RESULT BADGE
+========================= */
+
+.result-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:52px;
+    padding:4px 0;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.5px;
+    color:#fff;
+    text-transform:uppercase;
+}
+
+/* OUT */
+.result-badge.OUT{
+    background:#3f4654;
+}
+
+/* SO */
+.result-badge.SO{
+    background:#b91c1c;
+}
+
+/* BB */
+.result-badge.BB{
+    background:#2563eb;
+}
+
+/* HIT */
+.result-badge.HIT{
+    background:#059669;
+}
+
+/* HR */
+.result-badge.HR{
+    background:#9333ea;
+}
+
+/* ERR */
+.result-badge.Err{
+    background:#d97706;
+}
+
+/* SF */
+.result-badge.SF{
+    background:#0f766e;
+}
+
+/* FC */
+.result-badge.FC{
+    background:#475569;
+}
+
+
+/* =========================
+   TABLE ROW HOVER
+========================= */
+.batting-log-table tbody tr{
+    transition:
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+/* hover */
+.batting-log-table tbody tr:hover{
+    background:
+        rgba(59,130,246,0.08);
+
+    box-shadow:
+        inset 3px 0 0 #3b82f6;
+}
+
+/* hover時 description 少し明るく */
+.batting-log-table tbody tr:hover td:last-child{
+    color:#ffffff;
+}
+
+
+/* =========================
+    DESCRIPTION COLOR LINK
+========================= */
+
+.desc-text{
+    transition:color 0.18s ease;
+}
+
+/* HIT */
+.desc-text.HIT{
+    color:#d1fae5;
+}
+
+/* BB */
+.desc-text.BB{
+    color:#dbeafe;
+}
+
+/* SO */
+.desc-text.SO{
+    color:#fecaca;
+}
+
+/* HR */
+.desc-text.HR{
+    color:#e9d5ff;
+}
+
+/* OUT */
+.desc-text.OUT{
+    color:#e5e7eb;
+}
+
+/* ERR */
+.desc-text.Err{
+    color:#fde68a;
+}
+
+
+/* =========================
+    PITCH CELL
+========================= */
+
+.pitch-cell{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    white-space:nowrap;
+}
+
+/* 球速 */
+.velo{
+    color:#dbeafe;
+    font-weight:600;
+    font-size:12px;
+}
+
+/* 球種 badge */
+.pitch-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:3px 10px;
+
+    border-radius:999px;
+
+    font-size:11px;
+    font-weight:700;
+
+    letter-spacing:0.03em;
+}
+
+/* Sweeper */
+.pitch-badge.sweeper{
+    background:#312e81;
+    color:#c7d2fe;
+}
+
+/* Four-Seam */
+.pitch-badge.fourseam{
+    background:#7f1d1d;
+    color:#fecaca;
+}
+
+/* Slider */
+.pitch-badge.slider{
+    background:#0f766e;
+    color:#ccfbf1;
+}
+
+/* Splitter */
+.pitch-badge.splitter{
+    background:#4c1d95;
+    color:#e9d5ff;
+}
+
+/* Cutter */
+.pitch-badge.cutter{
+    background:#78350f;
+    color:#fde68a;
+}
+
+
+/* =========================
+    ROW SEPARATOR 超薄い separator を入れる
+========================= */
+.batting-log-table tbody tr{
+    border-bottom:
+        1px solid rgba(255,255,255,0.035);
+}
+
+/* 最終行 */
+.batting-log-table tbody tr:last-child{
+    border-bottom:none;
+}
+
+
+    /* =========================
+    PITCH TYPE COLORS
+    ========================= */
+
+    /* Four-Seam */
+    .pitch-badge.four-seam{
+        background:#7f1d1d;
+        color:#fecaca;
+    }
+
+    /* Sinker */
+    .pitch-badge.sinker{
+        background:#78350f;
+        color:#fde68a;
+    }
+
+    /* Sweeper */
+    .pitch-badge.sweeper{
+        background:#312e81;
+        color:#c7d2fe;
+    }
+
+    /* Slider */
+    .pitch-badge.slider{
+        background:#0f766e;
+        color:#ccfbf1;
+    }
+
+    /* Cutter */
+    .pitch-badge.cutter{
+        background:#92400e;
+        color:#fde68a;
+    }
+
+    /* Curve */
+    .pitch-badge.curve{
+        background:#1e3a8a;
+        color:#bfdbfe;
+    }
+
+    /* Knuckle Curve */
+    .pitch-badge.knuckle-curve{
+        background:#581c87;
+        color:#e9d5ff;
+    }
+
+    /* Splitter */
+    .pitch-badge.splitter{
+        background:#4c1d95;
+        color:#e9d5ff;
+    }
+
+    /* Changeup */
+    .pitch-badge.changeup{
+        background:#14532d;
+        color:#bbf7d0;
+    }
+
+
+    /* =========================
+    FILTER ACTIONS 検索 / クリアボタンを右側へ
+    ========================= */
+
+    .filter-action-group{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        margin-left:auto;
+    }
+
+    .filter-action-group{
+        display:flex;
+        justify-content:flex-end;
+        gap:12px;
+        margin-top:-80px;
+    }
+
+    .search-btn{
+        border:none;
+        border-radius:12px;
+        padding:10px 24px;
+        background:linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7
+        );
+        color:#fff;
+        font-weight:700;
+        cursor:pointer;
+        height: 50px;
+        width: 100px;
+        font-size: 24px;
+    }
+
+    .filter-clear-btn{
+        border:1px solid rgba(255,255,255,.15);
+        border-radius:12px;
+        padding:10px 18px;
+        text-decoration:none;
+        color:#cbd5e1;
+        background:rgba(255,255,255,.04);
+        cursor:pointer;
+        height: 50px;
+        width: 100px;
+    }
+
+/* ============================================
+▼ 球速レンジ 横並び
+============================================ */
+.speed-inline-row{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    width:100%;
+
+    margin-top:12px;
+}
+
+/* ============================================
+▼ 左ラベル
+============================================ */
+.speed-inline-label{
+
+    color:#ffffff;
+
+    font-size:15px;
+    font-weight:700;
+
+    white-space:nowrap;
+
+    flex-shrink:0;
+}
+
+/* ============================================
+▼ ドラムロール
+============================================ */
+.speed-drum-select{
+
+    width:72px;
+    height:42px;
+
+    border-radius:12px;
+
+    background:#131d35;
+    color:white;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    text-align:center;
+
+    font-size:16px;
+    font-weight:700;
+
+    padding:0 8px;
+
+    box-shadow:
+        inset 0 0 10px rgba(255,255,255,0.03),
+        0 0 12px rgba(120,80,255,0.15);
+
+    flex-shrink:0;
+}
+
+/* ============================================
+▼ 〜
+============================================ */
+.speed-separator{
+
+    color:white;
+
+    font-size:18px;
+    font-weight:700;
+
+    flex-shrink:0;
+}
+
+/* ============================================
+▼ mph
+============================================ */
+.mph-label{
+
+    color:white;
+
+    font-size:15px;
+    font-weight:700;
+
+    flex-shrink:0;
+}
+
+/* ============================================
+▼ スライダーエリア
+============================================ */
+.speed-slider-area{
+
+    width:260px;
+
+    display:flex;
+    align-items:center;
+
+    flex-shrink:0;
+}
+
+/* ============================================
+▼ slider wrap
+============================================ */
+.slider-track-wrap{
+
+    position:relative;
+
+    width:100%;
+    height:24px;
+
+    display:flex;
+    align-items:center;
+}
+
+/* ============================================
+▼ track
+============================================ */
+.slider-track{
+
+    position:absolute;
+
+    top:50%;
+    transform:translateY(-50%);
+
+    height:6px;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7cb4ff,
+            #d14dff
+        );
+
+    box-shadow:
+        0 0 12px rgba(139,92,246,.45);
+
+    z-index:1;
+}
+
+/* ============================================
+▼ range
+============================================ */
+.slider-track-wrap input[type="range"]{
+
+    position:absolute;
+
+    width:100%;
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    background:none;
+
+    pointer-events:none;
+
+    z-index:2;
+}
+
+/* ============================================
+▼ thumb
+============================================ */
+.slider-track-wrap input[type="range"]::-webkit-slider-thumb{
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    width:20px;
+    height:20px;
+
+    border-radius:50%;
+
+    background:white;
+
+    border:none;
+
+    pointer-events:auto;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,0.7);
+}
+
+/* =========================================
+    GUIDE MODAL 使い方ガイド
+========================================= */
+.guide-modal-overlay{
+
+    position:fixed;
+    inset:0;
+
+    background:
+        rgba(0,0,0,0.72);
+
+    backdrop-filter:
+        blur(6px);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:9999;
+
+    padding:24px;
+}
+
+/* open */
+.guide-modal-overlay.show{
+    display:flex;
+}
+
+/* =========================================
+    MODAL
+========================================= */
+    .guide-modal{
+        width:100%;
+        max-width:720px;
+
+        max-height:85vh;
+
+        box-shadow:
+            rgba(0,0,0,0.5) 0px 30px 80px;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgb(8,19,38),
+                rgb(11,23,48) 100%
+            );
+
+        border-radius:24px;
+        border:1px solid rgba(255,255,255,0.08);
+
+        overflow-y:auto;
+        overflow-x:hidden;
+    }
+
+/* =========================================
+    HEADER
+========================================= */
+    .guide-modal-header{
+        position:sticky;
+        top:0;
+        z-index:10;
+
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+
+        padding:26px 28px 20px;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(8,19,38,0.98),
+                rgba(8,19,38,0.92)
+            );
+
+        border-bottom:
+            1px solid rgba(255,255,255,0.08);
+
+        backdrop-filter:blur(10px);
+    }
+
+/* =========================================
+    CLOSE
+========================================= */
+.guide-close-button{
+
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:12px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color:white;
+
+    font-size:22px;
+    cursor:pointer;
+
+    transition:all 0.2s ease;
+}
+
+.guide-close-button:hover{
+
+    background:
+        rgba(124,92,255,0.25);
+
+    transform:scale(1.05);
+}
+
+/* =========================================
+    BODY
+========================================= */
+.guide-modal-body{
+    padding:28px;
+}
+
+/* =========================================
+    SECTION
+========================================= */
+.guide-section{
+
+    margin-bottom:28px;
+
+    padding:20px;
+
+    border-radius:18px;
+
+    background:
+        rgba(255,255,255,0.03);
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+}
+
+.guide-section h4{
+
+    margin:0 0 12px;
+
+    color:white;
+
+    font-size:18px;
+    font-weight:800;
+}
+
+.guide-section p{
+
+    margin:0;
+
+    color:#b7c3df;
+
+    line-height:1.8;
+
+    font-size:14px;
+}
+
+/* ============================================
+    🔥 LOADING OVERLAY
+============================================ */
+
+#loading-overlay {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.65);
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 99999;
+}
+
+.loading-box {
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-spinner {
+
+    width: 72px;
+    height: 72px;
+
+    border: 8px solid rgba(255,255,255,0.2);
+    border-top: 8px solid #ffffff;
+
+    border-radius: 50%;
+
+    animation: loadingSpin 1s linear infinite;
+}
+
+.loading-text {
+
+    margin-top: 18px;
+
+    color: #ffffff;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
+}
+
+@keyframes loadingSpin {
+
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================
+    mobile
+========================================= */
+@media (max-width:768px){
+
+    .guide-modal{
+        border-radius:18px;
+    }
+
+    .guide-modal-header{
+        padding:18px;
+    }
+
+    .guide-modal-body{
+        padding:18px;
+    }
+
+    .guide-modal-header h3{
+        font-size:20px;
+    }
+}
+
+
+/* ============================================
+▼ mobile
+============================================ */
+@media (max-width:768px){
+
+    .speed-inline-row{
+
+        flex-wrap:wrap;
+        gap:8px;
+    }
+
+    .speed-slider-area{
+
+        width:180px;
+    }
+
+    .speed-drum-select{
+
+        width:54px;
+        height:32px;
+
+        font-size:12px;
+
+        border-radius:8px;
+    }
+
+    .mph-label{
+
+        font-size:12px;
+    }
+}
+
+/* =========================================
+    GUIDE MODAL MOBILE
+========================================= */
+@media (max-width: 768px){
+
+    .guide-modal{
+        width:92%;
+        max-width:none;
+
+        border-radius:18px;
+    }
+
+    .guide-modal-header{
+        padding:18px 18px 14px;
+    }
+
+    .guide-modal-title{
+        font-size:22px;
+    }
+
+    .guide-close-button{
+        width:38px;
+        height:38px;
+        font-size:20px;
+    }
+
+    .guide-modal-body{
+        padding:18px;
+        gap:14px;
+    }
+
+    .guide-section{
+        padding:16px;
+        border-radius:14px;
+    }
+
+    .guide-section h4{
+        font-size:18px;
+        margin-bottom:8px;
+    }
+
+    .guide-section p{
+        font-size:13px;
+        line-height:1.7;
+    }
+}
