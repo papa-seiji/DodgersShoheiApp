@@ -369,7 +369,23 @@ public class OhtaniScorebookController {
                             speedMax));
         }
 
-        // 右
+        // ============================================
+        // ★ RISP（ALL）---------------------------------batting/filter用
+        // ============================================
+        Map<String, Object> rispAll = mlbGameService.getRispFromDBByHand(null);
+
+        model.addAttribute(
+                "rispAllAvg",
+                rispAll.get("avg"));
+
+        model.addAttribute(
+                "rispAllDetail",
+                rispAll.get("detail"));
+
+        // ============================================
+        // ★ 右
+        // ============================================
+
         if ("R".equals(hand)) {
 
             Map<String, String> vsR;
@@ -446,7 +462,10 @@ public class OhtaniScorebookController {
                             speedMax));
         }
 
-        // 左
+        // ============================================
+        // ★ 左
+        // ============================================
+
         if ("L".equals(hand)) {
 
             Map<String, String> vsL;
@@ -569,4 +588,5 @@ public class OhtaniScorebookController {
 
         return mlbGameService.searchPitchers(keyword);
     }
+
 }

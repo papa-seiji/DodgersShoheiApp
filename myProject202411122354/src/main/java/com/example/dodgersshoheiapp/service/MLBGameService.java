@@ -542,7 +542,7 @@ public class MLBGameService {
 
     /**
      * ============================================
-     * ★ 得点圏打率（RISP）取得（DB版）
+     * ★ 得点圏打率（RISP）取得（DB版）--------hogehoge_01.html用
      * ============================================
      */
     public Map<String, Object> getRispFromDB() {
@@ -1402,4 +1402,56 @@ public class MLBGameService {
 
         return "-";
     }
+
+    /**
+     * ============================================
+     * ★ 得点圏打率（RISP）取得（左右対応版）--------batting/filter用
+     * ============================================
+     */
+    public Map<String, Object> getRispFromDBByHand(String pitcherHand) {
+
+        Map<String, Object> raw = ohtaniGameRepository.getRispStatsByHand(pitcherHand);
+
+        Map<String, Object> result = new HashMap<>();
+
+        // =========================
+        // ★ null対策
+        // =========================
+        int hits = raw.get("hits") != null
+                ? ((Number) raw.get("hits")).intValue()
+                : 0;
+
+        int atBats = raw.get("at_bats") != null
+                ? ((Number) raw.get("at_bats")).intValue()
+                : 0;
+
+        double avg = raw.get("avg") != null
+                ? ((Number) raw.get("avg")).doubleValue()
+                : 0.0;
+
+        // =========================
+        // ★ .214形式
+        // =========================
+        String avgStr = String.format("%.3f", avg);
+
+        if (avgStr.startsWith("0")) {
+            avgStr = avgStr.substring(1);
+        }
+
+        // =========================
+        // ★ 6-28形式
+        // =========================
+        String detail = hits + "-" + atBats;
+
+        result.put("avg", avgStr);
+        result.put("detail", detail);
+
+        System.out.println(
+                "RISP(" + pitcherHand + "): "
+                        + avgStr
+                        + " (" + detail + ")");
+
+        return result;
+    }
+
 }

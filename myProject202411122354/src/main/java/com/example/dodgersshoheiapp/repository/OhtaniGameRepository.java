@@ -231,7 +231,7 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 得点圏打率（RISP）取得
+     * ★ 得点圏打率（RISP）取得--------hogehoge_01.html用
      * ============================================
      */
     public Map<String, Object> getRispStats() {
@@ -264,6 +264,116 @@ public class OhtaniGameRepository {
                 """;
 
         return jdbcTemplate.queryForMap(sql);
+    }
+
+    /**
+     * ============================================
+     * ★ 得点圏打率（RISP）取得（左右対応版）--------batting/filter用
+     * ============================================
+     */
+    public Map<String, Object> getRispStatsByHand(String pitcherHand) {
+
+        String sql = """
+                    SELECT
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+
+                        SUM(
+                            CASE
+                                WHEN result NOT IN ('BB','SF')
+                                AND result IS NOT NULL
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS at_bats,
+
+                        ROUND(
+                            SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                            /
+                            NULLIF(
+                                SUM(
+                                    CASE
+                                        WHEN result NOT IN ('BB','SF')
+                                        AND result IS NOT NULL
+                                        THEN 1
+                                        ELSE 0
+                                    END
+                                ),
+                                0
+                            )
+                        , 3) AS avg
+
+                    FROM (
+
+                        SELECT pa1_result AS result
+                        FROM ohtani_game_details
+                        WHERE pa1_description LIKE '%得点圏にランナー有%'
+                        AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR pa1_pitcher_hand = ?
+                        )
+
+                        UNION ALL
+
+                        SELECT pa2_result
+                        FROM ohtani_game_details
+                        WHERE pa2_description LIKE '%得点圏にランナー有%'
+                        AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR pa2_pitcher_hand = ?
+                        )
+
+                        UNION ALL
+
+                        SELECT pa3_result
+                        FROM ohtani_game_details
+                        WHERE pa3_description LIKE '%得点圏にランナー有%'
+                        AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR pa3_pitcher_hand = ?
+                        )
+
+                        UNION ALL
+
+                        SELECT pa4_result
+                        FROM ohtani_game_details
+                        WHERE pa4_description LIKE '%得点圏にランナー有%'
+                        AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR pa4_pitcher_hand = ?
+                        )
+
+                        UNION ALL
+
+                        SELECT pa5_result
+                        FROM ohtani_game_details
+                        WHERE pa5_description LIKE '%得点圏にランナー有%'
+                        AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR pa5_pitcher_hand = ?
+                        )
+
+                        UNION ALL
+
+                        SELECT pa6_result
+                        FROM ohtani_game_details
+                        WHERE pa6_description LIKE '%得点圏にランナー有%'
+                        AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR pa6_pitcher_hand = ?
+                        )
+
+                    ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+
+                pitcherHand, pitcherHand,
+                pitcherHand, pitcherHand,
+                pitcherHand, pitcherHand,
+                pitcherHand, pitcherHand,
+                pitcherHand, pitcherHand,
+                pitcherHand, pitcherHand);
     }
 
     /**
