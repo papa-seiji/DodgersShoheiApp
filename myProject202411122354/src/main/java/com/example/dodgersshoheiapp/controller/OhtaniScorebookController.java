@@ -294,6 +294,8 @@ public class OhtaniScorebookController {
             @RequestParam(required = false) String pitchType, // ★追加
             @RequestParam(required = false) Integer speedMin, // ★追加
             @RequestParam(required = false) Integer speedMax, // ★追加
+
+            @RequestParam(required = false) String pitcherHand, // RISP系 ★追加
             Model model) {
 
         // 🔥 ALL（明示的に選んだ時だけ）
@@ -387,7 +389,7 @@ public class OhtaniScorebookController {
         // ============================================
         model.addAttribute(
                 "rispLogs",
-                mlbGameService.getRispLogs());
+                mlbGameService.getRispLogs(pitcherHand));
 
         // ============================================
         // ★ 右
@@ -557,10 +559,11 @@ public class OhtaniScorebookController {
                 && hand != null && !hand.isBlank()
                 && !"ALL".equals(hand)) {
 
-            String pitcherHand = mlbGameService.getPitcherHand(pitcher);
+            String actualPitcherHand = mlbGameService.getPitcherHand(pitcher);
 
             // ★ R選択なのに左投手
-            if ("R".equals(hand) && "L".equals(pitcherHand)) {
+            if ("R".equals(hand)
+                    && "L".equals(actualPitcherHand)) {
 
                 model.addAttribute(
                         "pitcherWarning",
@@ -569,7 +572,8 @@ public class OhtaniScorebookController {
             }
 
             // ★ L選択なのに右投手
-            if ("L".equals(hand) && "R".equals(pitcherHand)) {
+            if ("L".equals(hand)
+                    && "R".equals(actualPitcherHand)) {
 
                 model.addAttribute(
                         "pitcherWarning",

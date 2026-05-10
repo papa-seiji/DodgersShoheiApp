@@ -1957,7 +1957,7 @@ public class OhtaniGameRepository {
      * ★ RISPログ取得---------------------------------batting/filter用
      * ============================================
      */
-    public List<Map<String, Object>> getRispLogs() {
+    public List<Map<String, Object>> getRispLogs(String pitcherHand) {
 
         String sql = """
                     SELECT
@@ -1966,7 +1966,7 @@ public class OhtaniGameRepository {
                         pitcher,
                         hand,
 
-                        substring(description FROM '([0-9]+\\.?[0-9]*)mph')
+                        substring(description FROM '([0-9]+\\\\.?[0-9]*)mph')
                             AS "pitchSpeed",
 
                         CASE
@@ -1986,6 +1986,7 @@ public class OhtaniGameRepository {
                         description
 
                     FROM (
+
                         SELECT
                             g.game_date,
                             g.opponent,
@@ -2091,14 +2092,23 @@ public class OhtaniGameRepository {
                             ON d.game_id = g.id
 
                         WHERE d.pa6_description LIKE '%得点圏にランナー有%'
+
                     ) t
+
+                    WHERE (
+                        CAST(? AS text) IS NULL
+                        OR hand = CAST(? AS text)
+                    )
 
                     ORDER BY game_date DESC
 
                     LIMIT 30
                 """;
 
-        return jdbcTemplate.queryForList(sql);
+        return jdbcTemplate.queryForList(
+                sql,
+                pitcherHand,
+                pitcherHand);
     }
 
     /**

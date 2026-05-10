@@ -478,10 +478,15 @@
             ============================================ -->
             <div class="avg-card-wrap">
                 <!-- 得点圏 -->
-                <div class="avg-card">
+                <div id="risp-card" class="avg-card">
                     <div class="avg-card-title">
                         得点圏打率
                     </div>
+
+                    <div class="avg-card-title">
+                        　　　　　　　　　　　ここをクリックで[ON/OFF]切替
+                    </div>
+
 
                     <div class="avg-card-value">
                         <span th:text="${rispAllAvg}"></span>
@@ -621,85 +626,52 @@
 <!-- =========================
     🔥 RISPログ　---------------------------------batting/filter用
 ========================= -->
-<div th:if="${rispLogs != null}" class="log-section">
-
-    <h3 class="log-title">
-        得点圏打席ログ
-    </h3>
-
+<div id="risp-log-section" th:if="${rispLogs != null}" class="log-section" style="display:none;"><!-- これで初期非表示になります。-->
+<h3 class="log-title">得点圏打席ログ</h3>
     <div class="table-wrapper">
-
         <table class="batting-log-table">
-
             <thead>
-            <tr>
-                <th>日付</th>
-                <th>対戦</th>
-                <th>投手</th>
-                <th>球種(球速)</th>
-                <th>結果</th>
-                <th>説明</th>
-            </tr>
+                <tr>
+                    <th>日付</th>
+                    <th>対戦</th>
+                    <th>投手</th>
+                    <th>球種(球速)</th>
+                    <th>結果</th>
+                    <th>説明</th>
+                </tr>
             </thead>
-
             <tbody>
-
-            <tr th:each="log : ${rispLogs}">
-
-                <td th:text="${log.game_date}"></td>
-
-                <td th:text="${log.opponent}"></td>
-
-                <td>
-                    <span th:text="${log.pitcher}"></span>
-                    （<span th:text="${log.hand}"></span>）
-                </td>
-
-                <td class="pitch-cell">
-
-                    <span class="velo"
-                        th:text="${log.pitchSpeed}">
-                    </span>
-
-                    <span class="pitch-badge"
-                        th:text="${log.pitchType}">
-                    </span>
-
-                </td>
-
-                <td>
-                    <span class="result-badge"
-                        th:classappend="${log.result}">
-
-                        <span th:text="${log.result}"></span>
-
-                    </span>
-                </td>
-
-                <td>
-                    <span class="desc-text"
-                        th:classappend="${log.result}"
-                        th:text="${log.description}">
-                    </span>
-                </td>
-
-            </tr>
-
+                <tr th:each="log : ${rispLogs}">
+                    <td th:text="${log.game_date}"></td>
+                    <td th:text="${log.opponent}"></td>
+                    <td>
+                        <span th:text="${log.pitcher}"></span>
+                        （<span th:text="${log.hand}"></span>）
+                    </td>
+                    <td class="pitch-cell">
+                        <span class="velo" th:text="${log.pitchSpeed}"></span>
+                        <span class="pitch-badge" th:text="${log.pitchType}"></span>
+                    </td>
+                    <td>
+                        <span class="result-badge" th:classappend="${log.result}">
+                            <span th:text="${log.result}"></span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="desc-text" th:classappend="${log.result}" th:text="${log.description}"></span>
+                    </td>
+                </tr>
             </tbody>
-
         </table>
-
     </div>
-
 </div>
-
-
 
 
         <!-- =========================
             🔥 打席ログ（対ALL）
         ========================= -->
-        <div th:if="${vsAllLogs != null}" class="log-section">
+        <!-- 初期(RISPログ非表示) > RISPカード押下(表示) > もう1回押下(非表示) -->
+        <div id="vsall-log-section" th:if="${vsAllLogs != null}" class="log-section">
 
             <h3 class="log-title">打席ログ（対ALL）</h3>
 
@@ -1343,6 +1315,46 @@
         // ★ 自動検索
         // document.querySelector('form').submit();
     }
+
+</script>
+
+<!-- =========================
+    🔥 RISPログ　切替発火装置---------------------------------batting/filter用
+========================= -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const rispCard =
+            document.getElementById("risp-card");
+
+        const rispLog =
+            document.getElementById("risp-log-section");
+
+        const searchButton =
+            document.querySelector("button[type='submit']");
+
+        if (rispCard && rispLog) {
+
+            rispCard.addEventListener("click", () => {
+
+                const isVisible =
+                    rispLog.style.display === "block";
+
+                rispLog.style.display =
+                    isVisible ? "none" : "block";
+            });
+
+            // 🔥 通常検索時はRISPログを閉じる
+            if (searchButton) {
+
+                searchButton.addEventListener("click", () => {
+
+                    rispLog.style.display = "none";
+                });
+            }
+        }
+    });
 
 </script>
 </body>
