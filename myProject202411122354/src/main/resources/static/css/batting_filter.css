@@ -567,11 +567,11 @@ body {
     タイトル
 ========================================= */
 .avg-card-title{
-    font-size:14px;
-    font-weight:700;
-    color:#aeb9d6;
-    margin-bottom:14px;
-    letter-spacing:0.4px;
+    font-size: 21px;
+    font-weight: bold;
+    color: #ff7979;
+    /* margin-bottom: 14px; */
+    letter-spacing: 0.4px;
 }
 
 /* =========================================
@@ -1407,7 +1407,74 @@ body {
     font-size:14px;
 }
 
+/* ============================================
+    🔥 LOADING OVERLAY
+============================================ */
 
+#loading-overlay {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.65);
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 99999;
+}
+
+.loading-box {
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-spinner {
+
+    width: 72px;
+    height: 72px;
+
+    border: 8px solid rgba(255,255,255,0.2);
+    border-top: 8px solid #ffffff;
+
+    border-radius: 50%;
+
+    animation: loadingSpin 1s linear infinite;
+}
+
+.loading-text {
+
+    margin-top: 18px;
+
+    color: #ffffff;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
+}
+
+@keyframes loadingSpin {
+
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 /* =========================================
     mobile

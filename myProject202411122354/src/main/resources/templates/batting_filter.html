@@ -10,7 +10,7 @@
     <div class="batting-filter-page">
 
         <div class="filter-header-row">
-            <div>
+            <div id="Analysis">
                 <h2 class="filter-main-title">Batting Filter</h2>
                 <p class="filter-sub-title">大谷翔平の打撃成績を様々な条件でフィルタリングできます</p>
             </div>
@@ -257,6 +257,19 @@
                                 class="search-btn">
                             検索
                         </button>
+
+                        <!-- ============================================
+                            🔥 LOADING OVERLAY
+                        ============================================ -->
+                        <div id="loading-overlay">
+                            <div class="loading-box">
+                                <div class="loading-spinner"></div>
+                                <div class="loading-text">
+                                    検索中...
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="button"
                                 class="filter-clear-btn"
                                 onclick="clearFilters()">
@@ -480,7 +493,7 @@
                 <!-- 得点圏 -->
                 <div id="risp-card" class="avg-card">
                     <div class="avg-card-title">
-                        得点圏打率
+                        '26 得点圏打率
                     </div>
 
                     <div class="avg-card-title">
@@ -1023,6 +1036,35 @@
                         </p>
                     </div>
 
+                    <!-- 得点圏打率カード -->
+                    <div class="guide-section">
+                        <h4>🔥 得点圏打率カード</h4>
+                        <p>
+                            「得点圏打率」カードをクリックすると、
+                            得点圏打席ログを
+                            ON / OFF 切替表示できます。<br><br>
+                            投手タイプ（ALL / 右 / 左）や
+                            各種フィルタ条件に応じて、
+                            表示される得点圏ログも切り替わります。
+                        </p>
+                    </div>
+
+                    <!-- MYショートカット -->
+                    <div class="guide-section">
+                        <h4>⭐ MY ショートカットカード</h4>
+                        <p>
+                            よく使う検索条件を
+                            MYショートカット①②へ保存できます。<br><br>
+                            【保存方法】<br>
+                            ① フィルタ条件を設定<br>
+                            ② カード内の「SAVE」ボタン押下<br><br>
+                            【使用方法】<br>
+                            ① 保存済みカードをクリック<br>
+                            ② 「検索」ボタン押下<br><br>
+                            保存内容はブラウザに保持されます。
+                        </p>
+
+                    </div>
                     <!-- 検索のコツ -->
                     <div class="guide-section">
                         <h4>💡 検索のコツ</h4>
@@ -1354,6 +1396,53 @@
                 });
             }
         }
+    });
+
+</script>
+
+<!-- ============================================
+    🔥 SEARCH LOADING
+============================================ -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const form =
+            document.querySelector("form");
+
+        const overlay =
+            document.getElementById("loading-overlay");
+
+        if(form && overlay){
+
+            form.addEventListener("submit", (e) => {
+
+                // ====================================
+                // 二重送信防止
+                // ====================================
+
+                e.preventDefault();
+
+                // ====================================
+                // ローディング表示
+                // ====================================
+
+                overlay.style.display = "flex";
+
+                // ====================================
+                // 4秒後にsubmit
+                // ====================================
+
+                setTimeout(() => {
+
+                    form.submit();
+
+                }, 2700);
+
+            });
+
+        }
+
     });
 
 </script>
