@@ -385,10 +385,16 @@ public class OhtaniScorebookController {
 
             if (!exists) {
 
+                String actualOpponent = mlbGameService.getOpponentByPitcher(
+                        pitcher);
+
                 model.addAttribute(
                         "pitcherOpponentWarning",
-                        "入力された投手は " + opponent + " の検索対象に存在しません");
-
+                        "⚠ "
+                                + pitcher
+                                + " は "
+                                + actualOpponent
+                                + " の投手です。チーム選択を確認してください");
             }
         }
 
@@ -606,6 +612,18 @@ public class OhtaniScorebookController {
         model.addAttribute("opponents", opponents);
 
         return "batting_filter";
+    }
+
+    // ============================================
+    // ★ 投手 → opponent 自動補完 API
+    // ============================================
+    @GetMapping("/api/pitcher-opponent")
+    @ResponseBody
+    public String getPitcherOpponent(
+            @RequestParam String pitcher) {
+
+        return mlbGameService
+                .getOpponentByPitcher(pitcher);
     }
 
     /**

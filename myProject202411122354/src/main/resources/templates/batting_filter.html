@@ -968,13 +968,35 @@ input.addEventListener("input", async () => {
         // クリックで反映
         // ====================================
 
-        li.addEventListener("click", () => {
+li.addEventListener("click", async () => {
 
-            input.value = name;
+    input.value = name;
+    list.innerHTML = "";
 
-            list.innerHTML = "";
+    // ★ opponent 自動選択
+    const opponentSelect =
+        document.querySelector(
+            "select[name='opponent']");
 
-        });
+    try {
+
+        const res = await fetch(
+            `/api/pitcher-opponent?pitcher=${encodeURIComponent(name)}`);
+
+        const opponent = await res.text();
+
+        if (opponent && opponent !== "null") {
+
+            opponentSelect.value = opponent;
+        }
+
+    } catch (e) {
+
+        console.error(
+            "Opponent auto select error",
+            e);
+    }
+});
 
         list.appendChild(li);
 

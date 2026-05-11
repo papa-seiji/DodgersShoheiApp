@@ -1356,6 +1356,15 @@ public class MLBGameService {
                 opponent);
     }
 
+    // ============================================
+    // ★ 投手所属チーム取得
+    // ============================================
+    public String getOpponentByPitcher(String pitcher) {
+
+        return ohtaniGameRepository
+                .getOpponentByPitcher(pitcher);
+    }
+
     /**
      * ============================================
      * ★ 投手の左右取得（左右が違えば警告を出して再入力を促す）

@@ -2302,6 +2302,38 @@ public class OhtaniGameRepository {
         return count != null && count > 0;
     }
 
+    // ============================================
+    // ★ 投手所属チーム取得
+    // ============================================
+    public String getOpponentByPitcher(
+            String pitcher) {
+
+        String sql = """
+                SELECT DISTINCT g.opponent
+                FROM ohtani_game_details d
+                JOIN ohtani_games g
+                    ON d.game_id = g.id
+                WHERE
+                       d.pa1_pitcher = ?
+                    OR d.pa2_pitcher = ?
+                    OR d.pa3_pitcher = ?
+                    OR d.pa4_pitcher = ?
+                LIMIT 1
+                """;
+
+        List<String> result = jdbcTemplate.queryForList(
+                sql,
+                String.class,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+
+        return result.isEmpty()
+                ? null
+                : result.get(0);
+    }
+
     /**
      * ============================================
      * ★ 投手の左右取得（左右が違えば警告を出して再入力を促す）
