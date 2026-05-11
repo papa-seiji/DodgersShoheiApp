@@ -1476,6 +1476,83 @@ body {
     }
 }
 
+
+/* =========================================
+   🔥 RISP MODE
+========================================= */
+
+body.risp-mode {
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(255, 60, 60, 0.12),
+            rgba(0, 0, 0, 0)
+        ),
+        #020b1d;
+
+    transition: 0.35s ease;
+}
+
+    /* =========================================
+    RISP CARD 発光
+    ========================================= */
+
+    body.risp-mode #risp-card {
+
+        border: 1px solid rgba(255, 80, 80, 0.7);
+
+        box-shadow:
+            0 0 18px rgba(255, 70, 70, 0.35),
+            0 0 40px rgba(255, 50, 50, 0.15);
+
+        transform: translateY(-2px);
+
+        transition: 0.3s ease;
+    }
+
+    /* =========================================
+    RISP LOG AREA
+    ========================================= */
+
+    body.risp-mode #risp-log-section {
+
+        border-left: 4px solid #ff4d6d;
+
+        padding-left: 12px;
+
+        animation: rispFade 0.25s ease;
+    }
+
+    /* =========================================
+    title
+    ========================================= */
+
+    body.risp-mode .log-title {
+
+        color: #ff6b81;
+
+        letter-spacing: 1px;
+    }
+
+    /* =========================================
+    animation
+    ========================================= */
+
+    @keyframes rispFade {
+
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
 /* =========================================
     mobile
 ========================================= */

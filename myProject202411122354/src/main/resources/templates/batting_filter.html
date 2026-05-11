@@ -580,6 +580,8 @@
     <!-- =========================================
         AVG CARD AREA
     ========================================= -->
+    <div id="normal-analysis-area">
+
     <div class="avg-card-wrap">
 
         <!-- 対ALL -->
@@ -634,7 +636,7 @@
         </div>
 
     </div>
-
+</div>
 
 <!-- =========================
     🔥 RISPログ　---------------------------------batting/filter用
@@ -1365,38 +1367,74 @@
 ========================= -->
 <script>
 
-    document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-        const rispCard =
-            document.getElementById("risp-card");
+    const rispCard =
+        document.getElementById("risp-card");
 
-        const rispLog =
-            document.getElementById("risp-log-section");
+    const normalArea =
+        document.getElementById("normal-analysis-area");
 
-        const searchButton =
-            document.querySelector("button[type='submit']");
+    const rispLog =
+        document.getElementById("risp-log-section");
 
-        if (rispCard && rispLog) {
+    const searchButton =
+        document.querySelector("button[type='submit']");
 
-            rispCard.addEventListener("click", () => {
+    if (rispCard && rispLog) {
 
-                const isVisible =
-                    rispLog.style.display === "block";
+        rispCard.addEventListener("click", () => {
 
-                rispLog.style.display =
-                    isVisible ? "none" : "block";
-            });
+            const isVisible =
+                rispLog.style.display === "block";
 
-            // 🔥 通常検索時はRISPログを閉じる
-            if (searchButton) {
+            // ====================================
+            // RISP OFF
+            // ====================================
 
-                searchButton.addEventListener("click", () => {
+            if (isVisible) {
 
-                    rispLog.style.display = "none";
-                });
+                rispLog.style.display = "none";
+
+                if (normalArea) {
+                    normalArea.style.display = "block";
+                }
+
+                document.body.classList.remove("risp-mode");
+
+            } else {
+
+                // ====================================
+                // RISP ON
+                // ====================================
+
+            rispLog.style.display = "block";
+
+            if (normalArea) {
+                normalArea.style.display = "none";
             }
+
+            document.body.classList.add("risp-mode");
+            }
+        });
+
+        // ====================================
+        // 通常検索時はRISPログ閉じる
+        // ====================================
+
+        if (searchButton) {
+
+            searchButton.addEventListener("click", () => {
+
+                rispLog.style.display = "none";
+
+                if (normalArea) {
+                    normalArea.style.display = "block";
+                }
+            });
         }
-    });
+    }
+});
 
 </script>
 
