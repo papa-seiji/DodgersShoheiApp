@@ -372,6 +372,33 @@ public class OhtaniScorebookController {
         }
 
         // ============================================
+        // ★ opponent × pitcher 整合性チェック
+        // ============================================
+        if (opponent != null
+                && !opponent.isBlank()
+                && pitcher != null
+                && !pitcher.isBlank()) {
+
+            boolean exists = mlbGameService.existsPitcherInOpponent(
+                    pitcher,
+                    opponent);
+
+            if (!exists) {
+
+                String actualOpponent = mlbGameService.getOpponentByPitcher(
+                        pitcher);
+
+                model.addAttribute(
+                        "pitcherOpponentWarning",
+                        "⚠ "
+                                + pitcher
+                                + " は "
+                                + actualOpponent
+                                + " の投手です。チーム選択を確認してください");
+            }
+        }
+
+        // ============================================
         // ★ RISP（ALL）---------------------------------batting/filter用
         // ============================================
         Map<String, Object> rispAll = mlbGameService.getRispFromDBByHand(null);
@@ -587,6 +614,18 @@ public class OhtaniScorebookController {
         return "batting_filter";
     }
 
+    // ============================================
+    // ★ 投手 → opponent 自動補完 API
+    // ============================================
+    @GetMapping("/api/pitcher-opponent")
+    @ResponseBody
+    public String getPitcherOpponent(
+            @RequestParam String pitcher) {
+
+        return mlbGameService
+                .getOpponentByPitcher(pitcher);
+    }
+
     /**
      * ============================================
      * ★ 投手サジェストAPI
@@ -594,10 +633,15 @@ public class OhtaniScorebookController {
      */
     @GetMapping("/api/pitchers")
     @ResponseBody
-    public List<String> searchPitchers(
-            @RequestParam String keyword) {
+    public List<String> getPitchers(
 
-        return mlbGameService.searchPitchers(keyword);
+            @RequestParam String keyword,
+
+            @RequestParam(required = false) String opponent) {
+
+        return mlbGameService
+                .searchPitchers(
+                        keyword,
+                        opponent);
     }
-
 }

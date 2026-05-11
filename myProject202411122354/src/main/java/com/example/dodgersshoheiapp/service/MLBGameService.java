@@ -1337,8 +1337,32 @@ public class MLBGameService {
      * ★ 投手サジェスト検索（Service）
      * ============================================
      */
-    public List<String> searchPitchers(String keyword) {
-        return ohtaniGameRepository.searchPitchers(keyword);
+    public List<String> searchPitchers(
+            String keyword,
+            String opponent) {
+
+        return ohtaniGameRepository
+                .searchPitchers(
+                        keyword,
+                        opponent);
+    }
+
+    public boolean existsPitcherInOpponent(
+            String pitcher,
+            String opponent) {
+
+        return ohtaniGameRepository.existsPitcherInOpponent(
+                pitcher,
+                opponent);
+    }
+
+    // ============================================
+    // ★ 投手所属チーム取得
+    // ============================================
+    public String getOpponentByPitcher(String pitcher) {
+
+        return ohtaniGameRepository
+                .getOpponentByPitcher(pitcher);
     }
 
     /**

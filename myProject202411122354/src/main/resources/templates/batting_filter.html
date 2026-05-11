@@ -9,16 +9,26 @@
 
     <div class="batting-filter-page">
 
+    <!-- =========================================
+        SHOHEI BACKGROUND IMAGE
+    ========================================= -->
+    <div class="shohei-bg">
+        <img
+            src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/img/Analysis/Analysis%E8%83%8C%E6%99%AF%E7%94%A8%E3%81%AE%E7%94%BB%E5%83%8F.png"
+            alt="Shohei Ohtani">
+    </div>
+
         <div class="filter-header-row">
             <div id="Analysis">
-                <h2 class="filter-main-title">Batting Filter</h2>
+                <h2 class="filter-main-title">Shohei Ohtani Analysis</h2>
+                <p class="filter-sub-title">Filter and analyze Shohei Ohtani’s 2026 batting data</p>
                 <p class="filter-sub-title">大谷翔平の打撃成績を様々な条件でフィルタリングできます</p>
             </div>
             <!-- ★ 使い方ガイド -->
             <button type="button" class="guide-button">ⓘ 使い方ガイド</button>
         </div>
         <a href="/hogehoge_01" class="back-button" style="color: #ffffff;">← 前の画面に戻る</a>
-        <hr>
+        <!--<hr>-->
 
         <!-- 🔽 フィルタUI -->
         <div class="filter-panel">
@@ -107,6 +117,17 @@
                         ⚠ <span th:text="${pitcherWarning}"></span>
 
                     </div>
+
+                    <!-- ============================================
+                        ★ 投手 × チーム warning
+                    ============================================ -->
+                    <div th:if="${pitcherOpponentWarning}"
+                        class="pitcher-warning">
+
+                        ⚠ <span th:text="${pitcherOpponentWarning}"></span>
+
+                    </div>
+
                 </div>
 
 
@@ -580,6 +601,8 @@
     <!-- =========================================
         AVG CARD AREA
     ========================================= -->
+    <div id="normal-analysis-area">
+
     <div class="avg-card-wrap">
 
         <!-- 対ALL -->
@@ -634,7 +657,7 @@
         </div>
 
     </div>
-
+</div>
 
 <!-- =========================
     🔥 RISPログ　---------------------------------batting/filter用
@@ -907,37 +930,104 @@
 * ============================================
 */-->
 <script>
-        const input = document.getElementById("pitcherInput");
-        const list = document.getElementById("pitcherSuggestions");
 
-        input.addEventListener("input", async () => {
+const input =
+    document.getElementById("pitcherInput");
 
-            const keyword = input.value;
+const list =
+    document.getElementById("pitcherSuggestions");
 
-            if (keyword.length < 1) {
-                list.innerHTML = "";
-                return;
-            }
+// ============================================
+// ★ 日本語IME入力対応
+// ============================================
+let isComposing = false;
 
-            const res = await fetch(`/api/pitchers?keyword=${keyword}`);
-            const data = await res.json();
+input.addEventListener("compositionstart", () => {
+    isComposing = true;
+});
+
+input.addEventListener("compositionend", () => {
+
+    isComposing = false;
+
+    // ★ 日本語確定後に再検索
+    input.dispatchEvent(new Event("input"));
+});
+
+input.addEventListener("input", async () => {
+
+    // ★ 日本語変換中は検索しない
+    if (isComposing) {
+        return;
+    }
+
+    const keyword = input.value;
+
+    if (keyword.length < 1) {
+
+        list.innerHTML = "";
+        return;
+    }
+
+    // ============================================
+    // ★ opponent連動
+    // ============================================
+    const opponent =
+        document.querySelector(
+            'select[name="opponent"]'
+        ).value;
+
+    const res =
+        await fetch(
+            `/api/pitchers?keyword=${keyword}&opponent=${opponent}`
+        );
+
+    const data = await res.json();
+
+    list.innerHTML = "";
+
+    data.forEach(name => {
+
+        const li =
+            document.createElement("li");
+
+        li.textContent = name;
+
+        // ★ クリックで入力反映
+        li.addEventListener("click", async () => {
+
+            input.value = name;
 
             list.innerHTML = "";
 
-            data.forEach(name => {
-                const li = document.createElement("li");
-                li.textContent = name;
+            // ============================================
+            // ★ 投手 → opponent 自動補完
+            // ============================================
+            const res =
+                await fetch(
+                    `/api/pitcher-opponent?pitcher=${name}`
+                );
 
-                // 👉 クリックで入力反映
-                li.addEventListener("click", () => {
-                    input.value = name;
-                    list.innerHTML = "";
-                });
+            const opponentName =
+                await res.text();
 
-                list.appendChild(li);
-            });
+            if (opponentName) {
+
+                const opponentSelect =
+                    document.querySelector(
+                        'select[name="opponent"]'
+                    );
+
+                opponentSelect.value =
+                    opponentName;
+            }
         });
+
+        list.appendChild(li);
+    });
+});
 </script>
+
 
 <!-- ============================================
     ★ 投手左右 warning
@@ -1365,38 +1455,74 @@
 ========================= -->
 <script>
 
-    document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-        const rispCard =
-            document.getElementById("risp-card");
+    const rispCard =
+        document.getElementById("risp-card");
 
-        const rispLog =
-            document.getElementById("risp-log-section");
+    const normalArea =
+        document.getElementById("normal-analysis-area");
 
-        const searchButton =
-            document.querySelector("button[type='submit']");
+    const rispLog =
+        document.getElementById("risp-log-section");
 
-        if (rispCard && rispLog) {
+    const searchButton =
+        document.querySelector("button[type='submit']");
 
-            rispCard.addEventListener("click", () => {
+    if (rispCard && rispLog) {
 
-                const isVisible =
-                    rispLog.style.display === "block";
+        rispCard.addEventListener("click", () => {
 
-                rispLog.style.display =
-                    isVisible ? "none" : "block";
-            });
+            const isVisible =
+                rispLog.style.display === "block";
 
-            // 🔥 通常検索時はRISPログを閉じる
-            if (searchButton) {
+            // ====================================
+            // RISP OFF
+            // ====================================
 
-                searchButton.addEventListener("click", () => {
+            if (isVisible) {
 
-                    rispLog.style.display = "none";
-                });
+                rispLog.style.display = "none";
+
+                if (normalArea) {
+                    normalArea.style.display = "block";
+                }
+
+                document.body.classList.remove("risp-mode");
+
+            } else {
+
+                // ====================================
+                // RISP ON
+                // ====================================
+
+            rispLog.style.display = "block";
+
+            if (normalArea) {
+                normalArea.style.display = "none";
             }
+
+            document.body.classList.add("risp-mode");
+            }
+        });
+
+        // ====================================
+        // 通常検索時はRISPログ閉じる
+        // ====================================
+
+        if (searchButton) {
+
+            searchButton.addEventListener("click", () => {
+
+                rispLog.style.display = "none";
+
+                if (normalArea) {
+                    normalArea.style.display = "block";
+                }
+            });
         }
-    });
+    }
+});
 
 </script>
 

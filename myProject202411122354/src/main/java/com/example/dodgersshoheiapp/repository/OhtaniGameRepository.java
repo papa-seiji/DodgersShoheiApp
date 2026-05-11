@@ -2132,29 +2132,206 @@ public class OhtaniGameRepository {
      * ★ 投手サジェスト検索（部分一致）
      * ============================================
      */
-    public List<String> searchPitchers(String keyword) {
+    public List<String> searchPitchers(
+            String keyword,
+            String opponent) {
 
         String sql = """
-                    SELECT DISTINCT pitcher FROM (
-                        SELECT pa1_pitcher AS pitcher FROM ohtani_game_details
-                        UNION
-                        SELECT pa2_pitcher FROM ohtani_game_details
-                        UNION
-                        SELECT pa3_pitcher FROM ohtani_game_details
-                        UNION
-                        SELECT pa4_pitcher FROM ohtani_game_details
-                        UNION
-                        SELECT pa5_pitcher FROM ohtani_game_details
-                        UNION
-                        SELECT pa6_pitcher FROM ohtani_game_details
+                    SELECT DISTINCT pitcher
+                    FROM (
+
+                        SELECT
+                            g.opponent,
+                            d.pa1_pitcher AS pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa2_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa3_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa4_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa5_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa6_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
                     ) t
-                    WHERE pitcher IS NOT NULL
-                    AND LOWER(pitcher) LIKE LOWER(?)
+
+                    WHERE pitcher ILIKE ?
+
+                    AND (
+                        ? IS NULL
+                        OR ? = ''
+                        OR ? = 'ALL'
+                        OR opponent = ?
+                    )
+
                     ORDER BY pitcher
+
                     LIMIT 10
                 """;
 
-        return jdbcTemplate.queryForList(sql, String.class, "%" + keyword + "%");
+        return jdbcTemplate.queryForList(
+
+                sql,
+
+                String.class,
+
+                "%" + keyword + "%",
+
+                opponent,
+                opponent,
+                opponent,
+                opponent);
+    }
+
+    /**
+     * ============================================
+     * ★ opponent内に投手が存在するかチェック
+     * ============================================
+     */
+    public boolean existsPitcherInOpponent(
+            String pitcher,
+            String opponent) {
+
+        String sql = """
+                    SELECT COUNT(*)
+                    FROM (
+
+                        SELECT
+                            g.opponent,
+                            d.pa1_pitcher AS pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa2_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa3_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa4_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa5_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        UNION ALL
+
+                        SELECT
+                            g.opponent,
+                            d.pa6_pitcher
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                    ) t
+
+                    WHERE opponent = ?
+                    AND pitcher = ?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                opponent,
+                pitcher);
+
+        return count != null && count > 0;
+    }
+
+    // ============================================
+    // ★ 投手所属チーム取得
+    // ============================================
+    public String getOpponentByPitcher(
+            String pitcher) {
+
+        String sql = """
+                SELECT DISTINCT g.opponent
+                FROM ohtani_game_details d
+                JOIN ohtani_games g
+                    ON d.game_id = g.id
+                WHERE
+                       d.pa1_pitcher = ?
+                    OR d.pa2_pitcher = ?
+                    OR d.pa3_pitcher = ?
+                    OR d.pa4_pitcher = ?
+                LIMIT 1
+                """;
+
+        List<String> result = jdbcTemplate.queryForList(
+                sql,
+                String.class,
+                pitcher,
+                pitcher,
+                pitcher,
+                pitcher);
+
+        return result.isEmpty()
+                ? null
+                : result.get(0);
     }
 
     /**
