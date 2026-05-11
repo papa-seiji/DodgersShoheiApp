@@ -107,6 +107,8 @@ public class SecurityConfig {
                                 "/api/dodgers/standings",
                                 "/api/stats",
                                 "/api/visitorCounter/**",
+                                "/api/pitchers",
+                                "/api/pitcher-opponent", // ★追加
                                 "/hogehoge_01",
                                 "/hogehoge_02",
                                 "/hogehoge_03",
