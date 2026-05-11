@@ -372,6 +372,27 @@ public class OhtaniScorebookController {
         }
 
         // ============================================
+        // ★ opponent × pitcher 整合性チェック
+        // ============================================
+        if (opponent != null
+                && !opponent.isBlank()
+                && pitcher != null
+                && !pitcher.isBlank()) {
+
+            boolean exists = mlbGameService.existsPitcherInOpponent(
+                    pitcher,
+                    opponent);
+
+            if (!exists) {
+
+                model.addAttribute(
+                        "pitcherOpponentWarning",
+                        "入力された投手は " + opponent + " の検索対象に存在しません");
+
+            }
+        }
+
+        // ============================================
         // ★ RISP（ALL）---------------------------------batting/filter用
         // ============================================
         Map<String, Object> rispAll = mlbGameService.getRispFromDBByHand(null);
@@ -594,10 +615,15 @@ public class OhtaniScorebookController {
      */
     @GetMapping("/api/pitchers")
     @ResponseBody
-    public List<String> searchPitchers(
-            @RequestParam String keyword) {
+    public List<String> getPitchers(
 
-        return mlbGameService.searchPitchers(keyword);
+            @RequestParam String keyword,
+
+            @RequestParam(required = false) String opponent) {
+
+        return mlbGameService
+                .searchPitchers(
+                        keyword,
+                        opponent);
     }
-
 }

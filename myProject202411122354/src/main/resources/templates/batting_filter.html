@@ -107,6 +107,17 @@
                         ⚠ <span th:text="${pitcherWarning}"></span>
 
                     </div>
+
+                    <!-- ============================================
+                        ★ 投手 × チーム warning
+                    ============================================ -->
+                    <div th:if="${pitcherOpponentWarning}"
+                        class="pitcher-warning">
+
+                        ⚠ <span th:text="${pitcherOpponentWarning}"></span>
+
+                    </div>
+
                 </div>
 
 
@@ -909,36 +920,68 @@
 * ============================================
 */-->
 <script>
-        const input = document.getElementById("pitcherInput");
-        const list = document.getElementById("pitcherSuggestions");
 
-        input.addEventListener("input", async () => {
+const input =
+    document.getElementById("pitcherInput");
 
-            const keyword = input.value;
+const list =
+    document.getElementById("pitcherSuggestions");
 
-            if (keyword.length < 1) {
-                list.innerHTML = "";
-                return;
-            }
+input.addEventListener("input", async () => {
 
-            const res = await fetch(`/api/pitchers?keyword=${keyword}`);
-            const data = await res.json();
+    const keyword = input.value;
+
+    if (keyword.length < 1) {
+
+        list.innerHTML = "";
+        return;
+    }
+
+    // ====================================
+    // チーム取得
+    // ====================================
+
+    const opponent =
+        document.querySelector('[name="opponent"]').value;
+
+    // ====================================
+    // API
+    // ====================================
+
+    const res =
+        await fetch(
+            `/api/pitchers?keyword=${keyword}&opponent=${encodeURIComponent(opponent)}`
+        );
+
+    const data = await res.json();
+
+    list.innerHTML = "";
+
+    data.forEach(name => {
+
+        const li =
+            document.createElement("li");
+
+        li.textContent = name;
+
+        // ====================================
+        // クリックで反映
+        // ====================================
+
+        li.addEventListener("click", () => {
+
+            input.value = name;
 
             list.innerHTML = "";
 
-            data.forEach(name => {
-                const li = document.createElement("li");
-                li.textContent = name;
-
-                // 👉 クリックで入力反映
-                li.addEventListener("click", () => {
-                    input.value = name;
-                    list.innerHTML = "";
-                });
-
-                list.appendChild(li);
-            });
         });
+
+        list.appendChild(li);
+
+    });
+
+});
+
 </script>
 
 <!-- ============================================
