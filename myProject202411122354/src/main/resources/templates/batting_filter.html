@@ -927,7 +927,29 @@ const input =
 const list =
     document.getElementById("pitcherSuggestions");
 
+// ============================================
+// ★ 日本語IME入力対応
+// ============================================
+let isComposing = false;
+
+input.addEventListener("compositionstart", () => {
+    isComposing = true;
+});
+
+input.addEventListener("compositionend", () => {
+
+    isComposing = false;
+
+    // ★ 日本語確定後に再検索
+    input.dispatchEvent(new Event("input"));
+});
+
 input.addEventListener("input", async () => {
+
+    // ★ 日本語変換中は検索しない
+    if (isComposing) {
+        return;
+    }
 
     const keyword = input.value;
 
@@ -936,6 +958,65 @@ input.addEventListener("input", async () => {
         list.innerHTML = "";
         return;
     }
+
+    // ============================================
+    // ★ opponent連動
+    // ============================================
+    const opponent =
+        document.querySelector(
+            'select[name="opponent"]'
+        ).value;
+
+    const res =
+        await fetch(
+            `/api/pitchers?keyword=${keyword}&opponent=${opponent}`
+        );
+
+    const data = await res.json();
+
+    list.innerHTML = "";
+
+    data.forEach(name => {
+
+        const li =
+            document.createElement("li");
+
+        li.textContent = name;
+
+        // ★ クリックで入力反映
+        li.addEventListener("click", async () => {
+
+            input.value = name;
+
+            list.innerHTML = "";
+
+            // ============================================
+            // ★ 投手 → opponent 自動補完
+            // ============================================
+            const res =
+                await fetch(
+                    `/api/pitcher-opponent?pitcher=${name}`
+                );
+
+            const opponentName =
+                await res.text();
+
+            if (opponentName) {
+
+                const opponentSelect =
+                    document.querySelector(
+                        'select[name="opponent"]'
+                    );
+
+                opponentSelect.value =
+                    opponentName;
+            }
+        });
+
+        list.appendChild(li);
+    });
+});
+</script>
 
     // ====================================
     // チーム取得
