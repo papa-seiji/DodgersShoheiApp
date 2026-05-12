@@ -140,10 +140,16 @@
                         ALL
                     </option>
 
+                    <option value="BREAKING"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'BREAKING'}">
+                        対変化球
+                    </option>
+
                     <option value="Four-Seam"
                         th:selected="${param.pitchType != null and param.pitchType[0] == 'Four-Seam'}">
                         Four-Seam
                     </option>
+
 
                     <option value="Sinker"
                         th:selected="${param.pitchType != null and param.pitchType[0] == 'Sinker'}">
@@ -175,9 +181,9 @@
                         Curve
                     </option>
 
-                    <option value="Knuckle_Curve"
-                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Knuckle_Curve'}">
-                        Knuckle_Curve
+                    <option value="Knuckle Curve"
+                        th:selected="${param.pitchType != null and param.pitchType[0] == 'Knuckle Curve'}">
+                        Knuckle Curve
                     </option>
 
                     <option value="Slurve"

@@ -693,6 +693,68 @@ public class MLBGameService {
      */
     public Map<String, String> getVsRightStatsByPitchTypeFormatted(String pitchType) {
 
+        // ============================================
+        // ★ BREAKING（変化球と丸っと包括）でも検索できるようにする仕組み--1469行目と親子
+        // ============================================
+        if ("BREAKING".equals(pitchType)) {
+
+            List<Map<String, Object>> logs = getVsRightLogs(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+
+            List<String> breakingTypes = normalizePitchTypes(
+                    pitchType);
+
+            int hits = 0;
+            int atBats = 0;
+
+            for (Map<String, Object> row : logs) {
+
+                String type = (String) row.get("pitchType");
+
+                String result = (String) row.get("result");
+
+                if (!breakingTypes.contains(type)) {
+                    continue;
+                }
+
+                // ★ AVG分母
+                if (!"BB".equals(result)
+                        && !"SF".equals(result)
+                        && result != null) {
+
+                    atBats++;
+                }
+
+                // ★ AVG分子
+                if ("HIT".equals(result)
+                        || "HR".equals(result)) {
+
+                    hits++;
+                }
+            }
+
+            double avg = atBats == 0
+                    ? 0.0
+                    : (double) hits / atBats;
+
+            String avgStr = String.format("%.3f", avg)
+                    .replace("0.", ".");
+
+            String detail = hits + "-" + atBats;
+
+            Map<String, String> resultMap = new HashMap<>();
+
+            resultMap.put("avg", avgStr);
+            resultMap.put("detail", detail);
+
+            return resultMap;
+        }
+
         Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitchType(pitchType);
 
         int hits = stats.get("hits") != null
@@ -950,6 +1012,67 @@ public class MLBGameService {
      */
     public Map<String, String> getVsLeftStatsByPitchTypeFormatted(String pitchType) {
 
+        // ============================================
+        // ★ BREAKING（変化球まとめ）対応
+        // ============================================
+        if ("BREAKING".equals(pitchType)) {
+
+            List<Map<String, Object>> logs = getVsLeftLogs(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+
+            List<String> breakingTypes = normalizePitchTypes(pitchType);
+
+            int hits = 0;
+            int atBats = 0;
+
+            for (Map<String, Object> row : logs) {
+
+                String type = (String) row.get("pitchType");
+
+                String result = (String) row.get("result");
+
+                if (!breakingTypes.contains(type)) {
+                    continue;
+                }
+
+                // ★ AVG分母
+                if (!"BB".equals(result)
+                        && !"SF".equals(result)
+                        && result != null) {
+
+                    atBats++;
+                }
+
+                // ★ AVG分子
+                if ("HIT".equals(result)
+                        || "HR".equals(result)) {
+
+                    hits++;
+                }
+            }
+
+            double avg = atBats == 0
+                    ? 0.0
+                    : (double) hits / atBats;
+
+            String avgStr = String.format("%.3f", avg)
+                    .replace("0.", ".");
+
+            String detail = hits + "-" + atBats;
+
+            Map<String, String> resultMap = new HashMap<>();
+
+            resultMap.put("avg", avgStr);
+            resultMap.put("detail", detail);
+
+            return resultMap;
+        }
+
         Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByPitchType(pitchType);
 
         int hits = stats.get("hits") != null
@@ -1179,6 +1302,67 @@ public class MLBGameService {
      */
     public Map<String, String> getVsAllStatsByPitchTypeFormatted(String pitchType) {
 
+        // ============================================
+        // ★ BREAKING（変化球と丸っと包括）でも検索できるようにする仕組み--1469行目と親子
+        // ============================================
+        if ("BREAKING".equals(pitchType)) {
+
+            List<Map<String, Object>> logs = getVsAllLogs(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+
+            List<String> breakingTypes = normalizePitchTypes(pitchType);
+
+            int hits = 0;
+            int atBats = 0;
+
+            for (Map<String, Object> row : logs) {
+
+                String type = (String) row.get("pitchType");
+
+                String result = (String) row.get("result");
+
+                if (!breakingTypes.contains(type)) {
+                    continue;
+                }
+
+                // ★ AVG分母
+                if (!"BB".equals(result)
+                        && !"SF".equals(result)
+                        && result != null) {
+
+                    atBats++;
+                }
+
+                // ★ AVG分子
+                if ("HIT".equals(result)
+                        || "HR".equals(result)) {
+
+                    hits++;
+                }
+            }
+
+            double avg = atBats == 0
+                    ? 0.0
+                    : (double) hits / atBats;
+
+            String avgStr = String.format("%.3f", avg)
+                    .replace("0.", ".");
+
+            String detail = hits + "-" + atBats;
+
+            Map<String, String> resultMap = new HashMap<>();
+
+            resultMap.put("avg", avgStr);
+            resultMap.put("detail", detail);
+
+            return resultMap;
+        }
+
         Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByPitchType(pitchType);
 
         int hits = stats.get("hits") != null
@@ -1373,6 +1557,47 @@ public class MLBGameService {
     public String getPitcherHand(String pitcher) {
 
         return ohtaniGameRepository.getPitcherHand(pitcher);
+    }
+
+    /**
+     * ============================================
+     * ★ pitchType 正規化
+     * BREAKING → 変化球一覧へ変換
+     * ============================================
+     */
+    private List<String> normalizePitchTypes(
+            String pitchType) {
+
+        // ============================================
+        // ★ ALL
+        // ============================================
+        if (pitchType == null
+                || pitchType.isBlank()
+                || "ALL".equals(pitchType)) {
+
+            return null;
+        }
+
+        // ============================================
+        // ★ BREAKING（変化球と丸っと包括）でも検索できるようにする仕組み
+        // ============================================
+        if ("BREAKING".equals(pitchType)) {
+
+            return List.of(
+                    "Sinker",
+                    "Sweeper",
+                    "Slider",
+                    "Splitter",
+                    "Cutter",
+                    "Knuckle Curve",
+                    "Slurve",
+                    "Changeup");
+        }
+
+        // ============================================
+        // ★ 単体球種
+        // ============================================
+        return List.of(pitchType);
     }
 
     // ============================================

@@ -754,133 +754,313 @@ public class OhtaniGameRepository {
             Integer speedMax) {
 
         String sql = """
-                                SELECT game_date, opponent, pitcher, hand, result, description
-                                FROM (
-                                    SELECT g.game_date,
-                                        g.opponent,
-                                        d.pa1_pitcher AS pitcher,
-                                        d.pa1_pitcher_hand AS hand,
-                                        d.pa1_result AS result,
-                                        d.pa1_description AS description
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g ON d.game_id = g.id
-                                    WHERE d.pa1_pitcher_hand = 'R'
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
-                                    AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                            substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                            AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                                        )
-                                    )
+                                                                SELECT game_date, opponent, pitcher, hand, result, description
+                                                                FROM (
+                                                                    SELECT g.game_date,
+                                                                        g.opponent,
+                                                                        d.pa1_pitcher AS pitcher,
+                                                                        d.pa1_pitcher_hand AS hand,
+                                                                        d.pa1_result AS result,
+                                                                        d.pa1_description AS description
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g ON d.game_id = g.id
+                                                                    WHERE d.pa1_pitcher_hand = 'R'
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
+                                                                    AND (
 
-                                    UNION ALL
+                    CAST(? AS TEXT) IS NULL
+                    OR CAST(? AS TEXT) = ''
 
-                                    SELECT g.game_date, g.opponent, d.pa2_pitcher, d.pa2_pitcher_hand, d.pa2_result, d.pa2_description
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g ON d.game_id = g.id
-                                    WHERE d.pa2_pitcher_hand = 'R'
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
-                                    AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                            substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                            AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                                        )
-                                    )
+                    OR (
 
-                                    UNION ALL
+                        CAST(? AS TEXT) = 'BREAKING'
 
-                                    SELECT g.game_date, g.opponent, d.pa3_pitcher, d.pa3_pitcher_hand, d.pa3_result, d.pa3_description
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g ON d.game_id = g.id
-                                    WHERE d.pa3_pitcher_hand = 'R'
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
-                                    AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                            substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                            AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                                        )
-                                    )
+                        AND (
 
-                                    UNION ALL
+                               d.pa1_description LIKE '%Sinker%'
+                            OR d.pa1_description LIKE '%Sweeper%'
+                            OR d.pa1_description LIKE '%Slider%'
+                            OR d.pa1_description LIKE '%Splitter%'
+                            OR d.pa1_description LIKE '%Cutter%'
+                            OR d.pa1_description LIKE '%Knuckle Curve%'
+                            OR d.pa1_description LIKE '%Slurve%'
+                            OR d.pa1_description LIKE '%Changeup%'
+                            OR d.pa1_description LIKE '%Curve%'
 
-                                    SELECT g.game_date, g.opponent, d.pa4_pitcher, d.pa4_pitcher_hand, d.pa4_result, d.pa4_description
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g ON d.game_id = g.id
-                                    WHERE d.pa4_pitcher_hand = 'R'
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
-                                    AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                            substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                            AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                                        )
-                                    )
+                        )
+                    )
 
-                                    UNION ALL
+                    OR (
 
-                                    SELECT g.game_date, g.opponent, d.pa5_pitcher, d.pa5_pitcher_hand, d.pa5_result, d.pa5_description
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g ON d.game_id = g.id
-                                    WHERE d.pa5_pitcher_hand = 'R'
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
-                                    AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                            substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                            AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                                        )
-                                    )
+                        CAST(? AS TEXT) <> 'BREAKING'
+                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
 
-                                    UNION ALL
+                    )
+                )
+                                                AND (
+                                CAST(? AS NUMERIC) IS NULL
+                                OR CAST(? AS NUMERIC) IS NULL
+                                OR (
+                                                                            substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                            AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                        )
+                                                                    )
 
-                                    SELECT g.game_date, g.opponent, d.pa6_pitcher, d.pa6_pitcher_hand, d.pa6_result, d.pa6_description
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g ON d.game_id = g.id
-                                    WHERE d.pa6_pitcher_hand = 'R'
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
-                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
-                                    AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                            substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                            AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                                        )
-                                    )
-                                ) t
-                                ORDER BY game_date DESC
-                            """;
+                                                                    UNION ALL
+
+                                                                    SELECT g.game_date, g.opponent, d.pa2_pitcher, d.pa2_pitcher_hand, d.pa2_result, d.pa2_description
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g ON d.game_id = g.id
+                                                                    WHERE d.pa2_pitcher_hand = 'R'
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
+                                                                    AND (
+
+                    CAST(? AS TEXT) IS NULL
+                    OR CAST(? AS TEXT) = ''
+
+                    OR (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               d.pa2_description LIKE '%Sinker%'
+                            OR d.pa2_description LIKE '%Sweeper%'
+                            OR d.pa2_description LIKE '%Slider%'
+                            OR d.pa2_description LIKE '%Splitter%'
+                            OR d.pa2_description LIKE '%Cutter%'
+                            OR d.pa2_description LIKE '%Knuckle Curve%'
+                            OR d.pa2_description LIKE '%Slurve%'
+                            OR d.pa2_description LIKE '%Changeup%'
+                            OR d.pa2_description LIKE '%Curve%'
+
+                        )
+                    )
+
+                    OR (
+
+                        CAST(? AS TEXT) <> 'BREAKING'
+                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                    )
+                )
+                                                AND (
+                                CAST(? AS NUMERIC) IS NULL
+                                OR CAST(? AS NUMERIC) IS NULL
+                                OR (
+                                                                            substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                            AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                        )
+                                                                    )
+
+                                                                    UNION ALL
+
+                                                                    SELECT g.game_date, g.opponent, d.pa3_pitcher, d.pa3_pitcher_hand, d.pa3_result, d.pa3_description
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g ON d.game_id = g.id
+                                                                    WHERE d.pa3_pitcher_hand = 'R'
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
+                                                                    AND (
+
+                    CAST(? AS TEXT) IS NULL
+                    OR CAST(? AS TEXT) = ''
+
+                    OR (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               d.pa3_description LIKE '%Sinker%'
+                            OR d.pa3_description LIKE '%Sweeper%'
+                            OR d.pa3_description LIKE '%Slider%'
+                            OR d.pa3_description LIKE '%Splitter%'
+                            OR d.pa3_description LIKE '%Cutter%'
+                            OR d.pa3_description LIKE '%Knuckle Curve%'
+                            OR d.pa3_description LIKE '%Slurve%'
+                            OR d.pa3_description LIKE '%Changeup%'
+                            OR d.pa3_description LIKE '%Curve%'
+
+                        )
+                    )
+
+                    OR (
+
+                        CAST(? AS TEXT) <> 'BREAKING'
+                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                    )
+                )
+                                                AND (
+                                CAST(? AS NUMERIC) IS NULL
+                                OR CAST(? AS NUMERIC) IS NULL
+                                OR (
+                                                                            substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                            AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                        )
+                                                                    )
+
+                                                                    UNION ALL
+
+                                                                    SELECT g.game_date, g.opponent, d.pa4_pitcher, d.pa4_pitcher_hand, d.pa4_result, d.pa4_description
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g ON d.game_id = g.id
+                                                                    WHERE d.pa4_pitcher_hand = 'R'
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
+                                                                    AND (
+
+                    CAST(? AS TEXT) IS NULL
+                    OR CAST(? AS TEXT) = ''
+
+                    OR (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               d.pa4_description LIKE '%Sinker%'
+                            OR d.pa4_description LIKE '%Sweeper%'
+                            OR d.pa4_description LIKE '%Slider%'
+                            OR d.pa4_description LIKE '%Splitter%'
+                            OR d.pa4_description LIKE '%Cutter%'
+                            OR d.pa4_description LIKE '%Knuckle Curve%'
+                            OR d.pa4_description LIKE '%Slurve%'
+                            OR d.pa4_description LIKE '%Changeup%'
+                            OR d.pa4_description LIKE '%Curve%'
+
+                        )
+                    )
+
+                    OR (
+
+                        CAST(? AS TEXT) <> 'BREAKING'
+                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                    )
+                )
+                                                AND (
+                                CAST(? AS NUMERIC) IS NULL
+                                OR CAST(? AS NUMERIC) IS NULL
+                                OR (
+                                                                            substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                            AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                        )
+                                                                    )
+
+                                                                    UNION ALL
+
+                                                                    SELECT g.game_date, g.opponent, d.pa5_pitcher, d.pa5_pitcher_hand, d.pa5_result, d.pa5_description
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g ON d.game_id = g.id
+                                                                    WHERE d.pa5_pitcher_hand = 'R'
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
+                                                                    AND (
+
+                    CAST(? AS TEXT) IS NULL
+                    OR CAST(? AS TEXT) = ''
+
+                    OR (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               d.pa5_description LIKE '%Sinker%'
+                            OR d.pa5_description LIKE '%Sweeper%'
+                            OR d.pa5_description LIKE '%Slider%'
+                            OR d.pa5_description LIKE '%Splitter%'
+                            OR d.pa5_description LIKE '%Cutter%'
+                            OR d.pa5_description LIKE '%Knuckle Curve%'
+                            OR d.pa5_description LIKE '%Slurve%'
+                            OR d.pa5_description LIKE '%Changeup%'
+                            OR d.pa5_description LIKE '%Curve%'
+
+                        )
+                    )
+
+                    OR (
+
+                        CAST(? AS TEXT) <> 'BREAKING'
+                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                    )
+                )
+                                                AND (
+                                CAST(? AS NUMERIC) IS NULL
+                                OR CAST(? AS NUMERIC) IS NULL
+                                OR (
+                                                                            substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                            AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                        )
+                                                                    )
+
+                                                                    UNION ALL
+
+                                                                    SELECT g.game_date, g.opponent, d.pa6_pitcher, d.pa6_pitcher_hand, d.pa6_result, d.pa6_description
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g ON d.game_id = g.id
+                                                                    WHERE d.pa6_pitcher_hand = 'R'
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                    AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
+                                                                    AND (
+
+                    CAST(? AS TEXT) IS NULL
+                    OR CAST(? AS TEXT) = ''
+
+                    OR (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               d.pa6_description LIKE '%Sinker%'
+                            OR d.pa6_description LIKE '%Sweeper%'
+                            OR d.pa6_description LIKE '%Slider%'
+                            OR d.pa6_description LIKE '%Splitter%'
+                            OR d.pa6_description LIKE '%Cutter%'
+                            OR d.pa6_description LIKE '%Knuckle Curve%'
+                            OR d.pa6_description LIKE '%Slurve%'
+                            OR d.pa6_description LIKE '%Changeup%'
+                            OR d.pa6_description LIKE '%Curve%'
+
+                        )
+                    )
+
+                    OR (
+
+                        CAST(? AS TEXT) <> 'BREAKING'
+                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                    )
+                )
+                                                AND (
+                                CAST(? AS NUMERIC) IS NULL
+                                OR CAST(? AS NUMERIC) IS NULL
+                                OR (
+                                                                            substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                            AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                        )
+                                                                    )
+                                                                ) t
+                                                                ORDER BY game_date DESC
+                                                            """;
 
         return jdbcTemplate.queryForList(
                 sql,
@@ -888,37 +1068,66 @@ public class OhtaniGameRepository {
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+
                 speedMin, speedMax, speedMin, speedMax);
     }
 
@@ -1265,133 +1474,313 @@ public class OhtaniGameRepository {
             Integer speedMax) {
 
         String sql = """
-                    SELECT game_date, opponent, pitcher, hand, result, description
-                    FROM (
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa1_pitcher AS pitcher,
-                            d.pa1_pitcher_hand AS hand,
-                            d.pa1_result AS result,
-                            d.pa1_description AS description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE d.pa1_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                            SELECT game_date, opponent, pitcher, hand, result, description
+                                            FROM (
+                                                SELECT g.game_date,
+                                                    g.opponent,
+                                                    d.pa1_pitcher AS pitcher,
+                                                    d.pa1_pitcher_hand AS hand,
+                                                    d.pa1_result AS result,
+                                                    d.pa1_description AS description
+                                                FROM ohtani_game_details d
+                                                JOIN ohtani_games g ON d.game_id = g.id
+                                                WHERE d.pa1_pitcher_hand = 'L'
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
+                                                AND (
+
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+
+                            OR (
+
+                                CAST(? AS TEXT) = 'BREAKING'
+
+                                AND (
+
+                                       d.pa1_description LIKE '%Sinker%'
+                                    OR d.pa1_description LIKE '%Sweeper%'
+                                    OR d.pa1_description LIKE '%Slider%'
+                                    OR d.pa1_description LIKE '%Splitter%'
+                                    OR d.pa1_description LIKE '%Cutter%'
+                                    OR d.pa1_description LIKE '%Knuckle Curve%'
+                                    OR d.pa1_description LIKE '%Slurve%'
+                                    OR d.pa1_description LIKE '%Changeup%'
+                                    OR d.pa1_description LIKE '%Curve%'
+
+                                )
+                            )
+
+                            OR (
+
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
                             )
                         )
+                                                AND (
+                CAST(? AS NUMERIC) IS NULL
+                OR CAST(? AS NUMERIC) IS NULL
+                                        OR (
+                                                        substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                        AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                            BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                    )
+                                                )
 
-                        UNION ALL
+                                                UNION ALL
 
-                        SELECT g.game_date, g.opponent, d.pa2_pitcher, d.pa2_pitcher_hand, d.pa2_result, d.pa2_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE d.pa2_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                SELECT g.game_date, g.opponent, d.pa2_pitcher, d.pa2_pitcher_hand, d.pa2_result, d.pa2_description
+                                                FROM ohtani_game_details d
+                                                JOIN ohtani_games g ON d.game_id = g.id
+                                                WHERE d.pa2_pitcher_hand = 'L'
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
+                                                AND (
+
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+
+                            OR (
+
+                                CAST(? AS TEXT) = 'BREAKING'
+
+                                AND (
+
+                                       d.pa2_description LIKE '%Sinker%'
+                                    OR d.pa2_description LIKE '%Sweeper%'
+                                    OR d.pa2_description LIKE '%Slider%'
+                                    OR d.pa2_description LIKE '%Splitter%'
+                                    OR d.pa2_description LIKE '%Cutter%'
+                                    OR d.pa2_description LIKE '%Knuckle Curve%'
+                                    OR d.pa2_description LIKE '%Slurve%'
+                                    OR d.pa2_description LIKE '%Changeup%'
+                                    OR d.pa2_description LIKE '%Curve%'
+
+                                )
+                            )
+
+                            OR (
+
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
+
                             )
                         )
+                                                AND (
+                CAST(? AS NUMERIC) IS NULL
+                OR CAST(? AS NUMERIC) IS NULL
+                                        OR (
+                                                        substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                        AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                            BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                    )
+                                                )
 
-                        UNION ALL
+                                                UNION ALL
 
-                        SELECT g.game_date, g.opponent, d.pa3_pitcher, d.pa3_pitcher_hand, d.pa3_result, d.pa3_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE d.pa3_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                SELECT g.game_date, g.opponent, d.pa3_pitcher, d.pa3_pitcher_hand, d.pa3_result, d.pa3_description
+                                                FROM ohtani_game_details d
+                                                JOIN ohtani_games g ON d.game_id = g.id
+                                                WHERE d.pa3_pitcher_hand = 'L'
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
+                                                AND (
+
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+
+                            OR (
+
+                                CAST(? AS TEXT) = 'BREAKING'
+
+                                AND (
+
+                                       d.pa3_description LIKE '%Sinker%'
+                                    OR d.pa3_description LIKE '%Sweeper%'
+                                    OR d.pa3_description LIKE '%Slider%'
+                                    OR d.pa3_description LIKE '%Splitter%'
+                                    OR d.pa3_description LIKE '%Cutter%'
+                                    OR d.pa3_description LIKE '%Knuckle Curve%'
+                                    OR d.pa3_description LIKE '%Slurve%'
+                                    OR d.pa3_description LIKE '%Changeup%'
+                                    OR d.pa3_description LIKE '%Curve%'
+
+                                )
+                            )
+
+                            OR (
+
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
+
                             )
                         )
+                                                AND (
+                CAST(? AS NUMERIC) IS NULL
+                OR CAST(? AS NUMERIC) IS NULL
+                                        OR (
+                                                        substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                        AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                            BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                    )
+                                                )
 
-                        UNION ALL
+                                                UNION ALL
 
-                        SELECT g.game_date, g.opponent, d.pa4_pitcher, d.pa4_pitcher_hand, d.pa4_result, d.pa4_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE d.pa4_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                SELECT g.game_date, g.opponent, d.pa4_pitcher, d.pa4_pitcher_hand, d.pa4_result, d.pa4_description
+                                                FROM ohtani_game_details d
+                                                JOIN ohtani_games g ON d.game_id = g.id
+                                                WHERE d.pa4_pitcher_hand = 'L'
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
+                                                AND (
+
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+
+                            OR (
+
+                                CAST(? AS TEXT) = 'BREAKING'
+
+                                AND (
+
+                                       d.pa4_description LIKE '%Sinker%'
+                                    OR d.pa4_description LIKE '%Sweeper%'
+                                    OR d.pa4_description LIKE '%Slider%'
+                                    OR d.pa4_description LIKE '%Splitter%'
+                                    OR d.pa4_description LIKE '%Cutter%'
+                                    OR d.pa4_description LIKE '%Knuckle Curve%'
+                                    OR d.pa4_description LIKE '%Slurve%'
+                                    OR d.pa4_description LIKE '%Changeup%'
+                                    OR d.pa4_description LIKE '%Curve%'
+
+                                )
+                            )
+
+                            OR (
+
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
+
                             )
                         )
+                                                AND (
+                CAST(? AS NUMERIC) IS NULL
+                OR CAST(? AS NUMERIC) IS NULL
+                                        OR (
+                                                        substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                        AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                            BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                    )
+                                                )
 
-                        UNION ALL
+                                                UNION ALL
 
-                        SELECT g.game_date, g.opponent, d.pa5_pitcher, d.pa5_pitcher_hand, d.pa5_result, d.pa5_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE d.pa5_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                SELECT g.game_date, g.opponent, d.pa5_pitcher, d.pa5_pitcher_hand, d.pa5_result, d.pa5_description
+                                                FROM ohtani_game_details d
+                                                JOIN ohtani_games g ON d.game_id = g.id
+                                                WHERE d.pa5_pitcher_hand = 'L'
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
+                                                AND (
+
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+
+                            OR (
+
+                                CAST(? AS TEXT) = 'BREAKING'
+
+                                AND (
+
+                                       d.pa5_description LIKE '%Sinker%'
+                                    OR d.pa5_description LIKE '%Sweeper%'
+                                    OR d.pa5_description LIKE '%Slider%'
+                                    OR d.pa5_description LIKE '%Splitter%'
+                                    OR d.pa5_description LIKE '%Cutter%'
+                                    OR d.pa5_description LIKE '%Knuckle Curve%'
+                                    OR d.pa5_description LIKE '%Slurve%'
+                                    OR d.pa5_description LIKE '%Changeup%'
+                                    OR d.pa5_description LIKE '%Curve%'
+
+                                )
+                            )
+
+                            OR (
+
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
+
                             )
                         )
+                                                AND (
+                CAST(? AS NUMERIC) IS NULL
+                OR CAST(? AS NUMERIC) IS NULL
+                                        OR (
+                                                        substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                        AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                            BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                    )
+                                                )
 
-                        UNION ALL
+                                                UNION ALL
 
-                        SELECT g.game_date, g.opponent, d.pa6_pitcher, d.pa6_pitcher_hand, d.pa6_result, d.pa6_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE d.pa6_pitcher_hand = 'L'
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                SELECT g.game_date, g.opponent, d.pa6_pitcher, d.pa6_pitcher_hand, d.pa6_result, d.pa6_description
+                                                FROM ohtani_game_details d
+                                                JOIN ohtani_games g ON d.game_id = g.id
+                                                WHERE d.pa6_pitcher_hand = 'L'
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
+                                                AND (
+
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+
+                            OR (
+
+                                CAST(? AS TEXT) = 'BREAKING'
+
+                                AND (
+
+                                       d.pa6_description LIKE '%Sinker%'
+                                    OR d.pa6_description LIKE '%Sweeper%'
+                                    OR d.pa6_description LIKE '%Slider%'
+                                    OR d.pa6_description LIKE '%Splitter%'
+                                    OR d.pa6_description LIKE '%Cutter%'
+                                    OR d.pa6_description LIKE '%Knuckle Curve%'
+                                    OR d.pa6_description LIKE '%Slurve%'
+                                    OR d.pa6_description LIKE '%Changeup%'
+                                    OR d.pa6_description LIKE '%Curve%'
+
+                                )
+                            )
+
+                            OR (
+
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
+
                             )
                         )
-                    ) t
-                    ORDER BY game_date DESC
-                """;
+                                                AND (
+                CAST(? AS NUMERIC) IS NULL
+                OR CAST(? AS NUMERIC) IS NULL
+                                        OR (
+                                                        substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                        AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                            BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                    )
+                                                )
+                                            ) t
+                                            ORDER BY game_date DESC
+                                        """;
 
         return jdbcTemplate.queryForList(
                 sql,
@@ -1399,37 +1788,61 @@ public class OhtaniGameRepository {
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax);
     }
 
@@ -1741,6 +2154,7 @@ public class OhtaniGameRepository {
      * ============================================
      * ★ ALL（左右両方）（ログ取得）最終版
      * （CAST維持＋result＋opponent＋pitcher＋pitchType＋speedRange）
+     * ★ BREAKING（変化球と丸っと包括）でも検索できるようにする仕組み
      * ============================================
      */
     public List<Map<String, Object>> getVsAllLogs(
@@ -1752,165 +2166,344 @@ public class OhtaniGameRepository {
             Integer speedMax) {
 
         String sql = """
-                    SELECT game_date, opponent, pitcher, hand, result, description
-                    FROM (
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa1_pitcher AS pitcher,
-                            d.pa1_pitcher_hand AS hand,
-                            d.pa1_result AS result,
-                            d.pa1_description AS description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%')
+                                                                                        SELECT game_date, opponent, pitcher, hand, result, description
+                                                                                        FROM (
+                                                                                            SELECT g.game_date,
+                                                                                                g.opponent,
+                                                                                                d.pa1_pitcher AS pitcher,
+                                                                                                d.pa1_pitcher_hand AS hand,
+                                                                                                d.pa1_result AS result,
+                                                                                                d.pa1_description AS description
+                                                                                            FROM ohtani_game_details d
+                                                                                            JOIN ohtani_games g ON d.game_id = g.id
+                                                                                            WHERE 1=1
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_result = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa1_pitcher = CAST(? AS TEXT))
+                                                                                            AND (
 
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                            )
-                        )
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
 
+                                                                        OR (
 
-                        UNION ALL
+                                                                            CAST(? AS TEXT) = 'BREAKING'
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa2_pitcher,
-                            d.pa2_pitcher_hand,
-                            d.pa2_result,
-                            d.pa2_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%')
+                                                                            AND (
 
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                            )
-                        )
+                                                                                   d.pa1_description LIKE '%Sinker%'
+                                                                                OR d.pa1_description LIKE '%Sweeper%'
+                                                                                OR d.pa1_description LIKE '%Slider%'
+                                                                                OR d.pa1_description LIKE '%Splitter%'
+                                                                                OR d.pa1_description LIKE '%Cutter%'
+                                                                                OR d.pa1_description LIKE '%Knuckle Curve%'
+                                                                                OR d.pa1_description LIKE '%Slurve%'
+                                                                                OR d.pa1_description LIKE '%Changeup%'
+                                                                                OR d.pa1_description LIKE '%Curve%'
 
+                                                                            )
+                                                                        )
 
-                        UNION ALL
+                                                                        OR (
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa3_pitcher,
-                            d.pa3_pitcher_hand,
-                            d.pa3_result,
-                            d.pa3_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                            )
-                        )
+                                                                            CAST(? AS TEXT) <> 'BREAKING'
+                                                                            AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                                        )
+                                                                    )
+
+                                                                                            AND (
+                                        CAST(? AS NUMERIC) IS NULL
+                                        OR CAST(? AS NUMERIC) IS NULL
+                                                                                    OR (
+                                                                                                    substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                                                    AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                                        BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                                                )
+                                                                                            )
 
 
-                        UNION ALL
+                                                                                            UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa4_pitcher,
-                            d.pa4_pitcher_hand,
-                            d.pa4_result,
-                            d.pa4_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                            )
-                        )
+                                                                                            SELECT g.game_date,
+                                                                                                g.opponent,
+                                                                                                d.pa2_pitcher,
+                                                                                                d.pa2_pitcher_hand,
+                                                                                                d.pa2_result,
+                                                                                                d.pa2_description
+                                                                                            FROM ohtani_game_details d
+                                                                                            JOIN ohtani_games g ON d.game_id = g.id
+                                                                                            WHERE 1=1
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_result = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa2_pitcher = CAST(? AS TEXT))
+                                                                                            AND (
+
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) = 'BREAKING'
+
+                                                                            AND (
+
+                                                                                   d.pa2_description LIKE '%Sinker%'
+                                                                                OR d.pa2_description LIKE '%Sweeper%'
+                                                                                OR d.pa2_description LIKE '%Slider%'
+                                                                                OR d.pa2_description LIKE '%Splitter%'
+                                                                                OR d.pa2_description LIKE '%Cutter%'
+                                                                                OR d.pa2_description LIKE '%Knuckle Curve%'
+                                                                                OR d.pa2_description LIKE '%Slurve%'
+                                                                                OR d.pa2_description LIKE '%Changeup%'
+                                                                                OR d.pa2_description LIKE '%Curve%'
+
+                                                                            )
+                                                                        )
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) <> 'BREAKING'
+                                                                            AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                                        )
+                                                                    )
+
+                                                                                            AND (
+                                        CAST(? AS NUMERIC) IS NULL
+                                        OR CAST(? AS NUMERIC) IS NULL
+                                                                                    OR (
+                                                                                                    substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                                                    AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                                        BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                                                )
+                                                                                            )
 
 
-                        UNION ALL
+                                                                                            UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa5_pitcher,
-                            d.pa5_pitcher_hand,
-                            d.pa5_result,
-                            d.pa5_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                            )
-                        )
+                                                                                            SELECT g.game_date,
+                                                                                                g.opponent,
+                                                                                                d.pa3_pitcher,
+                                                                                                d.pa3_pitcher_hand,
+                                                                                                d.pa3_result,
+                                                                                                d.pa3_description
+                                                                                            FROM ohtani_game_details d
+                                                                                            JOIN ohtani_games g ON d.game_id = g.id
+                                                                                            WHERE 1=1
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_result = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa3_pitcher = CAST(? AS TEXT))
+                                                                                            AND (
+
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) = 'BREAKING'
+
+                                                    AND (
+
+                                                           d.pa3_description LIKE '%Sinker%'
+                                                        OR d.pa3_description LIKE '%Sweeper%'
+                                                        OR d.pa3_description LIKE '%Slider%'
+                                                        OR d.pa3_description LIKE '%Splitter%'
+                                                        OR d.pa3_description LIKE '%Cutter%'
+                                                        OR d.pa3_description LIKE '%Knuckle Curve%'
+                                                        OR d.pa3_description LIKE '%Slurve%'
+                                                        OR d.pa3_description LIKE '%Changeup%'
+                                                        OR d.pa3_description LIKE '%Curve%'
+                                                    )
+                                                                        )
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) <> 'BREAKING'
+                                                                            AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                                        )
+                                                                    )
+                                                                                            AND (
+                                        CAST(? AS NUMERIC) IS NULL
+                                        OR CAST(? AS NUMERIC) IS NULL
+                                                                                    OR (
+                                                                                                    substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                                                    AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                                        BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                                                )
+                                                                                            )
 
 
-                        UNION ALL
+                                                                                            UNION ALL
 
-                        SELECT g.game_date,
-                            g.opponent,
-                            d.pa6_pitcher,
-                            d.pa6_pitcher_hand,
-                            d.pa6_result,
-                            d.pa6_description
-                        FROM ohtani_game_details d
-                        JOIN ohtani_games g ON d.game_id = g.id
-                        WHERE 1=1
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
-                        AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%')
-                        AND (
-                ? IS NULL
-                OR ? IS NULL
-                OR (
-                                substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
-                                AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
-                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
-                            )
-                        )
-                    ) t
-                    ORDER BY game_date DESC
-                """;
+                                                                                            SELECT g.game_date,
+                                                                                                g.opponent,
+                                                                                                d.pa4_pitcher,
+                                                                                                d.pa4_pitcher_hand,
+                                                                                                d.pa4_result,
+                                                                                                d.pa4_description
+                                                                                            FROM ohtani_game_details d
+                                                                                            JOIN ohtani_games g ON d.game_id = g.id
+                                                                                            WHERE 1=1
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_result = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa4_pitcher = CAST(? AS TEXT))
+                                                                                            AND (
+
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) = 'BREAKING'
+
+                                                                            AND (
+
+                                                                                   d.pa4_description LIKE '%Sinker%'
+                                                                                OR d.pa4_description LIKE '%Sweeper%'
+                                                                                OR d.pa4_description LIKE '%Slider%'
+                                                                                OR d.pa4_description LIKE '%Splitter%'
+                                                                                OR d.pa4_description LIKE '%Cutter%'
+                                                                                OR d.pa4_description LIKE '%Knuckle Curve%'
+                                                                                OR d.pa4_description LIKE '%Slurve%'
+                                                                                OR d.pa4_description LIKE '%Changeup%'
+                                                                                OR d.pa4_description LIKE '%Curve%'
+
+                                                                            )
+                                                                        )
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) <> 'BREAKING'
+                                                                            AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                                        )
+                                                                    )
+                                                                                            AND (
+                                        CAST(? AS NUMERIC) IS NULL
+                                        OR CAST(? AS NUMERIC) IS NULL
+                                                                                    OR (
+                                                                                                    substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                                                    AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                                        BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                                                )
+                                                                                            )
+
+
+                                                                                            UNION ALL
+
+                                                                                            SELECT g.game_date,
+                                                                                                g.opponent,
+                                                                                                d.pa5_pitcher,
+                                                                                                d.pa5_pitcher_hand,
+                                                                                                d.pa5_result,
+                                                                                                d.pa5_description
+                                                                                            FROM ohtani_game_details d
+                                                                                            JOIN ohtani_games g ON d.game_id = g.id
+                                                                                            WHERE 1=1
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_result = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa5_pitcher = CAST(? AS TEXT))
+                                                                                            AND (
+
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) = 'BREAKING'
+
+                                                                            AND (
+
+                                                                                   d.pa5_description LIKE '%Sinker%'
+                                                                                OR d.pa5_description LIKE '%Sweeper%'
+                                                                                OR d.pa5_description LIKE '%Slider%'
+                                                                                OR d.pa5_description LIKE '%Splitter%'
+                                                                                OR d.pa5_description LIKE '%Cutter%'
+                                                                                OR d.pa5_description LIKE '%Knuckle Curve%'
+                                                                                OR d.pa5_description LIKE '%Slurve%'
+                                                                                OR d.pa5_description LIKE '%Changeup%'
+                                                                                OR d.pa5_description LIKE '%Curve%'
+
+                                                                            )
+                                                                        )
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) <> 'BREAKING'
+                                                                            AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                                        )
+                                                                    )
+                                                                                            AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                                                                                    OR (
+                                                                                                    substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                                                    AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                                        BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                                                )
+                                                                                            )
+
+
+                                                                                            UNION ALL
+
+                                                                                            SELECT g.game_date,
+                                                                                                g.opponent,
+                                                                                                d.pa6_pitcher,
+                                                                                                d.pa6_pitcher_hand,
+                                                                                                d.pa6_result,
+                                                                                                d.pa6_description
+                                                                                            FROM ohtani_game_details d
+                                                                                            JOIN ohtani_games g ON d.game_id = g.id
+                                                                                            WHERE 1=1
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_result = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR g.opponent = CAST(? AS TEXT))
+                                                                                            AND (CAST(? AS TEXT) IS NULL OR CAST(? AS TEXT) = '' OR d.pa6_pitcher = CAST(? AS TEXT))
+                                                                                            AND (
+
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) = 'BREAKING'
+
+                                                                            AND (
+
+                                                                                   d.pa6_description LIKE '%Sinker%'
+                                                                                OR d.pa6_description LIKE '%Sweeper%'
+                                                                                OR d.pa6_description LIKE '%Slider%'
+                                                                                OR d.pa6_description LIKE '%Splitter%'
+                                                                                OR d.pa6_description LIKE '%Cutter%'
+                                                                                OR d.pa6_description LIKE '%Knuckle Curve%'
+                                                                                OR d.pa6_description LIKE '%Slurve%'
+                                                                                OR d.pa6_description LIKE '%Changeup%'
+                                                                                OR d.pa6_description LIKE '%Curve%'
+
+                                                                            )
+                                                                        )
+
+                                                                        OR (
+
+                                                                            CAST(? AS TEXT) <> 'BREAKING'
+                                                                            AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                                        )
+                                                                    )
+                                                                                            AND (
+                CAST(? AS NUMERIC) IS NULL
+                OR CAST(? AS NUMERIC) IS NULL
+                                                                                    OR (
+                                                                                                    substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                                                                                    AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                                                                                        BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                                                                                                )
+                                                                                            )
+                                                                                        ) t
+                                                                                        ORDER BY game_date DESC
+                                                                                    """;
 
         return jdbcTemplate.queryForList(
                 sql,
@@ -1918,37 +2511,61 @@ public class OhtaniGameRepository {
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax,
 
                 result, result, result,
                 opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
+                pitchType,
                 speedMin, speedMax, speedMin, speedMax);
     }
 
