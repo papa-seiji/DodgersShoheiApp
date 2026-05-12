@@ -680,6 +680,7 @@ body {
 /* =========================================
     打席ログ table
 ========================================= */
+
 .batting-log-table{
     width:100%;
     border-collapse:collapse;
@@ -703,31 +704,40 @@ body {
 }
 
 /* 説明列 */
-.batting-log-table td:nth-child(6){
+.batting-log-table td:nth-child(7){
     color:#dbe7ff;
     font-size:12px;
 }
 
 /* 結果列 */
-.batting-log-table td:nth-child(5){
+.batting-log-table td:nth-child(6){
     text-align:center;
 }
 
-/* 日付 */
+
+/* 行番号 */
 .batting-log-table th:nth-child(1),
 .batting-log-table td:nth-child(1){
+    width:46px;
+    text-align:center;
+}
+
+
+/* 日付 */
+.batting-log-table th:nth-child(2),
+.batting-log-table td:nth-child(2){
     width:90px;
 }
 
 /* 対戦 */
-.batting-log-table th:nth-child(2),
-.batting-log-table td:nth-child(2){
+.batting-log-table th:nth-child(3),
+.batting-log-table td:nth-child(3){
     width:120px;
 }
 
 /* 投手 */
-.batting-log-table th:nth-child(3),
-.batting-log-table td:nth-child(3){
+.batting-log-table th:nth-child(4),
+.batting-log-table td:nth-child(4){
     width:110px;
 }
 
@@ -735,8 +745,8 @@ body {
 /* =========================
     PITCH COLUMN
 ========================= */
-.batting-log-table th:nth-child(4),
-.batting-log-table td:nth-child(4){
+.batting-log-table th:nth-child(5),
+.batting-log-table td:nth-child(5){
     width:180px;
     min-width:180px;
 }
@@ -745,16 +755,16 @@ body {
 /* =========================
     RESULT COLUMN
 ========================= */
-.batting-log-table th:nth-child(5),
-.batting-log-table td:nth-child(5){
+.batting-log-table th:nth-child(6),
+.batting-log-table td:nth-child(6){
     width:72px;
     min-width:72px;
     text-align:center;
 }
 
 /* 説明 */
-.batting-log-table th:nth-child(6),
-.batting-log-table td:nth-child(6){
+.batting-log-table th:nth-child(7),
+.batting-log-table td:nth-child(7){
     width:auto;
 }
 
