@@ -606,23 +606,37 @@ public class OhtaniScorebookController {
                                 ? speedMin + "～" + speedMax + "mph"
                                 : "なし";
 
-                String searchSummaryHtml = "<span class='summary-key'>投手タイプ</span>"
-                                + "<span class='summary-hand'>対" + handLabel + "</span>"
+                String searchSummaryHtml =
 
-                                + "<span class='summary-key'>打席結果</span>"
-                                + "<span class='summary-value'>" + resultLabel + "</span>"
+                                "<div class='summary-badge'>"
+                                                + "<span class='badge-key'>投手タイプ</span>"
+                                                + "<span class='badge-value'>対" + handLabel + "</span>"
+                                                + "</div>"
 
-                                + "<span class='summary-key'>チーム</span>"
-                                + "<span class='summary-value'>" + opponentLabel + "</span>"
+                                                + "<div class='summary-badge'>"
+                                                + "<span class='badge-key'>打席結果</span>"
+                                                + "<span class='badge-value'>" + resultLabel + "</span>"
+                                                + "</div>"
 
-                                + "<span class='summary-key'>投手名</span>"
-                                + "<span class='summary-value'>" + pitcherLabel + "</span>"
+                                                + "<div class='summary-badge'>"
+                                                + "<span class='badge-key'>チーム</span>"
+                                                + "<span class='badge-value'>" + opponentLabel + "</span>"
+                                                + "</div>"
 
-                                + "<span class='summary-key'>球種</span>"
-                                + "<span class='summary-value'>" + pitchTypeLabel + "</span>"
+                                                + "<div class='summary-badge'>"
+                                                + "<span class='badge-key'>投手名</span>"
+                                                + "<span class='badge-value'>" + pitcherLabel + "</span>"
+                                                + "</div>"
 
-                                + "<span class='summary-key'>球速</span>"
-                                + "<span class='summary-value'>" + speedLabel + "</span>";
+                                                + "<div class='summary-badge'>"
+                                                + "<span class='badge-key'>球種</span>"
+                                                + "<span class='badge-value'>" + pitchTypeLabel + "</span>"
+                                                + "</div>"
+
+                                                + "<div class='summary-badge'>"
+                                                + "<span class='badge-key'>球速</span>"
+                                                + "<span class='badge-value'>" + speedLabel + "</span>"
+                                                + "</div>";
 
                 model.addAttribute(
                                 "searchSummaryHtml",

@@ -1707,6 +1707,75 @@ body.risp-mode {
     margin-right: 12px;
 }
 
+/* =========================================
+   🔥 Summary Badge Layout
+========================================= */
+
+.summary-badge-wrap{
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex: 1;
+}
+
+/* =========================================
+   🔥 Summary Badge
+========================================= */
+
+.summary-badge{
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(4px);
+}
+
+/* =========================================
+   🔥 Badge Label
+========================================= */
+
+.badge-key{
+
+    color: #56b8ff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+}
+
+/* =========================================
+   🔥 Badge Value
+========================================= */
+
+.badge-value{
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
 
 /* =========================================
    🔥 ログヘッダー横並び
