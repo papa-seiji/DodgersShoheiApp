@@ -719,13 +719,33 @@
 
 
 
+
         <!-- =========================
             🔥 打席ログ（対ALL）
         ========================= -->
         <!-- 初期(RISPログ非表示) > RISPカード押下(表示) > もう1回押下(非表示) -->
         <div id="vsall-log-section" th:if="${vsAllLogs != null}" class="log-section">
+        <div class="log-header-row">
 
             <h3 class="log-title">打席ログ（対ALL）</h3>
+
+                <!-- =========================================
+                    🔥 検索条件サマリー
+                ========================================= -->
+                    <div class="search-summary-box inline-summary">
+
+                        <span class="search-summary-icon">
+                            ⌕
+                        </span>
+
+
+                        <span class="search-summary-text"
+                            th:utext="${searchSummaryHtml}">
+                        </span>
+
+                    </div>
+
+                </div>
 
             <div class="table-wrapper">
 
@@ -802,8 +822,26 @@
             右（単体表示時のみ）
         ========================= -->
         <div th:if="${vsRLogs != null}">
+                <div class="log-header-row">
+                    <h3>打席ログ（対右）</h3>
+                <!-- =========================================
+                    🔥 検索条件サマリー
+                ========================================= -->
+                    <div class="search-summary-box inline-summary">
 
-            <h3>打席ログ（対右）</h3>
+                        <span class="search-summary-icon">
+                            ⌕
+                        </span>
+
+
+
+                        <span class="search-summary-text"
+                            th:utext="${searchSummaryHtml}">
+                        </span>
+
+                    </div>
+
+                </div>
 
             <table class="batting-log-table">
 
@@ -883,8 +921,26 @@
             左（単体表示時のみ）
         ========================= -->
         <div th:if="${vsLLogs != null}">
+                <div class="log-header-row">
+                    <h3>打席ログ（対左）</h3>
+                <!-- =========================================
+                    🔥 検索条件サマリー
+                ========================================= -->
+                    <div class="search-summary-box inline-summary">
 
-            <h3>打席ログ（対左）</h3>
+                        <span class="search-summary-icon">
+                            ⌕
+                        </span>
+
+
+
+                        <span class="search-summary-text"
+                            th:utext="${searchSummaryHtml}">
+                        </span>
+
+                    </div>
+
+                </div>
 
             <table class="batting-log-table">
 
