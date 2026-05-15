@@ -288,6 +288,8 @@ public class OhtaniScorebookController {
          */
         @GetMapping("/batting/filter")
         public String showBattingFilter(
+                        @RequestParam(required = false) Integer season,
+
                         @RequestParam(required = false) String hand,
                         @RequestParam(required = false) String result, // ★追加
                         @RequestParam(required = false) String opponent, // ★追加
@@ -298,6 +300,11 @@ public class OhtaniScorebookController {
 
                         @RequestParam(required = false) String pitcherHand, // RISP系 ★追加
                         Model model) {
+                int currentYear = LocalDate.now().getYear();
+
+                if (season == null) {
+                        season = currentYear;
+                }
 
                 // 🔥 ALL（明示的に選んだ時だけ）
                 if ("ALL".equals(hand)) {
@@ -746,6 +753,9 @@ public class OhtaniScorebookController {
 
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);
+
+                model.addAttribute("season", season);
+                model.addAttribute("currentYear", currentYear);
 
                 return "batting_filter";
         }
