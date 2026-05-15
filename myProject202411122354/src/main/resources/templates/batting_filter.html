@@ -598,6 +598,27 @@
 
             </div>
         </div>
+
+
+<!-- =========================================
+    📈 CUMULATIVE OPS TREND
+========================================= -->
+<div class="ops-trend-card">
+
+    <div class="ops-trend-header">
+        <h3>累積OPS 日次推移</h3>
+        <span class="ops-trend-sub">
+            Cumulative OPS Trend
+        </span>
+    </div>
+
+    <div class="ops-chart-wrap">
+        <canvas id="opsTrendChart"></canvas>
+    </div>
+
+</div>
+
+
         <hr>
 
 <!-- =========================
@@ -1656,5 +1677,104 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
+<!-- =========================================
+    📈 CUMULATIVE OPS TREND
+========================================= -->
+
+<script th:inline="javascript">
+
+    const opsLabels =
+        /*[[${opsLabels}]]*/ [];
+
+    const opsValues =
+        /*[[${opsValues}]]*/ [];
+
+    const ctx =
+        document.getElementById("opsTrendChart");
+
+    new Chart(ctx, {
+
+        type: "line",
+
+        data: {
+
+            labels: opsLabels,
+
+            datasets: [{
+
+                label: "OPS",
+
+                data: opsValues,
+
+                borderColor: "#8b5cf6",
+
+                backgroundColor:
+                    "rgba(139,92,246,0.15)",
+
+                borderWidth: 3,
+
+                tension: 0.35,
+
+                pointRadius: 3,
+
+                pointHoverRadius: 6,
+
+                fill: true
+            }]
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+                        color: "#dbeafe"
+                    },
+
+                    grid: {
+                        color: "rgba(255,255,255,0.05)"
+                    }
+                },
+
+                y: {
+
+                    min: 0.500,
+
+                    max: 1.100,
+
+                    ticks: {
+
+                        color: "#dbeafe"
+                    },
+
+                    grid: {
+                        color: "rgba(255,255,255,0.05)"
+                    }
+                }
+            }
+        }
+    });
+
+</script>
+
 </body>
 </html>
