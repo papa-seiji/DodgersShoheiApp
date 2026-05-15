@@ -409,7 +409,9 @@ public class OhtaniScorebookController {
                 // ============================================
                 // ★ RISP（ALL）---------------------------------batting/filter用
                 // ============================================
-                Map<String, Object> rispAll = mlbGameService.getRispFromDBByHand(null);
+                Map<String, Object> rispAll = mlbGameService.getRispFromDBByHand(
+                                null,
+                                season);
 
                 model.addAttribute(
                                 "rispAllAvg",

@@ -338,7 +338,7 @@
 
 
 
-        </div>
+        <!--</div>-->
 
 
 <script>
@@ -545,9 +545,8 @@
                 <!-- 得点圏 -->
                 <div id="risp-card" class="avg-card">
                     <div class="avg-card-title">
-                        '26 得点圏打率
+                        '<span th:text="${season.toString().substring(2)}"></span> 得点圏打率
                     </div>
-
                     <div class="avg-card-title">
                         　　　　　　　　　　　ここをクリックで[ON/OFF]切替
                     </div>
@@ -635,7 +634,7 @@
 
                 <div class="ops-trend-title-wrap">
 
-                    <h3>OPS 直近15日推移</h3>
+                    <h3>OPS 日次推移</h3>
 
                     <div class="ops-hand-badge"
                         th:text="${opsHandBadge}">
@@ -656,6 +655,7 @@
             </div>
 
         </div>
+        </div><!--34行目のfilter-panelの閉じタグ-->
         <hr>
 
 <!-- =========================

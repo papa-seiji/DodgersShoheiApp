@@ -1657,9 +1657,13 @@ public class MLBGameService {
      * ★ 得点圏打率（RISP）取得（左右対応版）--------batting/filter用
      * ============================================
      */
-    public Map<String, Object> getRispFromDBByHand(String pitcherHand) {
+    public Map<String, Object> getRispFromDBByHand(
+            String pitcherHand,
+            Integer season) {
 
-        Map<String, Object> raw = ohtaniGameRepository.getRispStatsByHand(pitcherHand);
+        Map<String, Object> raw = ohtaniGameRepository.getRispStatsByHand(
+                pitcherHand,
+                season);
 
         Map<String, Object> result = new HashMap<>();
 
