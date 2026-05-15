@@ -1,5 +1,6 @@
 package com.example.dodgersshoheiapp.controller;
 
+import com.example.dodgersshoheiapp.dto.OpsTrendDto;
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
 import com.example.dodgersshoheiapp.repository.OhtaniGameRepository;
@@ -9,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.example.dodgersshoheiapp.dto.OpsTrendDto;
 import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
 
 import lombok.RequiredArgsConstructor;
@@ -675,6 +676,73 @@ public class OhtaniScorebookController {
                                                 pitcher + " は右投手です");
                         }
                 }
+
+                // ============================================
+                // ★ 累積OPS日次推移グラフ、vsALL-第三弾 投手タイプフィルタと連動して[ vs ALL / R / L] 表示
+                // ============================================
+                String opsHand = (hand == null || hand.isBlank())
+                                ? "ALL"
+                                : hand;
+
+                // ============================================
+                // ★ 累積OPS日次推移グラフ、どれが選択されて表示されているかを再度ここでもバッジ形式で中に表示
+                // ============================================
+                String opsHandBadge;
+
+                switch (opsHand) {
+
+                        case "R":
+                                opsHandBadge = "VS 右ピッチャー";
+                                break;
+
+                        case "L":
+                                opsHandBadge = "VS 左ピッチャー";
+                                break;
+
+                        default:
+                                opsHandBadge = "VS ALLピッチャー";
+                }
+
+                // ============================================
+                // ★ 累積OPS推移
+                // ============================================
+                List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend(opsHand);
+
+                List<OpsTrendDto> allOpsTrend = gameRepository.getCumulativeOpsTrend("ALL");
+
+                List<OpsTrendDto> rOpsTrend = gameRepository.getCumulativeOpsTrend("R");
+
+                List<OpsTrendDto> lOpsTrend = gameRepository.getCumulativeOpsTrend("L");
+
+                List<String> opsLabels = new ArrayList<>();
+                List<Double> opsValues = new ArrayList<>();
+
+                for (OpsTrendDto dto : opsTrend) {
+
+                        opsLabels.add(dto.getGameDate());
+                        opsValues.add(dto.getCumulativeOps());
+                }
+
+                model.addAttribute("opsLabels", opsLabels);
+                model.addAttribute("opsValues", opsValues);
+                model.addAttribute("opsHandBadge", opsHandBadge);
+                model.addAttribute(
+                                "allOpsValues",
+                                allOpsTrend.stream()
+                                                .map(OpsTrendDto::getCumulativeOps)
+                                                .toList());
+
+                model.addAttribute(
+                                "rOpsValues",
+                                rOpsTrend.stream()
+                                                .map(OpsTrendDto::getCumulativeOps)
+                                                .toList());
+
+                model.addAttribute(
+                                "lOpsValues",
+                                lOpsTrend.stream()
+                                                .map(OpsTrendDto::getCumulativeOps)
+                                                .toList());
 
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);

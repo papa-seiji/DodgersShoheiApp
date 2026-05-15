@@ -3,7 +3,7 @@ package com.example.dodgersshoheiapp.repository;
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniGameDetail;
 import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
-
+import com.example.dodgersshoheiapp.dto.OpsTrendDto;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -3006,5 +3006,356 @@ public class OhtaniGameRepository {
                 pitcher);
 
         return result.isEmpty() ? null : result.get(0);
+    }
+
+    /**
+     * ============================================
+     * ★ 累積OPS推移
+     * ============================================
+     */
+    public List<OpsTrendDto> getCumulativeOpsTrend(String hand) {
+
+        String sql = """
+                WITH all_pa AS (
+
+                    SELECT
+                        DATE(created_at) AS game_date,
+
+                        pa1_pitcher_hand AS pitcher_hand,
+
+                        pa1_result AS result,
+                        pa1_description AS description
+
+                    FROM ohtani_game_details
+                    WHERE pa1_result IS NOT NULL
+
+                    AND (
+                        ? = 'ALL'
+                        OR pa1_pitcher_hand = ?
+                    )
+
+                    UNION ALL
+
+                    SELECT
+                        DATE(created_at),
+
+                        pa2_pitcher_hand AS pitcher_hand,
+
+                        pa2_result,
+                        pa2_description
+
+                    FROM ohtani_game_details
+                    WHERE pa2_result IS NOT NULL
+
+                    AND (
+                        ? = 'ALL'
+                        OR pa2_pitcher_hand = ?
+                    )
+
+                    UNION ALL
+
+                    SELECT
+                        DATE(created_at),
+
+                        pa3_pitcher_hand AS pitcher_hand,
+
+                        pa3_result,
+                        pa3_description
+
+                    FROM ohtani_game_details
+                    WHERE pa3_result IS NOT NULL
+
+                    AND (
+                        ? = 'ALL'
+                        OR pa3_pitcher_hand = ?
+                    )
+
+                    UNION ALL
+
+                    SELECT
+                        DATE(created_at),
+
+                        pa4_pitcher_hand AS pitcher_hand,
+
+                        pa4_result,
+                        pa4_description
+
+                    FROM ohtani_game_details
+                    WHERE pa4_result IS NOT NULL
+
+                    AND (
+                        ? = 'ALL'
+                        OR pa4_pitcher_hand = ?
+                    )
+
+                    UNION ALL
+
+                    SELECT
+                        DATE(created_at),
+
+                        pa5_pitcher_hand AS pitcher_hand,
+
+                        pa5_result,
+                        pa5_description
+
+                    FROM ohtani_game_details
+                    WHERE pa5_result IS NOT NULL
+
+                    AND (
+                        ? = 'ALL'
+                        OR pa5_pitcher_hand = ?
+                    )
+
+                    UNION ALL
+
+                    SELECT
+                        DATE(created_at),
+
+                        pa6_pitcher_hand AS pitcher_hand,
+
+                        pa6_result,
+                        pa6_description
+
+                    FROM ohtani_game_details
+                    WHERE pa6_result IS NOT NULL
+
+                    AND (
+                        ? = 'ALL'
+                        OR pa6_pitcher_hand = ?
+                    )
+                ),
+
+                daily_stats AS (
+
+                    SELECT
+
+                        game_date,
+
+                        SUM(
+                            CASE
+                                WHEN result = 'HIT'
+
+                                 AND description NOT LIKE '%二塁打%'
+                                 AND description NOT LIKE '%2塁打%'
+                                 AND description NOT LIKE '%2Bヒット%'
+
+                                 AND description NOT LIKE '%三塁打%'
+                                 AND description NOT LIKE '%3Bヒット%'
+
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS singles,
+
+                        SUM(
+                            CASE
+                                WHEN description LIKE '%二塁打%'
+                                  OR description LIKE '%2塁打%'
+                                  OR description LIKE '%2Bヒット%'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS doubles,
+
+                        SUM(
+                            CASE
+                                WHEN description LIKE '%三塁打%'
+                                  OR description LIKE '%3Bヒット%'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS triples,
+
+                        SUM(
+                            CASE
+                                WHEN result = 'HR'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS home_runs,
+
+                        SUM(
+                            CASE
+                                WHEN result = 'BB'
+
+                                 AND description NOT LIKE '%死球%'
+                                 AND description NOT LIKE '%デッドボール%'
+
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS walks,
+
+                        SUM(
+                            CASE
+                                WHEN result = 'BB'
+                                 AND (
+                                     description LIKE '%死球%'
+                                     OR description LIKE '%デッドボール%'
+                                 )
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS hbp,
+
+                        SUM(
+                            CASE
+                                WHEN result = 'SF'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) AS sac_fly,
+
+                        SUM(
+                            CASE
+
+                                WHEN result IN (
+                                    'HIT',
+                                    'OUT',
+                                    'SO',
+                                    'FC',
+                                    'HR'
+                                )
+                                THEN 1
+
+                                WHEN result = 'Err'
+                                 AND description NOT LIKE '%打撃妨害%'
+                                THEN 1
+
+                                ELSE 0
+
+                            END
+                        ) AS at_bats
+
+                    FROM all_pa
+
+                    GROUP BY game_date
+                ),
+
+                cumulative_stats AS (
+
+                    SELECT
+
+                        game_date,
+
+                        SUM(singles)
+                            OVER (ORDER BY game_date)
+                            AS cum_singles,
+
+                        SUM(doubles)
+                            OVER (ORDER BY game_date)
+                            AS cum_doubles,
+
+                        SUM(triples)
+                            OVER (ORDER BY game_date)
+                            AS cum_triples,
+
+                        SUM(home_runs)
+                            OVER (ORDER BY game_date)
+                            AS cum_home_runs,
+
+                        SUM(walks)
+                            OVER (ORDER BY game_date)
+                            AS cum_walks,
+
+                        SUM(hbp)
+                            OVER (ORDER BY game_date)
+                            AS cum_hbp,
+
+                        SUM(sac_fly)
+                            OVER (ORDER BY game_date)
+                            AS cum_sf,
+
+                        SUM(at_bats)
+                            OVER (ORDER BY game_date)
+                            AS cum_ab
+
+                    FROM daily_stats
+                )
+
+                SELECT
+
+                    TO_CHAR(game_date, 'YYYY-MM-DD') AS game_date,
+
+                    cumulative_ops
+
+                FROM (
+
+                    SELECT
+
+                        game_date,
+
+                        ROUND(
+
+                            (
+
+                                (
+                                    (
+                                        cum_singles
+                                        + cum_doubles
+                                        + cum_triples
+                                        + cum_home_runs
+                                        + cum_walks
+                                        + cum_hbp
+                                    )::numeric
+
+                                    /
+
+                                    NULLIF(
+                                        (
+                                            cum_ab
+                                            + cum_walks
+                                            + cum_hbp
+                                            + cum_sf
+                                        ),
+                                        0
+                                    )
+                                )
+
+                                +
+
+                                (
+                                    (
+                                        cum_singles
+                                        + (cum_doubles * 2)
+                                        + (cum_triples * 3)
+                                        + (cum_home_runs * 4)
+                                    )::numeric
+
+                                    /
+
+                                    NULLIF(cum_ab, 0)
+                                )
+
+                            ),
+
+                            3
+
+                        ) AS cumulative_ops
+
+                    FROM cumulative_stats
+
+                    ORDER BY game_date DESC
+
+                    LIMIT 15
+
+                ) latest_15
+
+                ORDER BY game_date ASC
+                """;
+
+        return jdbcTemplate.query(
+                sql,
+
+                ps -> {
+
+                    for (int i = 1; i <= 12; i++) {
+                        ps.setString(i, hand);
+                    }
+                },
+
+                (rs, rowNum) -> new OpsTrendDto(
+                        rs.getString("game_date"),
+                        rs.getDouble("cumulative_ops")));
     }
 }

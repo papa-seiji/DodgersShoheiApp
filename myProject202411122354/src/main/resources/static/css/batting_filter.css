@@ -1801,6 +1801,107 @@ body.risp-mode {
     margin: 0;
 }
 
+
+/* =========================================
+   OPS TREND
+========================================= */
+
+.ops-trend-card{
+
+    margin-top: 28px;
+
+    padding: 24px;
+
+    border-radius: 24px;
+
+    background:
+        rgba(8,18,56,0.88);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 0 30px rgba(0,0,0,0.35);
+}
+
+.ops-trend-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    /* margin-bottom:20px; */
+}
+
+.ops-trend-header h3{
+
+    color:#ffffff;
+
+    font-size:28px;
+
+    font-weight:800;
+}
+
+.ops-trend-sub{
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+    letter-spacing:1px;
+}
+
+.ops-chart-wrap{
+
+    position:relative;
+
+    width:100%;
+
+    height:320px;
+}
+
+
+
+/* =========================================
+   累積OPS 直近15日推移 投手タイプ：HAND BADGE
+========================================= */
+
+.ops-trend-title-wrap{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+}
+
+.ops-hand-badge{
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7
+        );
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:0.5px;
+
+    box-shadow:
+        0 0 12px rgba(168,85,247,0.35);
+}
+
 /* =========================================
     mobile
 ========================================= */

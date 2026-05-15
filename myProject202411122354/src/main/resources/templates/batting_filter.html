@@ -598,6 +598,39 @@
 
             </div>
         </div>
+
+
+<!-- =========================================
+    📈 CUMULATIVE OPS TREND
+========================================= -->
+
+        <div class="ops-trend-card">
+
+            <div class="ops-trend-header">
+
+                <div class="ops-trend-title-wrap">
+
+                    <h3>OPS 直近15日推移</h3>
+
+                    <div class="ops-hand-badge"
+                        th:text="${opsHandBadge}">
+                    </div>
+
+                </div>
+
+                <span class="ops-trend-sub">
+                    Cumulative OPS Trend
+                </span>
+
+            </div>
+
+            <div class="ops-chart-wrap">
+
+                <canvas id="opsTrendChart"></canvas>
+
+            </div>
+
+        </div>
         <hr>
 
 <!-- =========================
@@ -1654,6 +1687,219 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
     });
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
+<!-- =========================================
+    📈 CUMULATIVE OPS TREND
+========================================= -->
+<script th:inline="javascript">
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const opsLabels =
+        /*[[${opsLabels}]]*/ [];
+
+    const opsValues =
+        /*[[${opsValues}]]*/ [];
+
+    const allOpsValues =
+    /*[[${allOpsValues}]]*/ [];
+
+    const rOpsValues =
+        /*[[${rOpsValues}]]*/ [];
+
+    const lOpsValues =
+        /*[[${lOpsValues}]]*/ [];
+
+    // =========================================
+    // ★ Dynamic Y-Axis
+    // =========================================
+
+    const mergedOpsValues = [
+
+        ...allOpsValues,
+        ...rOpsValues,
+        ...lOpsValues
+    ];
+
+    const minOps =
+        Math.min(...opsValues);
+
+    const maxOps =
+        Math.max(...opsValues);
+
+    const suggestedMin =
+        Math.floor((minOps - 0.05) * 10) / 10;
+
+    const suggestedMax =
+        Math.ceil((maxOps + 0.05) * 10) / 10;
+
+    const ctx =
+        document.getElementById("opsTrendChart");
+
+    if (!ctx) {
+
+        console.error(
+            "opsTrendChart not found"
+        );
+
+        return;
+    }
+
+    new Chart(ctx, {
+
+        type: "line",
+
+        data: {
+
+            labels: opsLabels,
+
+        datasets: [
+
+            {
+
+                label: "VS 左右合算（通常OPS表示）",
+
+                data: allOpsValues,
+
+                borderColor: "#8b5cf6",
+
+                backgroundColor:
+                    "rgba(139,92,246,0.12)",
+
+                borderWidth: 3,
+
+                tension: 0.35,
+
+                pointRadius: 3,
+
+                pointHoverRadius: 6,
+
+                fill: false
+            },
+
+            {
+
+                label: "VS 右ピッチャー",
+
+                data: rOpsValues,
+
+                borderColor: "#38bdf8",
+
+                backgroundColor:
+                    "rgba(56,189,248,0.12)",
+
+                borderWidth: 3,
+
+                tension: 0.35,
+
+                pointRadius: 3,
+
+                pointHoverRadius: 6,
+
+                fill: false
+            },
+
+            {
+
+                label: "VS 左ピッチャー",
+
+                data: lOpsValues,
+
+                borderColor: "#f43f5e",
+
+                backgroundColor:
+                    "rgba(244,63,94,0.12)",
+
+                borderWidth: 3,
+
+                tension: 0.35,
+
+                pointRadius: 3,
+
+                pointHoverRadius: 6,
+
+                fill: false
+            }
+
+        ]
+    },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {  //OPSカードの汎用表示のサイス変更箇所
+
+                    display: true,
+
+                    labels: {
+
+                        color: "#dbeafe",
+
+                        font: {
+
+                            size: 19,
+
+                            weight: "bold"
+                        }
+                    }
+                }
+            },
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+                        color: "#dbeafe"
+                    },
+
+                    grid: {
+                        color:
+                            "rgba(255,255,255,0.05)"
+                    }
+                },
+
+                y: {
+
+                    suggestedMin: suggestedMin,
+
+                    suggestedMax: suggestedMax,
+
+                    ticks: {
+
+                        color: "#dbeafe",
+
+                        font: {
+
+                            size: 16,
+
+                            weight: "bold"
+                        }
+                    },
+
+                    grid: {
+
+                        color:
+                            "rgba(255,255,255,0.05)"
+                    }
+                }
+            }
+        }
+    });
+
+});
 
 </script>
 </body>
