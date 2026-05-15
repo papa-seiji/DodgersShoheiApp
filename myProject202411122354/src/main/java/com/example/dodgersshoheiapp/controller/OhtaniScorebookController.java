@@ -685,6 +685,25 @@ public class OhtaniScorebookController {
                                 : hand;
 
                 // ============================================
+                // ★ 累積OPS日次推移グラフ、どれが選択されて表示されているかを再度ここでもバッジ形式で中に表示
+                // ============================================
+                String opsHandBadge;
+
+                switch (opsHand) {
+
+                        case "R":
+                                opsHandBadge = "VS 右ピッチャー";
+                                break;
+
+                        case "L":
+                                opsHandBadge = "VS 左ピッチャー";
+                                break;
+
+                        default:
+                                opsHandBadge = "VS ALLピッチャー";
+                }
+
+                // ============================================
                 // ★ 累積OPS推移
                 // ============================================
                 List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend(opsHand);
@@ -700,6 +719,7 @@ public class OhtaniScorebookController {
 
                 model.addAttribute("opsLabels", opsLabels);
                 model.addAttribute("opsValues", opsValues);
+                model.addAttribute("opsHandBadge", opsHandBadge);
 
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);

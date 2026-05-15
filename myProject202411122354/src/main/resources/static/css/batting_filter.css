@@ -1863,6 +1863,45 @@ body.risp-mode {
 }
 
 
+
+/* =========================================
+   累積OPS 直近15日推移 投手タイプ：HAND BADGE
+========================================= */
+
+.ops-trend-title-wrap{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+}
+
+.ops-hand-badge{
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7
+        );
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:0.5px;
+
+    box-shadow:
+        0 0 12px rgba(168,85,247,0.35);
+}
+
 /* =========================================
     mobile
 ========================================= */

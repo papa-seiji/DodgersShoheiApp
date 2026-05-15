@@ -603,22 +603,34 @@
 <!-- =========================================
     📈 CUMULATIVE OPS TREND
 ========================================= -->
-<div class="ops-trend-card">
 
-    <div class="ops-trend-header">
-        <h3>累積OPS 直近15日推移</h3>
-        <span class="ops-trend-sub">
-            Cumulative OPS Trend
-        </span>
-    </div>
+        <div class="ops-trend-card">
 
-    <div class="ops-chart-wrap">
-        <canvas id="opsTrendChart"></canvas>
-    </div>
+            <div class="ops-trend-header">
 
-</div>
+                <div class="ops-trend-title-wrap">
 
+                    <h3>累積OPS 直近15日推移</h3>
 
+                    <div class="ops-hand-badge"
+                        th:text="${opsHandBadge}">
+                    </div>
+
+                </div>
+
+                <span class="ops-trend-sub">
+                    Cumulative OPS Trend
+                </span>
+
+            </div>
+
+            <div class="ops-chart-wrap">
+
+                <canvas id="opsTrendChart"></canvas>
+
+            </div>
+
+        </div>
         <hr>
 
 <!-- =========================
@@ -1686,8 +1698,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- =========================================
     📈 CUMULATIVE OPS TREND
 ========================================= -->
-
 <script th:inline="javascript">
+
+document.addEventListener("DOMContentLoaded", function () {
 
     const opsLabels =
         /*[[${opsLabels}]]*/ [];
@@ -1713,6 +1726,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ctx =
         document.getElementById("opsTrendChart");
+
+    if (!ctx) {
+
+        console.error(
+            "opsTrendChart not found"
+        );
+
+        return;
+    }
 
     new Chart(ctx, {
 
@@ -1767,7 +1789,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
 
                     grid: {
-                        color: "rgba(255,255,255,0.05)"
+                        color:
+                            "rgba(255,255,255,0.05)"
                     }
                 },
 
@@ -1783,12 +1806,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
 
                     grid: {
-                        color: "rgba(255,255,255,0.05)"
+                        color:
+                            "rgba(255,255,255,0.05)"
                     }
                 }
             }
         }
     });
+
+});
 
 </script>
 </body>
