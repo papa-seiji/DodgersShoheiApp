@@ -713,13 +713,13 @@ public class OhtaniScorebookController {
                 // ============================================
                 // ★ 累積OPS推移
                 // ============================================
-                List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend(opsHand);
+                List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend(opsHand, season);
 
-                List<OpsTrendDto> allOpsTrend = gameRepository.getCumulativeOpsTrend("ALL");
+                List<OpsTrendDto> allOpsTrend = gameRepository.getCumulativeOpsTrend("ALL", season);
 
-                List<OpsTrendDto> rOpsTrend = gameRepository.getCumulativeOpsTrend("R");
+                List<OpsTrendDto> rOpsTrend = gameRepository.getCumulativeOpsTrend("R", season);
 
-                List<OpsTrendDto> lOpsTrend = gameRepository.getCumulativeOpsTrend("L");
+                List<OpsTrendDto> lOpsTrend = gameRepository.getCumulativeOpsTrend("L", season);
 
                 List<String> opsLabels = new ArrayList<>();
                 List<Double> opsValues = new ArrayList<>();

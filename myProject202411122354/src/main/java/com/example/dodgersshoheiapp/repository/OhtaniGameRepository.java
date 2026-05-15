@@ -3013,7 +3013,7 @@ public class OhtaniGameRepository {
      * ★ 累積OPS推移
      * ============================================
      */
-    public List<OpsTrendDto> getCumulativeOpsTrend(String hand) {
+    public List<OpsTrendDto> getCumulativeOpsTrend(String hand, Integer season) {
 
         String sql = """
                 WITH all_pa AS (
@@ -3028,6 +3028,8 @@ public class OhtaniGameRepository {
 
                     FROM ohtani_game_details
                     WHERE pa1_result IS NOT NULL
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
 
                     AND (
                         ? = 'ALL'
@@ -3047,6 +3049,9 @@ public class OhtaniGameRepository {
                     FROM ohtani_game_details
                     WHERE pa2_result IS NOT NULL
 
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
                     AND (
                         ? = 'ALL'
                         OR pa2_pitcher_hand = ?
@@ -3064,6 +3069,8 @@ public class OhtaniGameRepository {
 
                     FROM ohtani_game_details
                     WHERE pa3_result IS NOT NULL
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
 
                     AND (
                         ? = 'ALL'
@@ -3083,6 +3090,8 @@ public class OhtaniGameRepository {
                     FROM ohtani_game_details
                     WHERE pa4_result IS NOT NULL
 
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
                     AND (
                         ? = 'ALL'
                         OR pa4_pitcher_hand = ?
@@ -3101,6 +3110,8 @@ public class OhtaniGameRepository {
                     FROM ohtani_game_details
                     WHERE pa5_result IS NOT NULL
 
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
                     AND (
                         ? = 'ALL'
                         OR pa5_pitcher_hand = ?
@@ -3118,6 +3129,8 @@ public class OhtaniGameRepository {
 
                     FROM ohtani_game_details
                     WHERE pa6_result IS NOT NULL
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
 
                     AND (
                         ? = 'ALL'
@@ -3349,8 +3362,15 @@ public class OhtaniGameRepository {
 
                 ps -> {
 
-                    for (int i = 1; i <= 12; i++) {
-                        ps.setString(i, hand);
+                    int idx = 1;
+
+                    for (int i = 0; i < 6; i++) {
+
+                        ps.setInt(idx++, season);
+
+                        ps.setString(idx++, hand);
+
+                        ps.setString(idx++, hand);
                     }
                 },
 
