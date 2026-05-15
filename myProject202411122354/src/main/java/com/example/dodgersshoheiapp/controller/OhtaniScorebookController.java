@@ -1,5 +1,6 @@
 package com.example.dodgersshoheiapp.controller;
 
+import com.example.dodgersshoheiapp.dto.OpsTrendDto;
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
 import com.example.dodgersshoheiapp.repository.OhtaniGameRepository;
@@ -9,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.example.dodgersshoheiapp.dto.OpsTrendDto;
 import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
 
 import lombok.RequiredArgsConstructor;
@@ -675,6 +676,23 @@ public class OhtaniScorebookController {
                                                 pitcher + " は右投手です");
                         }
                 }
+
+                // ============================================
+                // ★ 累積OPS推移
+                // ============================================
+                List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend();
+
+                List<String> opsLabels = new ArrayList<>();
+                List<Double> opsValues = new ArrayList<>();
+
+                for (OpsTrendDto dto : opsTrend) {
+
+                        opsLabels.add(dto.getGameDate());
+                        opsValues.add(dto.getCumulativeOps());
+                }
+
+                model.addAttribute("opsLabels", opsLabels);
+                model.addAttribute("opsValues", opsValues);
 
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);
