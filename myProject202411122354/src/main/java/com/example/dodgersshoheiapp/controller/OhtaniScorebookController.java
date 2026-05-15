@@ -426,7 +426,9 @@ public class OhtaniScorebookController {
                 // ============================================
                 model.addAttribute(
                                 "rispLogs",
-                                mlbGameService.getRispLogs(pitcherHand));
+                                mlbGameService.getRispLogs(
+                                                pitcherHand,
+                                                season));
 
                 // ============================================
                 // ★ 右

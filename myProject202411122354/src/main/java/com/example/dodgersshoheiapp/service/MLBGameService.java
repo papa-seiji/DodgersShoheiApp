@@ -1712,8 +1712,12 @@ public class MLBGameService {
      * ★ RISPログ取得---------------------------------batting/filter用
      * ============================================
      */
-    public List<Map<String, Object>> getRispLogs(String pitcherHand) {
+    public List<Map<String, Object>> getRispLogs(
+            String pitcherHand,
+            Integer season) {
 
-        return ohtaniGameRepository.getRispLogs(pitcherHand);
+        return ohtaniGameRepository.getRispLogs(
+                pitcherHand,
+                season);
     }
 }

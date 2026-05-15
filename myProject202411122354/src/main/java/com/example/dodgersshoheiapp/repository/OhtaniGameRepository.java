@@ -2600,7 +2600,9 @@ public class OhtaniGameRepository {
      * ★ RISPログ取得---------------------------------batting/filter用
      * ============================================
      */
-    public List<Map<String, Object>> getRispLogs(String pitcherHand) {
+    public List<Map<String, Object>> getRispLogs(
+            String pitcherHand,
+            Integer season) {
 
         String sql = """
                     SELECT
@@ -2646,6 +2648,8 @@ public class OhtaniGameRepository {
 
                         WHERE d.pa1_description LIKE '%得点圏にランナー有%'
 
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
+
                         UNION ALL
 
                         SELECT
@@ -2663,6 +2667,8 @@ public class OhtaniGameRepository {
                             ON d.game_id = g.id
 
                         WHERE d.pa2_description LIKE '%得点圏にランナー有%'
+
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
 
                         UNION ALL
 
@@ -2682,6 +2688,8 @@ public class OhtaniGameRepository {
 
                         WHERE d.pa3_description LIKE '%得点圏にランナー有%'
 
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
+
                         UNION ALL
 
                         SELECT
@@ -2699,6 +2707,8 @@ public class OhtaniGameRepository {
                             ON d.game_id = g.id
 
                         WHERE d.pa4_description LIKE '%得点圏にランナー有%'
+
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
 
                         UNION ALL
 
@@ -2718,6 +2728,8 @@ public class OhtaniGameRepository {
 
                         WHERE d.pa5_description LIKE '%得点圏にランナー有%'
 
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
+
                         UNION ALL
 
                         SELECT
@@ -2736,6 +2748,8 @@ public class OhtaniGameRepository {
 
                         WHERE d.pa6_description LIKE '%得点圏にランナー有%'
 
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
+
                     ) t
 
                     WHERE (
@@ -2750,6 +2764,14 @@ public class OhtaniGameRepository {
 
         return jdbcTemplate.queryForList(
                 sql,
+
+                season,
+                season,
+                season,
+                season,
+                season,
+                season,
+
                 pitcherHand,
                 pitcherHand);
     }
