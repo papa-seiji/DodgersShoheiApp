@@ -610,7 +610,7 @@
 
                 <div class="ops-trend-title-wrap">
 
-                    <h3>累積OPS 直近15日推移</h3>
+                    <h3>OPS 直近15日推移</h3>
 
                     <div class="ops-hand-badge"
                         th:text="${opsHandBadge}">
@@ -1708,9 +1708,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const opsValues =
         /*[[${opsValues}]]*/ [];
 
+    const allOpsValues =
+    /*[[${allOpsValues}]]*/ [];
+
+    const rOpsValues =
+        /*[[${rOpsValues}]]*/ [];
+
+    const lOpsValues =
+        /*[[${lOpsValues}]]*/ [];
+
     // =========================================
     // ★ Dynamic Y-Axis
     // =========================================
+
+    const mergedOpsValues = [
+
+        ...allOpsValues,
+        ...rOpsValues,
+        ...lOpsValues
+    ];
 
     const minOps =
         Math.min(...opsValues);
@@ -1744,16 +1760,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
             labels: opsLabels,
 
-            datasets: [{
+        datasets: [
 
-                label: "OPS",
+            {
 
-                data: opsValues,
+                label: "VS 左右合算（通常OPS表示）",
+
+                data: allOpsValues,
 
                 borderColor: "#8b5cf6",
 
                 backgroundColor:
-                    "rgba(139,92,246,0.15)",
+                    "rgba(139,92,246,0.12)",
 
                 borderWidth: 3,
 
@@ -1763,9 +1781,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 pointHoverRadius: 6,
 
-                fill: true
-            }]
-        },
+                fill: false
+            },
+
+            {
+
+                label: "VS 右ピッチャー",
+
+                data: rOpsValues,
+
+                borderColor: "#38bdf8",
+
+                backgroundColor:
+                    "rgba(56,189,248,0.12)",
+
+                borderWidth: 3,
+
+                tension: 0.35,
+
+                pointRadius: 3,
+
+                pointHoverRadius: 6,
+
+                fill: false
+            },
+
+            {
+
+                label: "VS 左ピッチャー",
+
+                data: lOpsValues,
+
+                borderColor: "#f43f5e",
+
+                backgroundColor:
+                    "rgba(244,63,94,0.12)",
+
+                borderWidth: 3,
+
+                tension: 0.35,
+
+                pointRadius: 3,
+
+                pointHoverRadius: 6,
+
+                fill: false
+            }
+
+        ]
+    },
 
         options: {
 
@@ -1775,8 +1839,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
             plugins: {
 
-                legend: {
-                    display: false
+                legend: {  //OPSカードの汎用表示のサイス変更箇所
+
+                    display: true,
+
+                    labels: {
+
+                        color: "#dbeafe",
+
+                        font: {
+
+                            size: 19,
+
+                            weight: "bold"
+                        }
+                    }
                 }
             },
 
@@ -1802,10 +1879,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     ticks: {
 
-                        color: "#dbeafe"
+                        color: "#dbeafe",
+
+                        font: {
+
+                            size: 16,
+
+                            weight: "bold"
+                        }
                     },
 
                     grid: {
+
                         color:
                             "rgba(255,255,255,0.05)"
                     }

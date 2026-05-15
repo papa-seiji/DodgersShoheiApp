@@ -708,6 +708,12 @@ public class OhtaniScorebookController {
                 // ============================================
                 List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend(opsHand);
 
+                List<OpsTrendDto> allOpsTrend = gameRepository.getCumulativeOpsTrend("ALL");
+
+                List<OpsTrendDto> rOpsTrend = gameRepository.getCumulativeOpsTrend("R");
+
+                List<OpsTrendDto> lOpsTrend = gameRepository.getCumulativeOpsTrend("L");
+
                 List<String> opsLabels = new ArrayList<>();
                 List<Double> opsValues = new ArrayList<>();
 
@@ -720,6 +726,23 @@ public class OhtaniScorebookController {
                 model.addAttribute("opsLabels", opsLabels);
                 model.addAttribute("opsValues", opsValues);
                 model.addAttribute("opsHandBadge", opsHandBadge);
+                model.addAttribute(
+                                "allOpsValues",
+                                allOpsTrend.stream()
+                                                .map(OpsTrendDto::getCumulativeOps)
+                                                .toList());
+
+                model.addAttribute(
+                                "rOpsValues",
+                                rOpsTrend.stream()
+                                                .map(OpsTrendDto::getCumulativeOps)
+                                                .toList());
+
+                model.addAttribute(
+                                "lOpsValues",
+                                lOpsTrend.stream()
+                                                .map(OpsTrendDto::getCumulativeOps)
+                                                .toList());
 
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);
