@@ -1695,6 +1695,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const opsValues =
         /*[[${opsValues}]]*/ [];
 
+    // =========================================
+    // ★ Dynamic Y-Axis
+    // =========================================
+
+    const minOps =
+        Math.min(...opsValues);
+
+    const maxOps =
+        Math.max(...opsValues);
+
+    const suggestedMin =
+        Math.floor((minOps - 0.05) * 10) / 10;
+
+    const suggestedMax =
+        Math.ceil((maxOps + 0.05) * 10) / 10;
+
     const ctx =
         document.getElementById("opsTrendChart");
 
@@ -1757,9 +1773,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 y: {
 
-                    min: 0.500,
+                    suggestedMin: suggestedMin,
 
-                    max: 1.100,
+                    suggestedMax: suggestedMax,
 
                     ticks: {
 
@@ -1775,6 +1791,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 </script>
-
 </body>
 </html>

@@ -3013,7 +3013,7 @@ public class OhtaniGameRepository {
      * ★ 累積OPS推移
      * ============================================
      */
-    public List<OpsTrendDto> getCumulativeOpsTrend() {
+    public List<OpsTrendDto> getCumulativeOpsTrend(String hand) {
 
         String sql = """
                 WITH all_pa AS (
@@ -3021,16 +3021,25 @@ public class OhtaniGameRepository {
                     SELECT
                         DATE(created_at) AS game_date,
 
+                        pa1_pitcher_hand AS pitcher_hand,
+
                         pa1_result AS result,
                         pa1_description AS description
 
                     FROM ohtani_game_details
                     WHERE pa1_result IS NOT NULL
 
+                    AND (
+                        ? = 'ALL'
+                        OR pa1_pitcher_hand = ?
+                    )
+
                     UNION ALL
 
                     SELECT
                         DATE(created_at),
+
+                        pa2_pitcher_hand AS pitcher_hand,
 
                         pa2_result,
                         pa2_description
@@ -3038,10 +3047,17 @@ public class OhtaniGameRepository {
                     FROM ohtani_game_details
                     WHERE pa2_result IS NOT NULL
 
+                    AND (
+                        ? = 'ALL'
+                        OR pa2_pitcher_hand = ?
+                    )
+
                     UNION ALL
 
                     SELECT
                         DATE(created_at),
+
+                        pa3_pitcher_hand AS pitcher_hand,
 
                         pa3_result,
                         pa3_description
@@ -3049,10 +3065,17 @@ public class OhtaniGameRepository {
                     FROM ohtani_game_details
                     WHERE pa3_result IS NOT NULL
 
+                    AND (
+                        ? = 'ALL'
+                        OR pa3_pitcher_hand = ?
+                    )
+
                     UNION ALL
 
                     SELECT
                         DATE(created_at),
+
+                        pa4_pitcher_hand AS pitcher_hand,
 
                         pa4_result,
                         pa4_description
@@ -3060,10 +3083,17 @@ public class OhtaniGameRepository {
                     FROM ohtani_game_details
                     WHERE pa4_result IS NOT NULL
 
+                    AND (
+                        ? = 'ALL'
+                        OR pa4_pitcher_hand = ?
+                    )
+
                     UNION ALL
 
                     SELECT
                         DATE(created_at),
+
+                        pa5_pitcher_hand AS pitcher_hand,
 
                         pa5_result,
                         pa5_description
@@ -3071,16 +3101,28 @@ public class OhtaniGameRepository {
                     FROM ohtani_game_details
                     WHERE pa5_result IS NOT NULL
 
+                    AND (
+                        ? = 'ALL'
+                        OR pa5_pitcher_hand = ?
+                    )
+
                     UNION ALL
 
                     SELECT
                         DATE(created_at),
+
+                        pa6_pitcher_hand AS pitcher_hand,
 
                         pa6_result,
                         pa6_description
 
                     FROM ohtani_game_details
                     WHERE pa6_result IS NOT NULL
+
+                    AND (
+                        ? = 'ALL'
+                        OR pa6_pitcher_hand = ?
+                    )
                 ),
 
                 daily_stats AS (
@@ -3304,6 +3346,14 @@ public class OhtaniGameRepository {
 
         return jdbcTemplate.query(
                 sql,
+
+                ps -> {
+
+                    for (int i = 1; i <= 12; i++) {
+                        ps.setString(i, hand);
+                    }
+                },
+
                 (rs, rowNum) -> new OpsTrendDto(
                         rs.getString("game_date"),
                         rs.getDouble("cumulative_ops")));

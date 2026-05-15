@@ -678,9 +678,16 @@ public class OhtaniScorebookController {
                 }
 
                 // ============================================
+                // ★ 累積OPS日次推移グラフ、vsALL-第三弾 投手タイプフィルタと連動して[ vs ALL / R / L] 表示
+                // ============================================
+                String opsHand = (hand == null || hand.isBlank())
+                                ? "ALL"
+                                : hand;
+
+                // ============================================
                 // ★ 累積OPS推移
                 // ============================================
-                List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend();
+                List<OpsTrendDto> opsTrend = gameRepository.getCumulativeOpsTrend(opsHand);
 
                 List<String> opsLabels = new ArrayList<>();
                 List<Double> opsValues = new ArrayList<>();
