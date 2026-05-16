@@ -959,9 +959,13 @@ public class MLBGameService {
      * ★ 対左投手 × 対戦チーム別 AVG
      * ============================================
      */
-    public Map<String, String> getVsLeftStatsByOpponentFormatted(String opponent) {
+    public Map<String, String> getVsLeftStatsByOpponentFormatted(
+            String opponent,
+            Integer season) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByOpponent(opponent);
+        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByOpponent(
+                opponent,
+                season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()

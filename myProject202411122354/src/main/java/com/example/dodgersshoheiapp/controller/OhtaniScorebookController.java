@@ -569,7 +569,9 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(opponent)) {
 
                                 vsL = mlbGameService
-                                                .getVsLeftStatsByOpponentFormatted(opponent);
+                                                .getVsLeftStatsByOpponentFormatted(
+                                                                opponent,
+                                                                season);
 
                         } else {
 

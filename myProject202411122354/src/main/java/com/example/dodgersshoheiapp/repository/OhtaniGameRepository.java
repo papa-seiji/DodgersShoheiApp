@@ -1242,7 +1242,9 @@ public class OhtaniGameRepository {
      * ★ 対左投手 × 対戦チーム別 AVG
      * ============================================
      */
-    public Map<String, Object> getVsLeftStatsByOpponent(String opponent) {
+    public Map<String, Object> getVsLeftStatsByOpponent(
+            String opponent,
+            Integer season) {
 
         String sql = """
                     SELECT
@@ -1281,6 +1283,7 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g
                             ON d.game_id = g.id
                         WHERE pa1_pitcher_hand = 'L'
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
                         UNION ALL
@@ -1291,6 +1294,7 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g
                             ON d.game_id = g.id
                         WHERE pa2_pitcher_hand = 'L'
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
                         UNION ALL
@@ -1301,6 +1305,7 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g
                             ON d.game_id = g.id
                         WHERE pa3_pitcher_hand = 'L'
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
                         UNION ALL
@@ -1311,6 +1316,7 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g
                             ON d.game_id = g.id
                         WHERE pa4_pitcher_hand = 'L'
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
                         UNION ALL
@@ -1321,6 +1327,7 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g
                             ON d.game_id = g.id
                         WHERE pa5_pitcher_hand = 'L'
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
                         UNION ALL
@@ -1331,6 +1338,7 @@ public class OhtaniGameRepository {
                         JOIN ohtani_games g
                             ON d.game_id = g.id
                         WHERE pa6_pitcher_hand = 'L'
+                        AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
                     ) t
@@ -1338,12 +1346,13 @@ public class OhtaniGameRepository {
 
         return jdbcTemplate.queryForMap(
                 sql,
-                opponent,
-                opponent,
-                opponent,
-                opponent,
-                opponent,
-                opponent);
+
+                season, opponent,
+                season, opponent,
+                season, opponent,
+                season, opponent,
+                season, opponent,
+                season, opponent);
     }
 
     /**
