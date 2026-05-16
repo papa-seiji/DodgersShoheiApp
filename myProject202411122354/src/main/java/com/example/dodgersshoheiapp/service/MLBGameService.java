@@ -604,9 +604,9 @@ public class MLBGameService {
      * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり
      * ============================================
      */
-    public Map<String, String> getVsRightStatsFormatted() {
+    public Map<String, String> getVsRightStatsFormatted(Integer season) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsRightStats();
+        Map<String, Object> stats = ohtaniGameRepository.getVsRightStats(season);
 
         int hits = ((Number) stats.get("hits")).intValue();
         int atBats = ((Number) stats.get("at_bats")).intValue();
@@ -691,7 +691,9 @@ public class MLBGameService {
      * ★ 対右投手 × 球種別 AVG
      * ============================================
      */
-    public Map<String, String> getVsRightStatsByPitchTypeFormatted(String pitchType) {
+    public Map<String, String> getVsRightStatsByPitchTypeFormatted(
+            String pitchType,
+            Integer season) {
 
         // ============================================
         // ★ BREAKING（変化球と丸っと包括）でも検索できるようにする仕組み--1469行目と親子
@@ -704,7 +706,8 @@ public class MLBGameService {
                     null,
                     null,
                     null,
-                    null);
+                    null,
+                    season);
 
             List<String> breakingTypes = normalizePitchTypes(
                     pitchType);
@@ -790,7 +793,8 @@ public class MLBGameService {
             String pitcher,
             String pitchType,
             Integer speedMin,
-            Integer speedMax) {
+            Integer speedMax,
+            Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsRightLogs(
                 result,
@@ -798,7 +802,8 @@ public class MLBGameService {
                 pitcher,
                 pitchType,
                 speedMin,
-                speedMax);
+                speedMax,
+                season);
 
         // ============================================
         // ★ 球速・球種 inject
@@ -853,7 +858,8 @@ public class MLBGameService {
      */
     public Map<String, String> getVsRightStatsBySpeedFormatted(
             Integer speedMin,
-            Integer speedMax) {
+            Integer speedMax,
+            Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsRightLogs(
                 null,
@@ -861,7 +867,8 @@ public class MLBGameService {
                 null,
                 null,
                 speedMin,
-                speedMax);
+                speedMax,
+                season);
 
         int hits = 0;
         int atBats = 0;
@@ -922,9 +929,9 @@ public class MLBGameService {
      * ★ 対左ピッチャー
      * ============================================
      */
-    public Map<String, String> getVsLeftStatsFormatted() {
+    public Map<String, String> getVsLeftStatsFormatted(Integer season) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStats();
+        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStats(season);
 
         int hits = ((Number) stats.get("hits")).intValue();
         int atBats = ((Number) stats.get("at_bats")).intValue();
@@ -1010,7 +1017,9 @@ public class MLBGameService {
      * ★ 対左投手 × 球種別 AVG
      * ============================================
      */
-    public Map<String, String> getVsLeftStatsByPitchTypeFormatted(String pitchType) {
+    public Map<String, String> getVsLeftStatsByPitchTypeFormatted(
+            String pitchType,
+            Integer season) {
 
         // ============================================
         // ★ BREAKING（変化球まとめ）対応
@@ -1023,7 +1032,8 @@ public class MLBGameService {
                     null,
                     null,
                     null,
-                    null);
+                    null,
+                    season);
 
             List<String> breakingTypes = normalizePitchTypes(pitchType);
 
@@ -1108,7 +1118,8 @@ public class MLBGameService {
             String pitcher,
             String pitchType,
             Integer speedMin,
-            Integer speedMax) {
+            Integer speedMax,
+            Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsLeftLogs(
                 result,
@@ -1116,7 +1127,8 @@ public class MLBGameService {
                 pitcher,
                 pitchType,
                 speedMin,
-                speedMax);
+                speedMax,
+                season);
 
         // ============================================
         // ★ 球速・球種 inject
@@ -1144,7 +1156,8 @@ public class MLBGameService {
      */
     public Map<String, String> getVsLeftStatsBySpeedFormatted(
             Integer speedMin,
-            Integer speedMax) {
+            Integer speedMax,
+            Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsLeftLogs(
                 null,
@@ -1152,7 +1165,8 @@ public class MLBGameService {
                 null,
                 null,
                 speedMin,
-                speedMax);
+                speedMax,
+                season);
 
         int hits = 0;
         int atBats = 0;
@@ -1214,20 +1228,27 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, String> getVsAllStatsFormatted(
+            String opponent,
             Integer season) {
 
-        Map<String, Object> result = getVsAllStats(season);
+        Map<String, Object> result = ohtaniGameRepository.getVsAllStats(
+                opponent,
+                season);
 
         int hits = ((Number) result.get("hits")).intValue();
         int atBats = ((Number) result.get("at_bats")).intValue();
+
         Number avgNum = (Number) result.get("avg");
-        Double avg = (avgNum != null) ? avgNum.doubleValue() : null;
+        Double avg = (avgNum != null)
+                ? avgNum.doubleValue()
+                : null;
 
         String avgStr = (avg != null)
                 ? String.format("%.3f", avg).replace("0.", ".")
                 : ".000";
 
         Map<String, String> formatted = new HashMap<>();
+
         formatted.put("avg", avgStr);
         formatted.put("detail", hits + "-" + atBats);
 
@@ -1239,9 +1260,13 @@ public class MLBGameService {
      * ★ 対ALL × 対戦チーム別 AVG
      * ============================================
      */
-    public Map<String, String> getVsAllStatsByOpponentFormatted(String opponent) {
+    public Map<String, String> getVsAllStatsByOpponentFormatted(
+            String opponent,
+            Integer season) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByOpponent(opponent);
+        Map<String, Object> stats = ohtaniGameRepository.getVsAllStats(
+                opponent,
+                season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()
@@ -1255,10 +1280,13 @@ public class MLBGameService {
                 ? ((Number) stats.get("avg")).doubleValue()
                 : 0.0;
 
-        String avgStr = String.format("%.3f", avg).replace("0.", ".");
+        String avgStr = String.format("%.3f", avg)
+                .replace("0.", ".");
+
         String detail = hits + "-" + atBats;
 
         Map<String, String> result = new HashMap<>();
+
         result.put("avg", avgStr);
         result.put("detail", detail);
 
@@ -1301,7 +1329,9 @@ public class MLBGameService {
      * ★ 対ALL × 球種別 AVG
      * ============================================
      */
-    public Map<String, String> getVsAllStatsByPitchTypeFormatted(String pitchType) {
+    public Map<String, String> getVsAllStatsByPitchTypeFormatted(
+            String pitchType,
+            Integer season) {
 
         // ============================================
         // ★ BREAKING（変化球と丸っと包括）でも検索できるようにする仕組み--1469行目と親子
@@ -1314,7 +1344,8 @@ public class MLBGameService {
                     null,
                     null,
                     null,
-                    null);
+                    null,
+                    season);
 
             List<String> breakingTypes = normalizePitchTypes(pitchType);
 
@@ -1395,7 +1426,8 @@ public class MLBGameService {
      */
     public Map<String, String> getVsAllStatsBySpeedFormatted(
             Integer speedMin,
-            Integer speedMax) {
+            Integer speedMax,
+            Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsAllLogs(
                 null,
@@ -1403,7 +1435,8 @@ public class MLBGameService {
                 null,
                 null,
                 speedMin,
-                speedMax);
+                speedMax,
+                season);
 
         int hits = 0;
         int atBats = 0;
@@ -1470,7 +1503,8 @@ public class MLBGameService {
             String pitcher,
             String pitchType,
             Integer speedMin,
-            Integer speedMax) {
+            Integer speedMax,
+            Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsAllLogs(
                 result,
@@ -1478,7 +1512,8 @@ public class MLBGameService {
                 pitcher,
                 pitchType,
                 speedMin,
-                speedMax);
+                speedMax,
+                season);
 
         // ============================================
         // ★ 球速・球種 inject

@@ -142,7 +142,7 @@ public class OhtaniScorebookController {
 
                 System.out.println("対右投手処理呼び出し開始");
                 // model.addAttribute("vsRAvg", mlbGameService.getVsRightAvgFormatted());
-                Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted();
+                Map<String, String> vsR = mlbGameService.getVsRightStatsFormatted(2026);
                 model.addAttribute("vsRAvg", vsR.get("avg"));
                 model.addAttribute("vsRDetail", vsR.get("detail"));
 
@@ -335,7 +335,8 @@ public class OhtaniScorebookController {
                                 vsAll = mlbGameService
                                                 .getVsAllStatsBySpeedFormatted(
                                                                 speedMin,
-                                                                speedMax);
+                                                                speedMax,
+                                                                season);
 
                                 // ============================================
                                 // ★ pitchType 指定時
@@ -345,7 +346,7 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(pitchType)) {
 
                                 vsAll = mlbGameService
-                                                .getVsAllStatsByPitchTypeFormatted(pitchType);
+                                                .getVsAllStatsByPitchTypeFormatted(pitchType, season);
 
                                 // ============================================
                                 // ★ opponent 指定時
@@ -355,12 +356,12 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(opponent)) {
 
                                 vsAll = mlbGameService
-                                                .getVsAllStatsByOpponentFormatted(opponent);
+                                                .getVsAllStatsByOpponentFormatted(opponent, season);
 
                         } else {
 
                                 vsAll = mlbGameService
-                                                .getVsAllStatsFormatted(season);
+                                                .getVsAllStatsFormatted(opponent, season);
                         }
 
                         model.addAttribute("vsAllAvg", vsAll.get("avg"));
@@ -376,7 +377,8 @@ public class OhtaniScorebookController {
                                                         pitcher,
                                                         pitchType,
                                                         speedMin,
-                                                        speedMax));
+                                                        speedMax,
+                                                        season));
                 }
 
                 // ============================================
@@ -466,7 +468,8 @@ public class OhtaniScorebookController {
                                 vsR = mlbGameService
                                                 .getVsRightStatsBySpeedFormatted(
                                                                 speedMin,
-                                                                speedMax);
+                                                                speedMax,
+                                                                season);
 
                                 // ============================================
                                 // ★ pitchType 指定時
@@ -476,7 +479,7 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(pitchType)) {
 
                                 vsR = mlbGameService
-                                                .getVsRightStatsByPitchTypeFormatted(pitchType);
+                                                .getVsRightStatsByPitchTypeFormatted(pitchType, season);
 
                                 // ============================================
                                 // ★ opponent 指定時
@@ -491,7 +494,7 @@ public class OhtaniScorebookController {
                         } else {
 
                                 vsR = mlbGameService
-                                                .getVsRightStatsFormatted();
+                                                .getVsRightStatsFormatted(season);
                         }
 
                         model.addAttribute("vsRAvg", vsR.get("avg"));
@@ -507,7 +510,8 @@ public class OhtaniScorebookController {
                                                         pitcher,
                                                         pitchType,
                                                         speedMin,
-                                                        speedMax));
+                                                        speedMax,
+                                                        season));
                 }
 
                 // ============================================
@@ -542,7 +546,8 @@ public class OhtaniScorebookController {
                                 vsL = mlbGameService
                                                 .getVsLeftStatsBySpeedFormatted(
                                                                 speedMin,
-                                                                speedMax);
+                                                                speedMax,
+                                                                season);
 
                                 // ============================================
                                 // ★ pitchType 指定時
@@ -552,7 +557,7 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(pitchType)) {
 
                                 vsL = mlbGameService
-                                                .getVsLeftStatsByPitchTypeFormatted(pitchType);
+                                                .getVsLeftStatsByPitchTypeFormatted(pitchType, season);
 
                                 // ============================================
                                 // ★ opponent 指定時
@@ -567,7 +572,7 @@ public class OhtaniScorebookController {
                         } else {
 
                                 vsL = mlbGameService
-                                                .getVsLeftStatsFormatted();
+                                                .getVsLeftStatsFormatted(season);
                         }
 
                         model.addAttribute("vsLAvg", vsL.get("avg"));
@@ -583,7 +588,8 @@ public class OhtaniScorebookController {
                                                         pitcher,
                                                         pitchType,
                                                         speedMin,
-                                                        speedMax));
+                                                        speedMax,
+                                                        season));
                 }
 
                 // ============================================
