@@ -136,7 +136,7 @@ public class OhtaniScorebookController {
                 // ここから取得（自前DB）
                 // ============================
                 System.out.println("RISP処理呼び出し開始");
-                Map<String, Object> risp = mlbGameService.getRispFromDB();
+                Map<String, Object> risp = mlbGameService.getRispFromDBByHand(null, 2026);
                 model.addAttribute("rispAvg", risp.get("avg"));
                 model.addAttribute("rispDetail", risp.get("detail"));
 

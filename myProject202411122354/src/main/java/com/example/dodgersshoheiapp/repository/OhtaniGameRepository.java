@@ -1979,27 +1979,110 @@ public class OhtaniGameRepository {
         String sql = """
                     SELECT
                         SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
-                        SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END) AS at_bats,
+
+                        SUM(
+                            CASE
+
+                                WHEN result IN (
+                                    'HIT',
+                                    'OUT',
+                                    'SO',
+                                    'FC',
+                                    'HR'
+                                )
+                                THEN 1
+
+                                WHEN result = 'Err'
+                                AND(
+                                    description IS NULL
+                                    OR description NOT LIKE '%打撃妨害%'
+                                )
+                                THEN 1
+
+                                ELSE 0
+
+                            END
+                        ) AS at_bats,
+
                         ROUND(
                             SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
                             /
                             NULLIF(
-                                SUM(CASE WHEN result NOT IN ('BB','SF') AND result IS NOT NULL THEN 1 ELSE 0 END),
+                                SUM(
+                                    CASE
+
+                                        WHEN result IN (
+                                            'HIT',
+                                            'OUT',
+                                            'SO',
+                                            'FC',
+                                            'HR'
+                                        )
+                                        THEN 1
+
+                                WHEN result = 'Err'
+                                AND(
+                                    description IS NULL
+                                    OR description NOT LIKE '%打撃妨害%'
+                                )
+                                THEN 1
+
+                                        ELSE 0
+
+                                    END
+                                ),
                                 0
                             )
                         , 3) AS avg
+
                     FROM (
-                        SELECT pa1_result AS result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
+
+                        SELECT
+                            pa1_result AS result,
+                            pa1_description AS description
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+
                         UNION ALL
-                        SELECT pa2_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
+
+                        SELECT
+                            pa2_result AS result,
+                            pa2_description AS description
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+
                         UNION ALL
-                        SELECT pa3_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
+
+                        SELECT
+                            pa3_result AS result,
+                            pa3_description AS description
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+
                         UNION ALL
-                        SELECT pa4_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
+
+                        SELECT
+                            pa4_result AS result,
+                            pa4_description AS description
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+
                         UNION ALL
-                        SELECT pa5_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
+
+                        SELECT
+                            pa5_result AS result,
+                            pa5_description AS description
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+
                         UNION ALL
-                        SELECT pa6_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
+
+                        SELECT
+                            pa6_result AS result,
+                            pa6_description AS description
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+
                     ) t
                 """;
 
@@ -2012,6 +2095,7 @@ public class OhtaniGameRepository {
                 season,
                 season,
                 season);
+
     }
 
     /**
@@ -2025,14 +2109,28 @@ public class OhtaniGameRepository {
 
         String sql = """
                     SELECT
-                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
 
                         SUM(
                             CASE
-                                WHEN result NOT IN ('BB','SF')
-                                AND result IS NOT NULL
+
+                                WHEN result IN (
+                                    'HIT',
+                                    'OUT',
+                                    'SO',
+                                    'FC',
+                                    'HR'
+                                )
                                 THEN 1
+
+                                WHEN result = 'Err'
+                                AND(
+                                    description IS NULL
+                                    OR description NOT LIKE '%打撃妨害%'
+                                )
+                                THEN 1
+
                                 ELSE 0
+
                             END
                         ) AS at_bats,
 
@@ -2042,10 +2140,25 @@ public class OhtaniGameRepository {
                             NULLIF(
                                 SUM(
                                     CASE
-                                        WHEN result NOT IN ('BB','SF')
-                                        AND result IS NOT NULL
+
+                                        WHEN result IN (
+                                            'HIT',
+                                            'OUT',
+                                            'SO',
+                                            'FC',
+                                            'HR'
+                                        )
                                         THEN 1
+
+                                WHEN result = 'Err'
+                                AND(
+                                    description IS NULL
+                                    OR description NOT LIKE '%打撃妨害%'
+                                )
+                                THEN 1
+
                                         ELSE 0
+
                                     END
                                 ),
                                 0
@@ -2054,7 +2167,9 @@ public class OhtaniGameRepository {
 
                     FROM (
 
-                        SELECT pa1_result AS result
+                        SELECT
+                            pa1_result AS result,
+                            pa1_description AS description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g
                             ON d.game_id = g.id
@@ -2063,7 +2178,9 @@ public class OhtaniGameRepository {
 
                         UNION ALL
 
-                        SELECT pa2_result
+                        SELECT
+                            pa2_result,
+                            pa2_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g
                             ON d.game_id = g.id
@@ -2072,7 +2189,9 @@ public class OhtaniGameRepository {
 
                         UNION ALL
 
-                        SELECT pa3_result
+                        SELECT
+                            pa3_result,
+                            pa3_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g
                             ON d.game_id = g.id
@@ -2081,7 +2200,9 @@ public class OhtaniGameRepository {
 
                         UNION ALL
 
-                        SELECT pa4_result
+                        SELECT
+                            pa4_result,
+                            pa4_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g
                             ON d.game_id = g.id
@@ -2090,7 +2211,9 @@ public class OhtaniGameRepository {
 
                         UNION ALL
 
-                        SELECT pa5_result
+                        SELECT
+                            pa5_result,
+                            pa5_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g
                             ON d.game_id = g.id
@@ -2099,7 +2222,9 @@ public class OhtaniGameRepository {
 
                         UNION ALL
 
-                        SELECT pa6_result
+                        SELECT
+                            pa6_result,
+                            pa6_description
                         FROM ohtani_game_details d
                         JOIN ohtani_games g
                             ON d.game_id = g.id
