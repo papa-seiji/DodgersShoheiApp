@@ -764,7 +764,7 @@ public class MLBGameService {
             return resultMap;
         }
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitchType(pitchType);
+        Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitchType(pitchType, season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()
@@ -1093,7 +1093,7 @@ public class MLBGameService {
             return resultMap;
         }
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByPitchType(pitchType);
+        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByPitchType(pitchType, season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()
