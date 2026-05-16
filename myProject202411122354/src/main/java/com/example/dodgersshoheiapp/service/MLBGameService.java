@@ -664,9 +664,11 @@ public class MLBGameService {
      * ★ 対右投手 × 投手別 AVG
      * ============================================
      */
-    public Map<String, String> getVsRightStatsByPitcherFormatted(String pitcher) {
+    public Map<String, String> getVsRightStatsByPitcherFormatted(
+            String pitcher,
+            Integer season) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitcher(pitcher);
+        Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitcher(pitcher, season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()
@@ -994,9 +996,9 @@ public class MLBGameService {
      * ★ 対左投手 × 投手別 AVG
      * ============================================
      */
-    public Map<String, String> getVsLeftStatsByPitcherFormatted(String pitcher) {
+    public Map<String, String> getVsLeftStatsByPitcherFormatted(String pitcher, Integer season) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByPitcher(pitcher);
+        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByPitcher(pitcher, season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()
@@ -1306,9 +1308,11 @@ public class MLBGameService {
      * ★ 対ALL × 投手別 AVG
      * ============================================
      */
-    public Map<String, String> getVsAllStatsByPitcherFormatted(String pitcher) {
+    public Map<String, String> getVsAllStatsByPitcherFormatted(
+            String pitcher,
+            Integer season) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByPitcher(pitcher);
+        Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByPitcher(pitcher, season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()

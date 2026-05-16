@@ -605,7 +605,9 @@ public class OhtaniGameRepository {
      * ★ 対右投手 × 投手別 AVG
      * ============================================
      */
-    public Map<String, Object> getVsRightStatsByPitcher(String pitcher) {
+    public Map<String, Object> getVsRightStatsByPitcher(
+            String pitcher,
+            Integer season) {
 
         String sql = """
                     SELECT
@@ -642,6 +644,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa1_pitcher_hand = 'R'
                         AND pa1_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -649,6 +652,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa2_pitcher_hand = 'R'
                         AND pa2_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -656,6 +660,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa3_pitcher_hand = 'R'
                         AND pa3_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -663,6 +668,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa4_pitcher_hand = 'R'
                         AND pa4_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -670,6 +676,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa5_pitcher_hand = 'R'
                         AND pa5_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -677,18 +684,19 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa6_pitcher_hand = 'R'
                         AND pa6_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                     ) t
                 """;
 
         return jdbcTemplate.queryForMap(
                 sql,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher);
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season);
     }
 
     /**
@@ -1360,7 +1368,9 @@ public class OhtaniGameRepository {
      * ★ 対左投手 × 投手別 AVG
      * ============================================
      */
-    public Map<String, Object> getVsLeftStatsByPitcher(String pitcher) {
+    public Map<String, Object> getVsLeftStatsByPitcher(
+            String pitcher,
+            Integer season) {
 
         String sql = """
                     SELECT
@@ -1397,6 +1407,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa1_pitcher_hand = 'L'
                         AND pa1_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -1404,6 +1415,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa2_pitcher_hand = 'L'
                         AND pa2_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -1411,6 +1423,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa3_pitcher_hand = 'L'
                         AND pa3_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -1418,6 +1431,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa4_pitcher_hand = 'L'
                         AND pa4_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -1425,6 +1439,7 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa5_pitcher_hand = 'L'
                         AND pa5_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
@@ -1432,18 +1447,19 @@ public class OhtaniGameRepository {
                         FROM ohtani_game_details
                         WHERE pa6_pitcher_hand = 'L'
                         AND pa6_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                     ) t
                 """;
 
         return jdbcTemplate.queryForMap(
                 sql,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher);
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season);
     }
 
     /**
@@ -2104,7 +2120,9 @@ public class OhtaniGameRepository {
      * ★ 対ALL × 投手別 AVG
      * ============================================
      */
-    public Map<String, Object> getVsAllStatsByPitcher(String pitcher) {
+    public Map<String, Object> getVsAllStatsByPitcher(
+            String pitcher,
+            Integer season) {
 
         String sql = """
                     SELECT
@@ -2140,48 +2158,55 @@ public class OhtaniGameRepository {
                         SELECT pa1_result AS result
                         FROM ohtani_game_details
                         WHERE pa1_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa2_result
                         FROM ohtani_game_details
                         WHERE pa2_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa3_result
                         FROM ohtani_game_details
                         WHERE pa3_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa4_result
                         FROM ohtani_game_details
                         WHERE pa4_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa5_result
                         FROM ohtani_game_details
                         WHERE pa5_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa6_result
                         FROM ohtani_game_details
                         WHERE pa6_pitcher = ?
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                     ) t
                 """;
 
         return jdbcTemplate.queryForMap(
                 sql,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher,
-                pitcher);
+
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season,
+                pitcher, season);
     }
 
     /**
