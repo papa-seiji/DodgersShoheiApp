@@ -2214,7 +2214,7 @@ public class OhtaniGameRepository {
      * ★ 対ALL × 球種別 AVG
      * ============================================
      */
-    public Map<String, Object> getVsAllStatsByPitchType(String pitchType) {
+    public Map<String, Object> getVsAllStatsByPitchType(String pitchType, Integer season) {
 
         String sql = """
                     SELECT
@@ -2250,48 +2250,54 @@ public class OhtaniGameRepository {
                         SELECT pa1_result AS result
                         FROM ohtani_game_details
                         WHERE pa1_description LIKE '%' || ? || '%'
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa2_result
                         FROM ohtani_game_details
                         WHERE pa2_description LIKE '%' || ? || '%'
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa3_result
                         FROM ohtani_game_details
                         WHERE pa3_description LIKE '%' || ? || '%'
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa4_result
                         FROM ohtani_game_details
                         WHERE pa4_description LIKE '%' || ? || '%'
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa5_result
-                        FROM ohtani_game_detailsonegaisimasu
+                        FROM ohtani_game_details
                         WHERE pa5_description LIKE '%' || ? || '%'
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                         UNION ALL
 
                         SELECT pa6_result
                         FROM ohtani_game_details
                         WHERE pa6_description LIKE '%' || ? || '%'
+                        AND EXTRACT(YEAR FROM created_at) = ?
 
                     ) t
                 """;
 
         return jdbcTemplate.queryForMap(
                 sql,
-                pitchType,
-                pitchType,
-                pitchType,
-                pitchType,
-                pitchType,
-                pitchType);
+                pitchType, season,
+                pitchType, season,
+                pitchType, season,
+                pitchType, season,
+                pitchType, season,
+                pitchType, season);
     }
 
     /**

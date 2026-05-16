@@ -1927,5 +1927,69 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+
+
+    <!--// =========================================
+    // ★ confirm風モーダルに ※ 投手名指定中は、 AVGカードは投手別成績を優先表示します。（球種・球速条件はログ抽出のみに適用） でOK押下してもらうで行きましょう
+    // ========================================= -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const form = document.querySelector("form");
+
+        if (!form) return;
+
+        form.addEventListener("submit", function (e) {
+
+            const pitcherInput =
+                document.querySelector("input[name='pitcher']");
+
+            const pitchTypeSelect =
+                document.querySelector("select[name='pitchType']");
+
+            const speedMinSelect =
+                document.querySelector("select[name='speedMin']");
+
+            const speedMaxSelect =
+                document.querySelector("select[name='speedMax']");
+
+            const pitcher =
+                pitcherInput ? pitcherInput.value.trim() : "";
+
+            const pitchType =
+                pitchTypeSelect ? pitchTypeSelect.value : "ALL";
+
+            const speedMin =
+                speedMinSelect ? speedMinSelect.value : "50";
+
+            const speedMax =
+                speedMaxSelect ? speedMaxSelect.value : "110";
+
+            const speedChanged =
+                speedMin !== "50" || speedMax !== "110";
+
+            if (
+                pitcher !== "" &&
+                (
+                    pitchType !== "ALL" ||
+                    speedChanged
+                )
+            ) {
+
+                const ok = confirm(
+    `※ 投手名指定中は、
+    AVGカードは投手別成績を優先表示します。
+
+    （球種・球速条件はログ抽出のみに適用）`
+                );
+
+                if (!ok) {
+                    e.preventDefault();
+                }
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

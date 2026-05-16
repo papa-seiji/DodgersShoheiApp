@@ -1407,7 +1407,10 @@ public class MLBGameService {
             return resultMap;
         }
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByPitchType(pitchType);
+        Map<String, Object> stats = ohtaniGameRepository
+                .getVsAllStatsByPitchType(
+                        pitchType,
+                        season);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()
