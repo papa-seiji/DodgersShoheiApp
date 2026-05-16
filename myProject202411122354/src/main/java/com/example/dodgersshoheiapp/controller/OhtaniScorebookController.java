@@ -360,7 +360,7 @@ public class OhtaniScorebookController {
                         } else {
 
                                 vsAll = mlbGameService
-                                                .getVsAllStatsFormatted();
+                                                .getVsAllStatsFormatted(season);
                         }
 
                         model.addAttribute("vsAllAvg", vsAll.get("avg"));

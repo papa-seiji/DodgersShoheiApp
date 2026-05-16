@@ -1213,9 +1213,10 @@ public class MLBGameService {
      * ★ 対ALLピッチャー打率（VS ALL）
      * ============================================
      */
-    public Map<String, String> getVsAllStatsFormatted() {
+    public Map<String, String> getVsAllStatsFormatted(
+            Integer season) {
 
-        Map<String, Object> result = getVsAllStats();
+        Map<String, Object> result = getVsAllStats(season);
 
         int hits = ((Number) result.get("hits")).intValue();
         int atBats = ((Number) result.get("at_bats")).intValue();
@@ -1503,8 +1504,10 @@ public class MLBGameService {
      * ★ 対ALLピッチャー打率（Repository呼び出し）
      * ============================================
      */
-    public Map<String, Object> getVsAllStats() {
-        return ohtaniGameRepository.getVsAllStats();
+    public Map<String, Object> getVsAllStats(
+            Integer season) {
+
+        return ohtaniGameRepository.getVsAllStats(season);
     }
 
     /**

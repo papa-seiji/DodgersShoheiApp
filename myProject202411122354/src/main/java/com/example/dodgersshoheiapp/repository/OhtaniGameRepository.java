@@ -1877,7 +1877,7 @@ public class OhtaniGameRepository {
      * ★ 対ALLピッチャー打率（内部）
      * ============================================
      */
-    public Map<String, Object> getVsAllStats() {
+    public Map<String, Object> getVsAllStats(Integer season) {
 
         String sql = """
                     SELECT
@@ -1892,21 +1892,29 @@ public class OhtaniGameRepository {
                             )
                         , 3) AS avg
                     FROM (
-                        SELECT pa1_result AS result FROM ohtani_game_details
+                        SELECT pa1_result AS result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
                         UNION ALL
-                        SELECT pa2_result FROM ohtani_game_details
+                        SELECT pa2_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
                         UNION ALL
-                        SELECT pa3_result FROM ohtani_game_details
+                        SELECT pa3_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
                         UNION ALL
-                        SELECT pa4_result FROM ohtani_game_details
+                        SELECT pa4_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
                         UNION ALL
-                        SELECT pa5_result FROM ohtani_game_details
+                        SELECT pa5_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
                         UNION ALL
-                        SELECT pa6_result FROM ohtani_game_details
+                        SELECT pa6_result FROM ohtani_game_details WHERE EXTRACT(YEAR FROM created_at) = ?
                     ) t
                 """;
 
-        return jdbcTemplate.queryForMap(sql);
+        return jdbcTemplate.queryForMap(
+                sql,
+
+                season,
+                season,
+                season,
+                season,
+                season,
+                season);
     }
 
     /**
