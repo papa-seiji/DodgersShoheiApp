@@ -642,7 +642,7 @@
 
                 </div>
 
-                <span class="ops-trend-sub">
+                <span id="opsLatestDate">
                     Cumulative OPS Trend
                 </span>
 
@@ -1718,8 +1718,6 @@ document.addEventListener("DOMContentLoaded", () => {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-
-
 <!-- =========================================
     📈 CUMULATIVE OPS TREND
 ========================================= -->
@@ -1734,13 +1732,20 @@ document.addEventListener("DOMContentLoaded", function () {
         /*[[${opsValues}]]*/ [];
 
     const allOpsValues =
-    /*[[${allOpsValues}]]*/ [];
+        /*[[${allOpsValues}]]*/ [];
 
     const rOpsValues =
         /*[[${rOpsValues}]]*/ [];
 
     const lOpsValues =
         /*[[${lOpsValues}]]*/ [];
+
+    // =========================================
+    // ★ 最終日付
+    // =========================================
+
+    const latestOpsDate =
+        opsLabels[opsLabels.length - 1];
 
     // =========================================
     // ★ Dynamic Y-Axis
@@ -1754,10 +1759,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
     const minOps =
-        Math.min(...opsValues);
+        Math.min(...mergedOpsValues);
 
     const maxOps =
-        Math.max(...opsValues);
+        Math.max(...mergedOpsValues);
 
     const suggestedMin =
         Math.floor((minOps - 0.05) * 10) / 10;
@@ -1785,76 +1790,76 @@ document.addEventListener("DOMContentLoaded", function () {
 
             labels: opsLabels,
 
-        datasets: [
+            datasets: [
 
-            {
+                {
 
-                label: "VS 左右合算（通常OPS表示）",
+                    label: "VS 左右合算（通常OPS表示）",
 
-                data: allOpsValues,
+                    data: allOpsValues,
 
-                borderColor: "#8b5cf6",
+                    borderColor: "#8b5cf6",
 
-                backgroundColor:
-                    "rgba(139,92,246,0.12)",
+                    backgroundColor:
+                        "rgba(139,92,246,0.12)",
 
-                borderWidth: 3,
+                    borderWidth: 3,
 
-                tension: 0.35,
+                    tension: 0.35,
 
-                pointRadius: 3,
+                    pointRadius: 3,
 
-                pointHoverRadius: 6,
+                    pointHoverRadius: 6,
 
-                fill: false
-            },
+                    fill: false
+                },
 
-            {
+                {
 
-                label: "VS 右ピッチャー",
+                    label: "VS 右ピッチャー",
 
-                data: rOpsValues,
+                    data: rOpsValues,
 
-                borderColor: "#38bdf8",
+                    borderColor: "#38bdf8",
 
-                backgroundColor:
-                    "rgba(56,189,248,0.12)",
+                    backgroundColor:
+                        "rgba(56,189,248,0.12)",
 
-                borderWidth: 3,
+                    borderWidth: 3,
 
-                tension: 0.35,
+                    tension: 0.35,
 
-                pointRadius: 3,
+                    pointRadius: 3,
 
-                pointHoverRadius: 6,
+                    pointHoverRadius: 6,
 
-                fill: false
-            },
+                    fill: false
+                },
 
-            {
+                {
 
-                label: "VS 左ピッチャー",
+                    label: "VS 左ピッチャー",
 
-                data: lOpsValues,
+                    data: lOpsValues,
 
-                borderColor: "#f43f5e",
+                    borderColor: "#f43f5e",
 
-                backgroundColor:
-                    "rgba(244,63,94,0.12)",
+                    backgroundColor:
+                        "rgba(244,63,94,0.12)",
 
-                borderWidth: 3,
+                    borderWidth: 3,
 
-                tension: 0.35,
+                    tension: 0.35,
 
-                pointRadius: 3,
+                    pointRadius: 3,
 
-                pointHoverRadius: 6,
+                    pointHoverRadius: 6,
 
-                fill: false
-            }
+                    fill: false
+                }
 
-        ]
-    },
+            ]
+        },
 
         options: {
 
@@ -1864,19 +1869,91 @@ document.addEventListener("DOMContentLoaded", function () {
 
             plugins: {
 
-                legend: {  //OPSカードの汎用表示のサイス変更箇所
+                legend: {
 
                     display: true,
 
+                    position: "top",
+
                     labels: {
 
-                        color: "#dbeafe",
+                        color: "#ffffff",
+
+                        boxWidth: 55,
+
+                        boxHeight: 18,
+
+                        padding: 24,
 
                         font: {
 
-                            size: 19,
+                            size: 27,
 
                             weight: "bold"
+                        },
+
+                        generateLabels(chart) {
+
+                            const datasets =
+                                chart.data.datasets;
+
+                            return datasets.map((ds, i) => {
+
+                                // =========================
+                                // ★ 最新OPS取得
+                                // =========================
+
+                                const latestValue =
+                                    ds.data[ds.data.length - 1];
+
+                                // null対策
+                                const formattedValue =
+                                    latestValue != null
+                                        ? latestValue.toFixed(3)
+                                        : "---";
+
+                                // =========================
+                                // ★ 表示ラベル
+                                // =========================
+
+                                let label = "";
+
+                                if (i === 0) {
+
+                                    label =
+                                        `対ALL ${formattedValue}`;
+                                }
+
+                                if (i === 1) {
+
+                                    label =
+                                        `対右 ${formattedValue}`;
+                                }
+
+                                if (i === 2) {
+
+                                    label =
+                                        `対左 ${formattedValue}`;
+                                }
+
+                                return {
+
+                                    text: label,
+
+                                    fillStyle: ds.borderColor,
+
+                                    strokeStyle: ds.borderColor,
+
+                                    lineWidth: 0,
+
+                                    fontColor: "#ffffff",
+
+                                    hidden:
+                                        !chart.isDatasetVisible(i),
+
+                                    datasetIndex: i
+                                };
+                            });
                         }
                     }
                 }
@@ -1887,10 +1964,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 x: {
 
                     ticks: {
-                        color: "#dbeafe"
+
+                        color: "#dbeafe",
+
+                        font: {
+
+                            size: 15,
+
+                            weight: "bold"
+                        }
                     },
 
                     grid: {
+
                         color:
                             "rgba(255,255,255,0.05)"
                     }
@@ -1923,6 +2009,30 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+    // =========================================
+    // ★ OPS最終日付表示
+    // =========================================
+
+    const latestDateEl =
+        document.getElementById(
+            "opsLatestDate"
+        );
+
+    if (latestDateEl && latestOpsDate) {
+
+        latestDateEl.textContent =
+            latestOpsDate + " 時点";
+
+        latestDateEl.style.color =
+            "rgba(255,255,255,0.72)";
+
+        latestDateEl.style.fontSize =
+            "15px";
+
+        latestDateEl.style.fontWeight =
+            "600";
+    }
 
 });
 
