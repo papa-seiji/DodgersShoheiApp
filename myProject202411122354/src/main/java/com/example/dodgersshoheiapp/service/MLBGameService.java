@@ -542,6 +542,60 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 打球方向分類-------円グラフ http://localhost:8080/batting/filter
+     * ============================================
+     */
+    private String classifyDirection(
+            double coordX,
+            String batterSide) {
+
+        // ============================================
+        // ★ 左打者（大谷）
+        // ============================================
+
+        if ("L".equalsIgnoreCase(batterSide)) {
+
+            if (coordX >= 140) {
+
+                return "PULL";
+            }
+
+            else if (coordX >= 110) {
+
+                return "CENTER";
+            }
+
+            else {
+
+                return "OPPOSITE";
+            }
+        }
+
+        // ============================================
+        // ★ 右打者
+        // ============================================
+
+        else {
+
+            if (coordX <= 110) {
+
+                return "PULL";
+            }
+
+            else if (coordX <= 140) {
+
+                return "CENTER";
+            }
+
+            else {
+
+                return "OPPOSITE";
+            }
+        }
+    }
+
+    /**
+     * ============================================
      * ★ 得点圏打率（RISP）取得（DB版）--------hogehoge_01.html用
      * ============================================
      */
