@@ -5,13 +5,14 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.dodgersshoheiapp.repository.OhtaniGameRepository;
-
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.example.dodgersshoheiapp.dto.BattedBallTargetDto;
 import com.example.dodgersshoheiapp.dto.HitDirectionStatsDto;
 
 @Service
@@ -616,6 +617,142 @@ public class MLBGameService {
                     Math.round(
                             opposite * 1000.0 / total) / 10.0);
         }
+
+        return result;
+    }
+
+    /**
+     * ============================================
+     * ★ 対右 打球方向割合
+     * ============================================
+     */
+    public HitDirectionStatsDto getShoheiBattedBallDirectionsVsRight(
+            Integer season) {
+
+        List<BattedBallTargetDto> targets = ohtaniGameRepository
+                .findBattedBallTargetsVsRightBySeason(
+                        season);
+
+        int pull = 0;
+        int center = 0;
+        int opposite = 0;
+
+        for (BattedBallTargetDto target : targets) {
+
+            Long gamePk = target.getGamePk();
+
+            Integer paNumber = target.getPaNumber();
+
+            try {
+
+                String url = "https://statsapi.mlb.com/api/v1/game/"
+                        + gamePk
+                        + "/playByPlay";
+
+                RestTemplate restTemplate = new RestTemplate();
+
+                Map<String, Object> response = restTemplate.getForObject(
+                        url,
+                        Map.class);
+
+                if (response == null)
+                    continue;
+
+                List<Map<String, Object>> allPlays = (List<Map<String, Object>>) response.get("allPlays");
+
+                if (allPlays == null)
+                    continue;
+
+                for (int i = 0; i < allPlays.size(); i++) {
+
+                    // ★ pa番号一致のみ
+                    if ((i + 1) != paNumber)
+                        continue;
+
+                    Map<String, Object> play = allPlays.get(i);
+
+                    List<Map<String, Object>> playEvents = (List<Map<String, Object>>) play.get("playEvents");
+
+                    if (playEvents == null)
+                        continue;
+
+                    for (Map<String, Object> eventObj : playEvents) {
+
+                        Map<String, Object> hitData = (Map<String, Object>) eventObj.get("hitData");
+
+                        if (hitData == null)
+                            continue;
+
+                        Map<String, Object> coordinates = (Map<String, Object>) hitData.get("coordinates");
+
+                        if (coordinates == null)
+                            continue;
+
+                        Object coordXObj = coordinates.get("coordX");
+
+                        if (!(coordXObj instanceof Number))
+                            continue;
+
+                        double coordX = ((Number) coordXObj)
+                                .doubleValue();
+
+                        String direction = classifyDirection(
+                                coordX,
+                                "L");
+
+                        if ("PULL".equals(direction)) {
+
+                            pull++;
+                        }
+
+                        else if ("CENTER".equals(direction)) {
+
+                            center++;
+                        }
+
+                        else if ("OPPOSITE".equals(direction)) {
+
+                            opposite++;
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
+
+        int total = pull + center + opposite;
+
+        HitDirectionStatsDto result = new HitDirectionStatsDto();
+
+        result.setPullCount(pull);
+        result.setCenterCount(center);
+        result.setOppositeCount(opposite);
+
+        result.setTotal(total);
+
+        if (total > 0) {
+
+            result.setPullPercent(
+                    Math.round(
+                            pull * 1000.0 / total) / 10.0);
+
+            result.setCenterPercent(
+                    Math.round(
+                            center * 1000.0 / total) / 10.0);
+
+            result.setOppositePercent(
+                    Math.round(
+                            opposite * 1000.0 / total) / 10.0);
+        }
+
+        System.out.println(
+                "DEBUG VS RIGHT : "
+                        + "PULL=" + pull
+                        + " CENTER=" + center
+                        + " OPPOSITE=" + opposite);
 
         return result;
     }

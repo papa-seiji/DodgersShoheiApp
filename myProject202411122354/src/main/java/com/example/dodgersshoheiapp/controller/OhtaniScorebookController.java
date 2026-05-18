@@ -781,6 +781,18 @@ public class OhtaniScorebookController {
                                 "directionStats",
                                 directionStats);
 
+                // ============================================
+                // ★ 対右 打球方向割合（円グラフ用）
+                // ============================================
+
+                HitDirectionStatsDto rightDirectionStats = mlbGameService
+                                .getShoheiBattedBallDirectionsVsRight(
+                                                season);
+
+                model.addAttribute(
+                                "rightDirectionStats",
+                                rightDirectionStats);
+
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);
 

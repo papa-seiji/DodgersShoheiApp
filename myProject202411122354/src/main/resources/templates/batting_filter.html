@@ -726,6 +726,75 @@
 
         </div>
 
+
+        <!--// ============================================
+        // ★ 打球方向割合（円グラフ用）-------対右用 円グラフ http://localhost:8080/batting/filter
+        // ============================================-->
+            <div class="direction-card">
+
+                <div class="direction-header">
+
+                    <div class="direction-title">
+                        Hit Direction Profile
+                        VS Right Pitchers
+                    </div>
+
+                    <div class="direction-total">
+
+                        Total :
+                        <span id="rightDirectionTotal">
+                            0
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="direction-chart-wrap">
+
+                    <canvas id="rightHitDirectionChart"></canvas>
+
+                </div>
+
+                <div class="direction-legend">
+
+                    <div class="direction-item pull">
+
+                        <span class="dot"></span>
+
+                        Pull :
+                        <span id="rightPullPercentText">
+                            0
+                        </span>%
+
+                    </div>
+
+                    <div class="direction-item center">
+
+                        <span class="dot"></span>
+
+                        Center :
+                        <span id="rightCenterPercentText">
+                            0
+                        </span>%
+
+                    </div>
+
+                    <div class="direction-item opposite">
+
+                        <span class="dot"></span>
+
+                        Opposite :
+                        <span id="rightOppositePercentText">
+                            0
+                        </span>%
+
+                    </div>
+
+                </div>
+
+            </div>
+
         <hr>
 
 <!-- =========================
@@ -1822,6 +1891,19 @@ document.addEventListener("DOMContentLoaded", function () {
         directionStats
     );
 
+    // ============================================
+    // ★ 対右 打球方向割合-------円グラフ http://localhost:8080/batting/filter
+    // ============================================
+
+    const rightDirectionStats =
+        /*[[${rightDirectionStats}]]*/ null;
+
+    console.log(
+        "DEBUG rightDirectionStats",
+        rightDirectionStats
+    );
+
+
     // =========================================
     // ★ 最終日付
     // =========================================
@@ -2188,6 +2270,102 @@ if (directionCanvas && directionStats) {
                 directionStats.oppositePercent;
 
 }
+
+// ============================================
+// ★ 対右 円グラフ
+// ============================================
+
+const rightCanvas =
+    document.getElementById(
+        "rightHitDirectionChart"
+    );
+
+if (rightCanvas && rightDirectionStats) {
+
+    new Chart(rightCanvas, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+
+                "Pull",
+                "Center",
+                "Opposite"
+
+            ],
+
+            datasets: [{
+
+                data: [
+
+                    rightDirectionStats.pullPercent,
+                    rightDirectionStats.centerPercent,
+                    rightDirectionStats.oppositePercent
+
+                ],
+
+                backgroundColor: [
+
+                    "#8b5cf6",
+                    "#38bdf8",
+                    "#f43f5e"
+
+                ],
+
+                borderColor: "#081225",
+
+                borderWidth: 2
+            }]
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+
+                    labels: {
+
+                        color: "#ffffff",
+
+                        font: {
+
+                            size: 16,
+                            weight: "bold"
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    document.getElementById(
+        "rightDirectionTotal"
+    ).textContent =
+        rightDirectionStats.total;
+
+    document.getElementById(
+        "rightPullPercentText"
+    ).textContent =
+        rightDirectionStats.pullPercent;
+
+    document.getElementById(
+        "rightCenterPercentText"
+    ).textContent =
+        rightDirectionStats.centerPercent;
+
+    document.getElementById(
+        "rightOppositePercentText"
+    ).textContent =
+        rightDirectionStats.oppositePercent;
+}
+
 
     // =========================================
     // ★ OPS最終日付表示

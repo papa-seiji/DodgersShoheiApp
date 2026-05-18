@@ -3,6 +3,7 @@ package com.example.dodgersshoheiapp.repository;
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniGameDetail;
 import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
+import com.example.dodgersshoheiapp.dto.BattedBallTargetDto;
 import com.example.dodgersshoheiapp.dto.OpsTrendDto;
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +14,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
+import com.example.dodgersshoheiapp.dto.BattedBallTargetDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -250,6 +251,88 @@ public class OhtaniGameRepository {
                 sql,
                 Long.class,
                 season);
+    }
+
+    /**
+     * ============================================
+     * ★ 対右打席一覧取得
+     * 円グラフ batting/filter 用
+     * ============================================
+     */
+    public List<BattedBallTargetDto> findBattedBallTargetsVsRightBySeason(
+            Integer season) {
+
+        String sql = """
+
+                SELECT g.game_pk, 1 AS pa_number
+                FROM ohtani_games g
+                JOIN ohtani_game_details d
+                  ON g.id = d.game_id
+                WHERE EXTRACT(YEAR FROM g.game_date) = ?
+                  AND d.pa1_pitcher_hand = 'R'
+
+                UNION ALL
+
+                SELECT g.game_pk, 2 AS pa_number
+                FROM ohtani_games g
+                JOIN ohtani_game_details d
+                  ON g.id = d.game_id
+                WHERE EXTRACT(YEAR FROM g.game_date) = ?
+                  AND d.pa2_pitcher_hand = 'R'
+
+                UNION ALL
+
+                SELECT g.game_pk, 3 AS pa_number
+                FROM ohtani_games g
+                JOIN ohtani_game_details d
+                  ON g.id = d.game_id
+                WHERE EXTRACT(YEAR FROM g.game_date) = ?
+                  AND d.pa3_pitcher_hand = 'R'
+
+                UNION ALL
+
+                SELECT g.game_pk, 4 AS pa_number
+                FROM ohtani_games g
+                JOIN ohtani_game_details d
+                  ON g.id = d.game_id
+                WHERE EXTRACT(YEAR FROM g.game_date) = ?
+                  AND d.pa4_pitcher_hand = 'R'
+
+                UNION ALL
+
+                SELECT g.game_pk, 5 AS pa_number
+                FROM ohtani_games g
+                JOIN ohtani_game_details d
+                  ON g.id = d.game_id
+                WHERE EXTRACT(YEAR FROM g.game_date) = ?
+                  AND d.pa5_pitcher_hand = 'R'
+
+                UNION ALL
+
+                SELECT g.game_pk, 6 AS pa_number
+                FROM ohtani_games g
+                JOIN ohtani_game_details d
+                  ON g.id = d.game_id
+                WHERE EXTRACT(YEAR FROM g.game_date) = ?
+                  AND d.pa6_pitcher_hand = 'R'
+
+                ORDER BY game_pk, pa_number
+
+                """;
+
+        return jdbcTemplate.query(
+                sql,
+                new Object[] {
+                        season,
+                        season,
+                        season,
+                        season,
+                        season,
+                        season
+                },
+                (rs, rowNum) -> new BattedBallTargetDto(
+                        rs.getLong("game_pk"),
+                        rs.getInt("pa_number")));
     }
 
     /**
