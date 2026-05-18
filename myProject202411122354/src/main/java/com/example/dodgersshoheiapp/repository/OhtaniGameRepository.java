@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -227,6 +228,28 @@ public class OhtaniGameRepository {
                 """;
 
         jdbcTemplate.update(sql, gamePk, gameId);
+    }
+
+    /**
+     * ============================================
+     * ★ season別 gamePk一覧取得 -------円グラフ http://localhost:8080/batting/filter
+     * ============================================
+     */
+    public List<Long> findGamePksBySeason(
+            Integer season) {
+
+        String sql = """
+                    SELECT game_pk
+                    FROM ohtani_games
+                    WHERE EXTRACT(YEAR FROM created_at) = ?
+                    AND game_pk IS NOT NULL
+                    ORDER BY game_date
+                """;
+
+        return jdbcTemplate.queryForList(
+                sql,
+                Long.class,
+                season);
     }
 
     /**
@@ -3728,4 +3751,5 @@ public class OhtaniGameRepository {
                         rs.getString("game_date"),
                         rs.getDouble("cumulative_ops")));
     }
+
 }

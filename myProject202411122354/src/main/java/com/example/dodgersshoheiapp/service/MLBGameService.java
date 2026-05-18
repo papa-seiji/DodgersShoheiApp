@@ -394,8 +394,7 @@ public class MLBGameService {
      * batting/filter 用
      * ============================================
      */
-    public HitDirectionStatsDto getShoheiBattedBallDirections(
-            Long gamePk) {
+    public HitDirectionStatsDto getShoheiBattedBallDirections(Long gamePk) {
 
         HitDirectionStatsDto dto = new HitDirectionStatsDto();
 
@@ -565,6 +564,60 @@ public class MLBGameService {
 
         return dto;
 
+    }
+
+    /**
+     * ============================================
+     * ★ season全体 打球方向割合
+     * ============================================
+     */
+    public HitDirectionStatsDto getShoheiBattedBallDirectionsBySeason(
+            Integer season) {
+
+        List<Long> gamePks = ohtaniGameRepository
+                .findGamePksBySeason(
+                        season);
+
+        int pull = 0;
+        int center = 0;
+        int opposite = 0;
+
+        for (Long gamePk : gamePks) {
+
+            HitDirectionStatsDto dto = getShoheiBattedBallDirections(
+                    gamePk);
+
+            pull += dto.getPullCount();
+            center += dto.getCenterCount();
+            opposite += dto.getOppositeCount();
+        }
+
+        int total = pull + center + opposite;
+
+        HitDirectionStatsDto result = new HitDirectionStatsDto();
+
+        result.setPullCount(pull);
+        result.setCenterCount(center);
+        result.setOppositeCount(opposite);
+
+        result.setTotal(total);
+
+        if (total > 0) {
+
+            result.setPullPercent(
+                    Math.round(
+                            pull * 1000.0 / total) / 10.0);
+
+            result.setCenterPercent(
+                    Math.round(
+                            center * 1000.0 / total) / 10.0);
+
+            result.setOppositePercent(
+                    Math.round(
+                            opposite * 1000.0 / total) / 10.0);
+        }
+
+        return result;
     }
 
     // baseballsavantからピッチングの軌道情報
