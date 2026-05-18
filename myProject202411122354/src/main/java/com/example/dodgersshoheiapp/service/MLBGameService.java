@@ -348,6 +348,16 @@ public class MLBGameService {
                         }
 
                         // ============================================
+                        // ★ 打球方向 DEBUG-------円グラフ http://localhost:8080/batting/filter
+                        // ============================================
+
+                        Map<String, Integer> directionMap = getShoheiBattedBallDirections(gamePk);
+
+                        System.out.println(
+                                "DEBUG DIRECTION MAP : "
+                                        + directionMap);
+
+                        // ============================================
                         // ★ 打球方向確認 DEBUG-------円グラフ http://localhost:8080/batting/filter
                         // ============================================
 
@@ -380,7 +390,7 @@ public class MLBGameService {
     /**
      * ============================================
      * ★ 打球方向割合取得
-     * batting/filter 用-------円グラフ http://localhost:8080/batting/filter
+     * batting/filter 用
      * ============================================
      */
     public Map<String, Integer> getShoheiBattedBallDirections(
@@ -391,6 +401,107 @@ public class MLBGameService {
         result.put("PULL", 0);
         result.put("CENTER", 0);
         result.put("OPPOSITE", 0);
+
+        try {
+
+            String url = "https://statsapi.mlb.com/api/v1/game/"
+                    + gamePk
+                    + "/playByPlay";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            Map<String, Object> response = restTemplate.getForObject(
+                    url,
+                    Map.class);
+
+            if (response == null
+                    || !response.containsKey("allPlays")) {
+
+                return result;
+            }
+
+            List<Map<String, Object>> allPlays = (List<Map<String, Object>>) response.get("allPlays");
+
+            for (Map<String, Object> play : allPlays) {
+
+                Map<String, Object> resultObj = (Map<String, Object>) play.get("result");
+
+                if (resultObj == null)
+                    continue;
+
+                String event = (String) resultObj.get("event");
+
+                // ============================================
+                // ★ 打球イベントのみ対象
+                // ============================================
+
+                if (event == null)
+                    continue;
+
+                if (!(
+
+                event.equals("Single")
+                        || event.equals("Double")
+                        || event.equals("Triple")
+                        || event.equals("Home Run")
+                        || event.equals("Groundout")
+                        || event.equals("Flyout")
+                        || event.equals("Lineout")
+
+                )) {
+
+                    continue;
+                }
+
+                // ============================================
+                // ★ playEvents → hitData
+                // ============================================
+
+                List<Map<String, Object>> playEvents = (List<Map<String, Object>>) play.get("playEvents");
+
+                if (playEvents == null)
+                    continue;
+
+                for (Map<String, Object> eventObj : playEvents) {
+
+                    Map<String, Object> hitData = (Map<String, Object>) eventObj.get("hitData");
+
+                    if (hitData == null)
+                        continue;
+
+                    Map<String, Object> coordinates = (Map<String, Object>) hitData.get("coordinates");
+
+                    if (coordinates == null)
+                        continue;
+
+                    Object coordXObj = coordinates.get("coordX");
+
+                    if (!(coordXObj instanceof Number))
+                        continue;
+
+                    double coordX = ((Number) coordXObj)
+                            .doubleValue();
+
+                    String direction = classifyDirection(
+                            coordX,
+                            "L");
+
+                    result.put(
+                            direction,
+                            result.get(direction) + 1);
+
+                    System.out.println(
+                            "DEBUG DIRECTION : "
+                                    + direction
+                                    + " / coordX="
+                                    + coordX);
+                }
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
 
         return result;
     }
