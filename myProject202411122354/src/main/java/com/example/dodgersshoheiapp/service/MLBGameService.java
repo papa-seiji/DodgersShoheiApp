@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.example.dodgersshoheiapp.dto.HitDirectionStatsDto;
 
 @Service
 @RequiredArgsConstructor
@@ -351,11 +352,11 @@ public class MLBGameService {
                         // ★ 打球方向 DEBUG-------円グラフ http://localhost:8080/batting/filter
                         // ============================================
 
-                        Map<String, Integer> directionMap = getShoheiBattedBallDirections(gamePk);
+                        HitDirectionStatsDto directionDto = getShoheiBattedBallDirections(gamePk);
 
                         System.out.println(
                                 "DEBUG DIRECTION MAP : "
-                                        + directionMap);
+                                        + directionDto);
 
                         // ============================================
                         // ★ 打球方向確認 DEBUG-------円グラフ http://localhost:8080/batting/filter
@@ -393,14 +394,14 @@ public class MLBGameService {
      * batting/filter 用
      * ============================================
      */
-    public Map<String, Integer> getShoheiBattedBallDirections(
+    public HitDirectionStatsDto getShoheiBattedBallDirections(
             Long gamePk) {
 
-        Map<String, Integer> result = new HashMap<>();
+        HitDirectionStatsDto dto = new HitDirectionStatsDto();
 
-        result.put("PULL", 0);
-        result.put("CENTER", 0);
-        result.put("OPPOSITE", 0);
+        int pullCount = 0;
+        int centerCount = 0;
+        int oppositeCount = 0;
 
         try {
 
@@ -417,7 +418,7 @@ public class MLBGameService {
             if (response == null
                     || !response.containsKey("allPlays")) {
 
-                return result;
+                return dto;
             }
 
             List<Map<String, Object>> allPlays = (List<Map<String, Object>>) response.get("allPlays");
@@ -452,7 +453,14 @@ public class MLBGameService {
 
                     continue;
                 }
-
+                // ============================================
+                // ★ 将来的に
+                // ・安打のみ
+                // ・HardHitのみ
+                // ・HRのみ
+                // ・球種別
+                // へ派生予定
+                // ============================================
                 // ============================================
                 // ★ playEvents → hitData
                 // ============================================
@@ -486,9 +494,20 @@ public class MLBGameService {
                             coordX,
                             "L");
 
-                    result.put(
-                            direction,
-                            result.get(direction) + 1);
+                    if ("PULL".equals(direction)) {
+
+                        pullCount++;
+                    }
+
+                    else if ("CENTER".equals(direction)) {
+
+                        centerCount++;
+                    }
+
+                    else if ("OPPOSITE".equals(direction)) {
+
+                        oppositeCount++;
+                    }
 
                     System.out.println(
                             "DEBUG DIRECTION : "
@@ -503,7 +522,49 @@ public class MLBGameService {
             e.printStackTrace();
         }
 
-        return result;
+        // ============================================
+        // ★ total
+        // ============================================
+
+        int total = pullCount
+                + centerCount
+                + oppositeCount;
+
+        // ============================================
+        // ★ DTO設定
+        // ============================================
+
+        dto.setPullCount(pullCount);
+        dto.setCenterCount(centerCount);
+        dto.setOppositeCount(oppositeCount);
+
+        dto.setTotal(total);
+
+        // ============================================
+        // ★ 割合
+        // ============================================
+
+        if (total > 0) {
+
+            dto.setPullPercent(
+                    pullCount * 100.0 / total);
+
+            dto.setCenterPercent(
+                    centerCount * 100.0 / total);
+
+            dto.setOppositePercent(
+                    oppositeCount * 100.0 / total);
+        }
+
+        System.out.println(
+                "DEBUG DTO : "
+                        + "PULL=" + pullCount
+                        + " CENTER=" + centerCount
+                        + " OPPOSITE=" + oppositeCount
+                        + " TOTAL=" + total);
+
+        return dto;
+
     }
 
     // baseballsavantからピッチングの軌道情報
