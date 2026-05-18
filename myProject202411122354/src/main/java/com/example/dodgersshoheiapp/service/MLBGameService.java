@@ -346,6 +346,27 @@ public class MLBGameService {
                             hr.put("coordX", coordinates.get("coordX"));
                             hr.put("coordY", coordinates.get("coordY"));
                         }
+
+                        // ============================================
+                        // ★ 打球方向確認 DEBUG-------円グラフ http://localhost:8080/batting/filter
+                        // ============================================
+
+                        // if (coordinates.get("coordX") != null) {
+
+                        // double coordX = ((Number) coordinates.get("coordX"))
+                        // .doubleValue();
+
+                        // String direction = classifyDirection(
+                        // coordX,
+                        // "L" // 大谷
+                        // );
+
+                        // System.out.println(
+                        // "DEBUG HIT DIRECTION : "
+                        // + "coordX=" + coordX
+                        // + " → "
+                        // + direction);
+                        // }
                     }
                 }
             }
@@ -354,6 +375,24 @@ public class MLBGameService {
         }
 
         return shoheiHRs;
+    }
+
+    /**
+     * ============================================
+     * ★ 打球方向割合取得
+     * batting/filter 用-------円グラフ http://localhost:8080/batting/filter
+     * ============================================
+     */
+    public Map<String, Integer> getShoheiBattedBallDirections(
+            Long gamePk) {
+
+        Map<String, Integer> result = new HashMap<>();
+
+        result.put("PULL", 0);
+        result.put("CENTER", 0);
+        result.put("OPPOSITE", 0);
+
+        return result;
     }
 
     // baseballsavantからピッチングの軌道情報
