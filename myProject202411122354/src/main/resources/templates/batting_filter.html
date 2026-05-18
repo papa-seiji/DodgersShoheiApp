@@ -656,6 +656,11 @@
 
         </div>
         </div><!--34行目のfilter-panelの閉じタグ-->
+
+        <div style="height:320px;">
+            <canvas id="hitDirectionChart"></canvas><!-------円グラフ http://localhost:8080/batting/filter-->
+        </div>
+
         <hr>
 
 <!-- =========================
@@ -2021,6 +2026,82 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+
+// ============================================
+// ★ 打球方向 円グラフ-------円グラフ http://localhost:8080/batting/filter
+// ============================================
+
+const directionCanvas =
+    document.getElementById(
+        "hitDirectionChart"
+    );
+
+if (directionCanvas && directionStats) {
+
+    new Chart(directionCanvas, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+
+                "Pull",
+                "Center",
+                "Opposite"
+
+            ],
+
+            datasets: [{
+
+                data: [
+
+                    directionStats.pullPercent,
+                    directionStats.centerPercent,
+                    directionStats.oppositePercent
+
+                ],
+
+                backgroundColor: [
+
+                    "#8b5cf6",
+                    "#38bdf8",
+                    "#f43f5e"
+
+                ],
+
+                borderColor: "#081225",
+
+                borderWidth: 2
+            }]
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+
+                    labels: {
+
+                        color: "#ffffff",
+
+                        font: {
+
+                            size: 16,
+                            weight: "bold"
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
 
     // =========================================
     // ★ OPS最終日付表示
