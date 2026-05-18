@@ -657,8 +657,74 @@
         </div>
         </div><!--34行目のfilter-panelの閉じタグ-->
 
-        <div style="height:320px;">
-            <canvas id="hitDirectionChart"></canvas><!-------円グラフ http://localhost:8080/batting/filter-->
+
+        // ============================================
+        // ★ 打球方向割合（円グラフ用）-------円グラフ http://localhost:8080/batting/filter
+
+        // ============================================
+
+        <div class="direction-card">
+
+            <div class="direction-header">
+
+                <div class="direction-title">
+                    Hit Direction Profile
+                </div>
+
+                <div class="direction-total">
+
+                    Total :
+                    <span id="directionTotal">
+                        0
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="direction-chart-wrap">
+
+                <canvas id="hitDirectionChart"></canvas>
+
+            </div>
+
+            <div class="direction-legend">
+
+                <div class="direction-item pull">
+
+                    <span class="dot"></span>
+
+                    Pull :
+                    <span id="pullPercentText">
+                        0
+                    </span>%
+
+                </div>
+
+                <div class="direction-item center">
+
+                    <span class="dot"></span>
+
+                    Center :
+                    <span id="centerPercentText">
+                        0
+                    </span>%
+
+                </div>
+
+                <div class="direction-item opposite">
+
+                    <span class="dot"></span>
+
+                    Opposite :
+                    <span id="oppositePercentText">
+                        0
+                    </span>%
+
+                </div>
+
+            </div>
+
         </div>
 
         <hr>
@@ -2101,6 +2167,27 @@ if (directionCanvas && directionStats) {
             }
         }
     });
+
+            document.getElementById(
+            "directionTotal"
+            ).textContent =
+                directionStats.total;
+
+            document.getElementById(
+                "pullPercentText"
+            ).textContent =
+                directionStats.pullPercent;
+
+            document.getElementById(
+                "centerPercentText"
+            ).textContent =
+                directionStats.centerPercent;
+
+            document.getElementById(
+                "oppositePercentText"
+            ).textContent =
+                directionStats.oppositePercent;
+
 }
 
     // =========================================
