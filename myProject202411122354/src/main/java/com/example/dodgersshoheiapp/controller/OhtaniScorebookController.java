@@ -1,5 +1,6 @@
 package com.example.dodgersshoheiapp.controller;
 
+import com.example.dodgersshoheiapp.dto.HitDirectionStatsDto;
 import com.example.dodgersshoheiapp.dto.OpsTrendDto;
 import com.example.dodgersshoheiapp.model.OhtaniGame;
 import com.example.dodgersshoheiapp.model.OhtaniPitchingGame;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.dodgersshoheiapp.dto.OpsTrendDto;
+import com.example.dodgersshoheiapp.dto.HitDirectionStatsDto;
 import com.example.dodgersshoheiapp.service.MLBGameService; // ←追加
 
 import lombok.RequiredArgsConstructor;
@@ -766,6 +768,17 @@ public class OhtaniScorebookController {
                                 lOpsTrend.stream()
                                                 .map(OpsTrendDto::getCumulativeOps)
                                                 .toList());
+
+                // ============================================
+                // ★ 打球方向割合（円グラフ用）
+                // ============================================
+
+                HitDirectionStatsDto directionStats = mlbGameService.getShoheiBattedBallDirections(
+                                824038L);
+
+                model.addAttribute(
+                                "directionStats",
+                                directionStats);
 
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);
