@@ -49,7 +49,7 @@
                             2026
                         </option>
 
-                        <!-- <option value="2025"
+                        <option value="2025"
                             th:selected="${season == 2025}">
                             2025
                         </option>
@@ -57,7 +57,7 @@
                         <option value="2024"
                             th:selected="${season == 2024}">
                             2024
-                        </option> -->
+                        </option>
 
                     </select>
                 </div>
@@ -656,6 +656,17 @@
 
         </div>
         </div><!--34行目のfilter-panelの閉じタグ-->
+
+
+<div class="direction-chart-wrapper">
+
+    <h2>打球方向分析</h2>
+
+    <canvas id="hitDirectionChart"></canvas>
+
+</div>
+
+
         <hr>
 
 <!-- =========================
@@ -2100,6 +2111,77 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 </script>
+
+
+
+<script th:inline="javascript">
+
+    const directionStats = /*[[${directionStats}]]*/ {};
+
+    const pullCount =
+        directionStats.PULL || 0;
+
+    const centerCount =
+        directionStats.CENTER || 0;
+
+    const oppositeCount =
+        directionStats.OPPOSITE || 0;
+
+    console.log(directionStats);
+
+
+const ctx = document
+    .getElementById('hitDirectionChart');
+
+new Chart(ctx, {
+
+    type: 'doughnut',
+
+    data: {
+
+        labels: [
+        '引っ張り',
+        'センター',
+        '逆方向'
+            ],
+
+        datasets: [{
+            data: [
+                pullCount,
+                centerCount,
+                oppositeCount
+            ],
+
+            backgroundColor: [
+                '#ff4d6d',
+                '#ffd166',
+                '#4cc9f0'
+            ],
+
+            borderWidth: 2
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+                labels: {
+                    color: '#fff'
+                }
+            }
+        }
+    }
+});
+
+
+</script>
+
+
+
 
 </body>
 </html>

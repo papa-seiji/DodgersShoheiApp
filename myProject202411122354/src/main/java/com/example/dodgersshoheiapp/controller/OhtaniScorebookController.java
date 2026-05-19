@@ -773,6 +773,14 @@ public class OhtaniScorebookController {
                 model.addAttribute("season", season);
                 model.addAttribute("currentYear", currentYear);
 
+                // ============================================
+                // ★ 打球方向集計（ALL）
+                // ============================================
+
+                Map<String, Integer> directionStats = mlbGameService.getHitDirectionStats(season);
+
+                model.addAttribute("directionStats", directionStats);
+
                 return "batting_filter";
         }
 
