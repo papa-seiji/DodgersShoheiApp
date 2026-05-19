@@ -774,7 +774,7 @@ public class OhtaniScorebookController {
                 model.addAttribute("currentYear", currentYear);
 
                 // ============================================
-                // ★ 打球方向集計
+                // ★ 打球方向集計-------------------------円グラフ
                 // ============================================
 
                 Map<String, Integer> directionStats;
@@ -783,6 +783,11 @@ public class OhtaniScorebookController {
 
                         directionStats = mlbGameService
                                         .getHitDirectionStatsByRight(season);
+
+                } else if ("L".equals(hand)) {
+
+                        directionStats = mlbGameService
+                                        .getHitDirectionStatsByLeft(season);
 
                 } else {
 
