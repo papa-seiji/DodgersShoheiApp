@@ -1772,6 +1772,18 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 打球方向集計（対右）-----------------円グラフ
+     * ============================================
+     */
+    public Map<String, Integer> getHitDirectionStatsByRight(
+            Integer season) {
+
+        return ohtaniGameRepository
+                .getHitDirectionStatsByRight(season);
+    }
+
+    /**
+     * ============================================
      * ★ 得点圏打率（RISP）取得（左右対応版）--------batting/filter用
      * ============================================
      */

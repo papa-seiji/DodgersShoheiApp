@@ -3308,6 +3308,265 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 打球方向集計（対右専用）----------------円グラフ
+     * ★ 内野方向込み正式版
+     * ============================================
+     */
+    public Map<String, Integer> getHitDirectionStatsByRight(
+            Integer season) {
+
+        String sql = """
+                    SELECT
+                        direction,
+                        COUNT(*) AS cnt
+
+                    FROM (
+
+                        SELECT
+
+                            CASE
+
+                                WHEN pa1_description LIKE '%左中間%'
+                                  OR pa1_description LIKE '%レフト%'
+                                  OR pa1_description LIKE '%サード%'
+                                  OR pa1_description LIKE '%三遊間%'
+                                  OR pa1_description LIKE '%ショート%'
+                                THEN 'PULL'
+
+                                WHEN pa1_description LIKE '%センター%'
+                                  OR pa1_description LIKE '%中堅%'
+                                  OR pa1_description LIKE '%ピッチャー%'
+                                THEN 'CENTER'
+
+                                WHEN pa1_description LIKE '%右中間%'
+                                  OR pa1_description LIKE '%ライト%'
+                                  OR pa1_description LIKE '%ファースト%'
+                                  OR pa1_description LIKE '%一二塁間%'
+                                  OR pa1_description LIKE '%1,2塁間%'
+                                  OR pa1_description LIKE '%セカンド%'
+                                THEN 'OPPOSITE'
+
+                                ELSE 'UNKNOWN'
+
+                            END AS direction
+
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        AND pa1_pitcher_hand = 'R'
+                        AND pa1_description IS NOT NULL
+                        AND pa1_description <> 'dammydammy'
+
+                        UNION ALL
+
+                        SELECT
+
+                            CASE
+
+                                WHEN pa2_description LIKE '%左中間%'
+                                  OR pa2_description LIKE '%レフト%'
+                                  OR pa2_description LIKE '%サード%'
+                                  OR pa2_description LIKE '%三遊間%'
+                                  OR pa2_description LIKE '%ショート%'
+                                THEN 'PULL'
+
+                                WHEN pa2_description LIKE '%センター%'
+                                  OR pa2_description LIKE '%中堅%'
+                                  OR pa2_description LIKE '%ピッチャー%'
+                                THEN 'CENTER'
+
+                                WHEN pa2_description LIKE '%右中間%'
+                                  OR pa2_description LIKE '%ライト%'
+                                  OR pa2_description LIKE '%ファースト%'
+                                  OR pa2_description LIKE '%一二塁間%'
+                                  OR pa2_description LIKE '%1,2塁間%'
+                                  OR pa2_description LIKE '%セカンド%'
+                                THEN 'OPPOSITE'
+
+                                ELSE 'UNKNOWN'
+
+                            END
+
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        AND pa2_pitcher_hand = 'R'
+                        AND pa2_description IS NOT NULL
+                        AND pa2_description <> 'dammydammy'
+
+                        UNION ALL
+
+                        SELECT
+
+                            CASE
+
+                                WHEN pa3_description LIKE '%左中間%'
+                                  OR pa3_description LIKE '%レフト%'
+                                  OR pa3_description LIKE '%サード%'
+                                  OR pa3_description LIKE '%三遊間%'
+                                  OR pa3_description LIKE '%ショート%'
+                                THEN 'PULL'
+
+                                WHEN pa3_description LIKE '%センター%'
+                                  OR pa3_description LIKE '%中堅%'
+                                  OR pa3_description LIKE '%ピッチャー%'
+                                THEN 'CENTER'
+
+                                WHEN pa3_description LIKE '%右中間%'
+                                  OR pa3_description LIKE '%ライト%'
+                                  OR pa3_description LIKE '%ファースト%'
+                                  OR pa3_description LIKE '%一二塁間%'
+                                  OR pa3_description LIKE '%1,2塁間%'
+                                  OR pa3_description LIKE '%セカンド%'
+                                THEN 'OPPOSITE'
+
+                                ELSE 'UNKNOWN'
+
+                            END
+
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        AND pa3_pitcher_hand = 'R'
+                        AND pa3_description IS NOT NULL
+                        AND pa3_description <> 'dammydammy'
+
+                        UNION ALL
+
+                        SELECT
+
+                            CASE
+
+                                WHEN pa4_description LIKE '%左中間%'
+                                  OR pa4_description LIKE '%レフト%'
+                                  OR pa4_description LIKE '%サード%'
+                                  OR pa4_description LIKE '%三遊間%'
+                                  OR pa4_description LIKE '%ショート%'
+                                THEN 'PULL'
+
+                                WHEN pa4_description LIKE '%センター%'
+                                  OR pa4_description LIKE '%中堅%'
+                                  OR pa4_description LIKE '%ピッチャー%'
+                                THEN 'CENTER'
+
+                                WHEN pa4_description LIKE '%右中間%'
+                                  OR pa4_description LIKE '%ライト%'
+                                  OR pa4_description LIKE '%ファースト%'
+                                  OR pa4_description LIKE '%一二塁間%'
+                                  OR pa4_description LIKE '%1,2塁間%'
+                                  OR pa4_description LIKE '%セカンド%'
+                                THEN 'OPPOSITE'
+
+                                ELSE 'UNKNOWN'
+
+                            END
+
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        AND pa4_pitcher_hand = 'R'
+                        AND pa4_description IS NOT NULL
+                        AND pa4_description <> 'dammydammy'
+
+                        UNION ALL
+
+                        SELECT
+
+                            CASE
+
+                                WHEN pa5_description LIKE '%左中間%'
+                                  OR pa5_description LIKE '%レフト%'
+                                  OR pa5_description LIKE '%サード%'
+                                  OR pa5_description LIKE '%三遊間%'
+                                  OR pa5_description LIKE '%ショート%'
+                                THEN 'PULL'
+
+                                WHEN pa5_description LIKE '%センター%'
+                                  OR pa5_description LIKE '%中堅%'
+                                  OR pa5_description LIKE '%ピッチャー%'
+                                THEN 'CENTER'
+
+                                WHEN pa5_description LIKE '%右中間%'
+                                  OR pa5_description LIKE '%ライト%'
+                                  OR pa5_description LIKE '%ファースト%'
+                                  OR pa5_description LIKE '%一二塁間%'
+                                  OR pa5_description LIKE '%1,2塁間%'
+                                  OR pa5_description LIKE '%セカンド%'
+                                THEN 'OPPOSITE'
+
+                                ELSE 'UNKNOWN'
+
+                            END
+
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        AND pa5_pitcher_hand = 'R'
+                        AND pa5_description IS NOT NULL
+                        AND pa5_description <> 'dammydammy'
+
+                        UNION ALL
+
+                        SELECT
+
+                            CASE
+
+                                WHEN pa6_description LIKE '%左中間%'
+                                  OR pa6_description LIKE '%レフト%'
+                                  OR pa6_description LIKE '%サード%'
+                                  OR pa6_description LIKE '%三遊間%'
+                                  OR pa6_description LIKE '%ショート%'
+                                THEN 'PULL'
+
+                                WHEN pa6_description LIKE '%センター%'
+                                  OR pa6_description LIKE '%中堅%'
+                                  OR pa6_description LIKE '%ピッチャー%'
+                                THEN 'CENTER'
+
+                                WHEN pa6_description LIKE '%右中間%'
+                                  OR pa6_description LIKE '%ライト%'
+                                  OR pa6_description LIKE '%ファースト%'
+                                  OR pa6_description LIKE '%一二塁間%'
+                                  OR pa6_description LIKE '%1,2塁間%'
+                                  OR pa6_description LIKE '%セカンド%'
+                                THEN 'OPPOSITE'
+
+                                ELSE 'UNKNOWN'
+
+                            END
+
+                        FROM ohtani_game_details
+                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        AND pa6_pitcher_hand = 'R'
+                        AND pa6_description IS NOT NULL
+                        AND pa6_description <> 'dammydammy'
+
+                    ) t
+
+                    GROUP BY direction
+                """;
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                sql,
+
+                season,
+                season,
+                season,
+                season,
+                season,
+                season);
+
+        Map<String, Integer> result = new java.util.HashMap<>();
+
+        for (Map<String, Object> row : rows) {
+
+            String direction = (String) row.get("direction");
+
+            Number cnt = (Number) row.get("cnt");
+
+            result.put(direction, cnt.intValue());
+        }
+
+        return result;
+    }
+
+    /**
+     * ============================================
      * ★ RISPログ取得---------------------------------batting/filter用
      * ============================================
      */
