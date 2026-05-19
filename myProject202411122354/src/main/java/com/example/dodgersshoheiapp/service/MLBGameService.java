@@ -640,42 +640,51 @@ public class MLBGameService {
     // =========================
     // 🔥 DBの 0.211 を👉 「.211」形式にする
     // =========================
-    public String getVsRightAvgFormatted() {
+    // public String getVsRightAvgFormatted() {
 
-        Double avg = ohtaniGameRepository.getVsRightAvg();
+    // Double avg = ohtaniGameRepository.getVsRightAvg();
 
-        // null対策
-        if (avg == null) {
-            return ".000";
-        }
+    // // null対策
+    // if (avg == null) {
+    // return ".000";
+    // }
 
-        // 0.211 → ".211"
-        return String.format("%.3f", avg).replace("0.", ".");
-    }
+    // // 0.211 → ".211"
+    // return String.format("%.3f", avg).replace("0.", ".");
+    // }
 
     /**
      * ============================================
      * ★ 対右ピッチャー👉 hits / at_bats も取る必要あり
      * ============================================
      */
-    public Map<String, String> getVsRightStatsFormatted(Integer season) {
+    public Map<String, String> getVsRightStatsFormatted(
+            Integer season,
+            String result) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsRightStats(season);
+        Map<String, Object> stats = ohtaniGameRepository.getVsRightStats(
+                season,
+                result);
 
         int hits = ((Number) stats.get("hits")).intValue();
         int atBats = ((Number) stats.get("at_bats")).intValue();
+
         Double avg = stats.get("avg") != null
                 ? ((Number) stats.get("avg")).doubleValue()
                 : 0.0;
 
-        String avgStr = (avg == null) ? ".000" : String.format("%.3f", avg).replace("0.", ".");
+        String avgStr = (avg == null)
+                ? ".000"
+                : String.format("%.3f", avg).replace("0.", ".");
+
         String detail = hits + "-" + atBats;
 
-        Map<String, String> result = new HashMap<>();
-        result.put("avg", avgStr);
-        result.put("detail", detail);
+        Map<String, String> resultMap = new HashMap<>();
 
-        return result;
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
     }
 
     /**
@@ -752,6 +761,7 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, String> getVsRightStatsByPitchTypeFormatted(
+            String result,
             String pitchType,
             Integer season) {
 
@@ -761,7 +771,7 @@ public class MLBGameService {
         if ("BREAKING".equals(pitchType)) {
 
             List<Map<String, Object>> logs = getVsRightLogs(
-                    null,
+                    result,
                     null,
                     null,
                     null,
@@ -779,23 +789,23 @@ public class MLBGameService {
 
                 String type = (String) row.get("pitchType");
 
-                String result = (String) row.get("result");
+                String rowResult = (String) row.get("result");
 
                 if (!breakingTypes.contains(type)) {
                     continue;
                 }
 
                 // ★ AVG分母
-                if (!"BB".equals(result)
-                        && !"SF".equals(result)
-                        && result != null) {
+                if (!"BB".equals(rowResult)
+                        && !"SF".equals(rowResult)
+                        && rowResult != null) {
 
                     atBats++;
                 }
 
                 // ★ AVG分子
-                if ("HIT".equals(result)
-                        || "HR".equals(result)) {
+                if ("HIT".equals(rowResult)
+                        || "HR".equals(rowResult)) {
 
                     hits++;
                 }
@@ -835,11 +845,11 @@ public class MLBGameService {
         String avgStr = String.format("%.3f", avg).replace("0.", ".");
         String detail = hits + "-" + atBats;
 
-        Map<String, String> result = new HashMap<>();
-        result.put("avg", avgStr);
-        result.put("detail", detail);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
 
-        return result;
+        return resultMap;
     }
 
     /**
@@ -917,12 +927,13 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, String> getVsRightStatsBySpeedFormatted(
+            String result,
             Integer speedMin,
             Integer speedMax,
             Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsRightLogs(
-                null,
+                result,
                 null,
                 null,
                 null,
@@ -935,7 +946,7 @@ public class MLBGameService {
 
         for (Map<String, Object> row : logs) {
 
-            String result = (String) row.get("result");
+            String rowResult = (String) row.get("result");
 
             String description = (String) row.get("description");
 
@@ -952,16 +963,16 @@ public class MLBGameService {
             }
 
             // ★ AVG分母
-            if (!"BB".equals(result)
-                    && !"SF".equals(result)
-                    && result != null) {
+            if (!"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)
+                    && rowResult != null) {
 
                 atBats++;
             }
 
             // ★ AVG分子
-            if ("HIT".equals(result)
-                    || "HR".equals(result)) {
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
 
                 hits++;
             }
@@ -989,9 +1000,13 @@ public class MLBGameService {
      * ★ 対左ピッチャー
      * ============================================
      */
-    public Map<String, String> getVsLeftStatsFormatted(Integer season) {
+    public Map<String, String> getVsLeftStatsFormatted(
+            Integer season,
+            String result) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStats(season);
+        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStats(
+                season,
+                result);
 
         int hits = ((Number) stats.get("hits")).intValue();
         int atBats = ((Number) stats.get("at_bats")).intValue();
@@ -1001,13 +1016,15 @@ public class MLBGameService {
                 : 0.0;
 
         String avgStr = String.format("%.3f", avg).replace("0.", ".");
+
         String detail = hits + "-" + atBats;
 
-        Map<String, String> result = new HashMap<>();
-        result.put("avg", avgStr);
-        result.put("detail", detail);
+        Map<String, String> resultMap = new HashMap<>();
 
-        return result;
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
     }
 
     /**
@@ -1108,23 +1125,23 @@ public class MLBGameService {
 
                 String type = (String) row.get("pitchType");
 
-                String result = (String) row.get("result");
+                String rowResult = (String) row.get("result");
 
                 if (!breakingTypes.contains(type)) {
                     continue;
                 }
 
                 // ★ AVG分母
-                if (!"BB".equals(result)
-                        && !"SF".equals(result)
-                        && result != null) {
+                if (!"BB".equals(rowResult)
+                        && !"SF".equals(rowResult)
+                        && rowResult != null) {
 
                     atBats++;
                 }
 
                 // ★ AVG分子
-                if ("HIT".equals(result)
-                        || "HR".equals(result)) {
+                if ("HIT".equals(rowResult)
+                        || "HR".equals(rowResult)) {
 
                     hits++;
                 }
@@ -1219,12 +1236,13 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, String> getVsLeftStatsBySpeedFormatted(
+            String result,
             Integer speedMin,
             Integer speedMax,
             Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsLeftLogs(
-                null,
+                result,
                 null,
                 null,
                 null,
@@ -1237,7 +1255,7 @@ public class MLBGameService {
 
         for (Map<String, Object> row : logs) {
 
-            String result = (String) row.get("result");
+            String rowResult = (String) row.get("result");
 
             String description = (String) row.get("description");
 
@@ -1254,16 +1272,16 @@ public class MLBGameService {
             }
 
             // ★ AVG分母
-            if (!"BB".equals(result)
-                    && !"SF".equals(result)
-                    && result != null) {
+            if (!"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)
+                    && rowResult != null) {
 
                 atBats++;
             }
 
             // ★ AVG分子
-            if ("HIT".equals(result)
-                    || "HR".equals(result)) {
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
 
                 hits++;
             }
@@ -1292,17 +1310,18 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, String> getVsAllStatsFormatted(
-            String opponent,
-            Integer season) {
+            Integer season,
+            String result) {
 
-        Map<String, Object> result = ohtaniGameRepository.getVsAllStats(
-                opponent,
-                season);
+        Map<String, Object> stats = ohtaniGameRepository.getVsAllStats(
+                season,
+                result);
 
-        int hits = ((Number) result.get("hits")).intValue();
-        int atBats = ((Number) result.get("at_bats")).intValue();
+        int hits = ((Number) stats.get("hits")).intValue();
+        int atBats = ((Number) stats.get("at_bats")).intValue();
 
-        Number avgNum = (Number) result.get("avg");
+        Number avgNum = (Number) stats.get("avg");
+
         Double avg = (avgNum != null)
                 ? avgNum.doubleValue()
                 : null;
@@ -1422,23 +1441,23 @@ public class MLBGameService {
 
                 String type = (String) row.get("pitchType");
 
-                String result = (String) row.get("result");
+                String rowResult = (String) row.get("result");
 
                 if (!breakingTypes.contains(type)) {
                     continue;
                 }
 
                 // ★ AVG分母
-                if (!"BB".equals(result)
-                        && !"SF".equals(result)
-                        && result != null) {
+                if (!"BB".equals(rowResult)
+                        && !"SF".equals(rowResult)
+                        && rowResult != null) {
 
                     atBats++;
                 }
 
                 // ★ AVG分子
-                if ("HIT".equals(result)
-                        || "HR".equals(result)) {
+                if ("HIT".equals(rowResult)
+                        || "HR".equals(rowResult)) {
 
                     hits++;
                 }
@@ -1494,12 +1513,13 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, String> getVsAllStatsBySpeedFormatted(
+            String result,
             Integer speedMin,
             Integer speedMax,
             Integer season) {
 
         List<Map<String, Object>> logs = ohtaniGameRepository.getVsAllLogs(
-                null,
+                result,
                 null,
                 null,
                 null,
@@ -1512,7 +1532,7 @@ public class MLBGameService {
 
         for (Map<String, Object> row : logs) {
 
-            String result = (String) row.get("result");
+            String rowResult = (String) row.get("result");
 
             String description = (String) row.get("description");
 
@@ -1529,16 +1549,16 @@ public class MLBGameService {
             }
 
             // ★ AVG分母
-            if (!"BB".equals(result)
-                    && !"SF".equals(result)
-                    && result != null) {
+            if (!"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)
+                    && rowResult != null) {
 
                 atBats++;
             }
 
             // ★ AVG分子
-            if ("HIT".equals(result)
-                    || "HR".equals(result)) {
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
 
                 hits++;
             }
@@ -1609,9 +1629,12 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, Object> getVsAllStats(
-            Integer season) {
+            Integer season,
+            String result) {
 
-        return ohtaniGameRepository.getVsAllStats(season);
+        return ohtaniGameRepository.getVsAllStats(
+                season,
+                result);
     }
 
     /**
@@ -1765,9 +1788,13 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, Integer> getHitDirectionStats(
-            Integer season) {
+            Integer season,
+            String result) {
 
-        return ohtaniGameRepository.getHitDirectionStats(season);
+        return ohtaniGameRepository
+                .getHitDirectionStats(
+                        season,
+                        result);
     }
 
     /**
@@ -1776,10 +1803,13 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, Integer> getHitDirectionStatsByRight(
-            Integer season) {
+            Integer season,
+            String result) {
 
         return ohtaniGameRepository
-                .getHitDirectionStatsByRight(season);
+                .getHitDirectionStatsByRight(
+                        season,
+                        result);
     }
 
     /**
@@ -1788,10 +1818,13 @@ public class MLBGameService {
      * ============================================
      */
     public Map<String, Integer> getHitDirectionStatsByLeft(
-            Integer season) {
+            Integer season,
+            String result) {
 
         return ohtaniGameRepository
-                .getHitDirectionStatsByLeft(season);
+                .getHitDirectionStatsByLeft(
+                        season,
+                        result);
     }
 
     /**
