@@ -1806,12 +1806,14 @@ public class MLBGameService {
      */
     public Map<String, Integer> getHitDirectionStatsByRight(
             Integer season,
-            String result) {
+            String result,
+            String opponent) {
 
         return ohtaniGameRepository
                 .getHitDirectionStatsByRight(
                         season,
-                        result);
+                        result,
+                        opponent);
     }
 
     /**

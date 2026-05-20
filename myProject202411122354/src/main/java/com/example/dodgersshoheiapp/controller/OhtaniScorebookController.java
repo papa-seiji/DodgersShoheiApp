@@ -801,7 +801,7 @@ public class OhtaniScorebookController {
                 if ("R".equals(hand)) {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStatsByRight(season, result);
+                                        .getHitDirectionStatsByRight(season, result, opponent);
 
                 } else if ("L".equals(hand)) {
 
