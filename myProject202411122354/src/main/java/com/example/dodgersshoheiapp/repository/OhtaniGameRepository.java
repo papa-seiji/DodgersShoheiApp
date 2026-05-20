@@ -541,7 +541,8 @@ public class OhtaniGameRepository {
      */
     public Map<String, Object> getVsRightStatsByOpponent(
             String opponent,
-            Integer season) {
+            Integer season,
+            String result) {
 
         String sql = """
                     SELECT
@@ -582,6 +583,11 @@ public class OhtaniGameRepository {
                         WHERE pa1_pitcher_hand = 'R'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa1_result = ?
+                        )
 
                         UNION ALL
 
@@ -593,6 +599,11 @@ public class OhtaniGameRepository {
                         WHERE pa2_pitcher_hand = 'R'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa2_result = ?
+                        )
 
                         UNION ALL
 
@@ -604,6 +615,11 @@ public class OhtaniGameRepository {
                         WHERE pa3_pitcher_hand = 'R'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa3_result = ?
+                        )
 
                         UNION ALL
 
@@ -615,6 +631,11 @@ public class OhtaniGameRepository {
                         WHERE pa4_pitcher_hand = 'R'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa4_result = ?
+                        )
 
                         UNION ALL
 
@@ -626,6 +647,11 @@ public class OhtaniGameRepository {
                         WHERE pa5_pitcher_hand = 'R'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa5_result = ?
+                        )
 
                         UNION ALL
 
@@ -637,6 +663,11 @@ public class OhtaniGameRepository {
                         WHERE pa6_pitcher_hand = 'R'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa6_result = ?
+                        )
 
                     ) t
                 """;
@@ -644,12 +675,29 @@ public class OhtaniGameRepository {
         return jdbcTemplate.queryForMap(
                 sql,
 
+                // pa1
                 season, opponent,
+                result, result, result,
+
+                // pa2
                 season, opponent,
+                result, result, result,
+
+                // pa3
                 season, opponent,
+                result, result, result,
+
+                // pa4
                 season, opponent,
+                result, result, result,
+
+                // pa5
                 season, opponent,
-                season, opponent);
+                result, result, result,
+
+                // pa6
+                season, opponent,
+                result, result, result);
     }
 
     /**

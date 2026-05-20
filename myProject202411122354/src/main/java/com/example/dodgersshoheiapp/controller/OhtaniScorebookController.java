@@ -510,7 +510,8 @@ public class OhtaniScorebookController {
                                 vsR = mlbGameService
                                                 .getVsRightStatsByOpponentFormatted(
                                                                 opponent,
-                                                                season);
+                                                                season,
+                                                                result);
 
                         } else {
 

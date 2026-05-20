@@ -694,11 +694,13 @@ public class MLBGameService {
      */
     public Map<String, String> getVsRightStatsByOpponentFormatted(
             String opponent,
-            Integer season) {
+            Integer season,
+            String result) {
 
         Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByOpponent(
                 opponent,
-                season);
+                season,
+                result);
 
         int hits = stats.get("hits") != null
                 ? ((Number) stats.get("hits")).intValue()
@@ -715,11 +717,11 @@ public class MLBGameService {
         String avgStr = String.format("%.3f", avg).replace("0.", ".");
         String detail = hits + "-" + atBats;
 
-        Map<String, String> result = new HashMap<>();
-        result.put("avg", avgStr);
-        result.put("detail", detail);
+        Map<String, String> formatted = new HashMap<>();
+        formatted.put("avg", avgStr);
+        formatted.put("detail", detail);
 
-        return result;
+        return formatted;
     }
 
     /**
