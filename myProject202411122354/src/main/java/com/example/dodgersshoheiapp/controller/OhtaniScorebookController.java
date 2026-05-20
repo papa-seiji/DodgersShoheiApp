@@ -551,7 +551,9 @@ public class OhtaniScorebookController {
                                         && !pitcher.isBlank()) {
 
                                 vsL = mlbGameService
-                                                .getVsLeftStatsByPitcherFormatted(pitcher, season);
+                                                .getVsLeftStatsByPitcherFormatted(
+                                                                pitcher,
+                                                                season);
 
                                 // ============================================
                                 // ★ 球速帯分析モード
@@ -580,7 +582,10 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(pitchType)) {
 
                                 vsL = mlbGameService
-                                                .getVsLeftStatsByPitchTypeFormatted(pitchType, season);
+                                                .getVsLeftStatsByPitchTypeFormatted(
+                                                                result,
+                                                                pitchType,
+                                                                season);
 
                                 // ============================================
                                 // ★ opponent 指定時
@@ -592,20 +597,23 @@ public class OhtaniScorebookController {
                                 vsL = mlbGameService
                                                 .getVsLeftStatsByOpponentFormatted(
                                                                 opponent,
-                                                                season);
+                                                                season,
+                                                                result);
 
                         } else {
 
                                 vsL = mlbGameService
-                                                .getVsLeftStatsFormatted(season, result);
+                                                .getVsLeftStatsFormatted(
+                                                                season,
+                                                                result);
                         }
 
                         model.addAttribute("vsLAvg", vsL.get("avg"));
                         model.addAttribute("vsLDetail", vsL.get("detail"));
 
-                        model.addAttribute("vsLAvg", vsL.get("avg"));
-                        model.addAttribute("vsLDetail", vsL.get("detail"));
-                        // ★ここ修正
+                        // ============================================
+                        // ★ 打席ログ（対左）
+                        // ============================================
                         model.addAttribute("vsLLogs",
                                         mlbGameService.getVsLeftLogs(
                                                         result,
@@ -806,7 +814,7 @@ public class OhtaniScorebookController {
                 } else if ("L".equals(hand)) {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStatsByLeft(season, result);
+                                        .getHitDirectionStatsByLeft(season, result, opponent);
 
                 } else {
 

@@ -1429,7 +1429,8 @@ public class OhtaniGameRepository {
      */
     public Map<String, Object> getVsLeftStatsByOpponent(
             String opponent,
-            Integer season) {
+            Integer season,
+            String result) {
 
         String sql = """
                     SELECT
@@ -1471,6 +1472,12 @@ public class OhtaniGameRepository {
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa1_result = ?
+                        )
+
                         UNION ALL
 
                         SELECT
@@ -1481,6 +1488,12 @@ public class OhtaniGameRepository {
                         WHERE pa2_pitcher_hand = 'L'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa2_result = ?
+                        )
 
                         UNION ALL
 
@@ -1493,6 +1506,12 @@ public class OhtaniGameRepository {
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa3_result = ?
+                        )
+
                         UNION ALL
 
                         SELECT
@@ -1503,6 +1522,12 @@ public class OhtaniGameRepository {
                         WHERE pa4_pitcher_hand = 'L'
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa4_result = ?
+                        )
 
                         UNION ALL
 
@@ -1515,6 +1540,12 @@ public class OhtaniGameRepository {
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa5_result = ?
+                        )
+
                         UNION ALL
 
                         SELECT
@@ -1526,18 +1557,41 @@ public class OhtaniGameRepository {
                         AND EXTRACT(YEAR FROM d.created_at) = ?
                         AND g.opponent = ?
 
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa6_result = ?
+                        )
+
                     ) t
                 """;
 
         return jdbcTemplate.queryForMap(
                 sql,
 
+                // pa1
                 season, opponent,
+                result, result, result,
+
+                // pa2
                 season, opponent,
+                result, result, result,
+
+                // pa3
                 season, opponent,
+                result, result, result,
+
+                // pa4
                 season, opponent,
+                result, result, result,
+
+                // pa5
                 season, opponent,
-                season, opponent);
+                result, result, result,
+
+                // pa6
+                season, opponent,
+                result, result, result);
     }
 
     /**
@@ -1645,6 +1699,7 @@ public class OhtaniGameRepository {
      * ============================================
      */
     public Map<String, Object> getVsLeftStatsByPitchType(
+            String result,
             String pitchType,
             Integer season) {
 
@@ -3906,12 +3961,13 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
-     * ★ 打球方向集計（対左専用）----------------円グラフ
-     * ★ 内野方向込み正式版
+     * ★ 打球方向集計（対左）-----------------円グラフ
      * ============================================
      */
     public Map<String, Integer> getHitDirectionStatsByLeft(
-            Integer season, String result) {
+            Integer season,
+            String result,
+            String opponent) {
 
         String sql = """
                     SELECT
@@ -3947,9 +4003,25 @@ public class OhtaniGameRepository {
 
                             END AS direction
 
-                        FROM ohtani_game_details
-                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
                         AND pa1_pitcher_hand = 'L'
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa1_result = ?
+                        )
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR g.opponent = ?
+                        )
+
                         AND pa1_description IS NOT NULL
                         AND pa1_description <> 'dammydammy'
 
@@ -3982,9 +4054,25 @@ public class OhtaniGameRepository {
 
                             END
 
-                        FROM ohtani_game_details
-                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
                         AND pa2_pitcher_hand = 'L'
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa2_result = ?
+                        )
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR g.opponent = ?
+                        )
+
                         AND pa2_description IS NOT NULL
                         AND pa2_description <> 'dammydammy'
 
@@ -4017,9 +4105,25 @@ public class OhtaniGameRepository {
 
                             END
 
-                        FROM ohtani_game_details
-                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
                         AND pa3_pitcher_hand = 'L'
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa3_result = ?
+                        )
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR g.opponent = ?
+                        )
+
                         AND pa3_description IS NOT NULL
                         AND pa3_description <> 'dammydammy'
 
@@ -4052,9 +4156,25 @@ public class OhtaniGameRepository {
 
                             END
 
-                        FROM ohtani_game_details
-                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
                         AND pa4_pitcher_hand = 'L'
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa4_result = ?
+                        )
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR g.opponent = ?
+                        )
+
                         AND pa4_description IS NOT NULL
                         AND pa4_description <> 'dammydammy'
 
@@ -4087,9 +4207,25 @@ public class OhtaniGameRepository {
 
                             END
 
-                        FROM ohtani_game_details
-                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
                         AND pa5_pitcher_hand = 'L'
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa5_result = ?
+                        )
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR g.opponent = ?
+                        )
+
                         AND pa5_description IS NOT NULL
                         AND pa5_description <> 'dammydammy'
 
@@ -4122,9 +4258,25 @@ public class OhtaniGameRepository {
 
                             END
 
-                        FROM ohtani_game_details
-                        WHERE EXTRACT(YEAR FROM created_at) = ?
+                        FROM ohtani_game_details d
+                        JOIN ohtani_games g
+                            ON d.game_id = g.id
+
+                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
                         AND pa6_pitcher_hand = 'L'
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR pa6_result = ?
+                        )
+
+                        AND (
+                            ? IS NULL
+                            OR ? = 'ALL'
+                            OR g.opponent = ?
+                        )
+
                         AND pa6_description IS NOT NULL
                         AND pa6_description <> 'dammydammy'
 
@@ -4136,12 +4288,12 @@ public class OhtaniGameRepository {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 sql,
 
-                season,
-                season,
-                season,
-                season,
-                season,
-                season);
+                season, result, result, result, opponent, opponent, opponent,
+                season, result, result, result, opponent, opponent, opponent,
+                season, result, result, result, opponent, opponent, opponent,
+                season, result, result, result, opponent, opponent, opponent,
+                season, result, result, result, opponent, opponent, opponent,
+                season, result, result, result, opponent, opponent, opponent);
 
         Map<String, Integer> directionMap = new java.util.HashMap<>();
 
