@@ -321,7 +321,10 @@ public class OhtaniScorebookController {
                         pitchType = null;
                 }
 
-                // 🔥 ALL（明示的に選んだ時だけ）
+                // ============================================
+                // ★ ALL
+                // ============================================
+
                 if ("ALL".equals(hand)) {
 
                         Map<String, String> vsAll;
@@ -364,7 +367,11 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(pitchType)) {
 
                                 vsAll = mlbGameService
-                                                .getVsAllStatsByPitchTypeFormatted(pitchType, season);
+                                                .getVsAllStatsByPitchTypeFormatted(
+                                                                result,
+                                                                pitchType,
+                                                                season,
+                                                                opponent);
 
                                 // ============================================
                                 // ★ opponent 指定時
@@ -374,21 +381,25 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(opponent)) {
 
                                 vsAll = mlbGameService
-                                                .getVsAllStatsFormatted(season, result);
+                                                .getVsAllStatsByOpponentFormatted(
+                                                                opponent,
+                                                                season,
+                                                                result);
 
                         } else {
 
                                 vsAll = mlbGameService
-                                                .getVsAllStatsFormatted(season, result);
+                                                .getVsAllStatsFormatted(
+                                                                season,
+                                                                result,
+                                                                opponent);
                         }
 
                         model.addAttribute("vsAllAvg", vsAll.get("avg"));
                         model.addAttribute("vsAllDetail", vsAll.get("detail"));
 
-                        model.addAttribute("vsAllAvg", vsAll.get("avg"));
-                        model.addAttribute("vsAllDetail", vsAll.get("detail"));
-                        // ★ここ修正
-                        model.addAttribute("vsAllLogs",
+                        model.addAttribute(
+                                        "vsAllLogs",
                                         mlbGameService.getVsAllLogs(
                                                         result,
                                                         opponent,
@@ -819,7 +830,7 @@ public class OhtaniScorebookController {
                 } else {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStats(season, result);
+                                        .getHitDirectionStats(season, result, opponent);
                 }
 
                 model.addAttribute(
