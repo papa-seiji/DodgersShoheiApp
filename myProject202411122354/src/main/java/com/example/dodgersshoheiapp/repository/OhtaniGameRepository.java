@@ -461,8 +461,9 @@ public class OhtaniGameRepository {
                     WHERE pa1_pitcher_hand = 'R'
                     AND EXTRACT(YEAR FROM created_at) = ?
                     AND (
-                        ? IS NULL
-                        OR pa1_result = ?
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa1_result = CAST(? AS TEXT)
                     )
 
                     UNION ALL
@@ -472,8 +473,9 @@ public class OhtaniGameRepository {
                     WHERE pa2_pitcher_hand = 'R'
                     AND EXTRACT(YEAR FROM created_at) = ?
                     AND (
-                        ? IS NULL
-                        OR pa2_result = ?
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa2_result = CAST(? AS TEXT)
                     )
 
                     UNION ALL
@@ -483,8 +485,9 @@ public class OhtaniGameRepository {
                     WHERE pa3_pitcher_hand = 'R'
                     AND EXTRACT(YEAR FROM created_at) = ?
                     AND (
-                        ? IS NULL
-                        OR pa3_result = ?
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa3_result = CAST(? AS TEXT)
                     )
 
                     UNION ALL
@@ -494,8 +497,9 @@ public class OhtaniGameRepository {
                     WHERE pa4_pitcher_hand = 'R'
                     AND EXTRACT(YEAR FROM created_at) = ?
                     AND (
-                        ? IS NULL
-                        OR pa4_result = ?
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa4_result = CAST(? AS TEXT)
                     )
 
                     UNION ALL
@@ -505,8 +509,9 @@ public class OhtaniGameRepository {
                     WHERE pa5_pitcher_hand = 'R'
                     AND EXTRACT(YEAR FROM created_at) = ?
                     AND (
-                        ? IS NULL
-                        OR pa5_result = ?
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa5_result = CAST(? AS TEXT)
                     )
 
                     UNION ALL
@@ -516,8 +521,9 @@ public class OhtaniGameRepository {
                     WHERE pa6_pitcher_hand = 'R'
                     AND EXTRACT(YEAR FROM created_at) = ?
                     AND (
-                        ? IS NULL
-                        OR pa6_result = ?
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa6_result = CAST(? AS TEXT)
                     )
 
                 ) t
@@ -526,12 +532,12 @@ public class OhtaniGameRepository {
         return jdbcTemplate.queryForMap(
                 sql,
 
-                season, result, result,
-                season, result, result,
-                season, result, result,
-                season, result, result,
-                season, result, result,
-                season, result, result);
+                season, result, result, result,
+                season, result, result, result,
+                season, result, result, result,
+                season, result, result, result,
+                season, result, result, result,
+                season, result, result, result);
     }
 
     /**
