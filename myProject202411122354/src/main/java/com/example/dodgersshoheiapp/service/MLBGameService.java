@@ -2034,14 +2034,20 @@ public class MLBGameService {
             Integer season,
             String result,
             String opponent,
-            String pitcher) {
+            String pitcher,
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
 
         return ohtaniGameRepository
                 .getHitDirectionStats(
                         season,
                         result,
                         opponent,
-                        pitcher);
+                        pitcher,
+                        pitchType,
+                        speedMin,
+                        speedMax);
     }
 
     /**
@@ -2053,14 +2059,16 @@ public class MLBGameService {
             Integer season,
             String result,
             String opponent,
-            String pitcher) {
+            String pitcher,
+            String pitchType) {
 
         return ohtaniGameRepository
                 .getHitDirectionStatsByRight(
                         season,
                         result,
                         opponent,
-                        pitcher);
+                        pitcher,
+                        pitchType);
     }
 
     /**
@@ -2072,14 +2080,16 @@ public class MLBGameService {
             Integer season,
             String result,
             String opponent,
-            String pitcher) {
+            String pitcher,
+            String pitchType) {
 
         return ohtaniGameRepository
                 .getHitDirectionStatsByLeft(
                         season,
                         result,
                         opponent,
-                        pitcher);
+                        pitcher,
+                        pitchType);
     }
 
     /**

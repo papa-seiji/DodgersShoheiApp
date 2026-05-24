@@ -835,17 +835,24 @@ public class OhtaniScorebookController {
                 if ("R".equals(hand)) {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStatsByRight(season, result, opponent, pitcher);
+                                        .getHitDirectionStatsByRight(season, result, opponent, pitcher, pitchType);
 
                 } else if ("L".equals(hand)) {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStatsByLeft(season, result, opponent, pitcher);
+                                        .getHitDirectionStatsByLeft(season, result, opponent, pitcher, pitchType);
 
                 } else {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStats(season, result, opponent, pitcher);
+                                        .getHitDirectionStats(
+                                                        season,
+                                                        result,
+                                                        opponent,
+                                                        pitcher,
+                                                        pitchType,
+                                                        speedMin,
+                                                        speedMax);
                 }
 
                 model.addAttribute(
