@@ -808,6 +808,8 @@ public class MLBGameService {
      */
     public Map<String, String> getVsRightStatsByPitchTypeFormatted(
             String result,
+            String opponent,
+            String pitcher,
             String pitchType,
             Integer season) {
 
@@ -818,15 +820,14 @@ public class MLBGameService {
 
             List<Map<String, Object>> logs = getVsRightLogs(
                     result,
-                    null,
-                    null,
+                    opponent,
+                    pitcher,
                     null,
                     null,
                     null,
                     season);
 
-            List<String> breakingTypes = normalizePitchTypes(
-                    pitchType);
+            List<String> breakingTypes = normalizePitchTypes(pitchType);
 
             int hits = 0;
             int atBats = 0;
@@ -874,24 +875,49 @@ public class MLBGameService {
             return resultMap;
         }
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitchType(pitchType, season);
+        List<Map<String, Object>> logs = getVsRightLogs(
+                result,
+                opponent,
+                pitcher,
+                pitchType,
+                null,
+                null,
+                season);
 
-        int hits = stats.get("hits") != null
-                ? ((Number) stats.get("hits")).intValue()
-                : 0;
+        int hits = 0;
+        int atBats = 0;
 
-        int atBats = stats.get("at_bats") != null
-                ? ((Number) stats.get("at_bats")).intValue()
-                : 0;
+        for (Map<String, Object> row : logs) {
 
-        Double avg = stats.get("avg") != null
-                ? ((Number) stats.get("avg")).doubleValue()
-                : 0.0;
+            String rowResult = (String) row.get("result");
 
-        String avgStr = String.format("%.3f", avg).replace("0.", ".");
+            // ★ AVG分母
+            if (!"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)
+                    && rowResult != null) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
+
+        String avgStr = String.format("%.3f", avg)
+                .replace("0.", ".");
+
         String detail = hits + "-" + atBats;
 
         Map<String, String> resultMap = new HashMap<>();
+
         resultMap.put("avg", avgStr);
         resultMap.put("detail", detail);
 

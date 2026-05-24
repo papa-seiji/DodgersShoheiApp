@@ -515,7 +515,12 @@ public class OhtaniScorebookController {
                                         && !"ALL".equals(pitchType)) {
 
                                 vsR = mlbGameService
-                                                .getVsRightStatsByPitchTypeFormatted(result, pitchType, season);
+                                                .getVsRightStatsByPitchTypeFormatted(
+                                                                result,
+                                                                opponent,
+                                                                pitcher,
+                                                                pitchType,
+                                                                season);
 
                                 // ============================================
                                 // ★ opponent 指定時
