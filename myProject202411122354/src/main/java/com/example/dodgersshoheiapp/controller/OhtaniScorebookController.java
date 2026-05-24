@@ -338,7 +338,9 @@ public class OhtaniScorebookController {
                                 vsAll = mlbGameService
                                                 .getVsAllStatsByPitcherFormatted(
                                                                 pitcher,
-                                                                season);
+                                                                season,
+                                                                result,
+                                                                opponent);
 
                                 // ============================================
                                 // ★ 球速帯分析モード
@@ -476,7 +478,11 @@ public class OhtaniScorebookController {
                                         && !pitcher.isBlank()) {
 
                                 vsR = mlbGameService
-                                                .getVsRightStatsByPitcherFormatted(pitcher, season);
+                                                .getVsRightStatsByPitcherFormatted(
+                                                                pitcher,
+                                                                season,
+                                                                result,
+                                                                opponent);
 
                                 // ============================================
                                 // ★ 球速帯分析モード
@@ -564,7 +570,9 @@ public class OhtaniScorebookController {
                                 vsL = mlbGameService
                                                 .getVsLeftStatsByPitcherFormatted(
                                                                 pitcher,
-                                                                season);
+                                                                season,
+                                                                result,
+                                                                opponent);
 
                                 // ============================================
                                 // ★ 球速帯分析モード
@@ -820,17 +828,17 @@ public class OhtaniScorebookController {
                 if ("R".equals(hand)) {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStatsByRight(season, result, opponent);
+                                        .getHitDirectionStatsByRight(season, result, opponent, pitcher);
 
                 } else if ("L".equals(hand)) {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStatsByLeft(season, result, opponent);
+                                        .getHitDirectionStatsByLeft(season, result, opponent, pitcher);
 
                 } else {
 
                         directionStats = mlbGameService
-                                        .getHitDirectionStats(season, result, opponent);
+                                        .getHitDirectionStats(season, result, opponent, pitcher);
                 }
 
                 model.addAttribute(

@@ -750,30 +750,55 @@ public class MLBGameService {
      */
     public Map<String, String> getVsRightStatsByPitcherFormatted(
             String pitcher,
-            Integer season) {
+            Integer season,
+            String result,
+            String opponent) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsRightStatsByPitcher(pitcher, season);
+        List<Map<String, Object>> logs = getVsRightLogs(
+                result,
+                opponent,
+                pitcher,
+                null,
+                null,
+                null,
+                season);
 
-        int hits = stats.get("hits") != null
-                ? ((Number) stats.get("hits")).intValue()
-                : 0;
+        int hits = 0;
+        int atBats = 0;
 
-        int atBats = stats.get("at_bats") != null
-                ? ((Number) stats.get("at_bats")).intValue()
-                : 0;
+        for (Map<String, Object> row : logs) {
 
-        Double avg = stats.get("avg") != null
-                ? ((Number) stats.get("avg")).doubleValue()
-                : 0.0;
+            String rowResult = (String) row.get("result");
+
+            // ★ AVG分母
+            if (!"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)
+                    && rowResult != null) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
 
         String avgStr = String.format("%.3f", avg).replace("0.", ".");
         String detail = hits + "-" + atBats;
 
-        Map<String, String> result = new HashMap<>();
-        result.put("avg", avgStr);
-        result.put("detail", detail);
+        Map<String, String> resultMap = new HashMap<>();
 
-        return result;
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
     }
 
     /**
@@ -1110,30 +1135,56 @@ public class MLBGameService {
      * ★ 対左投手 × 投手別 AVG
      * ============================================
      */
-    public Map<String, String> getVsLeftStatsByPitcherFormatted(String pitcher, Integer season) {
+    public Map<String, String> getVsLeftStatsByPitcherFormatted(
+            String pitcher,
+            Integer season,
+            String result,
+            String opponent) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsLeftStatsByPitcher(pitcher, season);
+        List<Map<String, Object>> logs = getVsLeftLogs(
+                result,
+                opponent,
+                pitcher,
+                null,
+                null,
+                null,
+                season);
 
-        int hits = stats.get("hits") != null
-                ? ((Number) stats.get("hits")).intValue()
-                : 0;
+        int hits = 0;
+        int atBats = 0;
 
-        int atBats = stats.get("at_bats") != null
-                ? ((Number) stats.get("at_bats")).intValue()
-                : 0;
+        for (Map<String, Object> row : logs) {
 
-        Double avg = stats.get("avg") != null
-                ? ((Number) stats.get("avg")).doubleValue()
-                : 0.0;
+            String rowResult = (String) row.get("result");
+
+            // ★ AVG分母
+            if (!"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)
+                    && rowResult != null) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
 
         String avgStr = String.format("%.3f", avg).replace("0.", ".");
         String detail = hits + "-" + atBats;
 
-        Map<String, String> result = new HashMap<>();
-        result.put("avg", avgStr);
-        result.put("detail", detail);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
 
-        return result;
+        return resultMap;
     }
 
     /**
@@ -1465,30 +1516,54 @@ public class MLBGameService {
      */
     public Map<String, String> getVsAllStatsByPitcherFormatted(
             String pitcher,
-            Integer season) {
+            Integer season,
+            String result,
+            String opponent) {
 
-        Map<String, Object> stats = ohtaniGameRepository.getVsAllStatsByPitcher(pitcher, season);
+        List<Map<String, Object>> logs = getVsAllLogs(
+                result,
+                opponent,
+                pitcher,
+                null,
+                null,
+                null,
+                season);
 
-        int hits = stats.get("hits") != null
-                ? ((Number) stats.get("hits")).intValue()
-                : 0;
+        int hits = 0;
+        int atBats = 0;
 
-        int atBats = stats.get("at_bats") != null
-                ? ((Number) stats.get("at_bats")).intValue()
-                : 0;
+        for (Map<String, Object> row : logs) {
 
-        Double avg = stats.get("avg") != null
-                ? ((Number) stats.get("avg")).doubleValue()
-                : 0.0;
+            String rowResult = (String) row.get("result");
+
+            // ★ AVG分母
+            if (!"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)
+                    && rowResult != null) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
 
         String avgStr = String.format("%.3f", avg).replace("0.", ".");
         String detail = hits + "-" + atBats;
 
-        Map<String, String> result = new HashMap<>();
-        result.put("avg", avgStr);
-        result.put("detail", detail);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
 
-        return result;
+        return resultMap;
     }
 
     /**
@@ -1881,13 +1956,15 @@ public class MLBGameService {
     public Map<String, Integer> getHitDirectionStats(
             Integer season,
             String result,
-            String opponent) {
+            String opponent,
+            String pitcher) {
 
         return ohtaniGameRepository
                 .getHitDirectionStats(
                         season,
                         result,
-                        opponent);
+                        opponent,
+                        pitcher);
     }
 
     /**
@@ -1898,13 +1975,15 @@ public class MLBGameService {
     public Map<String, Integer> getHitDirectionStatsByRight(
             Integer season,
             String result,
-            String opponent) {
+            String opponent,
+            String pitcher) {
 
         return ohtaniGameRepository
                 .getHitDirectionStatsByRight(
                         season,
                         result,
-                        opponent);
+                        opponent,
+                        pitcher);
     }
 
     /**
@@ -1915,13 +1994,15 @@ public class MLBGameService {
     public Map<String, Integer> getHitDirectionStatsByLeft(
             Integer season,
             String result,
-            String opponent) {
+            String opponent,
+            String pitcher) {
 
         return ohtaniGameRepository
                 .getHitDirectionStatsByLeft(
                         season,
                         result,
-                        opponent);
+                        opponent,
+                        pitcher);
     }
 
     /**
