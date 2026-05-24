@@ -608,6 +608,8 @@ public class OhtaniScorebookController {
                                 vsL = mlbGameService
                                                 .getVsLeftStatsByPitchTypeFormatted(
                                                                 result,
+                                                                opponent,
+                                                                pitcher,
                                                                 pitchType,
                                                                 season);
 
