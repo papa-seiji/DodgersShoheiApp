@@ -330,9 +330,25 @@ public class OhtaniScorebookController {
                         Map<String, String> vsAll;
 
                         // ============================================
-                        // ★ pitcher 指定時（最優先）
+                        // ★ pitcher + pitchType 指定時（最優先）
                         // ============================================
                         if (pitcher != null
+                                        && !pitcher.isBlank()
+                                        && pitchType != null
+                                        && !pitchType.isBlank()
+                                        && !"ALL".equals(pitchType)) {
+
+                                vsAll = mlbGameService
+                                                .getVsAllStatsByPitcherAndPitchTypeFormatted(
+                                                                pitcher,
+                                                                pitchType,
+                                                                season,
+                                                                result);
+
+                                // ============================================
+                                // ★ pitcher 指定時
+                                // ============================================
+                        } else if (pitcher != null
                                         && !pitcher.isBlank()) {
 
                                 vsAll = mlbGameService

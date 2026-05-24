@@ -1708,6 +1708,49 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 対ALL × 投手別 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, String> getVsAllStatsByPitcherAndPitchTypeFormatted(
+            String pitcher,
+            String pitchType,
+            Integer season,
+            String result) {
+
+        Map<String, Object> stats = ohtaniGameRepository
+                .getVsAllStatsByPitcherAndPitchType(
+                        pitcher,
+                        pitchType,
+                        season,
+                        result);
+
+        int hits = stats.get("hits") != null
+                ? ((Number) stats.get("hits")).intValue()
+                : 0;
+
+        int atBats = stats.get("at_bats") != null
+                ? ((Number) stats.get("at_bats")).intValue()
+                : 0;
+
+        Double avg = stats.get("avg") != null
+                ? ((Number) stats.get("avg")).doubleValue()
+                : 0.0;
+
+        String avgStr = String.format("%.3f", avg)
+                .replace("0.", ".");
+
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
+    }
+
+    /**
+     * ============================================
      * ★ 対ALL × 球種別 AVG
      * ============================================
      */
