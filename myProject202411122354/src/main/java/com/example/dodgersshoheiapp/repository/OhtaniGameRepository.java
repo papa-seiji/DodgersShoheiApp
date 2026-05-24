@@ -807,6 +807,355 @@ public class OhtaniGameRepository {
 
     /**
      * ============================================
+     * ★ 対右投手 × 投手別 × 球種別 AVG
+     * ============================================
+     */
+    public Map<String, Object> getVsRightStatsByPitcherAndPitchType(
+            String pitcher,
+            String pitchType,
+            Integer season,
+            String result) {
+
+        String sql = """
+                SELECT
+
+                    SUM(
+                        CASE
+                            WHEN result IN ('HIT','HR')
+                            THEN 1
+                            ELSE 0
+                        END
+                    ) AS hits,
+
+                    SUM(
+                        CASE
+                            WHEN result NOT IN ('BB','SF')
+                            AND result IS NOT NULL
+                            THEN 1
+                            ELSE 0
+                        END
+                    ) AS at_bats,
+
+                    ROUND(
+                        SUM(
+                            CASE
+                                WHEN result IN ('HIT','HR')
+                                THEN 1
+                                ELSE 0
+                            END
+                        ) * 1.0
+                        /
+                        NULLIF(
+                            SUM(
+                                CASE
+                                    WHEN result NOT IN ('BB','SF')
+                                    AND result IS NOT NULL
+                                    THEN 1
+                                    ELSE 0
+                                END
+                            ),
+                            0
+                        ),
+                        3
+                    ) AS avg
+
+                FROM (
+
+                    SELECT pa1_result AS result
+                    FROM ohtani_game_details
+                    WHERE pa1_pitcher_hand = 'R'
+                    AND pa1_pitcher = ?
+
+                    AND (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               pa1_description LIKE '%Sinker%'
+                            OR pa1_description LIKE '%Sweeper%'
+                            OR pa1_description LIKE '%Slider%'
+                            OR pa1_description LIKE '%Splitter%'
+                            OR pa1_description LIKE '%Cutter%'
+                            OR pa1_description LIKE '%Knuckle Curve%'
+                            OR pa1_description LIKE '%Slurve%'
+                            OR pa1_description LIKE '%Changeup%'
+                            OR pa1_description LIKE '%Curve%'
+
+                        )
+
+                        OR (
+
+                            CAST(? AS TEXT) <> 'BREAKING'
+                            AND pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                        )
+
+                    )
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
+                    AND (
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa1_result = CAST(? AS TEXT)
+                    )
+
+                    UNION ALL
+
+                    SELECT pa2_result
+                    FROM ohtani_game_details
+                    WHERE pa2_pitcher_hand = 'R'
+                    AND pa2_pitcher = ?
+
+                    AND (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               pa2_description LIKE '%Sinker%'
+                            OR pa2_description LIKE '%Sweeper%'
+                            OR pa2_description LIKE '%Slider%'
+                            OR pa2_description LIKE '%Splitter%'
+                            OR pa2_description LIKE '%Cutter%'
+                            OR pa2_description LIKE '%Knuckle Curve%'
+                            OR pa2_description LIKE '%Slurve%'
+                            OR pa2_description LIKE '%Changeup%'
+                            OR pa2_description LIKE '%Curve%'
+
+                        )
+
+                        OR (
+
+                            CAST(? AS TEXT) <> 'BREAKING'
+                            AND pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                        )
+
+                    )
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
+                    AND (
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa2_result = CAST(? AS TEXT)
+                    )
+
+                    UNION ALL
+
+                    SELECT pa3_result
+                    FROM ohtani_game_details
+                    WHERE pa3_pitcher_hand = 'R'
+                    AND pa3_pitcher = ?
+
+                    AND (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               pa3_description LIKE '%Sinker%'
+                            OR pa3_description LIKE '%Sweeper%'
+                            OR pa3_description LIKE '%Slider%'
+                            OR pa3_description LIKE '%Splitter%'
+                            OR pa3_description LIKE '%Cutter%'
+                            OR pa3_description LIKE '%Knuckle Curve%'
+                            OR pa3_description LIKE '%Slurve%'
+                            OR pa3_description LIKE '%Changeup%'
+                            OR pa3_description LIKE '%Curve%'
+
+                        )
+
+                        OR (
+
+                            CAST(? AS TEXT) <> 'BREAKING'
+                            AND pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                        )
+
+                    )
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
+                    AND (
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa3_result = CAST(? AS TEXT)
+                    )
+
+                    UNION ALL
+
+                    SELECT pa4_result
+                    FROM ohtani_game_details
+                    WHERE pa4_pitcher_hand = 'R'
+                    AND pa4_pitcher = ?
+
+                    AND (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               pa4_description LIKE '%Sinker%'
+                            OR pa4_description LIKE '%Sweeper%'
+                            OR pa4_description LIKE '%Slider%'
+                            OR pa4_description LIKE '%Splitter%'
+                            OR pa4_description LIKE '%Cutter%'
+                            OR pa4_description LIKE '%Knuckle Curve%'
+                            OR pa4_description LIKE '%Slurve%'
+                            OR pa4_description LIKE '%Changeup%'
+                            OR pa4_description LIKE '%Curve%'
+
+                        )
+
+                        OR (
+
+                            CAST(? AS TEXT) <> 'BREAKING'
+                            AND pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                        )
+
+                    )
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
+                    AND (
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa4_result = CAST(? AS TEXT)
+                    )
+
+                    UNION ALL
+
+                    SELECT pa5_result
+                    FROM ohtani_game_details
+                    WHERE pa5_pitcher_hand = 'R'
+                    AND pa5_pitcher = ?
+
+                    AND (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               pa5_description LIKE '%Sinker%'
+                            OR pa5_description LIKE '%Sweeper%'
+                            OR pa5_description LIKE '%Slider%'
+                            OR pa5_description LIKE '%Splitter%'
+                            OR pa5_description LIKE '%Cutter%'
+                            OR pa5_description LIKE '%Knuckle Curve%'
+                            OR pa5_description LIKE '%Slurve%'
+                            OR pa5_description LIKE '%Changeup%'
+                            OR pa5_description LIKE '%Curve%'
+
+                        )
+
+                        OR (
+
+                            CAST(? AS TEXT) <> 'BREAKING'
+                            AND pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                        )
+
+                    )
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
+                    AND (
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa5_result = CAST(? AS TEXT)
+                    )
+
+                    UNION ALL
+
+                    SELECT pa6_result
+                    FROM ohtani_game_details
+                    WHERE pa6_pitcher_hand = 'R'
+                    AND pa6_pitcher = ?
+
+                    AND (
+
+                        CAST(? AS TEXT) = 'BREAKING'
+
+                        AND (
+
+                               pa6_description LIKE '%Sinker%'
+                            OR pa6_description LIKE '%Sweeper%'
+                            OR pa6_description LIKE '%Slider%'
+                            OR pa6_description LIKE '%Splitter%'
+                            OR pa6_description LIKE '%Cutter%'
+                            OR pa6_description LIKE '%Knuckle Curve%'
+                            OR pa6_description LIKE '%Slurve%'
+                            OR pa6_description LIKE '%Changeup%'
+                            OR pa6_description LIKE '%Curve%'
+
+                        )
+
+                        OR (
+
+                            CAST(? AS TEXT) <> 'BREAKING'
+                            AND pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                        )
+
+                    )
+
+                    AND EXTRACT(YEAR FROM created_at) = ?
+
+                    AND (
+                        CAST(? AS TEXT) IS NULL
+                        OR CAST(? AS TEXT) = ''
+                        OR pa6_result = CAST(? AS TEXT)
+                    )
+
+                ) t
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+
+                // pa1
+                pitcher,
+                pitchType, pitchType, pitchType,
+                season,
+                result, result, result,
+
+                // pa2
+                pitcher,
+                pitchType, pitchType, pitchType,
+                season,
+                result, result, result,
+
+                // pa3
+                pitcher,
+                pitchType, pitchType, pitchType,
+                season,
+                result, result, result,
+
+                // pa4
+                pitcher,
+                pitchType, pitchType, pitchType,
+                season,
+                result, result, result,
+
+                // pa5
+                pitcher,
+                pitchType, pitchType, pitchType,
+                season,
+                result, result, result,
+
+                // pa6
+                pitcher,
+                pitchType, pitchType, pitchType,
+                season,
+                result, result, result);
+    }
+
+    /**
+     * ============================================
      * ★ 対右投手 × 球種別 AVG
      * ============================================
      */
