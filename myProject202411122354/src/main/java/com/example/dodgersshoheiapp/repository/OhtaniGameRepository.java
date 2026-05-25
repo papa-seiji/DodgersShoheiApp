@@ -4574,6 +4574,7 @@ public class OhtaniGameRepository {
      * ============================================
      * ★ 打球方向集計（ALL専用）----------------円グラフ
      * ★ 内野方向込み正式版
+     * ★ speedMin / speedMax 対応版
      * ============================================
      */
     public Map<String, Integer> getHitDirectionStats(
@@ -4586,50 +4587,617 @@ public class OhtaniGameRepository {
             Integer speedMax) {
 
         String sql = """
-                                                                                                        SELECT
-                                                                                                            direction,
-                                                                                                            COUNT(*) AS cnt
+                SELECT
+                    direction,
+                    COUNT(*) AS cnt
+                FROM (
+                    SELECT
+                        CASE
+                            WHEN d.pa1_description LIKE '%右中間%'
+                              OR d.pa1_description LIKE '%ライト%'
+                              OR d.pa1_description LIKE '%ファースト%'
+                              OR d.pa1_description LIKE '%一二塁間%'
+                              OR d.pa1_description LIKE '%1,2塁間%'
+                              OR d.pa1_description LIKE '%セカンド%'
+                            THEN 'PULL'
 
-                                                                                                        FROM (
+                            WHEN d.pa1_description LIKE '%センター%'
+                              OR d.pa1_description LIKE '%ピッチャー%'
+                            THEN 'CENTER'
 
-                                                                                                            SELECT
+                            WHEN d.pa1_description LIKE '%左中間%'
+                              OR d.pa1_description LIKE '%レフト%'
+                              OR d.pa1_description LIKE '%サード%'
+                              OR d.pa1_description LIKE '%三遊間%'
+                              OR d.pa1_description LIKE '%ショート%'
+                            THEN 'OPPOSITE'
 
-                                                                                                                CASE
+                            ELSE 'UNKNOWN'
+                        END AS direction
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa1_description IS NOT NULL
+                      AND d.pa1_description <> 'dammydammy'
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa1_result = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR g.opponent = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa1_pitcher = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR (
+                                CAST(? AS TEXT) = 'BREAKING'
+                                AND (
+                                       d.pa1_description LIKE '%Sinker%'
+                                    OR d.pa1_description LIKE '%Sweeper%'
+                                    OR d.pa1_description LIKE '%Slider%'
+                                    OR d.pa1_description LIKE '%Splitter%'
+                                    OR d.pa1_description LIKE '%Cutter%'
+                                    OR d.pa1_description LIKE '%Knuckle Curve%'
+                                    OR d.pa1_description LIKE '%Slurve%'
+                                    OR d.pa1_description LIKE '%Changeup%'
+                                    OR d.pa1_description LIKE '%Curve%'
+                                )
+                            )
+                            OR (
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+                            )
+                      )
+                      AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa1_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                      )
 
-                                                                                                        WHEN pa1_description LIKE '%右中間%'
-                                                                                                          OR pa1_description LIKE '%ライト%'
-                                                                                                          OR pa1_description LIKE '%ファースト%'
-                                                                                                          OR pa1_description LIKE '%一二塁間%'
-                                                                                                          OR pa1_description LIKE '%1,2塁間%'
-                                                                                                          OR pa1_description LIKE '%セカンド%'
-                                                                                                        THEN 'PULL'
+                    UNION ALL
 
-                                                                                                        WHEN pa1_description LIKE '%センター%'
-                                                                                                          OR pa1_description LIKE '%ピッチャー%'
-                                                                                                        THEN 'CENTER'
+                    SELECT
+                        CASE
+                            WHEN d.pa2_description LIKE '%右中間%'
+                              OR d.pa2_description LIKE '%ライト%'
+                              OR d.pa2_description LIKE '%ファースト%'
+                              OR d.pa2_description LIKE '%一二塁間%'
+                              OR d.pa2_description LIKE '%1,2塁間%'
+                              OR d.pa2_description LIKE '%セカンド%'
+                            THEN 'PULL'
 
-                                                                                                        WHEN pa1_description LIKE '%左中間%'
-                                                                                                          OR pa1_description LIKE '%レフト%'
-                                                                                                          OR pa1_description LIKE '%サード%'
-                                                                                                          OR pa1_description LIKE '%三遊間%'
-                                                                                                          OR pa1_description LIKE '%ショート%'
-                                                                                                        THEN 'OPPOSITE'
+                            WHEN d.pa2_description LIKE '%センター%'
+                              OR d.pa2_description LIKE '%ピッチャー%'
+                            THEN 'CENTER'
 
-                                                                                                                    ELSE 'UNKNOWN'
+                            WHEN d.pa2_description LIKE '%左中間%'
+                              OR d.pa2_description LIKE '%レフト%'
+                              OR d.pa2_description LIKE '%サード%'
+                              OR d.pa2_description LIKE '%三遊間%'
+                              OR d.pa2_description LIKE '%ショート%'
+                            THEN 'OPPOSITE'
 
-                                                                                                                END AS direction
+                            ELSE 'UNKNOWN'
+                        END AS direction
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa2_description IS NOT NULL
+                      AND d.pa2_description <> 'dammydammy'
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa2_result = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR g.opponent = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa2_pitcher = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR (
+                                CAST(? AS TEXT) = 'BREAKING'
+                                AND (
+                                       d.pa2_description LIKE '%Sinker%'
+                                    OR d.pa2_description LIKE '%Sweeper%'
+                                    OR d.pa2_description LIKE '%Slider%'
+                                    OR d.pa2_description LIKE '%Splitter%'
+                                    OR d.pa2_description LIKE '%Cutter%'
+                                    OR d.pa2_description LIKE '%Knuckle Curve%'
+                                    OR d.pa2_description LIKE '%Slurve%'
+                                    OR d.pa2_description LIKE '%Changeup%'
+                                    OR d.pa2_description LIKE '%Curve%'
+                                )
+                            )
+                            OR (
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
+                            )
+                      )
+                      AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa2_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                      )
 
-                                                                                                            FROM ohtani_game_details d
-                                                                                                            JOIN ohtani_games g
-                                                                                                                ON d.game_id = g.id
-                                                                                                            WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                    UNION ALL
 
-                                                                                                            AND pa1_description IS NOT NULL
-                                                                                                            AND pa1_description <> 'dammydammy'
+                    SELECT
+                        CASE
+                            WHEN d.pa3_description LIKE '%右中間%'
+                              OR d.pa3_description LIKE '%ライト%'
+                              OR d.pa3_description LIKE '%ファースト%'
+                              OR d.pa3_description LIKE '%一二塁間%'
+                              OR d.pa3_description LIKE '%1,2塁間%'
+                              OR d.pa3_description LIKE '%セカンド%'
+                            THEN 'PULL'
+
+                            WHEN d.pa3_description LIKE '%センター%'
+                              OR d.pa3_description LIKE '%ピッチャー%'
+                            THEN 'CENTER'
+
+                            WHEN d.pa3_description LIKE '%左中間%'
+                              OR d.pa3_description LIKE '%レフト%'
+                              OR d.pa3_description LIKE '%サード%'
+                              OR d.pa3_description LIKE '%三遊間%'
+                              OR d.pa3_description LIKE '%ショート%'
+                            THEN 'OPPOSITE'
+
+                            ELSE 'UNKNOWN'
+                        END AS direction
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa3_description IS NOT NULL
+                      AND d.pa3_description <> 'dammydammy'
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa3_result = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR g.opponent = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa3_pitcher = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR (
+                                CAST(? AS TEXT) = 'BREAKING'
+                                AND (
+                                       d.pa3_description LIKE '%Sinker%'
+                                    OR d.pa3_description LIKE '%Sweeper%'
+                                    OR d.pa3_description LIKE '%Slider%'
+                                    OR d.pa3_description LIKE '%Splitter%'
+                                    OR d.pa3_description LIKE '%Cutter%'
+                                    OR d.pa3_description LIKE '%Knuckle Curve%'
+                                    OR d.pa3_description LIKE '%Slurve%'
+                                    OR d.pa3_description LIKE '%Changeup%'
+                                    OR d.pa3_description LIKE '%Curve%'
+                                )
+                            )
+                            OR (
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
+                            )
+                      )
+                      AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa3_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                      )
+
+                    UNION ALL
+
+                    SELECT
+                        CASE
+                            WHEN d.pa4_description LIKE '%右中間%'
+                              OR d.pa4_description LIKE '%ライト%'
+                              OR d.pa4_description LIKE '%ファースト%'
+                              OR d.pa4_description LIKE '%一二塁間%'
+                              OR d.pa4_description LIKE '%1,2塁間%'
+                              OR d.pa4_description LIKE '%セカンド%'
+                            THEN 'PULL'
+
+                            WHEN d.pa4_description LIKE '%センター%'
+                              OR d.pa4_description LIKE '%ピッチャー%'
+                            THEN 'CENTER'
+
+                            WHEN d.pa4_description LIKE '%左中間%'
+                              OR d.pa4_description LIKE '%レフト%'
+                              OR d.pa4_description LIKE '%サード%'
+                              OR d.pa4_description LIKE '%三遊間%'
+                              OR d.pa4_description LIKE '%ショート%'
+                            THEN 'OPPOSITE'
+
+                            ELSE 'UNKNOWN'
+                        END AS direction
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa4_description IS NOT NULL
+                      AND d.pa4_description <> 'dammydammy'
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa4_result = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR g.opponent = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa4_pitcher = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR (
+                                CAST(? AS TEXT) = 'BREAKING'
+                                AND (
+                                       d.pa4_description LIKE '%Sinker%'
+                                    OR d.pa4_description LIKE '%Sweeper%'
+                                    OR d.pa4_description LIKE '%Slider%'
+                                    OR d.pa4_description LIKE '%Splitter%'
+                                    OR d.pa4_description LIKE '%Cutter%'
+                                    OR d.pa4_description LIKE '%Knuckle Curve%'
+                                    OR d.pa4_description LIKE '%Slurve%'
+                                    OR d.pa4_description LIKE '%Changeup%'
+                                    OR d.pa4_description LIKE '%Curve%'
+                                )
+                            )
+                            OR (
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
+                            )
+                      )
+                      AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa4_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                      )
+
+                    UNION ALL
+
+                    SELECT
+                        CASE
+                            WHEN d.pa5_description LIKE '%右中間%'
+                              OR d.pa5_description LIKE '%ライト%'
+                              OR d.pa5_description LIKE '%ファースト%'
+                              OR d.pa5_description LIKE '%一二塁間%'
+                              OR d.pa5_description LIKE '%1,2塁間%'
+                              OR d.pa5_description LIKE '%セカンド%'
+                            THEN 'PULL'
+
+                            WHEN d.pa5_description LIKE '%センター%'
+                              OR d.pa5_description LIKE '%ピッチャー%'
+                            THEN 'CENTER'
+
+                            WHEN d.pa5_description LIKE '%左中間%'
+                              OR d.pa5_description LIKE '%レフト%'
+                              OR d.pa5_description LIKE '%サード%'
+                              OR d.pa5_description LIKE '%三遊間%'
+                              OR d.pa5_description LIKE '%ショート%'
+                            THEN 'OPPOSITE'
+
+                            ELSE 'UNKNOWN'
+                        END AS direction
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa5_description IS NOT NULL
+                      AND d.pa5_description <> 'dammydammy'
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa5_result = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR g.opponent = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa5_pitcher = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR (
+                                CAST(? AS TEXT) = 'BREAKING'
+                                AND (
+                                       d.pa5_description LIKE '%Sinker%'
+                                    OR d.pa5_description LIKE '%Sweeper%'
+                                    OR d.pa5_description LIKE '%Slider%'
+                                    OR d.pa5_description LIKE '%Splitter%'
+                                    OR d.pa5_description LIKE '%Cutter%'
+                                    OR d.pa5_description LIKE '%Knuckle Curve%'
+                                    OR d.pa5_description LIKE '%Slurve%'
+                                    OR d.pa5_description LIKE '%Changeup%'
+                                    OR d.pa5_description LIKE '%Curve%'
+                                )
+                            )
+                            OR (
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
+                            )
+                      )
+                      AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa5_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                      )
+
+                    UNION ALL
+
+                    SELECT
+                        CASE
+                            WHEN d.pa6_description LIKE '%右中間%'
+                              OR d.pa6_description LIKE '%ライト%'
+                              OR d.pa6_description LIKE '%ファースト%'
+                              OR d.pa6_description LIKE '%一二塁間%'
+                              OR d.pa6_description LIKE '%1,2塁間%'
+                              OR d.pa6_description LIKE '%セカンド%'
+                            THEN 'PULL'
+
+                            WHEN d.pa6_description LIKE '%センター%'
+                              OR d.pa6_description LIKE '%ピッチャー%'
+                            THEN 'CENTER'
+
+                            WHEN d.pa6_description LIKE '%左中間%'
+                              OR d.pa6_description LIKE '%レフト%'
+                              OR d.pa6_description LIKE '%サード%'
+                              OR d.pa6_description LIKE '%三遊間%'
+                              OR d.pa6_description LIKE '%ショート%'
+                            THEN 'OPPOSITE'
+
+                            ELSE 'UNKNOWN'
+                        END AS direction
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa6_description IS NOT NULL
+                      AND d.pa6_description <> 'dammydammy'
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa6_result = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR g.opponent = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR d.pa6_pitcher = CAST(? AS TEXT)
+                      )
+                      AND (
+                            CAST(? AS TEXT) IS NULL
+                            OR CAST(? AS TEXT) = ''
+                            OR CAST(? AS TEXT) = 'ALL'
+                            OR (
+                                CAST(? AS TEXT) = 'BREAKING'
+                                AND (
+                                       d.pa6_description LIKE '%Sinker%'
+                                    OR d.pa6_description LIKE '%Sweeper%'
+                                    OR d.pa6_description LIKE '%Slider%'
+                                    OR d.pa6_description LIKE '%Splitter%'
+                                    OR d.pa6_description LIKE '%Cutter%'
+                                    OR d.pa6_description LIKE '%Knuckle Curve%'
+                                    OR d.pa6_description LIKE '%Slurve%'
+                                    OR d.pa6_description LIKE '%Changeup%'
+                                    OR d.pa6_description LIKE '%Curve%'
+                                )
+                            )
+                            OR (
+                                CAST(? AS TEXT) <> 'BREAKING'
+                                AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
+                            )
+                      )
+                      AND (
+                            CAST(? AS NUMERIC) IS NULL
+                            OR CAST(? AS NUMERIC) IS NULL
+                            OR (
+                                substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') IS NOT NULL
+                                AND CAST(substring(d.pa6_description FROM '([0-9]+\\.?[0-9]*)mph') AS NUMERIC)
+                                    BETWEEN CAST(? AS NUMERIC) AND CAST(? AS NUMERIC)
+                            )
+                      )
+                ) t
+                GROUP BY direction
+                """;
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                sql,
+
+                // pa1
+                season,
+                result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                // pa2
+                season,
+                result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                // pa3
+                season,
+                result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                // pa4
+                season,
+                result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                // pa5
+                season,
+                result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                // pa6
+                season,
+                result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax);
+
+        Map<String, Integer> directionMap = new java.util.HashMap<>();
+
+        for (Map<String, Object> row : rows) {
+
+            String direction = (String) row.get("direction");
+            Number cnt = (Number) row.get("cnt");
+
+            directionMap.put(direction, cnt.intValue());
+        }
+
+        return directionMap;
+    }
+
+    /**
+     * ============================================
+     * ★ 打球方向集計（対右専用）----------------円グラフ
+     * ★ 年度 × result × opponent 対応版
+     * ============================================
+     */
+    public Map<String, Integer> getHitDirectionStatsByRight(
+            Integer season,
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
+
+        String sql = """
+                                                                SELECT
+                                                                    direction,
+                                                                    COUNT(*) AS cnt
+
+                                                                FROM (
+
+                                                                    SELECT
+
+                                                                        CASE
+
+                                                                            WHEN pa1_description LIKE '%右中間%'
+                                                                              OR pa1_description LIKE '%ライト%'
+                                                                              OR pa1_description LIKE '%ファースト%'
+                                                                              OR pa1_description LIKE '%一二塁間%'
+                                                                              OR pa1_description LIKE '%1,2塁間%'
+                                                                              OR pa1_description LIKE '%セカンド%'
+                                                                            THEN 'PULL'
+
+                                                                            WHEN pa1_description LIKE '%センター%'
+                                                                              OR pa1_description LIKE '%ピッチャー%'
+                                                                            THEN 'CENTER'
+
+                                                                            WHEN pa1_description LIKE '%左中間%'
+                                                                              OR pa1_description LIKE '%レフト%'
+                                                                              OR pa1_description LIKE '%サード%'
+                                                                              OR pa1_description LIKE '%三遊間%'
+                                                                              OR pa1_description LIKE '%ショート%'
+                                                                            THEN 'OPPOSITE'
+
+                                                                            ELSE 'UNKNOWN'
+
+                                                                        END AS direction
+
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g
+                                                                        ON d.game_id = g.id
+
+                                                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                    AND pa1_pitcher_hand = 'R'
+                                                                    AND pa1_description IS NOT NULL
+                                                                    AND pa1_description <> 'dammydammy'
 
                                                                     AND (
                                                                         CAST(? AS TEXT) IS NULL
                                                                         OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
                                                                         OR pa1_result = CAST(? AS TEXT)
                                                                     )
 
@@ -4639,6 +5207,759 @@ public class OhtaniGameRepository {
                                                                         OR CAST(? AS TEXT) = 'ALL'
                                                                         OR g.opponent = CAST(? AS TEXT)
                                                                     )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR d.pa1_pitcher = CAST(? AS TEXT)
+                                                                    )
+
+                                                AND (
+
+                                                    CAST(? AS TEXT) IS NULL
+                                                    OR CAST(? AS TEXT) = ''
+                                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                                        AND (
+
+                                                               d.pa1_description LIKE '%Sinker%'
+                                                            OR d.pa1_description LIKE '%Sweeper%'
+                                                            OR d.pa1_description LIKE '%Slider%'
+                                                            OR d.pa1_description LIKE '%Splitter%'
+                                                            OR d.pa1_description LIKE '%Cutter%'
+                                                            OR d.pa1_description LIKE '%Knuckle Curve%'
+                                                            OR d.pa1_description LIKE '%Slurve%'
+                                                            OR d.pa1_description LIKE '%Changeup%'
+                                                            OR d.pa1_description LIKE '%Curve%'
+
+                                                        )
+                                                    )
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) <> 'BREAKING'
+                                                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                    )
+                                                )
+
+                -- ★ここから追加
+                AND (
+                    ? IS NULL
+                    OR ? IS NULL
+                    OR (
+                        substring(
+                            d.pa1_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
+
+                        AND CAST(
+                            substring(
+                                d.pa1_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
+                        )
+                        BETWEEN ? AND ?
+                    )
+                )
+                -- ★ここまで追加
+
+                                                                    UNION ALL
+
+                                                                    SELECT
+
+                                                                        CASE
+
+                                                                            WHEN pa2_description LIKE '%右中間%'
+                                                                              OR pa2_description LIKE '%ライト%'
+                                                                              OR pa2_description LIKE '%ファースト%'
+                                                                              OR pa2_description LIKE '%一二塁間%'
+                                                                              OR pa2_description LIKE '%1,2塁間%'
+                                                                              OR pa2_description LIKE '%セカンド%'
+                                                                            THEN 'PULL'
+
+                                                                            WHEN pa2_description LIKE '%センター%'
+                                                                              OR pa2_description LIKE '%ピッチャー%'
+                                                                            THEN 'CENTER'
+
+                                                                            WHEN pa2_description LIKE '%左中間%'
+                                                                              OR pa2_description LIKE '%レフト%'
+                                                                              OR pa2_description LIKE '%サード%'
+                                                                              OR pa2_description LIKE '%三遊間%'
+                                                                              OR pa2_description LIKE '%ショート%'
+                                                                            THEN 'OPPOSITE'
+
+                                                                            ELSE 'UNKNOWN'
+
+                                                                        END
+
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g
+                                                                        ON d.game_id = g.id
+
+                                                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                    AND pa2_pitcher_hand = 'R'
+                                                                    AND pa2_description IS NOT NULL
+                                                                    AND pa2_description <> 'dammydammy'
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR pa2_result = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR g.opponent = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR d.pa2_pitcher = CAST(? AS TEXT)
+                                                                    )
+
+                                                AND (
+
+                                                    CAST(? AS TEXT) IS NULL
+                                                    OR CAST(? AS TEXT) = ''
+                                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                                        AND (
+
+                                                               d.pa2_description LIKE '%Sinker%'
+                                                            OR d.pa2_description LIKE '%Sweeper%'
+                                                            OR d.pa2_description LIKE '%Slider%'
+                                                            OR d.pa2_description LIKE '%Splitter%'
+                                                            OR d.pa2_description LIKE '%Cutter%'
+                                                            OR d.pa2_description LIKE '%Knuckle Curve%'
+                                                            OR d.pa2_description LIKE '%Slurve%'
+                                                            OR d.pa2_description LIKE '%Changeup%'
+                                                            OR d.pa2_description LIKE '%Curve%'
+
+                                                        )
+                                                    )
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) <> 'BREAKING'
+                                                        AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                    )
+                                                )
+
+                -- ★ここから追加
+                AND (
+                    ? IS NULL
+                    OR ? IS NULL
+                    OR (
+                        substring(
+                            d.pa2_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
+
+                        AND CAST(
+                            substring(
+                                d.pa2_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
+                        )
+                        BETWEEN ? AND ?
+                    )
+                )
+                -- ★ここまで追加
+
+                                                                    UNION ALL
+
+                                                                    SELECT
+
+                                                                        CASE
+
+                                                                            WHEN pa3_description LIKE '%右中間%'
+                                                                              OR pa3_description LIKE '%ライト%'
+                                                                              OR pa3_description LIKE '%ファースト%'
+                                                                              OR pa3_description LIKE '%一二塁間%'
+                                                                              OR pa3_description LIKE '%1,2塁間%'
+                                                                              OR pa3_description LIKE '%セカンド%'
+                                                                            THEN 'PULL'
+
+                                                                            WHEN pa3_description LIKE '%センター%'
+                                                                              OR pa3_description LIKE '%ピッチャー%'
+                                                                            THEN 'CENTER'
+
+                                                                            WHEN pa3_description LIKE '%左中間%'
+                                                                              OR pa3_description LIKE '%レフト%'
+                                                                              OR pa3_description LIKE '%サード%'
+                                                                              OR pa3_description LIKE '%三遊間%'
+                                                                              OR pa3_description LIKE '%ショート%'
+                                                                            THEN 'OPPOSITE'
+
+                                                                            ELSE 'UNKNOWN'
+
+                                                                        END
+
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g
+                                                                        ON d.game_id = g.id
+
+                                                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                    AND pa3_pitcher_hand = 'R'
+                                                                    AND pa3_description IS NOT NULL
+                                                                    AND pa3_description <> 'dammydammy'
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR pa3_result = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR g.opponent = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR d.pa3_pitcher = CAST(? AS TEXT)
+                                                                    )
+
+                                                AND (
+
+                                                    CAST(? AS TEXT) IS NULL
+                                                    OR CAST(? AS TEXT) = ''
+                                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                                        AND (
+
+                                                               d.pa3_description LIKE '%Sinker%'
+                                                            OR d.pa3_description LIKE '%Sweeper%'
+                                                            OR d.pa3_description LIKE '%Slider%'
+                                                            OR d.pa3_description LIKE '%Splitter%'
+                                                            OR d.pa3_description LIKE '%Cutter%'
+                                                            OR d.pa3_description LIKE '%Knuckle Curve%'
+                                                            OR d.pa3_description LIKE '%Slurve%'
+                                                            OR d.pa3_description LIKE '%Changeup%'
+                                                            OR d.pa3_description LIKE '%Curve%'
+
+                                                        )
+                                                    )
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) <> 'BREAKING'
+                                                        AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                    )
+                                                )
+
+                -- ★ここから追加
+                AND (
+                    ? IS NULL
+                    OR ? IS NULL
+                    OR (
+                        substring(
+                            d.pa3_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
+
+                        AND CAST(
+                            substring(
+                                d.pa3_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
+                        )
+                        BETWEEN ? AND ?
+                    )
+                )
+                -- ★ここまで追加
+
+                                                                    UNION ALL
+
+                                                                    SELECT
+
+                                                                        CASE
+
+                                                                            WHEN pa4_description LIKE '%右中間%'
+                                                                              OR pa4_description LIKE '%ライト%'
+                                                                              OR pa4_description LIKE '%ファースト%'
+                                                                              OR pa4_description LIKE '%一二塁間%'
+                                                                              OR pa4_description LIKE '%1,2塁間%'
+                                                                              OR pa4_description LIKE '%セカンド%'
+                                                                            THEN 'PULL'
+
+                                                                            WHEN pa4_description LIKE '%センター%'
+                                                                              OR pa4_description LIKE '%ピッチャー%'
+                                                                            THEN 'CENTER'
+
+                                                                            WHEN pa4_description LIKE '%左中間%'
+                                                                              OR pa4_description LIKE '%レフト%'
+                                                                              OR pa4_description LIKE '%サード%'
+                                                                              OR pa4_description LIKE '%三遊間%'
+                                                                              OR pa4_description LIKE '%ショート%'
+                                                                            THEN 'OPPOSITE'
+
+                                                                            ELSE 'UNKNOWN'
+
+                                                                        END
+
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g
+                                                                        ON d.game_id = g.id
+
+                                                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                    AND pa4_pitcher_hand = 'R'
+                                                                    AND pa4_description IS NOT NULL
+                                                                    AND pa4_description <> 'dammydammy'
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR pa4_result = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR g.opponent = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR d.pa4_pitcher = CAST(? AS TEXT)
+                                                                    )
+
+                                                AND (
+
+                                                    CAST(? AS TEXT) IS NULL
+                                                    OR CAST(? AS TEXT) = ''
+                                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                                        AND (
+
+                                                               d.pa4_description LIKE '%Sinker%'
+                                                            OR d.pa4_description LIKE '%Sweeper%'
+                                                            OR d.pa4_description LIKE '%Slider%'
+                                                            OR d.pa4_description LIKE '%Splitter%'
+                                                            OR d.pa4_description LIKE '%Cutter%'
+                                                            OR d.pa4_description LIKE '%Knuckle Curve%'
+                                                            OR d.pa4_description LIKE '%Slurve%'
+                                                            OR d.pa4_description LIKE '%Changeup%'
+                                                            OR d.pa4_description LIKE '%Curve%'
+
+                                                        )
+                                                    )
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) <> 'BREAKING'
+                                                        AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                    )
+                                                )
+
+                -- ★ここから追加
+                AND (
+                    ? IS NULL
+                    OR ? IS NULL
+                    OR (
+                        substring(
+                            d.pa4_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
+
+                        AND CAST(
+                            substring(
+                                d.pa4_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
+                        )
+                        BETWEEN ? AND ?
+                    )
+                )
+                -- ★ここまで追加
+
+                                                                    UNION ALL
+
+                                                                    SELECT
+
+                                                                        CASE
+
+                                                                            WHEN pa5_description LIKE '%右中間%'
+                                                                              OR pa5_description LIKE '%ライト%'
+                                                                              OR pa5_description LIKE '%ファースト%'
+                                                                              OR pa5_description LIKE '%一二塁間%'
+                                                                              OR pa5_description LIKE '%1,2塁間%'
+                                                                              OR pa5_description LIKE '%セカンド%'
+                                                                            THEN 'PULL'
+
+                                                                            WHEN pa5_description LIKE '%センター%'
+                                                                              OR pa5_description LIKE '%ピッチャー%'
+                                                                            THEN 'CENTER'
+
+                                                                            WHEN pa5_description LIKE '%左中間%'
+                                                                              OR pa5_description LIKE '%レフト%'
+                                                                              OR pa5_description LIKE '%サード%'
+                                                                              OR pa5_description LIKE '%三遊間%'
+                                                                              OR pa5_description LIKE '%ショート%'
+                                                                            THEN 'OPPOSITE'
+
+                                                                            ELSE 'UNKNOWN'
+
+                                                                        END
+
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g
+                                                                        ON d.game_id = g.id
+
+                                                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                    AND pa5_pitcher_hand = 'R'
+                                                                    AND pa5_description IS NOT NULL
+                                                                    AND pa5_description <> 'dammydammy'
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR pa5_result = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR g.opponent = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR d.pa5_pitcher = CAST(? AS TEXT)
+                                                                    )
+
+                                                AND (
+
+                                                    CAST(? AS TEXT) IS NULL
+                                                    OR CAST(? AS TEXT) = ''
+                                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                                        AND (
+
+                                                               d.pa5_description LIKE '%Sinker%'
+                                                            OR d.pa5_description LIKE '%Sweeper%'
+                                                            OR d.pa5_description LIKE '%Slider%'
+                                                            OR d.pa5_description LIKE '%Splitter%'
+                                                            OR d.pa5_description LIKE '%Cutter%'
+                                                            OR d.pa5_description LIKE '%Knuckle Curve%'
+                                                            OR d.pa5_description LIKE '%Slurve%'
+                                                            OR d.pa5_description LIKE '%Changeup%'
+                                                            OR d.pa5_description LIKE '%Curve%'
+
+                                                        )
+                                                    )
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) <> 'BREAKING'
+                                                        AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                    )
+                                                )
+
+                -- ★ここから追加
+                AND (
+                    ? IS NULL
+                    OR ? IS NULL
+                    OR (
+                        substring(
+                            d.pa5_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
+
+                        AND CAST(
+                            substring(
+                                d.pa5_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
+                        )
+                        BETWEEN ? AND ?
+                    )
+                )
+                -- ★ここまで追加
+
+                                                                    UNION ALL
+
+                                                                    SELECT
+
+                                                                        CASE
+
+                                                                            WHEN pa6_description LIKE '%右中間%'
+                                                                              OR pa6_description LIKE '%ライト%'
+                                                                              OR pa6_description LIKE '%ファースト%'
+                                                                              OR pa6_description LIKE '%一二塁間%'
+                                                                              OR pa6_description LIKE '%1,2塁間%'
+                                                                              OR pa6_description LIKE '%セカンド%'
+                                                                            THEN 'PULL'
+
+                                                                            WHEN pa6_description LIKE '%センター%'
+                                                                              OR pa6_description LIKE '%ピッチャー%'
+                                                                            THEN 'CENTER'
+
+                                                                            WHEN pa6_description LIKE '%左中間%'
+                                                                              OR pa6_description LIKE '%レフト%'
+                                                                              OR pa6_description LIKE '%サード%'
+                                                                              OR pa6_description LIKE '%三遊間%'
+                                                                              OR pa6_description LIKE '%ショート%'
+                                                                            THEN 'OPPOSITE'
+
+                                                                            ELSE 'UNKNOWN'
+
+                                                                        END
+
+                                                                    FROM ohtani_game_details d
+                                                                    JOIN ohtani_games g
+                                                                        ON d.game_id = g.id
+
+                                                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                    AND pa6_pitcher_hand = 'R'
+                                                                    AND pa6_description IS NOT NULL
+                                                                    AND pa6_description <> 'dammydammy'
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR pa6_result = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR CAST(? AS TEXT) = 'ALL'
+                                                                        OR g.opponent = CAST(? AS TEXT)
+                                                                    )
+
+                                                                    AND (
+                                                                        CAST(? AS TEXT) IS NULL
+                                                                        OR CAST(? AS TEXT) = ''
+                                                                        OR d.pa6_pitcher = CAST(? AS TEXT)
+                                                                    )
+
+                                                AND (
+
+                                                    CAST(? AS TEXT) IS NULL
+                                                    OR CAST(? AS TEXT) = ''
+                                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                                        AND (
+
+                                                               d.pa6_description LIKE '%Sinker%'
+                                                            OR d.pa6_description LIKE '%Sweeper%'
+                                                            OR d.pa6_description LIKE '%Slider%'
+                                                            OR d.pa6_description LIKE '%Splitter%'
+                                                            OR d.pa6_description LIKE '%Cutter%'
+                                                            OR d.pa6_description LIKE '%Knuckle Curve%'
+                                                            OR d.pa6_description LIKE '%Slurve%'
+                                                            OR d.pa6_description LIKE '%Changeup%'
+                                                            OR d.pa6_description LIKE '%Curve%'
+
+                                                        )
+                                                    )
+
+                                                    OR (
+
+                                                        CAST(? AS TEXT) <> 'BREAKING'
+                                                        AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                                    )
+                                                )
+
+                -- ★ここから追加
+                AND (
+                    ? IS NULL
+                    OR ? IS NULL
+                    OR (
+                        substring(
+                            d.pa6_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
+
+                        AND CAST(
+                            substring(
+                                d.pa6_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
+                        )
+                        BETWEEN ? AND ?
+                    )
+                )
+                -- ★ここまで追加
+
+                                                                ) t
+
+                                                                GROUP BY direction
+                                                                """;
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                sql,
+
+                season,
+                result, result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                season,
+                result, result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                season,
+                result, result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                season,
+                result, result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                season,
+                result, result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
+
+                season,
+                result, result, result, result,
+                opponent, opponent, opponent, opponent,
+                pitcher, pitcher, pitcher,
+                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax);
+
+        Map<String, Integer> directionMap = new java.util.HashMap<>();
+
+        for (Map<String, Object> row : rows) {
+
+            String direction = (String) row.get("direction");
+
+            Number cnt = (Number) row.get("cnt");
+
+            directionMap.put(direction, cnt.intValue());
+        }
+
+        return directionMap;
+    }
+
+    /**
+     * ============================================
+     * ★ 打球方向集計（対左）-----------------円グラフ
+     * ============================================
+     */
+    public Map<String, Integer> getHitDirectionStatsByLeft(
+            Integer season,
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
+
+        String sql = """
+                                                                    SELECT
+                                                                        direction,
+                                                                        COUNT(*) AS cnt
+
+                                                                    FROM (
+
+                                                                        SELECT
+
+                                                                            CASE
+
+                                                                    WHEN pa1_description LIKE '%右中間%'
+                                                                      OR pa1_description LIKE '%ライト%'
+                                                                      OR pa1_description LIKE '%ファースト%'
+                                                                      OR pa1_description LIKE '%一二塁間%'
+                                                                      OR pa1_description LIKE '%1,2塁間%'
+                                                                      OR pa1_description LIKE '%セカンド%'
+                                                                    THEN 'PULL'
+
+                                                                    WHEN pa1_description LIKE '%センター%'
+                                                                      OR pa1_description LIKE '%ピッチャー%'
+                                                                    THEN 'CENTER'
+
+                                                                    WHEN pa1_description LIKE '%左中間%'
+                                                                      OR pa1_description LIKE '%レフト%'
+                                                                      OR pa1_description LIKE '%サード%'
+                                                                      OR pa1_description LIKE '%三遊間%'
+                                                                      OR pa1_description LIKE '%ショート%'
+                                                                    THEN 'OPPOSITE'
+
+                                                                                ELSE 'UNKNOWN'
+
+                                                                            END AS direction
+
+                                                                        FROM ohtani_game_details d
+                                                                        JOIN ohtani_games g
+                                                                            ON d.game_id = g.id
+
+                                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                        AND pa1_pitcher_hand = 'L'
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR pa1_result = CAST(? AS TEXT)
+                                                                        )
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR g.opponent = CAST(? AS TEXT)
+                                                                        )
 
                                                 AND (
                                                     CAST(? AS TEXT) IS NULL
@@ -4679,55 +6000,79 @@ public class OhtaniGameRepository {
                                     )
                                 )
 
-                                                                                                            UNION ALL
+                -- ★ここから追加
+                AND (
+                    ? IS NULL
+                    OR ? IS NULL
+                    OR (
+                        substring(
+                            d.pa1_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
 
-                                                                                                            SELECT
+                        AND CAST(
+                            substring(
+                                d.pa1_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
+                        )
+                        BETWEEN ? AND ?
+                    )
+                )
+                -- ★ここまで追加
 
-                                                                                                                CASE
+                                                                        AND pa1_description IS NOT NULL
+                                                                        AND pa1_description <> 'dammydammy'
 
-                                                                                                        WHEN pa2_description LIKE '%右中間%'
-                                                                                                          OR pa2_description LIKE '%ライト%'
-                                                                                                          OR pa2_description LIKE '%ファースト%'
-                                                                                                          OR pa2_description LIKE '%一二塁間%'
-                                                                                                          OR pa2_description LIKE '%1,2塁間%'
-                                                                                                          OR pa2_description LIKE '%セカンド%'
-                                                                                                        THEN 'PULL'
+                                                                        UNION ALL
 
-                                                                                                        WHEN pa2_description LIKE '%センター%'
-                                                                                                          OR pa2_description LIKE '%ピッチャー%'
-                                                                                                        THEN 'CENTER'
+                                                                        SELECT
 
-                                                                                                        WHEN pa2_description LIKE '%左中間%'
-                                                                                                          OR pa2_description LIKE '%レフト%'
-                                                                                                          OR pa2_description LIKE '%サード%'
-                                                                                                          OR pa2_description LIKE '%三遊間%'
-                                                                                                          OR pa2_description LIKE '%ショート%'
-                                                                                                        THEN 'OPPOSITE'
+                                                                            CASE
 
-                                                                                                                    ELSE 'UNKNOWN'
+                                                                    WHEN pa2_description LIKE '%右中間%'
+                                                                      OR pa2_description LIKE '%ライト%'
+                                                                      OR pa2_description LIKE '%ファースト%'
+                                                                      OR pa2_description LIKE '%一二塁間%'
+                                                                      OR pa2_description LIKE '%1,2塁間%'
+                                                                      OR pa2_description LIKE '%セカンド%'
+                                                                    THEN 'PULL'
 
-                                                                                                                END
+                                                                    WHEN pa2_description LIKE '%センター%'
+                                                                      OR pa2_description LIKE '%ピッチャー%'
+                                                                    THEN 'CENTER'
 
-                                                                                                            FROM ohtani_game_details d
-                                                                                                            JOIN ohtani_games g
-                                                                                                                ON d.game_id = g.id
-                                                                                                            WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                    WHEN pa2_description LIKE '%左中間%'
+                                                                      OR pa2_description LIKE '%レフト%'
+                                                                      OR pa2_description LIKE '%サード%'
+                                                                      OR pa2_description LIKE '%三遊間%'
+                                                                      OR pa2_description LIKE '%ショート%'
+                                                                    THEN 'OPPOSITE'
 
-                                                                                                            AND pa2_description IS NOT NULL
-                                                                                                            AND pa2_description <> 'dammydammy'
+                                                                                ELSE 'UNKNOWN'
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR pa2_result = CAST(? AS TEXT)
-                                                                    )
+                                                                            END
 
-                                                                    AND (
-                                                                    CAST(? AS TEXT) IS NULL
-                                                                    OR CAST(? AS TEXT) = ''
-                                                                    OR CAST(? AS TEXT) = 'ALL'
-                                                                    OR g.opponent = CAST(? AS TEXT)
-                                                                )
+                                                                        FROM ohtani_game_details d
+                                                                        JOIN ohtani_games g
+                                                                            ON d.game_id = g.id
+
+                                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                        AND pa2_pitcher_hand = 'L'
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR pa2_result = CAST(? AS TEXT)
+                                                                        )
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR g.opponent = CAST(? AS TEXT)
+                                                                        )
 
                                                 AND (
                                                     CAST(? AS TEXT) IS NULL
@@ -4735,88 +6080,113 @@ public class OhtaniGameRepository {
                                                     OR d.pa2_pitcher = CAST(? AS TEXT)
                                                 )
 
+                                AND (
+
+                                    CAST(? AS TEXT) IS NULL
+                                    OR CAST(? AS TEXT) = ''
+                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                    OR (
+
+                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                        AND (
+
+                                               d.pa2_description LIKE '%Sinker%'
+                                            OR d.pa2_description LIKE '%Sweeper%'
+                                            OR d.pa2_description LIKE '%Slider%'
+                                            OR d.pa2_description LIKE '%Splitter%'
+                                            OR d.pa2_description LIKE '%Cutter%'
+                                            OR d.pa2_description LIKE '%Knuckle Curve%'
+                                            OR d.pa2_description LIKE '%Slurve%'
+                                            OR d.pa2_description LIKE '%Changeup%'
+                                            OR d.pa2_description LIKE '%Curve%'
+
+                                        )
+                                    )
+
+                                    OR (
+
+                                        CAST(? AS TEXT) <> 'BREAKING'
+                                        AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                    )
+                                )
+
+                -- ★ここから追加
                 AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
+                    ? IS NULL
+                    OR ? IS NULL
                     OR (
+                        substring(
+                            d.pa2_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
 
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa2_description LIKE '%Sinker%'
-                            OR d.pa2_description LIKE '%Sweeper%'
-                            OR d.pa2_description LIKE '%Slider%'
-                            OR d.pa2_description LIKE '%Splitter%'
-                            OR d.pa2_description LIKE '%Cutter%'
-                            OR d.pa2_description LIKE '%Knuckle Curve%'
-                            OR d.pa2_description LIKE '%Slurve%'
-                            OR d.pa2_description LIKE '%Changeup%'
-                            OR d.pa2_description LIKE '%Curve%'
-
+                        AND CAST(
+                            substring(
+                                d.pa2_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
                         )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
-
+                        BETWEEN ? AND ?
                     )
                 )
+                -- ★ここまで追加
 
-                                                                                                            UNION ALL
+                                                                        AND pa2_description IS NOT NULL
+                                                                        AND pa2_description <> 'dammydammy'
 
-                                                                                                            SELECT
+                                                                        UNION ALL
 
-                                                                                                                CASE
+                                                                        SELECT
 
-                                                                                                        WHEN pa3_description LIKE '%右中間%'
-                                                                                                          OR pa3_description LIKE '%ライト%'
-                                                                                                          OR pa3_description LIKE '%ファースト%'
-                                                                                                          OR pa3_description LIKE '%一二塁間%'
-                                                                                                          OR pa3_description LIKE '%1,2塁間%'
-                                                                                                          OR pa3_description LIKE '%セカンド%'
-                                                                                                        THEN 'PULL'
+                                                                            CASE
 
-                                                                                                        WHEN pa3_description LIKE '%センター%'
-                                                                                                          OR pa3_description LIKE '%ピッチャー%'
-                                                                                                        THEN 'CENTER'
+                                                                    WHEN pa3_description LIKE '%右中間%'
+                                                                      OR pa3_description LIKE '%ライト%'
+                                                                      OR pa3_description LIKE '%ファースト%'
+                                                                      OR pa3_description LIKE '%一二塁間%'
+                                                                      OR pa3_description LIKE '%1,2塁間%'
+                                                                      OR pa3_description LIKE '%セカンド%'
+                                                                    THEN 'PULL'
 
-                                                                                                        WHEN pa3_description LIKE '%左中間%'
-                                                                                                          OR pa3_description LIKE '%レフト%'
-                                                                                                          OR pa3_description LIKE '%サード%'
-                                                                                                          OR pa3_description LIKE '%三遊間%'
-                                                                                                          OR pa3_description LIKE '%ショート%'
-                                                                                                        THEN 'OPPOSITE'
+                                                                    WHEN pa3_description LIKE '%センター%'
+                                                                      OR pa3_description LIKE '%ピッチャー%'
+                                                                    THEN 'CENTER'
 
-                                                                                                                    ELSE 'UNKNOWN'
+                                                                    WHEN pa3_description LIKE '%左中間%'
+                                                                      OR pa3_description LIKE '%レフト%'
+                                                                      OR pa3_description LIKE '%サード%'
+                                                                      OR pa3_description LIKE '%三遊間%'
+                                                                      OR pa3_description LIKE '%ショート%'
+                                                                    THEN 'OPPOSITE'
 
-                                                                                                                END
+                                                                                ELSE 'UNKNOWN'
 
-                                                                                                            FROM ohtani_game_details d
-                                                                                                            JOIN ohtani_games g
-                                                                                                                ON d.game_id = g.id
-                                                                                                            WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                            END
 
-                                                                                                            AND pa3_description IS NOT NULL
-                                                                                                            AND pa3_description <> 'dammydammy'
+                                                                        FROM ohtani_game_details d
+                                                                        JOIN ohtani_games g
+                                                                            ON d.game_id = g.id
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR pa3_result = CAST(? AS TEXT)
-                                                                    )
+                                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                        AND pa3_pitcher_hand = 'L'
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR CAST(? AS TEXT) = 'ALL'
-                                                                        OR g.opponent = CAST(? AS TEXT)
-                                                                    )
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR pa3_result = CAST(? AS TEXT)
+                                                                        )
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR g.opponent = CAST(? AS TEXT)
+                                                                        )
+
 
                                                 AND (
                                                     CAST(? AS TEXT) IS NULL
@@ -4824,88 +6194,112 @@ public class OhtaniGameRepository {
                                                     OR d.pa3_pitcher = CAST(? AS TEXT)
                                                 )
 
+                                AND (
+
+                                    CAST(? AS TEXT) IS NULL
+                                    OR CAST(? AS TEXT) = ''
+                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                    OR (
+
+                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                        AND (
+
+                                               d.pa3_description LIKE '%Sinker%'
+                                            OR d.pa3_description LIKE '%Sweeper%'
+                                            OR d.pa3_description LIKE '%Slider%'
+                                            OR d.pa3_description LIKE '%Splitter%'
+                                            OR d.pa3_description LIKE '%Cutter%'
+                                            OR d.pa3_description LIKE '%Knuckle Curve%'
+                                            OR d.pa3_description LIKE '%Slurve%'
+                                            OR d.pa3_description LIKE '%Changeup%'
+                                            OR d.pa3_description LIKE '%Curve%'
+
+                                        )
+                                    )
+
+                                    OR (
+
+                                        CAST(? AS TEXT) <> 'BREAKING'
+                                        AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                    )
+                                )
+
+                -- ★ここから追加
                 AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
+                    ? IS NULL
+                    OR ? IS NULL
                     OR (
+                        substring(
+                            d.pa3_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
 
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa3_description LIKE '%Sinker%'
-                            OR d.pa3_description LIKE '%Sweeper%'
-                            OR d.pa3_description LIKE '%Slider%'
-                            OR d.pa3_description LIKE '%Splitter%'
-                            OR d.pa3_description LIKE '%Cutter%'
-                            OR d.pa3_description LIKE '%Knuckle Curve%'
-                            OR d.pa3_description LIKE '%Slurve%'
-                            OR d.pa3_description LIKE '%Changeup%'
-                            OR d.pa3_description LIKE '%Curve%'
-
+                        AND CAST(
+                            substring(
+                                d.pa3_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
                         )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
-
+                        BETWEEN ? AND ?
                     )
                 )
+                -- ★ここまで追加
 
-                                                                                                            UNION ALL
+                                                                        AND pa3_description IS NOT NULL
+                                                                        AND pa3_description <> 'dammydammy'
 
-                                                                                                            SELECT
+                                                                        UNION ALL
 
-                                                                                                                CASE
+                                                                        SELECT
 
-                                                                                                        WHEN pa4_description LIKE '%右中間%'
-                                                                                                          OR pa4_description LIKE '%ライト%'
-                                                                                                          OR pa4_description LIKE '%ファースト%'
-                                                                                                          OR pa4_description LIKE '%一二塁間%'
-                                                                                                          OR pa4_description LIKE '%1,2塁間%'
-                                                                                                          OR pa4_description LIKE '%セカンド%'
-                                                                                                        THEN 'PULL'
+                                                                            CASE
 
-                                                                                                        WHEN pa4_description LIKE '%センター%'
-                                                                                                          OR pa4_description LIKE '%ピッチャー%'
-                                                                                                        THEN 'CENTER'
+                                                                    WHEN pa4_description LIKE '%右中間%'
+                                                                      OR pa4_description LIKE '%ライト%'
+                                                                      OR pa4_description LIKE '%ファースト%'
+                                                                      OR pa4_description LIKE '%一二塁間%'
+                                                                      OR pa4_description LIKE '%1,2塁間%'
+                                                                      OR pa4_description LIKE '%セカンド%'
+                                                                    THEN 'PULL'
 
-                                                                                                        WHEN pa4_description LIKE '%左中間%'
-                                                                                                          OR pa4_description LIKE '%レフト%'
-                                                                                                          OR pa4_description LIKE '%サード%'
-                                                                                                          OR pa4_description LIKE '%三遊間%'
-                                                                                                          OR pa4_description LIKE '%ショート%'
-                                                                                                        THEN 'OPPOSITE'
+                                                                    WHEN pa4_description LIKE '%センター%'
+                                                                      OR pa4_description LIKE '%ピッチャー%'
+                                                                    THEN 'CENTER'
 
-                                                                                                                    ELSE 'UNKNOWN'
+                                                                    WHEN pa4_description LIKE '%左中間%'
+                                                                      OR pa4_description LIKE '%レフト%'
+                                                                      OR pa4_description LIKE '%サード%'
+                                                                      OR pa4_description LIKE '%三遊間%'
+                                                                      OR pa4_description LIKE '%ショート%'
+                                                                    THEN 'OPPOSITE'
 
-                                                                                                                END
+                                                                                ELSE 'UNKNOWN'
 
-                                                                                                            FROM ohtani_game_details d
-                                                                                                            JOIN ohtani_games g
-                                                                                                                ON d.game_id = g.id
-                                                                                                            WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                            END
 
-                                                                                                            AND pa4_description IS NOT NULL
-                                                                                                            AND pa4_description <> 'dammydammy'
+                                                                        FROM ohtani_game_details d
+                                                                        JOIN ohtani_games g
+                                                                            ON d.game_id = g.id
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR pa4_result = CAST(? AS TEXT)
-                                                                    )
+                                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                        AND pa4_pitcher_hand = 'L'
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR CAST(? AS TEXT) = 'ALL'
-                                                                        OR g.opponent = CAST(? AS TEXT)
-                                                                    )
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR pa4_result = CAST(? AS TEXT)
+                                                                        )
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR g.opponent = CAST(? AS TEXT)
+                                                                        )
 
                                                 AND (
                                                     CAST(? AS TEXT) IS NULL
@@ -4913,88 +6307,113 @@ public class OhtaniGameRepository {
                                                     OR d.pa4_pitcher = CAST(? AS TEXT)
                                                 )
 
+                                AND (
+
+                                    CAST(? AS TEXT) IS NULL
+                                    OR CAST(? AS TEXT) = ''
+                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                    OR (
+
+                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                        AND (
+
+                                               d.pa4_description LIKE '%Sinker%'
+                                            OR d.pa4_description LIKE '%Sweeper%'
+                                            OR d.pa4_description LIKE '%Slider%'
+                                            OR d.pa4_description LIKE '%Splitter%'
+                                            OR d.pa4_description LIKE '%Cutter%'
+                                            OR d.pa4_description LIKE '%Knuckle Curve%'
+                                            OR d.pa4_description LIKE '%Slurve%'
+                                            OR d.pa4_description LIKE '%Changeup%'
+                                            OR d.pa4_description LIKE '%Curve%'
+
+                                        )
+                                    )
+
+                                    OR (
+
+                                        CAST(? AS TEXT) <> 'BREAKING'
+                                        AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                    )
+                                )
+
+                -- ★ここから追加
                 AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
+                    ? IS NULL
+                    OR ? IS NULL
                     OR (
+                        substring(
+                            d.pa4_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
 
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa4_description LIKE '%Sinker%'
-                            OR d.pa4_description LIKE '%Sweeper%'
-                            OR d.pa4_description LIKE '%Slider%'
-                            OR d.pa4_description LIKE '%Splitter%'
-                            OR d.pa4_description LIKE '%Cutter%'
-                            OR d.pa4_description LIKE '%Knuckle Curve%'
-                            OR d.pa4_description LIKE '%Slurve%'
-                            OR d.pa4_description LIKE '%Changeup%'
-                            OR d.pa4_description LIKE '%Curve%'
-
+                        AND CAST(
+                            substring(
+                                d.pa4_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
                         )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
-
+                        BETWEEN ? AND ?
                     )
                 )
+                -- ★ここまで追加
 
-                                                                                                            UNION ALL
+                                                                        AND pa4_description IS NOT NULL
+                                                                        AND pa4_description <> 'dammydammy'
 
-                                                                                                            SELECT
+                                                                        UNION ALL
 
-                                                                                                                CASE
+                                                                        SELECT
 
-                                                                                                        WHEN pa5_description LIKE '%右中間%'
-                                                                                                          OR pa5_description LIKE '%ライト%'
-                                                                                                          OR pa5_description LIKE '%ファースト%'
-                                                                                                          OR pa5_description LIKE '%一二塁間%'
-                                                                                                          OR pa5_description LIKE '%1,2塁間%'
-                                                                                                          OR pa5_description LIKE '%セカンド%'
-                                                                                                        THEN 'PULL'
+                                                                            CASE
 
-                                                                                                        WHEN pa5_description LIKE '%センター%'
-                                                                                                          OR pa5_description LIKE '%ピッチャー%'
-                                                                                                        THEN 'CENTER'
+                                                                    WHEN pa5_description LIKE '%右中間%'
+                                                                      OR pa5_description LIKE '%ライト%'
+                                                                      OR pa5_description LIKE '%ファースト%'
+                                                                      OR pa5_description LIKE '%一二塁間%'
+                                                                      OR pa5_description LIKE '%1,2塁間%'
+                                                                      OR pa5_description LIKE '%セカンド%'
+                                                                    THEN 'PULL'
 
-                                                                                                        WHEN pa5_description LIKE '%左中間%'
-                                                                                                          OR pa5_description LIKE '%レフト%'
-                                                                                                          OR pa5_description LIKE '%サード%'
-                                                                                                          OR pa5_description LIKE '%三遊間%'
-                                                                                                          OR pa5_description LIKE '%ショート%'
-                                                                                                        THEN 'OPPOSITE'
+                                                                    WHEN pa5_description LIKE '%センター%'
+                                                                      OR pa5_description LIKE '%ピッチャー%'
+                                                                    THEN 'CENTER'
 
-                                                                                                                    ELSE 'UNKNOWN'
+                                                                    WHEN pa5_description LIKE '%左中間%'
+                                                                      OR pa5_description LIKE '%レフト%'
+                                                                      OR pa5_description LIKE '%サード%'
+                                                                      OR pa5_description LIKE '%三遊間%'
+                                                                      OR pa5_description LIKE '%ショート%'
+                                                                    THEN 'OPPOSITE'
 
-                                                                                                                END
+                                                                                ELSE 'UNKNOWN'
 
-                                                                                                            FROM ohtani_game_details d
-                                                                                                            JOIN ohtani_games g
-                                                                                                                ON d.game_id = g.id
-                                                                                                            WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                            END
 
-                                                                                                            AND pa5_description IS NOT NULL
-                                                                                                            AND pa5_description <> 'dammydammy'
+                                                                        FROM ohtani_game_details d
+                                                                        JOIN ohtani_games g
+                                                                            ON d.game_id = g.id
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR pa5_result = CAST(? AS TEXT)
-                                                                    )
+                                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                        AND pa5_pitcher_hand = 'L'
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR CAST(? AS TEXT) = 'ALL'
-                                                                        OR g.opponent = CAST(? AS TEXT)
-                                                                    )
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR pa5_result = CAST(? AS TEXT)
+                                                                        )
+
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR g.opponent = CAST(? AS TEXT)
+                                                                        )
 
                                                 AND (
                                                     CAST(? AS TEXT) IS NULL
@@ -5002,87 +6421,112 @@ public class OhtaniGameRepository {
                                                     OR d.pa5_pitcher = CAST(? AS TEXT)
                                                 )
 
+                                AND (
+
+                                    CAST(? AS TEXT) IS NULL
+                                    OR CAST(? AS TEXT) = ''
+                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                    OR (
+
+                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                        AND (
+
+                                               d.pa5_description LIKE '%Sinker%'
+                                            OR d.pa5_description LIKE '%Sweeper%'
+                                            OR d.pa5_description LIKE '%Slider%'
+                                            OR d.pa5_description LIKE '%Splitter%'
+                                            OR d.pa5_description LIKE '%Cutter%'
+                                            OR d.pa5_description LIKE '%Knuckle Curve%'
+                                            OR d.pa5_description LIKE '%Slurve%'
+                                            OR d.pa5_description LIKE '%Changeup%'
+                                            OR d.pa5_description LIKE '%Curve%'
+
+                                        )
+                                    )
+
+                                    OR (
+
+                                        CAST(? AS TEXT) <> 'BREAKING'
+                                        AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                    )
+                                )
+
+                -- ★ここから追加
                 AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
+                    ? IS NULL
+                    OR ? IS NULL
                     OR (
+                        substring(
+                            d.pa5_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
 
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa5_description LIKE '%Sinker%'
-                            OR d.pa5_description LIKE '%Sweeper%'
-                            OR d.pa5_description LIKE '%Slider%'
-                            OR d.pa5_description LIKE '%Splitter%'
-                            OR d.pa5_description LIKE '%Cutter%'
-                            OR d.pa5_description LIKE '%Knuckle Curve%'
-                            OR d.pa5_description LIKE '%Slurve%'
-                            OR d.pa5_description LIKE '%Changeup%'
-                            OR d.pa5_description LIKE '%Curve%'
-
+                        AND CAST(
+                            substring(
+                                d.pa5_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
                         )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
-
+                        BETWEEN ? AND ?
                     )
                 )
+                -- ★ここまで追加
 
-                                                                                                            UNION ALL
+                                                                        AND pa5_description IS NOT NULL
+                                                                        AND pa5_description <> 'dammydammy'
 
-                                                                                                            SELECT
+                                                                        UNION ALL
 
-                                                                                                                CASE
+                                                                        SELECT
 
-                                                                                                        WHEN pa6_description LIKE '%右中間%'
-                                                                                                          OR pa6_description LIKE '%ライト%'
-                                                                                                          OR pa6_description LIKE '%ファースト%'
-                                                                                                          OR pa6_description LIKE '%一二塁間%'
-                                                                                                          OR pa6_description LIKE '%1,2塁間%'
-                                                                                                          OR pa6_description LIKE '%セカンド%'
-                                                                                                        THEN 'PULL'
+                                                                            CASE
 
-                                                                                                        WHEN pa6_description LIKE '%センター%'
-                                                                                                          OR pa6_description LIKE '%ピッチャー%'
-                                                                                                        THEN 'CENTER'
+                                                                    WHEN pa6_description LIKE '%右中間%'
+                                                                      OR pa6_description LIKE '%ライト%'
+                                                                      OR pa6_description LIKE '%ファースト%'
+                                                                      OR pa6_description LIKE '%一二塁間%'
+                                                                      OR pa6_description LIKE '%1,2塁間%'
+                                                                      OR pa6_description LIKE '%セカンド%'
+                                                                    THEN 'PULL'
 
-                                                                                                        WHEN pa6_description LIKE '%左中間%'
-                                                                                                          OR pa6_description LIKE '%レフト%'
-                                                                                                          OR pa6_description LIKE '%サード%'
-                                                                                                          OR pa6_description LIKE '%三遊間%'
-                                                                                                          OR pa6_description LIKE '%ショート%'
-                                                                                                        THEN 'OPPOSITE'
+                                                                    WHEN pa6_description LIKE '%センター%'
+                                                                      OR pa6_description LIKE '%ピッチャー%'
+                                                                    THEN 'CENTER'
 
-                                                                                                                    ELSE 'UNKNOWN'
+                                                                    WHEN pa6_description LIKE '%左中間%'
+                                                                      OR pa6_description LIKE '%レフト%'
+                                                                      OR pa6_description LIKE '%サード%'
+                                                                      OR pa6_description LIKE '%三遊間%'
+                                                                      OR pa6_description LIKE '%ショート%'
+                                                                    THEN 'OPPOSITE'
 
-                                                                                                                END
+                                                                                ELSE 'UNKNOWN'
 
-                                                                                                            FROM ohtani_game_details d
-                                                                                                            JOIN ohtani_games g
-                                                                                                                ON d.game_id = g.id
-                                                                                                            WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                            END
 
-                                                                                                            AND pa6_description IS NOT NULL
-                                                                                                            AND pa6_description <> 'dammydammy'
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR pa6_result = CAST(? AS TEXT)
-                                                                    )
+                                                                        FROM ohtani_game_details d
+                                                                        JOIN ohtani_games g
+                                                                            ON d.game_id = g.id
 
-                                                                    AND (
-                                                                        CAST(? AS TEXT) IS NULL
-                                                                        OR CAST(? AS TEXT) = ''
-                                                                        OR CAST(? AS TEXT) = 'ALL'
-                                                                        OR g.opponent = CAST(? AS TEXT)
-                                                                    )
+                                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                                                                        AND pa6_pitcher_hand = 'L'
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR pa6_result = CAST(? AS TEXT)
+                                                                        )
+
+                                                                        AND (
+                                                                            CAST(? AS TEXT) IS NULL
+                                                                            OR CAST(? AS TEXT) = ''
+                                                                            OR CAST(? AS TEXT) = 'ALL'
+                                                                            OR g.opponent = CAST(? AS TEXT)
+                                                                        )
 
                                                 AND (
                                                     CAST(? AS TEXT) IS NULL
@@ -5090,666 +6534,67 @@ public class OhtaniGameRepository {
                                                     OR d.pa6_pitcher = CAST(? AS TEXT)
                                                 )
 
+                                AND (
+
+                                    CAST(? AS TEXT) IS NULL
+                                    OR CAST(? AS TEXT) = ''
+                                    OR CAST(? AS TEXT) = 'ALL'
+
+                                    OR (
+
+                                        CAST(? AS TEXT) = 'BREAKING'
+
+                                        AND (
+
+                                               d.pa6_description LIKE '%Sinker%'
+                                            OR d.pa6_description LIKE '%Sweeper%'
+                                            OR d.pa6_description LIKE '%Slider%'
+                                            OR d.pa6_description LIKE '%Splitter%'
+                                            OR d.pa6_description LIKE '%Cutter%'
+                                            OR d.pa6_description LIKE '%Knuckle Curve%'
+                                            OR d.pa6_description LIKE '%Slurve%'
+                                            OR d.pa6_description LIKE '%Changeup%'
+                                            OR d.pa6_description LIKE '%Curve%'
+
+                                        )
+                                    )
+
+                                    OR (
+
+                                        CAST(? AS TEXT) <> 'BREAKING'
+                                        AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
+
+                                    )
+                                )
+
+                -- ★ここから追加
                 AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
+                    ? IS NULL
+                    OR ? IS NULL
                     OR (
+                        substring(
+                            d.pa6_description
+                            FROM '([0-9]+\\.?[0-9]*)mph'
+                        ) IS NOT NULL
 
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa6_description LIKE '%Sinker%'
-                            OR d.pa6_description LIKE '%Sweeper%'
-                            OR d.pa6_description LIKE '%Slider%'
-                            OR d.pa6_description LIKE '%Splitter%'
-                            OR d.pa6_description LIKE '%Cutter%'
-                            OR d.pa6_description LIKE '%Knuckle Curve%'
-                            OR d.pa6_description LIKE '%Slurve%'
-                            OR d.pa6_description LIKE '%Changeup%'
-                            OR d.pa6_description LIKE '%Curve%'
-
+                        AND CAST(
+                            substring(
+                                d.pa6_description
+                                FROM '([0-9]+\\.?[0-9]*)mph'
+                            ) AS NUMERIC
                         )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
-
+                        BETWEEN ? AND ?
                     )
                 )
+                -- ★ここまで追加
 
-                                                                                                        ) t
+                                                                        AND pa6_description IS NOT NULL
+                                                                        AND pa6_description <> 'dammydammy'
 
-                                                                                                        GROUP BY direction
-                                                                                                    """;
+                                                                    ) t
 
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                sql,
-
-                season,
-                result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType);
-
-        Map<String, Integer> directionMap = new java.util.HashMap<>();
-
-        for (Map<String, Object> row : rows) {
-
-            String direction = (String) row.get("direction");
-
-            Number cnt = (Number) row.get("cnt");
-
-            directionMap.put(direction, cnt.intValue());
-        }
-
-        return directionMap;
-    }
-
-    /**
-     * ============================================
-     * ★ 打球方向集計（対右専用）----------------円グラフ
-     * ★ 年度 × result × opponent 対応版
-     * ============================================
-     */
-    public Map<String, Integer> getHitDirectionStatsByRight(
-            Integer season,
-            String result,
-            String opponent,
-            String pitcher,
-            String pitchType) {
-
-        String sql = """
-                                SELECT
-                                    direction,
-                                    COUNT(*) AS cnt
-
-                                FROM (
-
-                                    SELECT
-
-                                        CASE
-
-                                            WHEN pa1_description LIKE '%右中間%'
-                                              OR pa1_description LIKE '%ライト%'
-                                              OR pa1_description LIKE '%ファースト%'
-                                              OR pa1_description LIKE '%一二塁間%'
-                                              OR pa1_description LIKE '%1,2塁間%'
-                                              OR pa1_description LIKE '%セカンド%'
-                                            THEN 'PULL'
-
-                                            WHEN pa1_description LIKE '%センター%'
-                                              OR pa1_description LIKE '%ピッチャー%'
-                                            THEN 'CENTER'
-
-                                            WHEN pa1_description LIKE '%左中間%'
-                                              OR pa1_description LIKE '%レフト%'
-                                              OR pa1_description LIKE '%サード%'
-                                              OR pa1_description LIKE '%三遊間%'
-                                              OR pa1_description LIKE '%ショート%'
-                                            THEN 'OPPOSITE'
-
-                                            ELSE 'UNKNOWN'
-
-                                        END AS direction
-
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g
-                                        ON d.game_id = g.id
-
-                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                    AND pa1_pitcher_hand = 'R'
-                                    AND pa1_description IS NOT NULL
-                                    AND pa1_description <> 'dammydammy'
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR pa1_result = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR g.opponent = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR d.pa1_pitcher = CAST(? AS TEXT)
-                                    )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa1_description LIKE '%Sinker%'
-                            OR d.pa1_description LIKE '%Sweeper%'
-                            OR d.pa1_description LIKE '%Slider%'
-                            OR d.pa1_description LIKE '%Splitter%'
-                            OR d.pa1_description LIKE '%Cutter%'
-                            OR d.pa1_description LIKE '%Knuckle Curve%'
-                            OR d.pa1_description LIKE '%Slurve%'
-                            OR d.pa1_description LIKE '%Changeup%'
-                            OR d.pa1_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                    UNION ALL
-
-                                    SELECT
-
-                                        CASE
-
-                                            WHEN pa2_description LIKE '%右中間%'
-                                              OR pa2_description LIKE '%ライト%'
-                                              OR pa2_description LIKE '%ファースト%'
-                                              OR pa2_description LIKE '%一二塁間%'
-                                              OR pa2_description LIKE '%1,2塁間%'
-                                              OR pa2_description LIKE '%セカンド%'
-                                            THEN 'PULL'
-
-                                            WHEN pa2_description LIKE '%センター%'
-                                              OR pa2_description LIKE '%ピッチャー%'
-                                            THEN 'CENTER'
-
-                                            WHEN pa2_description LIKE '%左中間%'
-                                              OR pa2_description LIKE '%レフト%'
-                                              OR pa2_description LIKE '%サード%'
-                                              OR pa2_description LIKE '%三遊間%'
-                                              OR pa2_description LIKE '%ショート%'
-                                            THEN 'OPPOSITE'
-
-                                            ELSE 'UNKNOWN'
-
-                                        END
-
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g
-                                        ON d.game_id = g.id
-
-                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                    AND pa2_pitcher_hand = 'R'
-                                    AND pa2_description IS NOT NULL
-                                    AND pa2_description <> 'dammydammy'
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR pa2_result = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR g.opponent = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR d.pa2_pitcher = CAST(? AS TEXT)
-                                    )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa2_description LIKE '%Sinker%'
-                            OR d.pa2_description LIKE '%Sweeper%'
-                            OR d.pa2_description LIKE '%Slider%'
-                            OR d.pa2_description LIKE '%Splitter%'
-                            OR d.pa2_description LIKE '%Cutter%'
-                            OR d.pa2_description LIKE '%Knuckle Curve%'
-                            OR d.pa2_description LIKE '%Slurve%'
-                            OR d.pa2_description LIKE '%Changeup%'
-                            OR d.pa2_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-
-                                    UNION ALL
-
-                                    SELECT
-
-                                        CASE
-
-                                            WHEN pa3_description LIKE '%右中間%'
-                                              OR pa3_description LIKE '%ライト%'
-                                              OR pa3_description LIKE '%ファースト%'
-                                              OR pa3_description LIKE '%一二塁間%'
-                                              OR pa3_description LIKE '%1,2塁間%'
-                                              OR pa3_description LIKE '%セカンド%'
-                                            THEN 'PULL'
-
-                                            WHEN pa3_description LIKE '%センター%'
-                                              OR pa3_description LIKE '%ピッチャー%'
-                                            THEN 'CENTER'
-
-                                            WHEN pa3_description LIKE '%左中間%'
-                                              OR pa3_description LIKE '%レフト%'
-                                              OR pa3_description LIKE '%サード%'
-                                              OR pa3_description LIKE '%三遊間%'
-                                              OR pa3_description LIKE '%ショート%'
-                                            THEN 'OPPOSITE'
-
-                                            ELSE 'UNKNOWN'
-
-                                        END
-
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g
-                                        ON d.game_id = g.id
-
-                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                    AND pa3_pitcher_hand = 'R'
-                                    AND pa3_description IS NOT NULL
-                                    AND pa3_description <> 'dammydammy'
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR pa3_result = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR g.opponent = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR d.pa3_pitcher = CAST(? AS TEXT)
-                                    )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa3_description LIKE '%Sinker%'
-                            OR d.pa3_description LIKE '%Sweeper%'
-                            OR d.pa3_description LIKE '%Slider%'
-                            OR d.pa3_description LIKE '%Splitter%'
-                            OR d.pa3_description LIKE '%Cutter%'
-                            OR d.pa3_description LIKE '%Knuckle Curve%'
-                            OR d.pa3_description LIKE '%Slurve%'
-                            OR d.pa3_description LIKE '%Changeup%'
-                            OR d.pa3_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                    UNION ALL
-
-                                    SELECT
-
-                                        CASE
-
-                                            WHEN pa4_description LIKE '%右中間%'
-                                              OR pa4_description LIKE '%ライト%'
-                                              OR pa4_description LIKE '%ファースト%'
-                                              OR pa4_description LIKE '%一二塁間%'
-                                              OR pa4_description LIKE '%1,2塁間%'
-                                              OR pa4_description LIKE '%セカンド%'
-                                            THEN 'PULL'
-
-                                            WHEN pa4_description LIKE '%センター%'
-                                              OR pa4_description LIKE '%ピッチャー%'
-                                            THEN 'CENTER'
-
-                                            WHEN pa4_description LIKE '%左中間%'
-                                              OR pa4_description LIKE '%レフト%'
-                                              OR pa4_description LIKE '%サード%'
-                                              OR pa4_description LIKE '%三遊間%'
-                                              OR pa4_description LIKE '%ショート%'
-                                            THEN 'OPPOSITE'
-
-                                            ELSE 'UNKNOWN'
-
-                                        END
-
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g
-                                        ON d.game_id = g.id
-
-                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                    AND pa4_pitcher_hand = 'R'
-                                    AND pa4_description IS NOT NULL
-                                    AND pa4_description <> 'dammydammy'
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR pa4_result = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR g.opponent = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR d.pa4_pitcher = CAST(? AS TEXT)
-                                    )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa4_description LIKE '%Sinker%'
-                            OR d.pa4_description LIKE '%Sweeper%'
-                            OR d.pa4_description LIKE '%Slider%'
-                            OR d.pa4_description LIKE '%Splitter%'
-                            OR d.pa4_description LIKE '%Cutter%'
-                            OR d.pa4_description LIKE '%Knuckle Curve%'
-                            OR d.pa4_description LIKE '%Slurve%'
-                            OR d.pa4_description LIKE '%Changeup%'
-                            OR d.pa4_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                    UNION ALL
-
-                                    SELECT
-
-                                        CASE
-
-                                            WHEN pa5_description LIKE '%右中間%'
-                                              OR pa5_description LIKE '%ライト%'
-                                              OR pa5_description LIKE '%ファースト%'
-                                              OR pa5_description LIKE '%一二塁間%'
-                                              OR pa5_description LIKE '%1,2塁間%'
-                                              OR pa5_description LIKE '%セカンド%'
-                                            THEN 'PULL'
-
-                                            WHEN pa5_description LIKE '%センター%'
-                                              OR pa5_description LIKE '%ピッチャー%'
-                                            THEN 'CENTER'
-
-                                            WHEN pa5_description LIKE '%左中間%'
-                                              OR pa5_description LIKE '%レフト%'
-                                              OR pa5_description LIKE '%サード%'
-                                              OR pa5_description LIKE '%三遊間%'
-                                              OR pa5_description LIKE '%ショート%'
-                                            THEN 'OPPOSITE'
-
-                                            ELSE 'UNKNOWN'
-
-                                        END
-
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g
-                                        ON d.game_id = g.id
-
-                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                    AND pa5_pitcher_hand = 'R'
-                                    AND pa5_description IS NOT NULL
-                                    AND pa5_description <> 'dammydammy'
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR pa5_result = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR g.opponent = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR d.pa5_pitcher = CAST(? AS TEXT)
-                                    )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa5_description LIKE '%Sinker%'
-                            OR d.pa5_description LIKE '%Sweeper%'
-                            OR d.pa5_description LIKE '%Slider%'
-                            OR d.pa5_description LIKE '%Splitter%'
-                            OR d.pa5_description LIKE '%Cutter%'
-                            OR d.pa5_description LIKE '%Knuckle Curve%'
-                            OR d.pa5_description LIKE '%Slurve%'
-                            OR d.pa5_description LIKE '%Changeup%'
-                            OR d.pa5_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                    UNION ALL
-
-                                    SELECT
-
-                                        CASE
-
-                                            WHEN pa6_description LIKE '%右中間%'
-                                              OR pa6_description LIKE '%ライト%'
-                                              OR pa6_description LIKE '%ファースト%'
-                                              OR pa6_description LIKE '%一二塁間%'
-                                              OR pa6_description LIKE '%1,2塁間%'
-                                              OR pa6_description LIKE '%セカンド%'
-                                            THEN 'PULL'
-
-                                            WHEN pa6_description LIKE '%センター%'
-                                              OR pa6_description LIKE '%ピッチャー%'
-                                            THEN 'CENTER'
-
-                                            WHEN pa6_description LIKE '%左中間%'
-                                              OR pa6_description LIKE '%レフト%'
-                                              OR pa6_description LIKE '%サード%'
-                                              OR pa6_description LIKE '%三遊間%'
-                                              OR pa6_description LIKE '%ショート%'
-                                            THEN 'OPPOSITE'
-
-                                            ELSE 'UNKNOWN'
-
-                                        END
-
-                                    FROM ohtani_game_details d
-                                    JOIN ohtani_games g
-                                        ON d.game_id = g.id
-
-                                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                    AND pa6_pitcher_hand = 'R'
-                                    AND pa6_description IS NOT NULL
-                                    AND pa6_description <> 'dammydammy'
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR pa6_result = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR CAST(? AS TEXT) = 'ALL'
-                                        OR g.opponent = CAST(? AS TEXT)
-                                    )
-
-                                    AND (
-                                        CAST(? AS TEXT) IS NULL
-                                        OR CAST(? AS TEXT) = ''
-                                        OR d.pa6_pitcher = CAST(? AS TEXT)
-                                    )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa6_description LIKE '%Sinker%'
-                            OR d.pa6_description LIKE '%Sweeper%'
-                            OR d.pa6_description LIKE '%Slider%'
-                            OR d.pa6_description LIKE '%Splitter%'
-                            OR d.pa6_description LIKE '%Cutter%'
-                            OR d.pa6_description LIKE '%Knuckle Curve%'
-                            OR d.pa6_description LIKE '%Slurve%'
-                            OR d.pa6_description LIKE '%Changeup%'
-                            OR d.pa6_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                ) t
-
-                                GROUP BY direction
-                                """;
+                                                                    GROUP BY direction
+                                                                """;
 
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 sql,
@@ -5759,665 +6604,42 @@ public class OhtaniGameRepository {
                 opponent, opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
 
                 season,
                 result, result, result, result,
                 opponent, opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
 
                 season,
                 result, result, result, result,
                 opponent, opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
 
                 season,
                 result, result, result, result,
                 opponent, opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
+                speedMin, speedMax, speedMin, speedMax,
 
                 season,
                 result, result, result, result,
                 opponent, opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType);
-
-        Map<String, Integer> directionMap = new java.util.HashMap<>();
-
-        for (Map<String, Object> row : rows) {
-
-            String direction = (String) row.get("direction");
-
-            Number cnt = (Number) row.get("cnt");
-
-            directionMap.put(direction, cnt.intValue());
-        }
-
-        return directionMap;
-    }
-
-    /**
-     * ============================================
-     * ★ 打球方向集計（対左）-----------------円グラフ
-     * ============================================
-     */
-    public Map<String, Integer> getHitDirectionStatsByLeft(
-            Integer season,
-            String result,
-            String opponent,
-            String pitcher,
-            String pitchType) {
-
-        String sql = """
-                                                    SELECT
-                                                        direction,
-                                                        COUNT(*) AS cnt
-
-                                                    FROM (
-
-                                                        SELECT
-
-                                                            CASE
-
-                                                    WHEN pa1_description LIKE '%右中間%'
-                                                      OR pa1_description LIKE '%ライト%'
-                                                      OR pa1_description LIKE '%ファースト%'
-                                                      OR pa1_description LIKE '%一二塁間%'
-                                                      OR pa1_description LIKE '%1,2塁間%'
-                                                      OR pa1_description LIKE '%セカンド%'
-                                                    THEN 'PULL'
-
-                                                    WHEN pa1_description LIKE '%センター%'
-                                                      OR pa1_description LIKE '%ピッチャー%'
-                                                    THEN 'CENTER'
-
-                                                    WHEN pa1_description LIKE '%左中間%'
-                                                      OR pa1_description LIKE '%レフト%'
-                                                      OR pa1_description LIKE '%サード%'
-                                                      OR pa1_description LIKE '%三遊間%'
-                                                      OR pa1_description LIKE '%ショート%'
-                                                    THEN 'OPPOSITE'
-
-                                                                ELSE 'UNKNOWN'
-
-                                                            END AS direction
-
-                                                        FROM ohtani_game_details d
-                                                        JOIN ohtani_games g
-                                                            ON d.game_id = g.id
-
-                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                                        AND pa1_pitcher_hand = 'L'
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR pa1_result = CAST(? AS TEXT)
-                                                        )
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR g.opponent = CAST(? AS TEXT)
-                                                        )
-
-                                AND (
-                                    CAST(? AS TEXT) IS NULL
-                                    OR CAST(? AS TEXT) = ''
-                                    OR d.pa1_pitcher = CAST(? AS TEXT)
-                                )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa1_description LIKE '%Sinker%'
-                            OR d.pa1_description LIKE '%Sweeper%'
-                            OR d.pa1_description LIKE '%Slider%'
-                            OR d.pa1_description LIKE '%Splitter%'
-                            OR d.pa1_description LIKE '%Cutter%'
-                            OR d.pa1_description LIKE '%Knuckle Curve%'
-                            OR d.pa1_description LIKE '%Slurve%'
-                            OR d.pa1_description LIKE '%Changeup%'
-                            OR d.pa1_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa1_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                                        AND pa1_description IS NOT NULL
-                                                        AND pa1_description <> 'dammydammy'
-
-                                                        UNION ALL
-
-                                                        SELECT
-
-                                                            CASE
-
-                                                    WHEN pa2_description LIKE '%右中間%'
-                                                      OR pa2_description LIKE '%ライト%'
-                                                      OR pa2_description LIKE '%ファースト%'
-                                                      OR pa2_description LIKE '%一二塁間%'
-                                                      OR pa2_description LIKE '%1,2塁間%'
-                                                      OR pa2_description LIKE '%セカンド%'
-                                                    THEN 'PULL'
-
-                                                    WHEN pa2_description LIKE '%センター%'
-                                                      OR pa2_description LIKE '%ピッチャー%'
-                                                    THEN 'CENTER'
-
-                                                    WHEN pa2_description LIKE '%左中間%'
-                                                      OR pa2_description LIKE '%レフト%'
-                                                      OR pa2_description LIKE '%サード%'
-                                                      OR pa2_description LIKE '%三遊間%'
-                                                      OR pa2_description LIKE '%ショート%'
-                                                    THEN 'OPPOSITE'
-
-                                                                ELSE 'UNKNOWN'
-
-                                                            END
-
-                                                        FROM ohtani_game_details d
-                                                        JOIN ohtani_games g
-                                                            ON d.game_id = g.id
-
-                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                                        AND pa2_pitcher_hand = 'L'
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR pa2_result = CAST(? AS TEXT)
-                                                        )
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR g.opponent = CAST(? AS TEXT)
-                                                        )
-
-                                AND (
-                                    CAST(? AS TEXT) IS NULL
-                                    OR CAST(? AS TEXT) = ''
-                                    OR d.pa2_pitcher = CAST(? AS TEXT)
-                                )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa2_description LIKE '%Sinker%'
-                            OR d.pa2_description LIKE '%Sweeper%'
-                            OR d.pa2_description LIKE '%Slider%'
-                            OR d.pa2_description LIKE '%Splitter%'
-                            OR d.pa2_description LIKE '%Cutter%'
-                            OR d.pa2_description LIKE '%Knuckle Curve%'
-                            OR d.pa2_description LIKE '%Slurve%'
-                            OR d.pa2_description LIKE '%Changeup%'
-                            OR d.pa2_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa2_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                                        AND pa2_description IS NOT NULL
-                                                        AND pa2_description <> 'dammydammy'
-
-                                                        UNION ALL
-
-                                                        SELECT
-
-                                                            CASE
-
-                                                    WHEN pa3_description LIKE '%右中間%'
-                                                      OR pa3_description LIKE '%ライト%'
-                                                      OR pa3_description LIKE '%ファースト%'
-                                                      OR pa3_description LIKE '%一二塁間%'
-                                                      OR pa3_description LIKE '%1,2塁間%'
-                                                      OR pa3_description LIKE '%セカンド%'
-                                                    THEN 'PULL'
-
-                                                    WHEN pa3_description LIKE '%センター%'
-                                                      OR pa3_description LIKE '%ピッチャー%'
-                                                    THEN 'CENTER'
-
-                                                    WHEN pa3_description LIKE '%左中間%'
-                                                      OR pa3_description LIKE '%レフト%'
-                                                      OR pa3_description LIKE '%サード%'
-                                                      OR pa3_description LIKE '%三遊間%'
-                                                      OR pa3_description LIKE '%ショート%'
-                                                    THEN 'OPPOSITE'
-
-                                                                ELSE 'UNKNOWN'
-
-                                                            END
-
-                                                        FROM ohtani_game_details d
-                                                        JOIN ohtani_games g
-                                                            ON d.game_id = g.id
-
-                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                                        AND pa3_pitcher_hand = 'L'
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR pa3_result = CAST(? AS TEXT)
-                                                        )
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR g.opponent = CAST(? AS TEXT)
-                                                        )
-
-
-                                AND (
-                                    CAST(? AS TEXT) IS NULL
-                                    OR CAST(? AS TEXT) = ''
-                                    OR d.pa3_pitcher = CAST(? AS TEXT)
-                                )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa3_description LIKE '%Sinker%'
-                            OR d.pa3_description LIKE '%Sweeper%'
-                            OR d.pa3_description LIKE '%Slider%'
-                            OR d.pa3_description LIKE '%Splitter%'
-                            OR d.pa3_description LIKE '%Cutter%'
-                            OR d.pa3_description LIKE '%Knuckle Curve%'
-                            OR d.pa3_description LIKE '%Slurve%'
-                            OR d.pa3_description LIKE '%Changeup%'
-                            OR d.pa3_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa3_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                                        AND pa3_description IS NOT NULL
-                                                        AND pa3_description <> 'dammydammy'
-
-                                                        UNION ALL
-
-                                                        SELECT
-
-                                                            CASE
-
-                                                    WHEN pa4_description LIKE '%右中間%'
-                                                      OR pa4_description LIKE '%ライト%'
-                                                      OR pa4_description LIKE '%ファースト%'
-                                                      OR pa4_description LIKE '%一二塁間%'
-                                                      OR pa4_description LIKE '%1,2塁間%'
-                                                      OR pa4_description LIKE '%セカンド%'
-                                                    THEN 'PULL'
-
-                                                    WHEN pa4_description LIKE '%センター%'
-                                                      OR pa4_description LIKE '%ピッチャー%'
-                                                    THEN 'CENTER'
-
-                                                    WHEN pa4_description LIKE '%左中間%'
-                                                      OR pa4_description LIKE '%レフト%'
-                                                      OR pa4_description LIKE '%サード%'
-                                                      OR pa4_description LIKE '%三遊間%'
-                                                      OR pa4_description LIKE '%ショート%'
-                                                    THEN 'OPPOSITE'
-
-                                                                ELSE 'UNKNOWN'
-
-                                                            END
-
-                                                        FROM ohtani_game_details d
-                                                        JOIN ohtani_games g
-                                                            ON d.game_id = g.id
-
-                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                                        AND pa4_pitcher_hand = 'L'
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR pa4_result = CAST(? AS TEXT)
-                                                        )
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR g.opponent = CAST(? AS TEXT)
-                                                        )
-
-                                AND (
-                                    CAST(? AS TEXT) IS NULL
-                                    OR CAST(? AS TEXT) = ''
-                                    OR d.pa4_pitcher = CAST(? AS TEXT)
-                                )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa4_description LIKE '%Sinker%'
-                            OR d.pa4_description LIKE '%Sweeper%'
-                            OR d.pa4_description LIKE '%Slider%'
-                            OR d.pa4_description LIKE '%Splitter%'
-                            OR d.pa4_description LIKE '%Cutter%'
-                            OR d.pa4_description LIKE '%Knuckle Curve%'
-                            OR d.pa4_description LIKE '%Slurve%'
-                            OR d.pa4_description LIKE '%Changeup%'
-                            OR d.pa4_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa4_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                                        AND pa4_description IS NOT NULL
-                                                        AND pa4_description <> 'dammydammy'
-
-                                                        UNION ALL
-
-                                                        SELECT
-
-                                                            CASE
-
-                                                    WHEN pa5_description LIKE '%右中間%'
-                                                      OR pa5_description LIKE '%ライト%'
-                                                      OR pa5_description LIKE '%ファースト%'
-                                                      OR pa5_description LIKE '%一二塁間%'
-                                                      OR pa5_description LIKE '%1,2塁間%'
-                                                      OR pa5_description LIKE '%セカンド%'
-                                                    THEN 'PULL'
-
-                                                    WHEN pa5_description LIKE '%センター%'
-                                                      OR pa5_description LIKE '%ピッチャー%'
-                                                    THEN 'CENTER'
-
-                                                    WHEN pa5_description LIKE '%左中間%'
-                                                      OR pa5_description LIKE '%レフト%'
-                                                      OR pa5_description LIKE '%サード%'
-                                                      OR pa5_description LIKE '%三遊間%'
-                                                      OR pa5_description LIKE '%ショート%'
-                                                    THEN 'OPPOSITE'
-
-                                                                ELSE 'UNKNOWN'
-
-                                                            END
-
-                                                        FROM ohtani_game_details d
-                                                        JOIN ohtani_games g
-                                                            ON d.game_id = g.id
-
-                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                                        AND pa5_pitcher_hand = 'L'
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR pa5_result = CAST(? AS TEXT)
-                                                        )
-
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR g.opponent = CAST(? AS TEXT)
-                                                        )
-
-                                AND (
-                                    CAST(? AS TEXT) IS NULL
-                                    OR CAST(? AS TEXT) = ''
-                                    OR d.pa5_pitcher = CAST(? AS TEXT)
-                                )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa5_description LIKE '%Sinker%'
-                            OR d.pa5_description LIKE '%Sweeper%'
-                            OR d.pa5_description LIKE '%Slider%'
-                            OR d.pa5_description LIKE '%Splitter%'
-                            OR d.pa5_description LIKE '%Cutter%'
-                            OR d.pa5_description LIKE '%Knuckle Curve%'
-                            OR d.pa5_description LIKE '%Slurve%'
-                            OR d.pa5_description LIKE '%Changeup%'
-                            OR d.pa5_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa5_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                                        AND pa5_description IS NOT NULL
-                                                        AND pa5_description <> 'dammydammy'
-
-                                                        UNION ALL
-
-                                                        SELECT
-
-                                                            CASE
-
-                                                    WHEN pa6_description LIKE '%右中間%'
-                                                      OR pa6_description LIKE '%ライト%'
-                                                      OR pa6_description LIKE '%ファースト%'
-                                                      OR pa6_description LIKE '%一二塁間%'
-                                                      OR pa6_description LIKE '%1,2塁間%'
-                                                      OR pa6_description LIKE '%セカンド%'
-                                                    THEN 'PULL'
-
-                                                    WHEN pa6_description LIKE '%センター%'
-                                                      OR pa6_description LIKE '%ピッチャー%'
-                                                    THEN 'CENTER'
-
-                                                    WHEN pa6_description LIKE '%左中間%'
-                                                      OR pa6_description LIKE '%レフト%'
-                                                      OR pa6_description LIKE '%サード%'
-                                                      OR pa6_description LIKE '%三遊間%'
-                                                      OR pa6_description LIKE '%ショート%'
-                                                    THEN 'OPPOSITE'
-
-                                                                ELSE 'UNKNOWN'
-
-                                                            END
-
-                                                        FROM ohtani_game_details d
-                                                        JOIN ohtani_games g
-                                                            ON d.game_id = g.id
-
-                                                        WHERE EXTRACT(YEAR FROM d.created_at) = ?
-                                                        AND pa6_pitcher_hand = 'L'
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR pa6_result = CAST(? AS TEXT)
-                                                        )
-
-                                                        AND (
-                                                            CAST(? AS TEXT) IS NULL
-                                                            OR CAST(? AS TEXT) = ''
-                                                            OR CAST(? AS TEXT) = 'ALL'
-                                                            OR g.opponent = CAST(? AS TEXT)
-                                                        )
-
-                                AND (
-                                    CAST(? AS TEXT) IS NULL
-                                    OR CAST(? AS TEXT) = ''
-                                    OR d.pa6_pitcher = CAST(? AS TEXT)
-                                )
-
-                AND (
-
-                    CAST(? AS TEXT) IS NULL
-                    OR CAST(? AS TEXT) = ''
-                    OR CAST(? AS TEXT) = 'ALL'
-
-                    OR (
-
-                        CAST(? AS TEXT) = 'BREAKING'
-
-                        AND (
-
-                               d.pa6_description LIKE '%Sinker%'
-                            OR d.pa6_description LIKE '%Sweeper%'
-                            OR d.pa6_description LIKE '%Slider%'
-                            OR d.pa6_description LIKE '%Splitter%'
-                            OR d.pa6_description LIKE '%Cutter%'
-                            OR d.pa6_description LIKE '%Knuckle Curve%'
-                            OR d.pa6_description LIKE '%Slurve%'
-                            OR d.pa6_description LIKE '%Changeup%'
-                            OR d.pa6_description LIKE '%Curve%'
-
-                        )
-                    )
-
-                    OR (
-
-                        CAST(? AS TEXT) <> 'BREAKING'
-                        AND d.pa6_description LIKE '%' || CAST(? AS TEXT) || '%'
-
-                    )
-                )
-
-                                                        AND pa6_description IS NOT NULL
-                                                        AND pa6_description <> 'dammydammy'
-
-                                                    ) t
-
-                                                    GROUP BY direction
-                                                """;
-
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                sql,
+                speedMin, speedMax, speedMin, speedMax,
 
                 season,
                 result, result, result, result,
                 opponent, opponent, opponent, opponent,
                 pitcher, pitcher, pitcher,
                 pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType,
-
-                season,
-                result, result, result, result,
-                opponent, opponent, opponent, opponent,
-                pitcher, pitcher, pitcher,
-                pitchType, pitchType, pitchType, pitchType, pitchType, pitchType);
+                speedMin, speedMax, speedMin, speedMax);
 
         Map<String, Integer> directionMap = new java.util.HashMap<>();
 

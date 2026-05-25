@@ -1917,6 +1917,71 @@ body.risp-mode {
 }
 
 
+/* =========================================
+   AVGカード + 円グラフ打球方向分析 横並び
+========================================= */
+
+.analysis-summary-row {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(360px, 520px);
+    gap: 32px;
+    align-items: stretch;
+    margin: 40px 0 36px;
+}
+
+.analysis-avg-area {
+    display: flex;
+    align-items: stretch;
+}
+
+.normal-avg-card-wrap {
+    width: 100%;
+    margin: 0;
+}
+
+.normal-avg-card-wrap .avg-card {
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.direction-chart-wrapper {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 24px;
+    border-radius: 18px;
+}
+
+.direction-chart-wrapper h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.direction-chart-wrapper canvas {
+    max-height: 360px;
+}
+
+/* スマホは縦積みに戻す */
+@media (max-width: 900px) {
+
+    .analysis-summary-row {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .normal-avg-card-wrap .avg-card {
+        min-height: auto;
+    }
+
+    .direction-chart-wrapper {
+        padding: 18px;
+    }
+}
+
+
+
 
 /* =========================================
     mobile
