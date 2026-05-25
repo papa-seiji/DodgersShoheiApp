@@ -525,96 +525,24 @@ public class OhtaniScorebookController {
                         Map<String, String> vsL;
 
                         // ============================================
-                        // ★ pitcher + pitchType 指定時（最優先）
+                        // ★ 対左：全フィルタ併用 AVG
+                        // result + opponent + pitcher + pitchType + speedRange + season
+                        // ログ抽出結果を正としてAVGカードを計算する
                         // ============================================
-                        if (pitcher != null
-                                        && !pitcher.isBlank()
-                                        && pitchType != null
-                                        && !pitchType.isBlank()
-                                        && !"ALL".equals(pitchType)) {
-
-                                vsL = mlbGameService
-                                                .getVsLeftStatsByPitcherAndPitchTypeFormatted(
-                                                                pitcher,
-                                                                pitchType,
-                                                                season,
-                                                                result);
-
-                                // ============================================
-                                // ★ pitcher 指定時
-                                // ============================================
-                        } else if (pitcher != null
-                                        && !pitcher.isBlank()) {
-
-                                vsL = mlbGameService
-                                                .getVsLeftStatsByPitcherFormatted(
-                                                                pitcher,
-                                                                season,
-                                                                result,
-                                                                opponent);
-
-                                // ============================================
-                                // ★ 球速帯分析モード
-                                // ============================================
-                        } else if (speedMin != null
-                                        && speedMax != null
-                                        && (pitchType == null
-                                                        || pitchType.isBlank()
-                                                        || "ALL".equals(pitchType))
-                                        && (opponent == null
-                                                        || opponent.isBlank()
-                                                        || "ALL".equals(opponent))) {
-
-                                vsL = mlbGameService
-                                                .getVsLeftStatsBySpeedFormatted(
-                                                                result,
-                                                                speedMin,
-                                                                speedMax,
-                                                                season);
-
-                                // ============================================
-                                // ★ pitchType 指定時
-                                // ============================================
-                        } else if (pitchType != null
-                                        && !pitchType.isBlank()
-                                        && !"ALL".equals(pitchType)) {
-
-                                vsL = mlbGameService
-                                                .getVsLeftStatsByPitchTypeFormatted(
-                                                                result,
-                                                                opponent,
-                                                                pitcher,
-                                                                pitchType,
-                                                                season);
-
-                                // ============================================
-                                // ★ opponent 指定時
-                                // ============================================
-                        } else if (opponent != null
-                                        && !opponent.isBlank()
-                                        && !"ALL".equals(opponent)) {
-
-                                vsL = mlbGameService
-                                                .getVsLeftStatsByOpponentFormatted(
-                                                                opponent,
-                                                                season,
-                                                                result);
-
-                        } else {
-
-                                vsL = mlbGameService
-                                                .getVsLeftStatsFormatted(
-                                                                season,
-                                                                result);
-                        }
+                        vsL = mlbGameService.getVsLeftStatsByFilterFormatted(
+                                        result,
+                                        opponent,
+                                        pitcher,
+                                        pitchType,
+                                        speedMin,
+                                        speedMax,
+                                        season);
 
                         model.addAttribute("vsLAvg", vsL.get("avg"));
                         model.addAttribute("vsLDetail", vsL.get("detail"));
 
-                        // ============================================
-                        // ★ 打席ログ（対左）
-                        // ============================================
-                        model.addAttribute("vsLLogs",
+                        model.addAttribute(
+                                        "vsLLogs",
                                         mlbGameService.getVsLeftLogs(
                                                         result,
                                                         opponent,
