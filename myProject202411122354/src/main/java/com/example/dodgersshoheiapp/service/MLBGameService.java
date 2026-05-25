@@ -2400,7 +2400,9 @@ public class MLBGameService {
             String result,
             String opponent,
             String pitcher,
-            String pitchType) {
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
 
         return ohtaniGameRepository
                 .getHitDirectionStatsByLeft(
@@ -2408,7 +2410,9 @@ public class MLBGameService {
                         result,
                         opponent,
                         pitcher,
-                        pitchType);
+                        pitchType,
+                        speedMin,
+                        speedMax);
     }
 
     /**
