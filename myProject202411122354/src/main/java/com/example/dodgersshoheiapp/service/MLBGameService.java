@@ -1112,6 +1112,71 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 対右投手 × 全フィルタ併用 AVG
+     * result + opponent + pitcher + pitchType + speedRange + season
+     * AVGカードとログ数を完全同期させるため、ログ抽出結果を正として計算する
+     * ============================================
+     */
+    public Map<String, String> getVsRightStatsByFilterFormatted(
+            String result,
+            String opponent,
+            String pitcher,
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax,
+            Integer season) {
+
+        List<Map<String, Object>> logs = getVsRightLogs(
+                result,
+                opponent,
+                pitcher,
+                pitchType,
+                speedMin,
+                speedMax,
+                season);
+
+        int hits = 0;
+        int atBats = 0;
+
+        for (Map<String, Object> row : logs) {
+
+            String rowResult = (String) row.get("result");
+
+            // ★ AVG分母
+            if (rowResult != null
+                    && !"BB".equals(rowResult)
+                    && !"SF".equals(rowResult)) {
+
+                atBats++;
+            }
+
+            // ★ AVG分子
+            if ("HIT".equals(rowResult)
+                    || "HR".equals(rowResult)) {
+
+                hits++;
+            }
+        }
+
+        double avg = atBats == 0
+                ? 0.0
+                : (double) hits / atBats;
+
+        String avgStr = String.format("%.3f", avg)
+                .replace("0.", ".");
+
+        String detail = hits + "-" + atBats;
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        resultMap.put("avg", avgStr);
+        resultMap.put("detail", detail);
+
+        return resultMap;
+    }
+
+    /**
+     * ============================================
      * ★ 対左ピッチャー
      * ============================================
      */
