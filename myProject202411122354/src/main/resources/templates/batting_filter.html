@@ -297,12 +297,12 @@
                 <!-- ============================================
                     AVG説明
                 ============================================ -->
-                <div class="speed-range-info">
+                <!--<div class="speed-range-info">
 
                     ※ 球速レンジによるAVG変動は、
                     「投手タイプ＋球速レンジのみ」の組み合わせ時に適用されます。
 
-                </div>
+                </div>-->
 
                     <div class="filter-action-group">
                         <button type="submit"
@@ -658,13 +658,13 @@
         </div><!--34行目のfilter-panelの閉じタグ-->
 
 
-<div class="direction-chart-wrapper">
+<!--<div class="direction-chart-wrapper">
 
     <h2>打球方向分析</h2>
 
     <canvas id="hitDirectionChart"></canvas>
 
-</div>
+</div>-->
 
 
         <hr>
@@ -730,61 +730,84 @@
     ========================================= -->
     <div id="normal-analysis-area">
 
-        <div class="avg-card-wrap">
+    <div class="analysis-summary-row">
 
-            <!-- 対ALL -->
-            <div class="avg-card"
-                th:if="${vsAllAvg != null}">
+        <!-- =========================
+            AVG CARD
+        ========================= -->
+        <div class="analysis-avg-area">
 
-                <div class="avg-card-title">
-                    対ALLピッチャー打率
+            <div class="avg-card-wrap normal-avg-card-wrap">
+
+                <!-- 対ALL -->
+                <div class="avg-card"
+                    th:if="${vsAllAvg != null}">
+
+                    <div class="avg-card-title">
+                        対ALLピッチャー打率
+                    </div>
+
+                    <div class="avg-card-value">
+                        <span th:text="${vsAllAvg}"></span>
+                    </div>
+
+                    <div class="avg-card-detail">
+                        <span th:text="${vsAllDetail}"></span>
+                    </div>
                 </div>
 
-                <div class="avg-card-value">
-                    <span th:text="${vsAllAvg}"></span>
+                <!-- 対右 -->
+                <div class="avg-card"
+                    th:if="${vsRAvg != null}">
+
+                    <div class="avg-card-title">
+                        対右ピッチャー打率
+                    </div>
+
+                    <div class="avg-card-value">
+                        <span th:text="${vsRAvg}"></span>
+                    </div>
+
+                    <div class="avg-card-detail">
+                        <span th:text="${vsRDetail}"></span>
+                    </div>
                 </div>
 
-                <div class="avg-card-detail">
-                    <span th:text="${vsAllDetail}"></span>
-                </div>
-            </div>
+                <!-- 対左 -->
+                <div class="avg-card"
+                    th:if="${vsLAvg != null}">
 
-            <!-- 対右 -->
-            <div class="avg-card"
-                th:if="${vsRAvg != null}">
+                    <div class="avg-card-title">
+                        対左ピッチャー打率
+                    </div>
 
-                <div class="avg-card-title">
-                    対右ピッチャー打率
-                </div>
+                    <div class="avg-card-value">
+                        <span th:text="${vsLAvg}"></span>
+                    </div>
 
-                <div class="avg-card-value">
-                    <span th:text="${vsRAvg}"></span>
-                </div>
-
-                <div class="avg-card-detail">
-                    <span th:text="${vsRDetail}"></span>
-                </div>
-            </div>
-
-            <!-- 対左 -->
-            <div class="avg-card"
-                th:if="${vsLAvg != null}">
-
-                <div class="avg-card-title">
-                    対左ピッチャー打率
+                    <div class="avg-card-detail">
+                        <span th:text="${vsLDetail}"></span>
+                    </div>
                 </div>
 
-                <div class="avg-card-value">
-                    <span th:text="${vsLAvg}"></span>
-                </div>
-
-                <div class="avg-card-detail">
-                    <span th:text="${vsLDetail}"></span>
-                </div>
             </div>
 
         </div>
-    
+
+        <!-- =========================
+            打球方向 円グラフ
+        ========================= -->
+        <div class="direction-chart-wrapper">
+
+            <h2>打球方向分析</h2>
+
+            <canvas id="hitDirectionChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <hr>
 
 
 
@@ -2053,7 +2076,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <!--// =========================================
     // ★ confirm風モーダルに ※ 投手名指定中は、 AVGカードは投手別成績を優先表示します。（球種・球速条件はログ抽出のみに適用） でOK押下してもらうで行きましょう
     // ========================================= -->
-<script>
+<!--<script>
     document.addEventListener("DOMContentLoaded", function () {
 
         const form = document.querySelector("form");
@@ -2110,7 +2133,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-</script>
+</script>-->
 
 
 
