@@ -2367,6 +2367,7 @@ public class MLBGameService {
     /**
      * ============================================
      * ★ 打球方向集計（対右）-----------------円グラフ
+     * result + opponent + pitcher + pitchType + speedRange + season
      * ============================================
      */
     public Map<String, Integer> getHitDirectionStatsByRight(
@@ -2374,7 +2375,9 @@ public class MLBGameService {
             String result,
             String opponent,
             String pitcher,
-            String pitchType) {
+            String pitchType,
+            Integer speedMin,
+            Integer speedMax) {
 
         return ohtaniGameRepository
                 .getHitDirectionStatsByRight(
@@ -2382,7 +2385,9 @@ public class MLBGameService {
                         result,
                         opponent,
                         pitcher,
-                        pitchType);
+                        pitchType,
+                        speedMin,
+                        speedMax);
     }
 
     /**
