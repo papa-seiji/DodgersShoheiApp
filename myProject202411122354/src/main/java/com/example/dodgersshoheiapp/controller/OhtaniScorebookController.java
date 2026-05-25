@@ -330,88 +330,18 @@ public class OhtaniScorebookController {
                         Map<String, String> vsAll;
 
                         // ============================================
-                        // ★ pitcher + pitchType 指定時（最優先）
+                        // ★ 対ALL：全フィルタ併用 AVG
+                        // result + opponent + pitcher + pitchType + speedRange + season
+                        // ログ抽出結果を正としてAVGカードを計算する
                         // ============================================
-                        if (pitcher != null
-                                        && !pitcher.isBlank()
-                                        && pitchType != null
-                                        && !pitchType.isBlank()
-                                        && !"ALL".equals(pitchType)) {
-
-                                vsAll = mlbGameService
-                                                .getVsAllStatsByPitcherAndPitchTypeFormatted(
-                                                                pitcher,
-                                                                pitchType,
-                                                                season,
-                                                                result);
-
-                                // ============================================
-                                // ★ pitcher 指定時
-                                // ============================================
-                        } else if (pitcher != null
-                                        && !pitcher.isBlank()) {
-
-                                vsAll = mlbGameService
-                                                .getVsAllStatsByPitcherFormatted(
-                                                                pitcher,
-                                                                season,
-                                                                result,
-                                                                opponent);
-
-                                // ============================================
-                                // ★ 球速帯分析モード
-                                // ============================================
-                        } else if (speedMin != null
-                                        && speedMax != null
-                                        && (pitchType == null
-                                                        || pitchType.isBlank()
-                                                        || "ALL".equals(pitchType))
-                                        && (opponent == null
-                                                        || opponent.isBlank()
-                                                        || "ALL".equals(opponent))) {
-
-                                vsAll = mlbGameService
-                                                .getVsAllStatsBySpeedFormatted(
-                                                                result,
-                                                                speedMin,
-                                                                speedMax,
-                                                                season);
-
-                                // ============================================
-                                // ★ pitchType 指定時
-                                // ============================================
-                        } else if (pitchType != null
-                                        && !pitchType.isBlank()
-                                        && !"ALL".equals(pitchType)) {
-
-                                vsAll = mlbGameService
-                                                .getVsAllStatsByPitchTypeFormatted(
-                                                                result,
-                                                                pitchType,
-                                                                season,
-                                                                opponent);
-
-                                // ============================================
-                                // ★ opponent 指定時
-                                // ============================================
-                        } else if (opponent != null
-                                        && !opponent.isBlank()
-                                        && !"ALL".equals(opponent)) {
-
-                                vsAll = mlbGameService
-                                                .getVsAllStatsByOpponentFormatted(
-                                                                opponent,
-                                                                season,
-                                                                result);
-
-                        } else {
-
-                                vsAll = mlbGameService
-                                                .getVsAllStatsFormatted(
-                                                                season,
-                                                                result,
-                                                                opponent);
-                        }
+                        vsAll = mlbGameService.getVsAllStatsByFilterFormatted(
+                                        result,
+                                        opponent,
+                                        pitcher,
+                                        pitchType,
+                                        speedMin,
+                                        speedMax,
+                                        season);
 
                         model.addAttribute("vsAllAvg", vsAll.get("avg"));
                         model.addAttribute("vsAllDetail", vsAll.get("detail"));
