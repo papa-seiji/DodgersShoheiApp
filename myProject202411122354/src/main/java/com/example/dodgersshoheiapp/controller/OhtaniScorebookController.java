@@ -688,15 +688,14 @@ public class OhtaniScorebookController {
 
                 } else {
 
-                        directionStats = mlbGameService
-                                        .getHitDirectionStats(
-                                                        season,
-                                                        result,
-                                                        opponent,
-                                                        pitcher,
-                                                        pitchType,
-                                                        speedMin,
-                                                        speedMax);
+                        directionStats = mlbGameService.getHitDirectionStats(
+                                        season,
+                                        result,
+                                        opponent,
+                                        pitcher,
+                                        pitchType,
+                                        speedMin,
+                                        speedMax);
                 }
 
                 model.addAttribute(

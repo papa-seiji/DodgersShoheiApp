@@ -2353,15 +2353,14 @@ public class MLBGameService {
             Integer speedMin,
             Integer speedMax) {
 
-        return ohtaniGameRepository
-                .getHitDirectionStats(
-                        season,
-                        result,
-                        opponent,
-                        pitcher,
-                        pitchType,
-                        speedMin,
-                        speedMax);
+        return ohtaniGameRepository.getHitDirectionStats(
+                season,
+                result,
+                opponent,
+                pitcher,
+                pitchType,
+                speedMin,
+                speedMax);
     }
 
     /**
