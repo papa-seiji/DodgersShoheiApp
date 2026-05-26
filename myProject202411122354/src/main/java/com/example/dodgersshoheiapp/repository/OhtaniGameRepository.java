@@ -7034,21 +7034,76 @@ public class OhtaniGameRepository {
             String pitcher) {
 
         String sql = """
-                SELECT DISTINCT g.opponent
-                FROM ohtani_game_details d
-                JOIN ohtani_games g
-                    ON d.game_id = g.id
-                WHERE
-                       d.pa1_pitcher = ?
-                    OR d.pa2_pitcher = ?
-                    OR d.pa3_pitcher = ?
-                    OR d.pa4_pitcher = ?
+                SELECT opponent
+                FROM (
+                    SELECT
+                        g.opponent,
+                        d.created_at
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE d.pa1_pitcher = ?
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.created_at
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE d.pa2_pitcher = ?
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.created_at
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE d.pa3_pitcher = ?
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.created_at
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE d.pa4_pitcher = ?
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.created_at
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE d.pa5_pitcher = ?
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.created_at
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE d.pa6_pitcher = ?
+                ) t
+                WHERE opponent IS NOT NULL
+                ORDER BY created_at DESC
                 LIMIT 1
                 """;
 
         List<String> result = jdbcTemplate.queryForList(
                 sql,
                 String.class,
+                pitcher,
+                pitcher,
                 pitcher,
                 pitcher,
                 pitcher,
