@@ -1181,11 +1181,11 @@ input.addEventListener("input", async () => {
             // ============================================
             const res =
                 await fetch(
-                    `/api/pitcher-opponent?pitcher=${name}`
+                    `/api/pitcher-opponent?pitcher=${encodeURIComponent(name)}`
                 );
 
             const opponentName =
-                await res.text();
+                (await res.text()).trim();
 
             if (opponentName) {
 
