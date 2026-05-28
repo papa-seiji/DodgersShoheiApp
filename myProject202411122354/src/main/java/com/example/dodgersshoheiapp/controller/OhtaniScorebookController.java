@@ -306,6 +306,11 @@ public class OhtaniScorebookController {
                         season = currentYear;
                 }
 
+                // ★ 初回表示・クリア時はALL表示にする
+                if (hand == null || hand.isBlank()) {
+                        hand = "ALL";
+                }
+
                 // ============================================
                 // ★ ALL → null 変換（超重要）
                 // ============================================
