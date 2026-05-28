@@ -548,9 +548,9 @@
                         '<span th:text="${season.toString().substring(2)}"></span> 得点圏打率
                     </div>
                     <div class="avg-card-title">
-                        　　　　　　　　　　　ここをクリックで[ON/OFF]切替
+                        ここをクリックで[ON/OFF]切替できます
                     </div>
-
+<div>　　　　　　　　　　</div>
 
                     <div class="avg-card-value">
                         <span th:text="${rispAllAvg}"></span>
@@ -1397,8 +1397,15 @@ input.addEventListener("input", async () => {
 
     function saveFilterCard1(event) {
 
-        // ★ カード側クリックを止める
         event.stopPropagation();
+
+        const ok = confirm(
+            "MY ショートカット①に現在の検索条件を保存しますか？\n\n既存の保存内容は上書きされます。"
+        );
+
+        if (!ok) {
+            return;
+        }
 
         const filter = {
             hand: document.querySelector('[name="hand"]').value,
@@ -1414,6 +1421,25 @@ input.addEventListener("input", async () => {
             "battingFilterCard1",
             JSON.stringify(filter)
         );
+
+        const title =
+            filter.opponent
+            || filter.pitcher
+            || "MY FILTER";
+
+        document.getElementById("myFilterCard1Value")
+            .textContent = title;
+
+        document.getElementById("myFilterCard1Detail")
+            .innerHTML =
+                (filter.hand || "ALL")
+                + " / "
+                + (filter.pitcher || "ALL")
+                + "<br>"
+                + (filter.speedMin || "50")
+                + "-"
+                + (filter.speedMax || "110")
+                + "mph";
 
         alert("MY FILTER① に保存しました");
     }
@@ -1542,6 +1568,14 @@ input.addEventListener("input", async () => {
     function saveFilterCard2(event) {
 
         event.stopPropagation();
+
+        const ok = confirm(
+            "MY ショートカット②に現在の検索条件を保存しますか？\n\n既存の保存内容は上書きされます。"
+        );
+
+        if (!ok) {
+            return;
+        }
 
         const filter = {
             hand: document.querySelector('[name="hand"]').value,
