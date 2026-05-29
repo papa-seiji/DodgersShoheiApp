@@ -7541,4 +7541,136 @@ public class OhtaniGameRepository {
                         rs.getString("game_date"),
                         rs.getDouble("cumulative_ops")));
     }
+
+    /**
+     * ============================================
+     * ★ チーム別打率一覧（ALL投手）--------------------棒グラフ用
+     * ============================================
+     */
+    public List<Map<String, Object>> getTeamBattingAveragesAll(
+            Integer season) {
+
+        String sql = """
+                SELECT
+                    opponent,
+                    SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) AS hits,
+                    SUM(
+                        CASE
+                            WHEN result NOT IN ('BB','SF')
+                            AND result IS NOT NULL
+                            THEN 1
+                            ELSE 0
+                        END
+                    ) AS at_bats,
+                    ROUND(
+                        SUM(CASE WHEN result IN ('HIT','HR') THEN 1 ELSE 0 END) * 1.0
+                        /
+                        NULLIF(
+                            SUM(
+                                CASE
+                                    WHEN result NOT IN ('BB','SF')
+                                    AND result IS NOT NULL
+                                    THEN 1
+                                    ELSE 0
+                                END
+                            ),
+                            0
+                        ),
+                        3
+                    ) AS avg
+                FROM (
+                    SELECT
+                        g.opponent,
+                        d.pa1_result AS result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa1_description IS NOT NULL
+                      AND d.pa1_description <> 'dammydammy'
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.pa2_result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa2_description IS NOT NULL
+                      AND d.pa2_description <> 'dammydammy'
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.pa3_result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa3_description IS NOT NULL
+                      AND d.pa3_description <> 'dammydammy'
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.pa4_result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa4_description IS NOT NULL
+                      AND d.pa4_description <> 'dammydammy'
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.pa5_result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa5_description IS NOT NULL
+                      AND d.pa5_description <> 'dammydammy'
+
+                    UNION ALL
+
+                    SELECT
+                        g.opponent,
+                        d.pa6_result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g
+                        ON d.game_id = g.id
+                    WHERE EXTRACT(YEAR FROM d.created_at) = ?
+                      AND d.pa6_description IS NOT NULL
+                      AND d.pa6_description <> 'dammydammy'
+                ) t
+                WHERE opponent IS NOT NULL
+                GROUP BY opponent
+                HAVING
+                    SUM(
+                        CASE
+                            WHEN result NOT IN ('BB','SF')
+                            AND result IS NOT NULL
+                            THEN 1
+                            ELSE 0
+                        END
+                    ) > 0
+                ORDER BY avg DESC, opponent ASC
+                """;
+
+        return jdbcTemplate.queryForList(
+                sql,
+                season,
+                season,
+                season,
+                season,
+                season,
+                season);
+    }
+
 }

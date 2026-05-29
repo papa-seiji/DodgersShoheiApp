@@ -17,6 +17,80 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class MLBGameService {
 
+    // ============================================
+    // ★ MLB Team ID--------------------棒グラフ用
+    // ============================================
+    private static final Map<String, Integer> TEAM_IDS = Map.ofEntries(
+
+            Map.entry("Arizona Diamondbacks", 109),
+            Map.entry("Atlanta Braves", 144),
+            Map.entry("Baltimore Orioles", 110),
+            Map.entry("Boston Red Sox", 111),
+            Map.entry("Chicago Cubs", 112),
+            Map.entry("Chicago White Sox", 145),
+            Map.entry("Cincinnati Reds", 113),
+            Map.entry("Cleveland Guardians", 114),
+            Map.entry("Colorado Rockies", 115),
+            Map.entry("Detroit Tigers", 116),
+            Map.entry("Houston Astros", 117),
+            Map.entry("Kansas City Royals", 118),
+            Map.entry("Los Angeles Angels", 108),
+            Map.entry("Los Angeles Dodgers", 119),
+            Map.entry("Miami Marlins", 146),
+            Map.entry("Milwaukee Brewers", 158),
+            Map.entry("Minnesota Twins", 142),
+            Map.entry("New York Mets", 121),
+            Map.entry("New York Yankees", 147),
+            Map.entry("Oakland Athletics", 133),
+            Map.entry("Philadelphia Phillies", 143),
+            Map.entry("Pittsburgh Pirates", 134),
+            Map.entry("San Diego Padres", 135),
+            Map.entry("San Francisco Giants", 137),
+            Map.entry("Seattle Mariners", 136),
+            Map.entry("St. Louis Cardinals", 138),
+            Map.entry("Tampa Bay Rays", 139),
+            Map.entry("Texas Rangers", 140),
+            Map.entry("Toronto Blue Jays", 141),
+            Map.entry("Washington Nationals", 120)
+
+    );
+
+    // ============================================
+    // ★ Team ID取得--------------------棒グラフ用
+    // ============================================
+    public Integer getTeamId(String opponent) {
+
+        return TEAM_IDS.get(opponent);
+    }
+
+    // ============================================
+    // ★ NLチーム判定--------------------棒グラフ用
+    // ============================================
+    public boolean isNationalLeagueTeam(String opponent) {
+
+        return switch (opponent) {
+
+            case "Arizona Diamondbacks",
+                    "Atlanta Braves",
+                    "Chicago Cubs",
+                    "Cincinnati Reds",
+                    "Colorado Rockies",
+                    "Los Angeles Dodgers",
+                    "Miami Marlins",
+                    "Milwaukee Brewers",
+                    "New York Mets",
+                    "Philadelphia Phillies",
+                    "Pittsburgh Pirates",
+                    "San Diego Padres",
+                    "San Francisco Giants",
+                    "St. Louis Cardinals",
+                    "Washington Nationals" ->
+                true;
+
+            default -> false;
+        };
+    }
+
     private final String BASE_URL = "https://statsapi.mlb.com/api/v1/schedule/games/";
     private final String SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule";
     private final OhtaniGameRepository ohtaniGameRepository;
@@ -2482,4 +2556,16 @@ public class MLBGameService {
                 pitcherHand,
                 season);
     }
+
+    /**
+     * ============================================
+     * ★ チーム別打率一覧--------------------棒グラフ用
+     * ============================================
+     */
+    public List<Map<String, Object>> getTeamBattingAveragesAll(
+            Integer season) {
+
+        return ohtaniGameRepository.getTeamBattingAveragesAll(season);
+    }
+
 }
