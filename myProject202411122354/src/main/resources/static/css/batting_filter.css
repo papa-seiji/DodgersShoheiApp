@@ -1988,7 +1988,7 @@ body.risp-mode {
 ===================================================== */
 
 .team-avg-section{
-    margin:40px 0;
+    margin:10px 0;
 }
 
 .team-avg-title{
@@ -2042,7 +2042,7 @@ body.risp-mode {
 
 .team-avg-league-grid {
     display: grid;
-    /* grid-template-columns: 1fr 1fr; */
+    grid-template-columns: 1fr 1fr;
     gap: 36px;
 }
 
@@ -2454,4 +2454,20 @@ body.risp-mode {
     background: rgb(180 19 255);
     border-radius: 50%;
     padding: 1px;
+}
+
+/* =====================================================
+   チーム別打率ランキングだけ スマホ縮尺表示
+   ※ viewport metaなし前提
+===================================================== */
+@media (max-width: 1000px) {
+
+    .team-avg-section {
+        overflow: hidden;
+    }
+
+    .team-avg-league-grid {
+        zoom: 0.65;
+        transform-origin: top left;
+    }
 }
