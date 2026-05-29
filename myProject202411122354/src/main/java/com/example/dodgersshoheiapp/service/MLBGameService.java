@@ -63,6 +63,34 @@ public class MLBGameService {
         return TEAM_IDS.get(opponent);
     }
 
+    // ============================================
+    // ★ NLチーム判定--------------------棒グラフ用
+    // ============================================
+    public boolean isNationalLeagueTeam(String opponent) {
+
+        return switch (opponent) {
+
+            case "Arizona Diamondbacks",
+                    "Atlanta Braves",
+                    "Chicago Cubs",
+                    "Cincinnati Reds",
+                    "Colorado Rockies",
+                    "Los Angeles Dodgers",
+                    "Miami Marlins",
+                    "Milwaukee Brewers",
+                    "New York Mets",
+                    "Philadelphia Phillies",
+                    "Pittsburgh Pirates",
+                    "San Diego Padres",
+                    "San Francisco Giants",
+                    "St. Louis Cardinals",
+                    "Washington Nationals" ->
+                true;
+
+            default -> false;
+        };
+    }
+
     private final String BASE_URL = "https://statsapi.mlb.com/api/v1/schedule/games/";
     private final String SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule";
     private final OhtaniGameRepository ohtaniGameRepository;

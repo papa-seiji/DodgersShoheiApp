@@ -658,49 +658,145 @@
         </div><!--34行目のfilter-panelの閉じタグ-->
 
 
-            <!-- =========================================================
-                チーム別打率ランキング--------------------棒グラフ用
-            ========================================================= -->
+    <!-- =========================================================
+        チーム別打率ランキング--------------------棒グラフ用
+    ========================================================= -->
             <div class="team-avg-section">
 
                 <h2 class="team-avg-title">チーム別打率</h2>
 
-                <div class="team-avg-item"
-                    th:each="team : ${teamAvgList}">
+                <div class="team-avg-league-grid">
 
-                    <!-- MLBロゴ -->
-                    <img class="team-logo"
-                        th:if="${team['teamId'] != null}"
-                        th:src="|https://www.mlbstatic.com/team-logos/${team['teamId']}.svg|">
+                    <!-- =========================
+                        NL
+                    ========================= -->
+                    <div class="team-avg-league-col nl-team-avg-col">
 
-                    <!-- チーム名 -->
-                    <span class="team-name"
-                        th:text="${team['opponent']}">
-                    </span>
+                        <h3 class="team-avg-league-title">National League</h3>
 
-                    <!-- 横棒 -->
-                    <div class="team-bar-wrap">
+<div class="team-scale-row">
 
-                        <div class="team-bar"
-                            th:style="'width:' + (${team['avg']} * 100) + '%'">
+    <div></div>
+
+    <div class="team-scale">
+        <span>0.000</span>
+        <span>0.100</span>
+        <span>0.200</span>
+        <span>0.300</span>
+        <span>0.400</span>
+        <span>0.500</span>
+        <span>0.600</span>
+        <span>0.700</span>
+        <span>0.800</span>
+        <span>0.900</span>
+        <span>1.000</span>
+    </div>
+
+    <div></div>
+    <div></div>
+
+</div>
+
+                        <div class="team-avg-item"
+                            th:each="team : ${nlTeamAvgList}">
+
+                        <img class="team-logo"
+                            th:if="${team['teamId'] != null}"
+                            th:classappend="
+                                ${team['teamId'] == 135} ? ' padres-logo' :
+                                (${team['teamId'] == 115} ? ' rockies-logo' : '')
+                            "
+                            th:src="|https://www.mlbstatic.com/team-logos/${team['teamId']}.svg|">
+
+                            <!--<span class="team-name"
+                                th:text="${team['opponent']}">
+                            </span>-->
+
+                            <div class="team-bar-wrap">
+
+                                <div class="team-bar"
+                                    th:style="'width:' + ${team['barPercent']} + '%'">
+                                </div>
+
+                            </div>
+
+                            <span class="team-avg-value"
+                                th:text="${team['avg']}">
+                            </span>
+
+                            <span class="team-detail"
+                                th:text="'(' + ${team['hits']} + '-' + ${team['at_bats']} + ')'">
+                            </span>
+
                         </div>
 
                     </div>
 
-                    <!-- 打率 -->
-                    <span class="team-avg-value"
-                        th:text="${team['avg']}">
-                    </span>
+                    <!-- =========================
+                        AL
+                    ========================= -->
+                    <div class="team-avg-league-col al-team-avg-col">
 
-                    <!-- ヒット数 -->
-                    <span style="color:#aaa;"
-                        th:text="'(' + ${team['hits']} + '-' + ${team['at_bats']} + ')'">
-                    </span>
+                        <h3 class="team-avg-league-title">American League</h3>
+
+<div class="team-scale-row">
+
+    <div></div>
+
+    <div class="team-scale">
+        <span>0.000</span>
+        <span>0.100</span>
+        <span>0.200</span>
+        <span>0.300</span>
+        <span>0.400</span>
+        <span>0.500</span>
+        <span>0.600</span>
+        <span>0.700</span>
+        <span>0.800</span>
+        <span>0.900</span>
+        <span>1.000</span>
+    </div>
+
+    <div></div>
+    <div></div>
+
+</div>
+
+
+                        <div class="team-avg-item"
+                            th:each="team : ${alTeamAvgList}">
+
+                            <img class="team-logo"
+                                th:if="${team['teamId'] != null}"
+                                th:src="|https://www.mlbstatic.com/team-logos/${team['teamId']}.svg|">
+
+                            <!--<span class="team-name"
+                                th:text="${team['opponent']}">
+                            </span>-->
+
+                            <div class="team-bar-wrap">
+
+                                <div class="team-bar"
+                                    th:style="'width:' + ${team['barPercent']} + '%'">
+                                </div>
+
+                            </div>
+
+                            <span class="team-avg-value"
+                                th:text="${team['avg']}">
+                            </span>
+
+                            <span class="team-detail"
+                                th:text="'(' + ${team['hits']} + '-' + ${team['at_bats']} + ')'">
+                            </span>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
-
 
         <hr>
 

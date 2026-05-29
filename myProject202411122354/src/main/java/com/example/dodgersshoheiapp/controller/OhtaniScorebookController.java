@@ -561,6 +561,13 @@ public class OhtaniScorebookController {
                 // ============================================
                 List<Map<String, Object>> teamAvgList = mlbGameService.getTeamBattingAveragesAll(season);
 
+                double maxTeamAvg = teamAvgList.stream()
+                                .map(team -> team.get("avg"))
+                                .filter(Objects::nonNull)
+                                .mapToDouble(avg -> ((Number) avg).doubleValue())
+                                .max()
+                                .orElse(1.0);
+
                 for (Map<String, Object> team : teamAvgList) {
 
                         String opponentName = (String) team.get("opponent");
@@ -568,11 +575,46 @@ public class OhtaniScorebookController {
                         Integer teamId = mlbGameService.getTeamId(opponentName);
 
                         team.put("teamId", teamId);
+
+                        Number avgNumber = (Number) team.get("avg");
+
+                        double avg = avgNumber == null
+                                        ? 0.0
+                                        : avgNumber.doubleValue();
+
+                        // double barPercent = maxTeamAvg == 0.0
+                        // ? 0.0
+                        // : (avg / maxTeamAvg) * 100.0;
+
+                        double barPercent = avg * 100.0;
+
+                        team.put("barPercent", barPercent);
                 }
 
                 model.addAttribute(
                                 "teamAvgList",
                                 teamAvgList);
+
+                // ============================================
+                // ★ チーム別打率ランキングのチームをNL/ALに分ける--------------------棒グラフ用
+                // ============================================
+                List<Map<String, Object>> nlTeamAvgList = teamAvgList.stream()
+                                .filter(team -> mlbGameService.isNationalLeagueTeam(
+                                                (String) team.get("opponent")))
+                                .toList();
+
+                List<Map<String, Object>> alTeamAvgList = teamAvgList.stream()
+                                .filter(team -> !mlbGameService.isNationalLeagueTeam(
+                                                (String) team.get("opponent")))
+                                .toList();
+
+                model.addAttribute(
+                                "nlTeamAvgList",
+                                nlTeamAvgList);
+
+                model.addAttribute(
+                                "alTeamAvgList",
+                                alTeamAvgList);
 
                 /*
                  * ============================================
