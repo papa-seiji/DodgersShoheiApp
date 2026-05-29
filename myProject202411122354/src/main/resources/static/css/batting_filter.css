@@ -1983,6 +1983,57 @@ body.risp-mode {
 }
 
 
+/* =====================================================
+   チーム別打率ランキング--------------------棒グラフ用
+===================================================== */
+
+.team-avg-section{
+    margin:40px 0;
+}
+
+.team-avg-title{
+    color:#fff;
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.team-avg-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.team-logo{
+    width:32px;
+    height:32px;
+    flex-shrink:0;
+}
+
+.team-bar-wrap{
+    width:500px;
+    height:18px;
+    background:rgba(255,255,255,0.08);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.team-bar{
+    height:100%;
+    background:#19bfff;
+}
+
+.team-avg-value{
+    color:white;
+    font-weight:bold;
+    min-width:60px;
+}
+
+.team-name{
+    color:white;
+    width:220px;
+}
 
 
 /* =========================================

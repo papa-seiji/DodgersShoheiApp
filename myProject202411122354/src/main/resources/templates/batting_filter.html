@@ -658,13 +658,48 @@
         </div><!--34行目のfilter-panelの閉じタグ-->
 
 
-<!--<div class="direction-chart-wrapper">
+            <!-- =========================================================
+                チーム別打率ランキング--------------------棒グラフ用
+            ========================================================= -->
+            <div class="team-avg-section">
 
-    <h2>打球方向分析</h2>
+                <h2 class="team-avg-title">チーム別打率</h2>
 
-    <canvas id="hitDirectionChart"></canvas>
+                <div class="team-avg-item"
+                    th:each="team : ${teamAvgList}">
 
-</div>-->
+                    <!-- MLBロゴ -->
+                    <img class="team-logo"
+                        th:if="${team['teamId'] != null}"
+                        th:src="|https://www.mlbstatic.com/team-logos/${team['teamId']}.svg|">
+
+                    <!-- チーム名 -->
+                    <span class="team-name"
+                        th:text="${team['opponent']}">
+                    </span>
+
+                    <!-- 横棒 -->
+                    <div class="team-bar-wrap">
+
+                        <div class="team-bar"
+                            th:style="'width:' + (${team['avg']} * 100) + '%'">
+                        </div>
+
+                    </div>
+
+                    <!-- 打率 -->
+                    <span class="team-avg-value"
+                        th:text="${team['avg']}">
+                    </span>
+
+                    <!-- ヒット数 -->
+                    <span style="color:#aaa;"
+                        th:text="'(' + ${team['hits']} + '-' + ${team['at_bats']} + ')'">
+                    </span>
+
+                </div>
+
+            </div>
 
 
         <hr>

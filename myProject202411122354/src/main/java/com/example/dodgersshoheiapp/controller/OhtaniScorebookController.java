@@ -556,8 +556,23 @@ public class OhtaniScorebookController {
                                 "searchSummaryHtml",
                                 searchSummaryHtml);
 
-                // ★ チーム一覧を取得
-                List<String> opponents = mlbGameService.getAllOpponents();
+                // ============================================
+                // ★ チーム別打率ランキング--------------------棒グラフ用
+                // ============================================
+                List<Map<String, Object>> teamAvgList = mlbGameService.getTeamBattingAveragesAll(season);
+
+                for (Map<String, Object> team : teamAvgList) {
+
+                        String opponentName = (String) team.get("opponent");
+
+                        Integer teamId = mlbGameService.getTeamId(opponentName);
+
+                        team.put("teamId", teamId);
+                }
+
+                model.addAttribute(
+                                "teamAvgList",
+                                teamAvgList);
 
                 /*
                  * ============================================
@@ -656,6 +671,9 @@ public class OhtaniScorebookController {
                                 lOpsTrend.stream()
                                                 .map(OpsTrendDto::getCumulativeOps)
                                                 .toList());
+
+                // ★ チーム一覧を取得
+                List<String> opponents = mlbGameService.getAllOpponents();
 
                 // ★ 画面へ渡す
                 model.addAttribute("opponents", opponents);
