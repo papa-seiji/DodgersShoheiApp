@@ -117,8 +117,14 @@ public class SecurityConfig {
                                 // 参加するならログイン必須
                                 "/comments",
                                 "/proud",
+                                "/api/proud/images",
+                                "/api/proud/files/**",
                                 "/yosou")
                         .permitAll()
+
+                        // 🔐 Proud投稿・いいねはログイン必須
+                        .requestMatchers("/api/proud/upload").authenticated()
+                        .requestMatchers("/api/proud/like/**").authenticated()
 
                         // 🔐 管理者専用
                         .requestMatchers("/admin/**").hasRole("ADMIN")
