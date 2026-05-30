@@ -119,6 +119,11 @@ public class SecurityConfig {
                                 "/proud",
                                 "/api/proud/images",
                                 "/api/proud/files/**",
+
+                                // ★一時検証：Proud投稿・いいねも未ログイン許可
+                                // "/api/proud/upload",
+                                // "/api/proud/like/**",
+
                                 "/yosou")
                         .permitAll()
 
