@@ -2043,7 +2043,8 @@ body.risp-mode {
 .team-avg-league-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 36px;
+    gap: 34px;
+    zoom: 0.91;
 }
 
 .team-avg-league-title {
@@ -2467,7 +2468,7 @@ body.risp-mode {
     }
 
     .team-avg-league-grid {
-        zoom: 0.65;
+        zoom: 0.615;
         transform-origin: top left;
     }
 }
