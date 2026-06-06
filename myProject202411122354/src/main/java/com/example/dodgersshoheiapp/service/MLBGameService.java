@@ -2391,16 +2391,16 @@ public class MLBGameService {
         }
 
         String[] pitchTypes = {
+                "Knuckle Curve",
                 "Four-Seam",
                 "Sinker",
                 "Sweeper",
                 "Slider",
+                "Slurve",
                 "Curve",
                 "Cutter",
                 "Splitter",
-                "Changeup",
-                "Knuckle Curve",
-                "Sweeping Curve"
+                "Changeup"
         };
 
         for (String type : pitchTypes) {
