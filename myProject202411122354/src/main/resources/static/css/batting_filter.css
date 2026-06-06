@@ -1033,6 +1033,12 @@ body {
         color:#bbf7d0;
     }
 
+        /* Slurve */
+    .pitch-badge.slurve{
+        background:#a6ba0c;
+        color:#232523;
+    }
+
 
     /* =========================
     FILTER ACTIONS 検索 / クリアボタンを右側へ
