@@ -2568,4 +2568,1099 @@ public class MLBGameService {
         return ohtaniGameRepository.getTeamBattingAveragesAll(season);
     }
 
+    /**
+     * ============================================
+     * ★ 2025取込検証用：1試合の大谷打席をDB形式へ変換
+     * まずは gamePk=823942 で検証
+     * ============================================
+     */
+    public Map<String, Object> buildOhtaniBattingImportPreview(Long gamePk) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://statsapi.mlb.com/api/v1.1/game/"
+                + gamePk
+                + "/feed/live";
+
+        Map<String, Object> feed = restTemplate.getForObject(url, Map.class);
+
+        Map<String, Object> result = new HashMap<>();
+
+        if (feed == null) {
+            result.put("error", "feed/live が取得できませんでした");
+            return result;
+        }
+
+        Map<String, Object> gameData = (Map<String, Object>) feed.get("gameData");
+
+        Map<String, Object> liveData = (Map<String, Object>) feed.get("liveData");
+
+        Map<String, Object> datetime = (Map<String, Object>) gameData.get("datetime");
+
+        String gameDate = (String) datetime.get("originalDate");
+
+        Map<String, Object> teams = (Map<String, Object>) gameData.get("teams");
+
+        Map<String, Object> home = (Map<String, Object>) teams.get("home");
+
+        Map<String, Object> away = (Map<String, Object>) teams.get("away");
+
+        Integer homeId = (Integer) home.get("id");
+
+        Integer awayId = (Integer) away.get("id");
+
+        String homeName = (String) home.get("name");
+
+        String awayName = (String) away.get("name");
+
+        boolean dodgersHome = homeId != null && homeId == 119;
+
+        String opponent = dodgersHome ? awayName : homeName;
+
+        Map<String, Object> linescore = (Map<String, Object>) liveData.get("linescore");
+
+        Map<String, Object> lineTeams = (Map<String, Object>) linescore.get("teams");
+
+        Map<String, Object> lineHome = (Map<String, Object>) lineTeams.get("home");
+
+        Map<String, Object> lineAway = (Map<String, Object>) lineTeams.get("away");
+
+        int homeRuns = ((Number) lineHome.get("runs")).intValue();
+
+        int awayRuns = ((Number) lineAway.get("runs")).intValue();
+
+        int dodgersRuns = dodgersHome ? homeRuns : awayRuns;
+
+        int opponentRuns = dodgersHome ? awayRuns : homeRuns;
+
+        String winLose = dodgersRuns > opponentRuns ? "○" : "●";
+
+        String gameResult = winLose + dodgersRuns + "-" + opponentRuns;
+
+        Map<String, Object> ohtaniGamesRow = new LinkedHashMap<>();
+
+        ohtaniGamesRow.put("id", 0);
+        ohtaniGamesRow.put("game_date", gameDate);
+        ohtaniGamesRow.put("opponent", opponent);
+        ohtaniGamesRow.put("result", gameResult);
+        ohtaniGamesRow.put("form_value", 0);
+        ohtaniGamesRow.put("created_at", gameDate + " 00:00:00");
+        ohtaniGamesRow.put("comment", "-");
+        ohtaniGamesRow.put("game_pk", gamePk);
+
+        Map<String, Object> plays = (Map<String, Object>) liveData.get("plays");
+
+        List<Map<String, Object>> allPlays = (List<Map<String, Object>>) plays.get("allPlays");
+
+        List<Map<String, Object>> ohtaniPlateAppearances = new ArrayList<>();
+
+        final int OHTANI_ID = 660271;
+
+        for (Map<String, Object> play : allPlays) {
+
+            Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+
+            if (matchup == null) {
+                continue;
+            }
+
+            Map<String, Object> batter = (Map<String, Object>) matchup.get("batter");
+
+            if (batter == null) {
+                continue;
+            }
+
+            Integer batterId = (Integer) batter.get("id");
+
+            if (batterId == null || batterId != OHTANI_ID) {
+                continue;
+            }
+
+            // ★ 大谷の打席結果ではないプレーは除外
+            // 例：大谷打席中の一塁ランナー牽制死
+            if (isNonBatterResultPlay(play)) {
+                continue;
+            }
+
+            ohtaniPlateAppearances.add(
+                    buildOhtaniPaRow(play));
+        }
+
+        Map<String, Object> detailRow = new LinkedHashMap<>();
+
+        detailRow.put("id", 0);
+        detailRow.put("game_id", 0);
+        detailRow.put("created_at", gameDate + " 00:00:00");
+
+        for (int i = 1; i <= 6; i++) {
+
+            if (i <= ohtaniPlateAppearances.size()) {
+
+                Map<String, Object> pa = ohtaniPlateAppearances.get(i - 1);
+
+                detailRow.put("pa" + i + "_pitcher", pa.get("pitcher"));
+                detailRow.put("pa" + i + "_pitcher_hand", pa.get("pitcher_hand"));
+                detailRow.put("pa" + i + "_result", pa.get("result"));
+                detailRow.put("pa" + i + "_description", pa.get("description"));
+
+            } else {
+
+                detailRow.put("pa" + i + "_pitcher", null);
+                detailRow.put("pa" + i + "_pitcher_hand", null);
+                detailRow.put("pa" + i + "_result", null);
+                detailRow.put("pa" + i + "_description", null);
+            }
+        }
+
+        result.put("ohtani_games", ohtaniGamesRow);
+        result.put("ohtani_game_details", detailRow);
+        result.put("pa_count", ohtaniPlateAppearances.size());
+
+        return result;
+    }
+
+    /**
+     * ============================================
+     * ★ 大谷の打席結果ではないプレーを除外
+     * 例：大谷打席中の牽制死、盗塁死など
+     * ============================================
+     */
+    private boolean isNonBatterResultPlay(Map<String, Object> play) {
+
+        Map<String, Object> result = (Map<String, Object>) play.get("result");
+
+        if (result == null) {
+            return false;
+        }
+
+        String event = result.get("event") != null
+                ? result.get("event").toString()
+                : "";
+
+        String description = result.get("description") != null
+                ? result.get("description").toString().toLowerCase()
+                : "";
+
+        return event.contains("Pickoff")
+                || event.contains("Caught Stealing")
+                || description.contains("pickoff")
+                || description.contains("caught stealing")
+                || description.contains("picked off")
+                || description.contains("pick-off");
+    }
+
+    private Map<String, Object> buildOhtaniPaRow(
+            Map<String, Object> play) {
+
+        Map<String, Object> row = new LinkedHashMap<>();
+
+        Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+
+        Map<String, Object> pitcher = (Map<String, Object>) matchup.get("pitcher");
+
+        Map<String, Object> pitchHand = (Map<String, Object>) matchup.get("pitchHand");
+
+        String pitcherName = pitcher != null
+                ? (String) pitcher.get("fullName")
+                : "-";
+
+        String pitcherHand = pitchHand != null
+                ? (String) pitchHand.get("code")
+                : "-";
+
+        Map<String, Object> result = (Map<String, Object>) play.get("result");
+
+        String event = result != null
+                ? (String) result.get("event")
+                : "";
+
+        String resultCode = convertResultCode(event);
+
+        List<Map<String, Object>> playEvents = (List<Map<String, Object>>) play.get("playEvents");
+
+        Map<String, Object> lastPitch = findLastPitch(playEvents);
+
+        String countText = buildPrePitchCountText(playEvents);
+
+        int pitchNumber = countPitches(playEvents);
+
+        String pitchSpeed = extractPitchSpeedText(lastPitch);
+
+        String pitchType = extractPitchTypeText(lastPitch);
+
+        String direction = extractDirectionText(play);
+
+        String eventJa = convertEventJapanese(event, play);
+
+        boolean risp = hasRunnerInScoringPosition(play);
+
+        String description;
+
+        if ("Intent Walk".equals(event) || "Intentional Walk".equals(event)) {
+
+            description = "申告敬遠50mph Nopitch";
+
+        } else if ("BB".equals(resultCode) || "SO".equals(resultCode)) {
+
+            description = countText
+                    + "となった"
+                    + pitchNumber
+                    + "球目"
+                    + pitchSpeed
+                    + " "
+                    + pitchType
+                    + "を"
+                    + eventJa;
+
+        } else {
+
+            description = countText
+                    + "となった"
+                    + pitchNumber
+                    + "球目"
+                    + pitchSpeed
+                    + " "
+                    + pitchType
+                    + "を"
+                    + direction
+                    + eventJa;
+        }
+
+        if (risp) {
+            description += " 得点圏にランナー有";
+        }
+
+        row.put("pitcher", pitcherName);
+        row.put("pitcher_hand", pitcherHand);
+        row.put("result", resultCode);
+        row.put("description", description);
+
+        return row;
+    }
+
+    private Map<String, Object> findLastPitch(
+            List<Map<String, Object>> playEvents) {
+
+        if (playEvents == null) {
+            return null;
+        }
+
+        Map<String, Object> lastPitch = null;
+
+        for (Map<String, Object> e : playEvents) {
+
+            if (Boolean.TRUE.equals(e.get("isPitch"))) {
+                lastPitch = e;
+            }
+        }
+
+        return lastPitch;
+    }
+
+    private int countPitches(
+            List<Map<String, Object>> playEvents) {
+
+        if (playEvents == null) {
+            return 0;
+        }
+
+        int count = 0;
+
+        for (Map<String, Object> e : playEvents) {
+
+            if (Boolean.TRUE.equals(e.get("isPitch"))) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    // private String buildCountText(
+    // Map<String, Object> lastPitch) {
+
+    // if (lastPitch == null) {
+    // return "-";
+    // }
+
+    // Map<String, Object> count = (Map<String, Object>) lastPitch.get("count");
+
+    // if (count == null) {
+    // return "-";
+    // }
+
+    // Object balls = count.get("balls");
+
+    // Object strikes = count.get("strikes");
+
+    // return balls + "-" + strikes;
+    // }
+
+    /**
+     * ============================================
+     * ★ 最後の投球「前」のカウントを作る
+     * 例：四球後 4-2 ではなく、投球前の 3-2 に戻す
+     * ============================================
+     */
+    private String buildPrePitchCountText(
+            List<Map<String, Object>> playEvents) {
+
+        if (playEvents == null || playEvents.isEmpty()) {
+            return "-";
+        }
+
+        Map<String, Object> lastPitch = findLastPitch(playEvents);
+
+        if (lastPitch == null) {
+            return "-";
+        }
+
+        Map<String, Object> count = (Map<String, Object>) lastPitch.get("count");
+
+        Map<String, Object> details = (Map<String, Object>) lastPitch.get("details");
+
+        if (count == null || details == null) {
+            return "-";
+        }
+
+        int balls = ((Number) count.get("balls")).intValue();
+
+        int strikes = ((Number) count.get("strikes")).intValue();
+
+        String code = details.get("code") != null
+                ? details.get("code").toString()
+                : "";
+
+        String description = details.get("description") != null
+                ? details.get("description").toString()
+                : "";
+
+        /*
+         * 最後の投球後カウントから、投球前カウントへ戻す
+         */
+        if ("B".equals(code)
+                || "I".equals(code)
+                || "H".equals(code)
+                || "V".equals(code)
+                || description.contains("Ball")
+                || description.contains("Hit By Pitch")) {
+            balls = Math.max(0, balls - 1);
+        }
+
+        if ("S".equals(code)
+                || "C".equals(code)
+                || "W".equals(code)
+                || "F".equals(code)
+                || "T".equals(code)
+                || "L".equals(code)
+                || "M".equals(code)
+                || description.contains("Strike")
+                || description.contains("Foul")) {
+            strikes = Math.max(0, strikes - 1);
+        }
+
+        return balls + "-" + strikes;
+    }
+
+    private String extractPitchSpeedText(
+            Map<String, Object> lastPitch) {
+
+        if (lastPitch == null) {
+            return "-";
+        }
+
+        Map<String, Object> pitchData = (Map<String, Object>) lastPitch.get("pitchData");
+
+        if (pitchData == null || pitchData.get("startSpeed") == null) {
+            return "-";
+        }
+
+        double speed = ((Number) pitchData.get("startSpeed")).doubleValue();
+
+        return String.format("%.1f", speed) + "mph";
+    }
+
+    // private String extractPitchTypeText(
+    // Map<String, Object> lastPitch) {
+
+    // if (lastPitch == null) {
+    // return "-";
+    // }
+
+    // Map<String, Object> details = (Map<String, Object>) lastPitch.get("details");
+
+    // if (details == null) {
+    // return "-";
+    // }
+
+    // Map<String, Object> type = (Map<String, Object>) details.get("type");
+
+    // if (type == null || type.get("description") == null) {
+    // return "-";
+    // }
+
+    // return (String) type.get("description");
+    // }
+
+    private String extractPitchTypeText(
+            Map<String, Object> lastPitch) {
+
+        if (lastPitch == null) {
+            return "-";
+        }
+
+        Map<String, Object> details = (Map<String, Object>) lastPitch.get("details");
+
+        if (details == null) {
+            return "-";
+        }
+
+        Map<String, Object> type = (Map<String, Object>) details.get("type");
+
+        if (type == null || type.get("description") == null) {
+            return "-";
+        }
+
+        String pitchType = (String) type.get("description");
+
+        // batting/filter の球種名に合わせる
+        if ("Four-Seam Fastball".equals(pitchType)) {
+            return "Four-Seam";
+        }
+
+        return pitchType;
+    }
+
+    private String convertResultCode(String event) {
+
+        if (event == null) {
+            return "OUT";
+        }
+
+        if ("Single".equals(event)
+                || "Double".equals(event)
+                || "Triple".equals(event)) {
+            return "HIT";
+        }
+
+        if ("Home Run".equals(event)) {
+            return "HR";
+        }
+
+        if ("Strikeout".equals(event)) {
+            return "SO";
+        }
+
+        if ("Walk".equals(event)
+                || "Intent Walk".equals(event)
+                || "Intentional Walk".equals(event)
+                || "Hit By Pitch".equals(event)) {
+            return "BB";
+        }
+
+        if (event.contains("Field Error")
+                || event.contains("Error")) {
+            return "Err";
+        }
+
+        if (event.contains("Sac Fly")
+                || event.contains("Sac Bunt")
+                || event.contains("Sacrifice")) {
+            return "SF";
+        }
+
+        if (event.contains("Fielder")
+                || event.contains("Fielders Choice")) {
+            return "FC";
+        }
+
+        return "OUT";
+    }
+
+    private String convertEventJapanese(
+            String event,
+            Map<String, Object> play) {
+
+        if (event == null) {
+            return "アウト";
+        }
+
+        return switch (event) {
+
+            case "Single" -> "ゴロで安打";
+            case "Double" -> "へ二塁打";
+            case "Triple" -> "へ三塁打";
+            case "Home Run" -> "へホームラン";
+            case "Strikeout" -> "三振";
+            case "Walk" -> "フォアボール";
+            case "Intent Walk", "Intentional Walk" -> "申告敬遠50mph Nopitch";
+            case "Hit By Pitch" -> "デッドボール";
+
+            default -> {
+                String desc = extractResultDescription(play);
+
+                if (desc.contains("grounds")) {
+                    yield "ゴロでアウト";
+                }
+
+                if (desc.contains("flies")) {
+                    yield "フライでアウト";
+                }
+
+                if (desc.contains("lines")) {
+                    yield "ライナーでアウト";
+                }
+
+                if (desc.contains("pops")) {
+                    yield "ポップフライでアウト";
+                }
+
+                if (event.contains("Fielder")) {
+                    yield "フィルダースチョイス";
+                }
+
+                if (event.contains("Error")) {
+                    yield "エラーで出塁";
+                }
+
+                yield "アウト";
+            }
+        };
+    }
+
+    private String extractDirectionText(
+            Map<String, Object> play) {
+
+        String desc = extractResultDescription(play);
+
+        if (desc == null) {
+            return "";
+        }
+
+        desc = desc.toLowerCase();
+
+        if (desc.contains("right-center")) {
+            return "右中間";
+        }
+
+        if (desc.contains("left-center")) {
+            return "左中間";
+        }
+
+        if (desc.contains("right fielder")
+                || desc.contains("right field")) {
+            return "ライト";
+        }
+
+        if (desc.contains("center fielder")
+                || desc.contains("center field")) {
+            return "センター";
+        }
+
+        if (desc.contains("left fielder")
+                || desc.contains("left field")) {
+            return "レフト";
+        }
+
+        if (desc.contains("second baseman")) {
+            return "セカンド";
+        }
+
+        if (desc.contains("shortstop")) {
+            return "ショート";
+        }
+
+        if (desc.contains("third baseman")) {
+            return "サード";
+        }
+
+        if (desc.contains("first baseman")) {
+            return "ファースト";
+        }
+
+        if (desc.contains("pitcher")) {
+            return "ピッチャー";
+        }
+
+        return "";
+    }
+
+    private String extractResultDescription(
+            Map<String, Object> play) {
+
+        Map<String, Object> result = (Map<String, Object>) play.get("result");
+
+        if (result == null || result.get("description") == null) {
+            return "";
+        }
+
+        return ((String) result.get("description")).toLowerCase();
+    }
+
+    private boolean hasRunnerInScoringPosition(
+            Map<String, Object> play) {
+
+        List<Map<String, Object>> runners = (List<Map<String, Object>>) play.get("runners");
+
+        if (runners == null) {
+            return false;
+        }
+
+        for (Map<String, Object> runner : runners) {
+
+            Map<String, Object> movement = (Map<String, Object>) runner.get("movement");
+
+            if (movement == null) {
+                continue;
+            }
+
+            String originBase = (String) movement.get("originBase");
+
+            if ("2B".equals(originBase)
+                    || "3B".equals(originBase)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * ============================================
+     * まず STEP1：ohtani_games_2025.csv ダウンロード から作りましょう。
+     * 
+     * 1. MLBGameService.java に追加
+     * ★ 2025年 Dodgers レギュラーシーズン一覧取得
+     * ohtani_games_2025.csv 用
+     * ============================================
+     */
+    public String buildOhtaniGames2025Csv() {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://statsapi.mlb.com/api/v1/schedule"
+                + "?sportId=1"
+                + "&teamId=119"
+                + "&season=2025"
+                + "&gameType=R";
+
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+        StringBuilder csv = new StringBuilder();
+
+        csv.append("id,game_date,opponent,result,form_value,created_at,comment,game_pk\n");
+
+        if (response == null || response.get("dates") == null) {
+            return csv.toString();
+        }
+
+        List<Map<String, Object>> dates = (List<Map<String, Object>>) response.get("dates");
+
+        for (Map<String, Object> dateObj : dates) {
+
+            List<Map<String, Object>> games = (List<Map<String, Object>>) dateObj.get("games");
+
+            if (games == null) {
+                continue;
+            }
+
+            for (Map<String, Object> game : games) {
+
+                Object statusObj = game.get("status");
+
+                if (statusObj == null) {
+                    continue;
+                }
+
+                Map<String, Object> status = (Map<String, Object>) statusObj;
+
+                String detailedState = (String) status.get("detailedState");
+
+                if (!"Final".equals(detailedState)) {
+                    continue;
+                }
+
+                Integer gamePk = ((Number) game.get("gamePk")).intValue();
+
+                String gameDate = ((String) game.get("officialDate"));
+
+                Map<String, Object> teams = (Map<String, Object>) game.get("teams");
+
+                Map<String, Object> home = (Map<String, Object>) teams.get("home");
+
+                Map<String, Object> away = (Map<String, Object>) teams.get("away");
+
+                Map<String, Object> homeTeam = (Map<String, Object>) home.get("team");
+
+                Map<String, Object> awayTeam = (Map<String, Object>) away.get("team");
+
+                Integer homeId = ((Number) homeTeam.get("id")).intValue();
+
+                Integer awayId = ((Number) awayTeam.get("id")).intValue();
+
+                String homeName = (String) homeTeam.get("name");
+
+                String awayName = (String) awayTeam.get("name");
+
+                boolean dodgersHome = homeId == 119;
+
+                String opponent = dodgersHome ? awayName : homeName;
+
+                int homeScore = home.get("score") == null
+                        ? 0
+                        : ((Number) home.get("score")).intValue();
+
+                int awayScore = away.get("score") == null
+                        ? 0
+                        : ((Number) away.get("score")).intValue();
+
+                int dodgersScore = dodgersHome ? homeScore : awayScore;
+
+                int opponentScore = dodgersHome ? awayScore : homeScore;
+
+                String winLose = dodgersScore > opponentScore ? "○" : "●";
+
+                String result = winLose + dodgersScore + "-" + opponentScore;
+
+                csv.append("0").append(",");
+                csv.append(gameDate).append(",");
+                csv.append(escapeCsv(opponent)).append(",");
+                csv.append(result).append(",");
+                csv.append("0").append(",");
+                csv.append(gameDate).append(" 00:00:00").append(",");
+                csv.append("-").append(",");
+                csv.append(gamePk).append("\n");
+            }
+        }
+
+        return csv.toString();
+    }
+
+    /**
+     * ============================================
+     * 2. 同じ MLBGameService.java に追加
+     * ============================================
+     */
+    private String escapeCsv(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        if (value.contains(",")
+                || value.contains("\"")
+                || value.contains("\n")) {
+
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+
+        return value;
+    }
+
+    /**
+     * ============================================
+     * ★ 2025年 大谷翔平 打席詳細CSV
+     * ohtani_game_details_2025.csv 用
+     * ============================================
+     */
+    public String buildOhtaniGameDetails2025Csv() {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://statsapi.mlb.com/api/v1/schedule"
+                + "?sportId=1"
+                + "&teamId=119"
+                + "&season=2025"
+                + "&gameType=R";
+
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+        StringBuilder csv = new StringBuilder();
+
+        csv.append("id,game_id,created_at,")
+                .append("pa1_pitcher,pa1_pitcher_hand,pa1_result,pa1_description,")
+                .append("pa2_pitcher,pa2_pitcher_hand,pa2_result,pa2_description,")
+                .append("pa3_pitcher,pa3_pitcher_hand,pa3_result,pa3_description,")
+                .append("pa4_pitcher,pa4_pitcher_hand,pa4_result,pa4_description,")
+                .append("pa5_pitcher,pa5_pitcher_hand,pa5_result,pa5_description,")
+                .append("pa6_pitcher,pa6_pitcher_hand,pa6_result,pa6_description\n");
+
+        if (response == null || response.get("dates") == null) {
+            return csv.toString();
+        }
+
+        List<Map<String, Object>> dates = (List<Map<String, Object>>) response.get("dates");
+
+        for (Map<String, Object> dateObj : dates) {
+
+            List<Map<String, Object>> games = (List<Map<String, Object>>) dateObj.get("games");
+
+            if (games == null) {
+                continue;
+            }
+
+            for (Map<String, Object> game : games) {
+
+                Map<String, Object> status = (Map<String, Object>) game.get("status");
+
+                if (status == null) {
+                    continue;
+                }
+
+                String detailedState = (String) status.get("detailedState");
+
+                if (!"Final".equals(detailedState)) {
+                    continue;
+                }
+
+                Long gamePk = ((Number) game.get("gamePk")).longValue();
+
+                try {
+
+                    Map<String, Object> preview = buildOhtaniBattingImportPreview(gamePk);
+
+                    Map<String, Object> detail = (Map<String, Object>) preview.get("ohtani_game_details");
+
+                    if (detail == null) {
+                        continue;
+                    }
+
+                    csv.append("0").append(",");
+                    csv.append("0").append(",");
+                    csv.append(escapeCsv((String) detail.get("created_at"))).append(",");
+
+                    for (int i = 1; i <= 6; i++) {
+
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_pitcher"))).append(",");
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_pitcher_hand"))).append(",");
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_result"))).append(",");
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_description")));
+
+                        if (i < 6) {
+                            csv.append(",");
+                        }
+                    }
+
+                    csv.append("\n");
+
+                } catch (Exception e) {
+
+                    // 1試合失敗しても全体停止しない
+                    System.out.println(
+                            "ohtani_game_details CSV生成失敗 gamePk="
+                                    + gamePk
+                                    + " / "
+                                    + e.getMessage());
+                }
+            }
+        }
+
+        return csv.toString();
+    }
+
+    /**
+     * ============================================
+     * まず STEP1：ohtani_games_2024.csv ダウンロード から作りましょう。
+     * 
+     * 1. MLBGameService.java に追加
+     * ★ 2024年 Dodgers レギュラーシーズン一覧取得
+     * ohtani_games_2024.csv 用
+     * ============================================
+     */
+
+    public String buildOhtaniGames2024Csv() {
+        return buildOhtaniGamesCsvBySeason(2024);
+    }
+
+    public String buildOhtaniGameDetails2024Csv() {
+        return buildOhtaniGameDetailsCsvBySeason(2024);
+    }
+
+    private String buildOhtaniGamesCsvBySeason(int season) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://statsapi.mlb.com/api/v1/schedule"
+                + "?sportId=1"
+                + "&teamId=119"
+                + "&season=" + season
+                + "&gameType=R";
+
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+        StringBuilder csv = new StringBuilder();
+
+        csv.append("id,game_date,opponent,result,form_value,created_at,comment,game_pk\n");
+
+        if (response == null || response.get("dates") == null) {
+            return csv.toString();
+        }
+
+        List<Map<String, Object>> dates = (List<Map<String, Object>>) response.get("dates");
+
+        for (Map<String, Object> dateObj : dates) {
+
+            List<Map<String, Object>> games = (List<Map<String, Object>>) dateObj.get("games");
+
+            if (games == null) {
+                continue;
+            }
+
+            for (Map<String, Object> game : games) {
+
+                Map<String, Object> status = (Map<String, Object>) game.get("status");
+
+                if (status == null) {
+                    continue;
+                }
+
+                String detailedState = (String) status.get("detailedState");
+
+                if (!"Final".equals(detailedState)) {
+                    continue;
+                }
+
+                Integer gamePk = ((Number) game.get("gamePk")).intValue();
+
+                String gameDate = (String) game.get("officialDate");
+
+                Map<String, Object> teams = (Map<String, Object>) game.get("teams");
+
+                Map<String, Object> home = (Map<String, Object>) teams.get("home");
+                Map<String, Object> away = (Map<String, Object>) teams.get("away");
+
+                Map<String, Object> homeTeam = (Map<String, Object>) home.get("team");
+                Map<String, Object> awayTeam = (Map<String, Object>) away.get("team");
+
+                Integer homeId = ((Number) homeTeam.get("id")).intValue();
+
+                String homeName = (String) homeTeam.get("name");
+                String awayName = (String) awayTeam.get("name");
+
+                boolean dodgersHome = homeId == 119;
+
+                String opponent = dodgersHome ? awayName : homeName;
+
+                int homeScore = home.get("score") == null
+                        ? 0
+                        : ((Number) home.get("score")).intValue();
+
+                int awayScore = away.get("score") == null
+                        ? 0
+                        : ((Number) away.get("score")).intValue();
+
+                int dodgersScore = dodgersHome ? homeScore : awayScore;
+                int opponentScore = dodgersHome ? awayScore : homeScore;
+
+                String winLose = dodgersScore > opponentScore ? "○" : "●";
+                String result = winLose + dodgersScore + "-" + opponentScore;
+
+                csv.append("0").append(",");
+                csv.append(gameDate).append(",");
+                csv.append(escapeCsv(opponent)).append(",");
+                csv.append(result).append(",");
+                csv.append("0").append(",");
+                csv.append(gameDate).append(" 00:00:00").append(",");
+                csv.append("-").append(",");
+                csv.append(gamePk).append("\n");
+            }
+        }
+
+        return csv.toString();
+    }
+
+    private String buildOhtaniGameDetailsCsvBySeason(int season) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://statsapi.mlb.com/api/v1/schedule"
+                + "?sportId=1"
+                + "&teamId=119"
+                + "&season=" + season
+                + "&gameType=R";
+
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+        StringBuilder csv = new StringBuilder();
+
+        csv.append("id,game_id,created_at,")
+                .append("pa1_pitcher,pa1_pitcher_hand,pa1_result,pa1_description,")
+                .append("pa2_pitcher,pa2_pitcher_hand,pa2_result,pa2_description,")
+                .append("pa3_pitcher,pa3_pitcher_hand,pa3_result,pa3_description,")
+                .append("pa4_pitcher,pa4_pitcher_hand,pa4_result,pa4_description,")
+                .append("pa5_pitcher,pa5_pitcher_hand,pa5_result,pa5_description,")
+                .append("pa6_pitcher,pa6_pitcher_hand,pa6_result,pa6_description\n");
+
+        if (response == null || response.get("dates") == null) {
+            return csv.toString();
+        }
+
+        List<Map<String, Object>> dates = (List<Map<String, Object>>) response.get("dates");
+
+        for (Map<String, Object> dateObj : dates) {
+
+            List<Map<String, Object>> games = (List<Map<String, Object>>) dateObj.get("games");
+
+            if (games == null) {
+                continue;
+            }
+
+            for (Map<String, Object> game : games) {
+
+                Map<String, Object> status = (Map<String, Object>) game.get("status");
+
+                if (status == null) {
+                    continue;
+                }
+
+                String detailedState = (String) status.get("detailedState");
+
+                if (!"Final".equals(detailedState)) {
+                    continue;
+                }
+
+                Long gamePk = ((Number) game.get("gamePk")).longValue();
+
+                try {
+
+                    Map<String, Object> preview = buildOhtaniBattingImportPreview(gamePk);
+
+                    Map<String, Object> detail = (Map<String, Object>) preview.get("ohtani_game_details");
+
+                    if (detail == null) {
+                        continue;
+                    }
+
+                    csv.append("0").append(",");
+                    csv.append("0").append(",");
+                    csv.append(escapeCsv((String) detail.get("created_at"))).append(",");
+
+                    for (int i = 1; i <= 6; i++) {
+
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_pitcher"))).append(",");
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_pitcher_hand"))).append(",");
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_result"))).append(",");
+                        csv.append(escapeCsv((String) detail.get("pa" + i + "_description")));
+
+                        if (i < 6) {
+                            csv.append(",");
+                        }
+                    }
+
+                    csv.append("\n");
+
+                } catch (Exception e) {
+
+                    System.out.println(
+                            "ohtani_game_details CSV生成失敗 gamePk="
+                                    + gamePk
+                                    + " / "
+                                    + e.getMessage());
+                }
+            }
+        }
+
+        return csv.toString();
+    }
+
 }
