@@ -3669,6 +3669,60 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * 2018~2022 CSV用メソッド追加。
+     * 
+     * 1. MLBGameService.java に追加
+     * ★ 2018年~2022年 Angels レギュラーシーズン一覧取得
+     * ohtani_games_2018.csv~ohtani_games_2022.csv 用
+     * ============================================
+     */
+
+    public String buildOhtaniGameDetails2023Csv() {
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2023, 108);
+    }
+
+    public String buildOhtaniGames2018Csv() {
+        return buildOhtaniGamesCsvBySeasonAndTeam(2018, 108);
+    }
+
+    public String buildOhtaniGameDetails2018Csv() {
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2018, 108);
+    }
+
+    public String buildOhtaniGames2019Csv() {
+        return buildOhtaniGamesCsvBySeasonAndTeam(2019, 108);
+    }
+
+    public String buildOhtaniGameDetails2019Csv() {
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2019, 108);
+    }
+
+    public String buildOhtaniGames2020Csv() {
+        return buildOhtaniGamesCsvBySeasonAndTeam(2020, 108);
+    }
+
+    public String buildOhtaniGameDetails2020Csv() {
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2020, 108);
+    }
+
+    public String buildOhtaniGames2021Csv() {
+        return buildOhtaniGamesCsvBySeasonAndTeam(2021, 108);
+    }
+
+    public String buildOhtaniGameDetails2021Csv() {
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2021, 108);
+    }
+
+    public String buildOhtaniGames2022Csv() {
+        return buildOhtaniGamesCsvBySeasonAndTeam(2022, 108);
+    }
+
+    public String buildOhtaniGameDetails2022Csv() {
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2022, 108);
+    }
+
+    /**
+     * ============================================
      * 2023 CSV用メソッド追加。
      * 
      * 1. MLBGameService.java に追加
@@ -3774,10 +3828,6 @@ public class MLBGameService {
         }
 
         return csv.toString();
-    }
-
-    public String buildOhtaniGameDetails2023Csv() {
-        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2023, 108);
     }
 
 }
