@@ -921,4 +921,58 @@ public class OhtaniScorebookController {
                                 headers,
                                 org.springframework.http.HttpStatus.OK);
         }
+
+        /**
+         * ============================================
+         * 2023 CSV用メソッド追加。
+         * 
+         * 1. MLBGameService.java に追加
+         * ★ 2023年 Angels レギュラーシーズン一覧取得
+         * ohtani_games_2023.csv 用
+         * ============================================
+         */
+        @GetMapping(value = "/debug/ohtani-games-2023-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2023Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2023Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2023.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2023-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2023Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2023Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2023.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
 }

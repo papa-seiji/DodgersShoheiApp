@@ -2721,6 +2721,134 @@ public class MLBGameService {
 
     /**
      * ============================================
+     * ★ 今回は 2025/2024を壊さず、2023用だけ Angels基準で追加します。現在の取得ロジックは Dodgers teamId=119
+     * 前提なので、2023だけ teamId=108 を渡せる形にします。
+     * ============================================
+     */
+    private Map<String, Object> buildOhtaniBattingImportPreview(
+            Long gamePk,
+            int targetTeamId) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://statsapi.mlb.com/api/v1.1/game/"
+                + gamePk
+                + "/feed/live";
+
+        Map<String, Object> feed = restTemplate.getForObject(url, Map.class);
+
+        Map<String, Object> result = new HashMap<>();
+
+        if (feed == null) {
+            result.put("error", "feed/live が取得できませんでした");
+            return result;
+        }
+
+        Map<String, Object> gameData = (Map<String, Object>) feed.get("gameData");
+        Map<String, Object> liveData = (Map<String, Object>) feed.get("liveData");
+
+        Map<String, Object> datetime = (Map<String, Object>) gameData.get("datetime");
+        String gameDate = (String) datetime.get("originalDate");
+
+        Map<String, Object> teams = (Map<String, Object>) gameData.get("teams");
+        Map<String, Object> home = (Map<String, Object>) teams.get("home");
+        Map<String, Object> away = (Map<String, Object>) teams.get("away");
+
+        Integer homeId = (Integer) home.get("id");
+        String homeName = (String) home.get("name");
+        String awayName = (String) away.get("name");
+
+        boolean targetHome = homeId != null && homeId == targetTeamId;
+        String opponent = targetHome ? awayName : homeName;
+
+        Map<String, Object> linescore = (Map<String, Object>) liveData.get("linescore");
+        Map<String, Object> lineTeams = (Map<String, Object>) linescore.get("teams");
+        Map<String, Object> lineHome = (Map<String, Object>) lineTeams.get("home");
+        Map<String, Object> lineAway = (Map<String, Object>) lineTeams.get("away");
+
+        int homeRuns = ((Number) lineHome.get("runs")).intValue();
+        int awayRuns = ((Number) lineAway.get("runs")).intValue();
+
+        int targetRuns = targetHome ? homeRuns : awayRuns;
+        int opponentRuns = targetHome ? awayRuns : homeRuns;
+
+        String winLose = targetRuns > opponentRuns ? "○" : "●";
+        String gameResult = winLose + targetRuns + "-" + opponentRuns;
+
+        Map<String, Object> ohtaniGamesRow = new LinkedHashMap<>();
+        ohtaniGamesRow.put("id", 0);
+        ohtaniGamesRow.put("game_date", gameDate);
+        ohtaniGamesRow.put("opponent", opponent);
+        ohtaniGamesRow.put("result", gameResult);
+        ohtaniGamesRow.put("form_value", 0);
+        ohtaniGamesRow.put("created_at", gameDate + " 00:00:00");
+        ohtaniGamesRow.put("comment", "-");
+        ohtaniGamesRow.put("game_pk", gamePk);
+
+        Map<String, Object> plays = (Map<String, Object>) liveData.get("plays");
+        List<Map<String, Object>> allPlays = (List<Map<String, Object>>) plays.get("allPlays");
+
+        List<Map<String, Object>> ohtaniPlateAppearances = new ArrayList<>();
+
+        final int OHTANI_ID = 660271;
+
+        for (Map<String, Object> play : allPlays) {
+
+            Map<String, Object> matchup = (Map<String, Object>) play.get("matchup");
+            if (matchup == null)
+                continue;
+
+            Map<String, Object> batter = (Map<String, Object>) matchup.get("batter");
+            if (batter == null)
+                continue;
+
+            Integer batterId = (Integer) batter.get("id");
+
+            if (batterId == null || batterId != OHTANI_ID) {
+                continue;
+            }
+
+            if (isNonBatterResultPlay(play)) {
+                continue;
+            }
+
+            ohtaniPlateAppearances.add(buildOhtaniPaRow(play));
+        }
+
+        Map<String, Object> detailRow = new LinkedHashMap<>();
+        detailRow.put("id", 0);
+        detailRow.put("game_id", 0);
+        detailRow.put("created_at", gameDate + " 00:00:00");
+
+        for (int i = 1; i <= 6; i++) {
+
+            if (i <= ohtaniPlateAppearances.size()) {
+
+                Map<String, Object> pa = ohtaniPlateAppearances.get(i - 1);
+
+                detailRow.put("pa" + i + "_pitcher", pa.get("pitcher"));
+                detailRow.put("pa" + i + "_pitcher_hand", pa.get("pitcher_hand"));
+                detailRow.put("pa" + i + "_result", pa.get("result"));
+                detailRow.put("pa" + i + "_description", pa.get("description"));
+
+            } else {
+
+                detailRow.put("pa" + i + "_pitcher", null);
+                detailRow.put("pa" + i + "_pitcher_hand", null);
+                detailRow.put("pa" + i + "_result", null);
+                detailRow.put("pa" + i + "_description", null);
+            }
+        }
+
+        result.put("ohtani_games", ohtaniGamesRow);
+        result.put("ohtani_game_details", detailRow);
+        result.put("pa_count", ohtaniPlateAppearances.size());
+
+        return result;
+    }
+
+    /**
+     * ============================================
      * ★ 大谷の打席結果ではないプレーを除外
      * 例：大谷打席中の牽制死、盗塁死など
      * ============================================
@@ -3469,27 +3597,28 @@ public class MLBGameService {
      */
 
     public String buildOhtaniGames2024Csv() {
-        return buildOhtaniGamesCsvBySeason(2024);
+        return buildOhtaniGamesCsvBySeasonAndTeam(2024, 119);
     }
 
     public String buildOhtaniGameDetails2024Csv() {
-        return buildOhtaniGameDetailsCsvBySeason(2024);
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2024, 119);
     }
 
-    private String buildOhtaniGamesCsvBySeason(int season) {
+    private String buildOhtaniGamesCsvBySeasonAndTeam(
+            int season,
+            int teamId) {
 
         RestTemplate restTemplate = new RestTemplate();
 
         String url = "https://statsapi.mlb.com/api/v1/schedule"
                 + "?sportId=1"
-                + "&teamId=119"
+                + "&teamId=" + teamId
                 + "&season=" + season
                 + "&gameType=R";
 
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 
         StringBuilder csv = new StringBuilder();
-
         csv.append("id,game_date,opponent,result,form_value,created_at,comment,game_pk\n");
 
         if (response == null || response.get("dates") == null) {
@@ -3502,65 +3631,34 @@ public class MLBGameService {
 
             List<Map<String, Object>> games = (List<Map<String, Object>>) dateObj.get("games");
 
-            if (games == null) {
+            if (games == null)
                 continue;
-            }
 
             for (Map<String, Object> game : games) {
 
                 Map<String, Object> status = (Map<String, Object>) game.get("status");
-
-                if (status == null) {
+                if (status == null)
                     continue;
-                }
 
                 String detailedState = (String) status.get("detailedState");
-
-                if (!"Final".equals(detailedState)) {
+                if (!"Final".equals(detailedState))
                     continue;
-                }
 
-                Integer gamePk = ((Number) game.get("gamePk")).intValue();
+                Long gamePk = ((Number) game.get("gamePk")).longValue();
 
-                String gameDate = (String) game.get("officialDate");
+                Map<String, Object> preview = buildOhtaniBattingImportPreview(gamePk, teamId);
 
-                Map<String, Object> teams = (Map<String, Object>) game.get("teams");
+                Map<String, Object> row = (Map<String, Object>) preview.get("ohtani_games");
 
-                Map<String, Object> home = (Map<String, Object>) teams.get("home");
-                Map<String, Object> away = (Map<String, Object>) teams.get("away");
-
-                Map<String, Object> homeTeam = (Map<String, Object>) home.get("team");
-                Map<String, Object> awayTeam = (Map<String, Object>) away.get("team");
-
-                Integer homeId = ((Number) homeTeam.get("id")).intValue();
-
-                String homeName = (String) homeTeam.get("name");
-                String awayName = (String) awayTeam.get("name");
-
-                boolean dodgersHome = homeId == 119;
-
-                String opponent = dodgersHome ? awayName : homeName;
-
-                int homeScore = home.get("score") == null
-                        ? 0
-                        : ((Number) home.get("score")).intValue();
-
-                int awayScore = away.get("score") == null
-                        ? 0
-                        : ((Number) away.get("score")).intValue();
-
-                int dodgersScore = dodgersHome ? homeScore : awayScore;
-                int opponentScore = dodgersHome ? awayScore : homeScore;
-
-                String winLose = dodgersScore > opponentScore ? "○" : "●";
-                String result = winLose + dodgersScore + "-" + opponentScore;
+                if (row == null)
+                    continue;
 
                 csv.append("0").append(",");
-                csv.append(gameDate).append(",");
-                csv.append(escapeCsv(opponent)).append(",");
-                csv.append(result).append(",");
+                csv.append(row.get("game_date")).append(",");
+                csv.append(escapeCsv((String) row.get("opponent"))).append(",");
+                csv.append(row.get("result")).append(",");
                 csv.append("0").append(",");
-                csv.append(gameDate).append(" 00:00:00").append(",");
+                csv.append(row.get("created_at")).append(",");
                 csv.append("-").append(",");
                 csv.append(gamePk).append("\n");
             }
@@ -3569,13 +3667,28 @@ public class MLBGameService {
         return csv.toString();
     }
 
-    private String buildOhtaniGameDetailsCsvBySeason(int season) {
+    /**
+     * ============================================
+     * 2023 CSV用メソッド追加。
+     * 
+     * 1. MLBGameService.java に追加
+     * ★ 2023年 Angels レギュラーシーズン一覧取得
+     * ohtani_games_2023.csv 用
+     * ============================================
+     */
+    public String buildOhtaniGames2023Csv() {
+        return buildOhtaniGamesCsvBySeasonAndTeam(2023, 108);
+    }
+
+    private String buildOhtaniGameDetailsCsvBySeasonAndTeam(
+            int season,
+            int teamId) {
 
         RestTemplate restTemplate = new RestTemplate();
 
         String url = "https://statsapi.mlb.com/api/v1/schedule"
                 + "?sportId=1"
-                + "&teamId=119"
+                + "&teamId=" + teamId
                 + "&season=" + season
                 + "&gameType=R";
 
@@ -3623,7 +3736,7 @@ public class MLBGameService {
 
                 try {
 
-                    Map<String, Object> preview = buildOhtaniBattingImportPreview(gamePk);
+                    Map<String, Object> preview = buildOhtaniBattingImportPreview(gamePk, teamId);
 
                     Map<String, Object> detail = (Map<String, Object>) preview.get("ohtani_game_details");
 
@@ -3661,6 +3774,10 @@ public class MLBGameService {
         }
 
         return csv.toString();
+    }
+
+    public String buildOhtaniGameDetails2023Csv() {
+        return buildOhtaniGameDetailsCsvBySeasonAndTeam(2023, 108);
     }
 
 }
