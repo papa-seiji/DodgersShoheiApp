@@ -800,4 +800,399 @@ public class OhtaniScorebookController {
                                                 keyword,
                                                 opponent);
         }
+
+        /**
+         * ============================================
+         * ★ STEP4：Controllerに一時確認URLを追加OhtaniScorebookController.java に追加してください。
+         * ============================================
+         */
+        @GetMapping("/debug/ohtani-import-preview")
+        @ResponseBody
+        public Map<String, Object> debugOhtaniImportPreview(
+                        @RequestParam Long gamePk) {
+
+                return mlbGameService.buildOhtaniBattingImportPreview(gamePk);
+        }
+
+        /**
+         * ============================================
+         * 3. OhtaniScorebookController.java に追加
+         * ============================================
+         */
+        @GetMapping(value = "/debug/ohtani-games-2025-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2025Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2025Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2025.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        /**
+         * ============================================
+         * ★ 2025年 大谷翔平 打席詳細CSV
+         * ohtani_game_details_2025.csv 用
+         * ============================================
+         */
+        @GetMapping(value = "/debug/ohtani-game-details-2025-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2025Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2025Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2025.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        /**
+         * ============================================
+         * まず STEP1：ohtani_games_2024.csv ダウンロード から作りましょう。
+         * 
+         * 1. MLBGameService.java に追加
+         * ★ 2024年 Dodgers レギュラーシーズン一覧取得
+         * ohtani_games_2024.csv 用
+         * ============================================
+         */
+        @GetMapping(value = "/debug/ohtani-games-2024-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2024Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2024Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2024.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2024-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2024Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2024Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2024.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        /**
+         * ============================================
+         * 2023 CSV用メソッド追加。
+         * 
+         * 1. MLBGameService.java に追加
+         * ★ 2023年 Angels レギュラーシーズン一覧取得
+         * ohtani_games_2023.csv 用
+         * ============================================
+         */
+        @GetMapping(value = "/debug/ohtani-games-2023-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2023Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2023Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2023.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2023-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2023Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2023Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2023.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-games-2018-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2018Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2018Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2018.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2018-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2018Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2018Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2018.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-games-2019-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2019Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2019Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2019.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2019-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2019Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2019Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2019.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-games-2020-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2020Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2020Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2020.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2020-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2020Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2020Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2020.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-games-2021-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2021Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2021Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2021.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2021-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2021Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2021Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2021.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-games-2022-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGames2022Csv() {
+
+                String csv = mlbGameService.buildOhtaniGames2022Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_games_2022.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/debug/ohtani-game-details-2022-csv", produces = "text/csv; charset=UTF-8")
+        @ResponseBody
+        public org.springframework.http.ResponseEntity<String> downloadOhtaniGameDetails2022Csv() {
+
+                String csv = mlbGameService.buildOhtaniGameDetails2022Csv();
+
+                org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=ohtani_game_details_2022.csv");
+
+                headers.add(
+                                org.springframework.http.HttpHeaders.CONTENT_TYPE,
+                                "text/csv; charset=UTF-8");
+
+                return new org.springframework.http.ResponseEntity<>(
+                                "\uFEFF" + csv,
+                                headers,
+                                org.springframework.http.HttpStatus.OK);
+        }
+
 }
