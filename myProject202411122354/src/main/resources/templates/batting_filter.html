@@ -888,50 +888,80 @@
 
 <!-- =========================================
     SHOHEI FAVORITE RANKING
-    /**
+        /**
      * ============================================
-     * ★ Shohei Favorite Ranking 1位取得
+     * ★ Shohei Favorite Ranking 1～5位取得
      * 現在選択中season / 最低5打数
+     * 顔写真URL
      * ============================================
      */
 ========================================= -->
+<!-- =========================================
+    SHOHEI FAVORITE RANKING TOP5
+========================================= -->
+
+<div
+    class="favorite-ranking-section"
+    th:if="${favoritePitchers != null and !favoritePitchers.isEmpty()}">
+
+    <h3 class="favorite-ranking-title">
+        🔥 Shohei Favorite Pitchers
+        <span th:text="${season}">2026</span>
+    </h3>
+
+    <div class="favorite-ranking-grid">
+
         <div
             class="favorite-pitcher-card"
-            th:if="${favoritePitcher != null}">
+            th:each="fp : ${favoritePitchers}">
 
-            <h3>🔥 Shohei Favorite Ranking</h3>
-
-            <div class="favorite-rank-no">
+            <div
+                class="favorite-rank-no"
+                th:text="'#' + ${fp.rank}">
                 #1
             </div>
 
-            <div
-                class="favorite-pitcher-name"
-                th:text="${favoritePitcher.pitcher}">
-                Pitcher Name
-            </div>
+            <img
+                class="favorite-pitcher-img"
+                th:src="${fp.headshotUrl}"
+                alt="Pitcher">
 
-            <div
-                class="favorite-pitcher-avg"
-                th:text="'AVG ' + ${favoritePitcher.avg}">
-                AVG .500
-            </div>
+            <div class="favorite-pitcher-info">
 
-            <div
-                th:text="${favoritePitcher.hits}
-                        + '-'
-                        + ${favoritePitcher.atBats}">
-                6-12
-            </div>
+                <div
+                    class="favorite-pitcher-name"
+                    th:text="${fp.pitcher}">
+                    Pitcher Name
+                </div>
 
-            <div
-                th:text="'HR '
-                        + ${favoritePitcher.hr}">
-                HR 2
+                <div class="favorite-pitcher-stats">
+
+                    <span
+                        class="favorite-pitcher-avg"
+                        th:text="'AVG ' + ${fp.avg}">
+                        AVG .500
+                    </span>
+
+                    <span
+                        class="favorite-pitcher-detail"
+                        th:text="${fp.hits} + '-' + ${fp.atBats}">
+                        6-12
+                    </span>
+
+                    <span
+                        class="favorite-pitcher-hr"
+                        th:text="'HR ' + ${fp.hr}">
+                        HR 2
+                    </span>
+
+                </div>
+
             </div>
 
         </div>
 
+    </div>
+</div>
 
 <hr>
     </div><!--34行目のfilter-panelの閉じタグ-->

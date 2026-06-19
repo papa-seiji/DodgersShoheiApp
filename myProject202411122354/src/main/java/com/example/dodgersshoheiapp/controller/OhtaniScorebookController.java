@@ -572,6 +572,19 @@ public class OhtaniScorebookController {
                                 "favoritePitcher",
                                 favoritePitcher);
 
+                /**
+                 * ============================================
+                 * ★ Shohei Favorite Ranking 1～5位取得
+                 * 現在選択中season / 最低5打数
+                 * ============================================
+                 */
+                List<Map<String, Object>> favoritePitchers = mlbGameService.getShoheiFavoritePitcherTopFive(
+                                season);
+
+                model.addAttribute(
+                                "favoritePitchers",
+                                favoritePitchers);
+
                 // ============================================
                 // ★ チーム別打率ランキング--------------------棒グラフ用
                 // ============================================
