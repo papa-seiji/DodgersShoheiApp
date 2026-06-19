@@ -690,10 +690,18 @@
         <!--</div>34行目のfilter-panelの閉じタグ-->
 
 
+
+
     <!-- =========================================================
         チーム別打率ランキング--------------------棒グラフ用
     ========================================================= -->
-            <div class="team-avg-section">
+<!-- <details class="team-avg-details"> -->
+<details class="team-avg-details" open>
+    <summary class="team-avg-summary">
+        　　　　　　　 ⚾ チーム別打率ランキング
+    </summary>
+
+    <div class="team-avg-section">
 
                 <h2 class="team-avg-title"
                     th:text="${season} + '年 チーム別打率'">
@@ -832,8 +840,9 @@
                 </div>
 
             </div>
+</details>
 
-        <hr>
+<hr>
 
 <!-- =========================
     🔥 RISPログ　---------------------------------batting/filter用
@@ -970,6 +979,12 @@
                                         HR 2
                                     </span>
 
+                                    <span
+                                        class="favorite-pitcher-so"
+                                        th:text="'SO ' + ${fp.so}">
+                                        SO 0
+                                    </span>
+
                                 </div>
 
                             </div>
@@ -1043,6 +1058,11 @@
                                         class="killer-pitcher-hr"
                                         th:text="'HR ' + ${fp.hr}">
                                         HR 2
+                                    </span>
+
+                                    <span
+                                        th:text="'SO ' + ${fp.so}">
+                                        SO 5
                                     </span>
 
                                 </div>

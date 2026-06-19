@@ -2835,3 +2835,30 @@ body.risp-mode {
         transform-origin: top left;
     }
 }
+
+.team-avg-details{
+    margin-top: 24px;
+}
+
+.team-avg-summary{
+    cursor: pointer;
+    padding: 14px 18px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+    list-style: none;
+    border-top: 1px solid rgba(255,255,255,0.35);
+}
+
+.team-avg-summary::-webkit-details-marker{
+    display: none;
+}
+
+.team-avg-summary::before{
+    content: "▶ ";
+    color: #ffd700;
+}
+
+.team-avg-details[open] .team-avg-summary::before{
+    content: "▼ ";
+}
