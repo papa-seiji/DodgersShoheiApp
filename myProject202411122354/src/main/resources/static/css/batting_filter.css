@@ -2169,6 +2169,58 @@ body.risp-mode {
     }
 } */
 
+
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1位取得
+     * 現在選択中season / 最低5打数
+     * ============================================
+     */
+.favorite-pitcher-card{
+
+    margin:20px auto;
+    width:320px;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    text-align:center;
+}
+
+.favorite-rank-no{
+
+    font-size:32px;
+    font-weight:bold;
+
+    color:#ffd700;
+}
+
+.favorite-pitcher-name{
+
+    font-size:22px;
+    font-weight:bold;
+
+    margin-top:8px;
+}
+
+.favorite-pitcher-avg{
+
+    font-size:20px;
+
+    margin-top:10px;
+}
+
+
+
+
+
 /* =========================================
     mobile
 ========================================= */

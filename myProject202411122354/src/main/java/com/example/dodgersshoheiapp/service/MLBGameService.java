@@ -3830,4 +3830,46 @@ public class MLBGameService {
         return csv.toString();
     }
 
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1位取得
+     * 現在選択中season / 最低5打数
+     * ============================================
+     */
+    public Map<String, Object> getShoheiFavoritePitcherTopOne(
+            Integer season) {
+
+        Map<String, Object> row = ohtaniGameRepository.getShoheiFavoritePitcherTopOne(
+                season);
+
+        if (row == null || row.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        result.put("pitcher",
+                row.get("pitcher"));
+
+        result.put("avg",
+                row.get("avg"));
+
+        result.put("hits",
+                row.get("hits"));
+
+        result.put("atBats",
+                row.get("at_bats"));
+
+        result.put("hr",
+                row.get("hr"));
+
+        result.put("bb",
+                row.get("bb"));
+
+        result.put("so",
+                row.get("so"));
+
+        return result;
+    }
+
 }

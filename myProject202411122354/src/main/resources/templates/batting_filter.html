@@ -886,6 +886,54 @@
 </div>
 
 
+<!-- =========================================
+    SHOHEI FAVORITE RANKING
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1位取得
+     * 現在選択中season / 最低5打数
+     * ============================================
+     */
+========================================= -->
+        <div
+            class="favorite-pitcher-card"
+            th:if="${favoritePitcher != null}">
+
+            <h3>🔥 Shohei Favorite Ranking</h3>
+
+            <div class="favorite-rank-no">
+                #1
+            </div>
+
+            <div
+                class="favorite-pitcher-name"
+                th:text="${favoritePitcher.pitcher}">
+                Pitcher Name
+            </div>
+
+            <div
+                class="favorite-pitcher-avg"
+                th:text="'AVG ' + ${favoritePitcher.avg}">
+                AVG .500
+            </div>
+
+            <div
+                th:text="${favoritePitcher.hits}
+                        + '-'
+                        + ${favoritePitcher.atBats}">
+                6-12
+            </div>
+
+            <div
+                th:text="'HR '
+                        + ${favoritePitcher.hr}">
+                HR 2
+            </div>
+
+        </div>
+
+
+<hr>
     </div><!--34行目のfilter-panelの閉じタグ-->
 
 

@@ -7226,4 +7226,94 @@ public class OhtaniGameRepository {
                 season);
     }
 
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1位取得
+     * 現在選択中season / 最低5打数
+     * ============================================
+     */
+    public Map<String, Object> getShoheiFavoritePitcherTopOne(
+            Integer season) {
+
+        String sql = """
+                WITH pa AS (
+
+                    SELECT d.pa1_pitcher AS pitcher, d.pa1_result AS result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g ON d.game_id = g.id
+                    WHERE d.pa1_pitcher IS NOT NULL
+                      AND EXTRACT(YEAR FROM g.game_date) = ?
+
+                    UNION ALL
+
+                    SELECT d.pa2_pitcher AS pitcher, d.pa2_result AS result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g ON d.game_id = g.id
+                    WHERE d.pa2_pitcher IS NOT NULL
+                      AND EXTRACT(YEAR FROM g.game_date) = ?
+
+                    UNION ALL
+
+                    SELECT d.pa3_pitcher AS pitcher, d.pa3_result AS result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g ON d.game_id = g.id
+                    WHERE d.pa3_pitcher IS NOT NULL
+                      AND EXTRACT(YEAR FROM g.game_date) = ?
+
+                    UNION ALL
+
+                    SELECT d.pa4_pitcher AS pitcher, d.pa4_result AS result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g ON d.game_id = g.id
+                    WHERE d.pa4_pitcher IS NOT NULL
+                      AND EXTRACT(YEAR FROM g.game_date) = ?
+
+                    UNION ALL
+
+                    SELECT d.pa5_pitcher AS pitcher, d.pa5_result AS result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g ON d.game_id = g.id
+                    WHERE d.pa5_pitcher IS NOT NULL
+                      AND EXTRACT(YEAR FROM g.game_date) = ?
+
+                    UNION ALL
+
+                    SELECT d.pa6_pitcher AS pitcher, d.pa6_result AS result
+                    FROM ohtani_game_details d
+                    JOIN ohtani_games g ON d.game_id = g.id
+                    WHERE d.pa6_pitcher IS NOT NULL
+                      AND EXTRACT(YEAR FROM g.game_date) = ?
+                )
+
+                SELECT
+                    pitcher,
+                    SUM(CASE WHEN result IN ('HIT', 'HR') THEN 1 ELSE 0 END) AS hits,
+                    SUM(CASE WHEN result NOT IN ('BB', 'SF') THEN 1 ELSE 0 END) AS at_bats,
+                    SUM(CASE WHEN result = 'HR' THEN 1 ELSE 0 END) AS hr,
+                    SUM(CASE WHEN result = 'BB' THEN 1 ELSE 0 END) AS bb,
+                    SUM(CASE WHEN result = 'SO' THEN 1 ELSE 0 END) AS so,
+                    ROUND(
+                        SUM(CASE WHEN result IN ('HIT', 'HR') THEN 1 ELSE 0 END)::numeric
+                        /
+                        NULLIF(SUM(CASE WHEN result NOT IN ('BB', 'SF') THEN 1 ELSE 0 END), 0),
+                        3
+                    ) AS avg
+                FROM pa
+                WHERE result IS NOT NULL
+                GROUP BY pitcher
+                HAVING SUM(CASE WHEN result NOT IN ('BB', 'SF') THEN 1 ELSE 0 END) >= 5
+                ORDER BY avg DESC, hits DESC, at_bats DESC
+                LIMIT 1
+                """;
+
+        return jdbcTemplate.queryForMap(
+                sql,
+                season,
+                season,
+                season,
+                season,
+                season,
+                season);
+    }
+
 }
