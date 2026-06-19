@@ -3833,7 +3833,7 @@ public class MLBGameService {
     /**
      * ============================================
      * ★ Shohei Favorite Ranking 1位取得
-     * 現在選択中season / 最低5打数
+     * 現在選択中season / 最低4打数
      * ============================================
      */
     public Map<String, Object> getShoheiFavoritePitcherTopOne(
@@ -3875,7 +3875,7 @@ public class MLBGameService {
     /**
      * ============================================
      * ★ Shohei Favorite Ranking 1～5位取得
-     * 現在選択中season / 最低5打数
+     * 現在選択中season / 最低4打数
      * ============================================
      */
     private final Map<String, Integer> mlbPlayerIdCache = new java.util.concurrent.ConcurrentHashMap<>();
@@ -3918,7 +3918,7 @@ public class MLBGameService {
     /**
      * ============================================
      * ★ Shohei Favorite Ranking 1～5位取得
-     * 現在選択中season / 最低5打数
+     * 現在選択中season / 最低4打数
      * 顔写真URL
      * ============================================
      */
@@ -3995,6 +3995,45 @@ public class MLBGameService {
                 + "v1/people/"
                 + playerId
                 + "/headshot/67/current";
+    }
+
+    /**
+     * ============================================
+     * ★ Shohei Killer Pitchers TOP5
+     * ============================================
+     */
+    public List<Map<String, Object>> getShoheiKillerPitcherTopFive(
+            Integer season) {
+
+        List<Map<String, Object>> rows = ohtaniGameRepository.getShoheiKillerPitcherTopFive(season);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        int rank = 1;
+
+        for (Map<String, Object> row : rows) {
+
+            String pitcher = (String) row.get("pitcher");
+
+            Integer playerId = resolveMlbPlayerIdByName(pitcher);
+
+            Map<String, Object> item = new LinkedHashMap<>();
+
+            item.put("rank", rank);
+            item.put("pitcher", pitcher);
+            item.put("avg", row.get("avg"));
+            item.put("hits", row.get("hits"));
+            item.put("atBats", row.get("at_bats"));
+            item.put("hr", row.get("hr"));
+            item.put("bb", row.get("bb"));
+            item.put("so", row.get("so"));
+            item.put("headshotUrl", buildMlbHeadshotUrl(playerId));
+
+            result.add(item);
+            rank++;
+        }
+
+        return result;
     }
 
 }

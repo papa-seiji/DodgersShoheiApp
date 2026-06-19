@@ -559,7 +559,7 @@ public class OhtaniScorebookController {
                 /**
                  * ============================================
                  * ★ Shohei Favorite Ranking 1位取得
-                 * 現在選択中season / 最低5打数
+                 * 現在選択中season / 最低4打数
                  * ============================================
                  */
                 // ============================================
@@ -575,7 +575,7 @@ public class OhtaniScorebookController {
                 /**
                  * ============================================
                  * ★ Shohei Favorite Ranking 1～5位取得
-                 * 現在選択中season / 最低5打数
+                 * 現在選択中season / 最低4打数
                  * ============================================
                  */
                 List<Map<String, Object>> favoritePitchers = mlbGameService.getShoheiFavoritePitcherTopFive(
@@ -584,6 +584,16 @@ public class OhtaniScorebookController {
                 model.addAttribute(
                                 "favoritePitchers",
                                 favoritePitchers);
+
+                // ============================================
+                // ★ Shohei Killer Pitchers TOP5
+                // ============================================
+                List<Map<String, Object>> killerPitchers = mlbGameService.getShoheiKillerPitcherTopFive(
+                                season);
+
+                model.addAttribute(
+                                "killerPitchers",
+                                killerPitchers);
 
                 // ============================================
                 // ★ チーム別打率ランキング--------------------棒グラフ用
