@@ -3899,6 +3899,7 @@ public class MLBGameService {
 
             item.put("rank", rank);
             item.put("pitcher", pitcher);
+            item.put("pitcherHand", row.get("pitcher_hand")); // ★追加
             item.put("avg", row.get("avg"));
             item.put("hits", row.get("hits"));
             item.put("atBats", row.get("at_bats"));
@@ -4021,6 +4022,7 @@ public class MLBGameService {
 
             item.put("rank", rank);
             item.put("pitcher", pitcher);
+            item.put("pitcherHand", row.get("pitcher_hand")); // ★追加
             item.put("avg", row.get("avg"));
             item.put("hits", row.get("hits"));
             item.put("atBats", row.get("at_bats"));

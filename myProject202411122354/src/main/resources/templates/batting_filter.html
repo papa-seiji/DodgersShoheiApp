@@ -935,10 +935,19 @@
 
                             <div class="favorite-pitcher-info">
 
-                                <div
-                                    class="favorite-pitcher-name"
-                                    th:text="${fp.pitcher}">
-                                    Pitcher Name
+                                <div class="favorite-pitcher-name">
+
+                                    <span
+                                        th:text="${fp.pitcher}">
+                                        Pitcher Name
+                                    </span>
+
+                                    <span
+                                        class="pitcher-hand"
+                                        th:text="'(' + ${fp.pitcherHand} + ')'">
+                                        (R)
+                                    </span>
+
                                 </div>
 
                                 <div class="favorite-pitcher-stats">
@@ -1001,10 +1010,19 @@
 
                             <div class="killer-pitcher-info">
 
-                                <div
-                                    class="killer-pitcher-name"
-                                    th:text="${fp.pitcher}">
-                                    Pitcher Name
+                                <div class="killer-pitcher-name">
+
+                                    <span
+                                        th:text="${fp.pitcher}">
+                                        Pitcher Name
+                                    </span>
+
+                                    <span
+                                        class="pitcher-hand"
+                                        th:text="'(' + ${fp.pitcherHand} + ')'">
+                                        (R)
+                                    </span>
+
                                 </div>
 
                                 <div class="killer-pitcher-stats">
