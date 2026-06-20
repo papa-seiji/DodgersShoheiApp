@@ -690,10 +690,18 @@
         <!--</div>34行目のfilter-panelの閉じタグ-->
 
 
+
+
     <!-- =========================================================
         チーム別打率ランキング--------------------棒グラフ用
     ========================================================= -->
-            <div class="team-avg-section">
+<!-- <details class="team-avg-details"> -->
+<details class="team-avg-details" open>
+    <summary class="team-avg-summary">
+        　クリックで開閉
+    </summary>
+
+    <div class="team-avg-section">
 
                 <h2 class="team-avg-title"
                     th:text="${season} + '年 チーム別打率'">
@@ -832,8 +840,9 @@
                 </div>
 
             </div>
+</details>
 
-        <hr>
+<hr>
 
 <!-- =========================
     🔥 RISPログ　---------------------------------batting/filter用
@@ -886,6 +895,189 @@
 </div>
 
 
+<!-- 開閉式UI details採用 -->
+<details class="pitcher-ranking-details" open>
+
+    <summary class="pitcher-ranking-summary">
+        　クリックで開閉
+    </summary>
+
+        <div class="pitcher-ranking-compare">
+                <!-- =========================================
+                    SHOHEI FAVORITE RANKING
+                        /**
+                    * ============================================
+                    * ★ Shohei Favorite Ranking 1～5位取得
+                    * 現在選択中season / 最低4打数
+                    * 顔写真URL
+                    * ============================================
+                    */
+                ========================================= -->
+                <!-- =========================================
+                    SHOHEI FAVORITE RANKING TOP5
+                ========================================= -->
+                <div
+                    class="favorite-ranking-section"
+                    th:if="${favoritePitchers != null and !favoritePitchers.isEmpty()}">
+
+                    <h3 class="favorite-ranking-title">
+                        💖 Shohei Favorite Pitchers
+                        <span th:text="${season}">2026</span>
+                    </h3>
+
+                    <div class="favorite-ranking-grid">
+
+                        <div
+                            class="favorite-pitcher-card"
+                            th:each="fp : ${favoritePitchers}">
+
+                            <div
+                                class="favorite-rank-no"
+                                th:text="'#' + ${fp.rank}">
+                                #1
+                            </div>
+
+                            <img
+                                class="favorite-pitcher-img"
+                                th:src="${fp.headshotUrl}"
+                                alt="Pitcher">
+
+                            <div class="favorite-pitcher-info">
+
+                                <div class="favorite-pitcher-name">
+
+                                    <span
+                                        th:text="${fp.pitcher}">
+                                        Pitcher Name
+                                    </span>
+
+                                    <span
+                                        class="pitcher-hand"
+                                        th:text="'(' + ${fp.pitcherHand} + ')'">
+                                        (R)
+                                    </span>
+
+                                </div>
+
+                                <div class="favorite-pitcher-stats">
+
+                                    <span
+                                        class="favorite-pitcher-avg"
+                                        th:text="'AVG ' + ${fp.avg}">
+                                        AVG .500
+                                    </span>
+
+                                    <span
+                                        class="favorite-pitcher-detail"
+                                        th:text="${fp.hits} + '-' + ${fp.atBats}">
+                                        6-12
+                                    </span>
+
+                                    <span
+                                        class="favorite-pitcher-hr"
+                                        th:text="'HR ' + ${fp.hr}">
+                                        HR 2
+                                    </span>
+
+                                    <span
+                                        class="favorite-pitcher-so"
+                                        th:text="'SO ' + ${fp.so}">
+                                        SO 0
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- =========================================
+                    SHOHEI KILLER RANKING TOP5
+                ========================================= -->
+                <div
+                    class="killer-ranking-section"
+                    th:if="${killerPitchers != null and !killerPitchers.isEmpty()}">
+
+                    <h3 class="killer-ranking-title">
+                        💀 Shohei Killer Pitchers
+                        <span th:text="${season}">2026</span>
+                    </h3>
+
+                    <div class="killer-ranking-grid">
+
+                        <div
+                            class="killer-pitcher-card"
+                            th:each="fp : ${killerPitchers}">
+
+                            <div
+                                class="killer-rank-no"
+                                th:text="'#' + ${fp.rank}">
+                                #1
+                            </div>
+
+                            <img
+                                class="killer-pitcher-img"
+                                th:src="${fp.headshotUrl}"
+                                alt="Pitcher">
+
+                            <div class="killer-pitcher-info">
+
+                                <div class="killer-pitcher-name">
+
+                                    <span
+                                        th:text="${fp.pitcher}">
+                                        Pitcher Name
+                                    </span>
+
+                                    <span
+                                        class="pitcher-hand"
+                                        th:text="'(' + ${fp.pitcherHand} + ')'">
+                                        (R)
+                                    </span>
+
+                                </div>
+
+                                <div class="killer-pitcher-stats">
+
+                                    <span
+                                        class="killer-pitcher-avg"
+                                        th:text="'AVG ' + ${fp.avg}">
+                                        AVG .500
+                                    </span>
+
+                                    <span
+                                        class="killer-pitcher-detail"
+                                        th:text="${fp.hits} + '-' + ${fp.atBats}">
+                                        6-12
+                                    </span>
+
+                                    <span
+                                        class="killer-pitcher-hr"
+                                        th:text="'HR ' + ${fp.hr}">
+                                        HR 2
+                                    </span>
+
+                                    <span
+                                        th:text="'SO ' + ${fp.so}">
+                                        SO 5
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+        </div>
+
+</details>
+
+<hr>
     </div><!--34行目のfilter-panelの閉じタグ-->
 
 

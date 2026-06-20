@@ -556,6 +556,45 @@ public class OhtaniScorebookController {
                                 "searchSummaryHtml",
                                 searchSummaryHtml);
 
+                /**
+                 * ============================================
+                 * ★ Shohei Favorite Ranking 1位取得
+                 * 現在選択中season / 最低4打数
+                 * ============================================
+                 */
+                // ============================================
+                // ★ Shohei Favorite Ranking 1位
+                // ============================================
+                Map<String, Object> favoritePitcher = mlbGameService.getShoheiFavoritePitcherTopOne(
+                                season);
+
+                model.addAttribute(
+                                "favoritePitcher",
+                                favoritePitcher);
+
+                /**
+                 * ============================================
+                 * ★ Shohei Favorite Ranking 1～5位取得
+                 * 現在選択中season / 最低4打数
+                 * ============================================
+                 */
+                List<Map<String, Object>> favoritePitchers = mlbGameService.getShoheiFavoritePitcherTopFive(
+                                season);
+
+                model.addAttribute(
+                                "favoritePitchers",
+                                favoritePitchers);
+
+                // ============================================
+                // ★ Shohei Killer Pitchers TOP5
+                // ============================================
+                List<Map<String, Object>> killerPitchers = mlbGameService.getShoheiKillerPitcherTopFive(
+                                season);
+
+                model.addAttribute(
+                                "killerPitchers",
+                                killerPitchers);
+
                 // ============================================
                 // ★ チーム別打率ランキング--------------------棒グラフ用
                 // ============================================

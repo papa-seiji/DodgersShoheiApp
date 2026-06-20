@@ -2169,6 +2169,363 @@ body.risp-mode {
     }
 } */
 
+
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1位取得
+     * 現在選択中season / 最低5打数
+     * ============================================
+     */
+.favorite-pitcher-card{
+
+    margin:3px auto;
+    width:320px;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    text-align:center;
+}
+
+.favorite-rank-no{
+
+    font-size:32px;
+    font-weight:bold;
+
+    color:#ffd700;
+}
+
+
+.favorite-pitcher-name{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:4px;
+
+    font-size:22px;
+    font-weight:bold;
+    margin-top:8px;
+
+    color:#fff;
+}
+
+.pitcher-hand{
+    font-size:12px;
+    color:#8fc4ff;
+    font-weight:700;
+}
+
+
+.favorite-pitcher-avg{
+
+    font-size:20px;
+
+    margin-top:10px;
+}
+
+
+.favorite-ranking-section{
+    /* margin-top: 28px; */
+    /* padding-top: 18px; */
+    /* border-top: 1px solid rgba(255,255,255,0.45); */
+}
+
+.favorite-ranking-title{
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 18px;
+}
+
+.favorite-ranking-title span{
+    margin-left: 8px;
+}
+
+.favorite-ranking-grid{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.favorite-pitcher-card{
+    width: 430px;
+    min-height: 80px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 110px 70px 1fr;
+    align-items: center;
+    background: rgba(255,255,255,0.055);
+    border-radius: 0;
+    border: 0;
+}
+
+.favorite-rank-no{
+    font-size: 42px;
+    font-weight: 900;
+    color: #ffd800;
+    text-align: center;
+}
+
+.favorite-pitcher-img{
+    width: 56px;
+    height: 70px;
+    object-fit: cover;
+    background: #fff;
+}
+
+.favorite-pitcher-name{
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    text-align: center;
+}
+
+.favorite-pitcher-avg{
+    font-size: 16px;
+    color: #fff;
+    text-align: center;
+}
+
+.favorite-pitcher-detail,
+.favorite-pitcher-hr{
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+}
+
+
+.favorite-pitcher-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.favorite-pitcher-stats{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+
+    /**
+     * ============================================
+     * ★ Shohei killer Ranking 1位取得
+     * 現在選択中season / 最低5打数
+     * ============================================
+     */
+.killer-pitcher-card{
+
+    margin:3px auto;
+    width:320px;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    text-align:center;
+}
+
+.killer-rank-no{
+
+    font-size:32px;
+    font-weight:bold;
+
+    color:#ff5252;
+}
+
+.killer-pitcher-name{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:4px;
+
+    font-size:22px;
+    font-weight:bold;
+    margin-top:8px;
+
+    color:#fff;
+}
+
+.pitcher-hand{
+    font-size:12px;
+    color:#8fc4ff;
+    font-weight:700;
+}
+
+
+.killer-pitcher-avg{
+
+    font-size:20px;
+
+    margin-top:10px;
+}
+
+
+.killer-ranking-section{
+    /* margin-top: 28px; */
+    /* padding-top: 18px; */
+    /* border-top: 1px solid rgba(255,255,255,0.45); */
+}
+
+.killer-ranking-title{
+    font-size: 22px;
+    font-weight: 900;
+    color:#ffffff;
+    margin-bottom: 18px;
+}
+
+.killer-ranking-title span{
+    margin-left: 8px;
+}
+
+.killer-ranking-grid{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.killer-pitcher-card{
+    width: 430px;
+    min-height: 80px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 110px 70px 1fr;
+    align-items: center;
+    background: rgba(255,255,255,0.055);
+    border-radius: 0;
+    border: 0;
+}
+
+.killer-rank-no{
+    font-size: 42px;
+    font-weight: 900;
+    color:#ff5d5d;
+    text-align: center;
+}
+
+.killer-pitcher-img{
+    width: 56px;
+    height: 70px;
+    object-fit: cover;
+    background: #fff;
+}
+
+.killer-pitcher-name{
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    text-align: center;
+}
+
+.killer-pitcher-avg{
+    font-size: 16px;
+    color: #fff;
+    text-align: center;
+}
+
+.killer-pitcher-detail,
+.killer-pitcher-hr{
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+}
+
+
+.killer-pitcher-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.killer-pitcher-stats{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+
+.pitcher-ranking-compare{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+    /* margin-top: 24px; */
+}
+
+.favorite-ranking-section,
+.killer-ranking-section{
+    width: 100%;
+}
+
+.favorite-ranking-grid,
+.killer-ranking-grid{
+    align-items: center;
+}
+
+/* 開閉式UI details採用 */
+.pitcher-ranking-details{
+    margin-top:20px;
+    margin-bottom:20px;
+
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;
+
+    background:rgba(5,15,40,.35);
+}
+
+.pitcher-ranking-summary{
+    cursor:pointer;
+
+    padding:14px 18px;
+
+    font-size:28px;
+    font-weight:700;
+
+    color:#ffffff;
+
+    list-style:none;
+}
+
+.pitcher-ranking-summary::-webkit-details-marker{
+    display:none;
+}
+
+.pitcher-ranking-summary::before{
+    content:"▶ ";
+    color:#ffd700;
+}
+
+.pitcher-ranking-details[open]
+.pitcher-ranking-summary::before{
+    content:"▼ ";
+}
+
+
 /* =========================================
     mobile
 ========================================= */
@@ -2477,4 +2834,31 @@ body.risp-mode {
         zoom: 0.615;
         transform-origin: top left;
     }
+}
+
+.team-avg-details{
+    margin-top: 24px;
+}
+
+.team-avg-summary{
+    cursor: pointer;
+    padding: 14px 18px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+    list-style: none;
+    border-top: 1px solid rgba(255,255,255,0.35);
+}
+
+.team-avg-summary::-webkit-details-marker{
+    display: none;
+}
+
+.team-avg-summary::before{
+    content: "▶ ";
+    color: #ffd700;
+}
+
+.team-avg-details[open] .team-avg-summary::before{
+    content: "▼ ";
 }

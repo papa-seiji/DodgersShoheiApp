@@ -3830,4 +3830,212 @@ public class MLBGameService {
         return csv.toString();
     }
 
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1位取得
+     * 現在選択中season / 最低4打数
+     * ============================================
+     */
+    public Map<String, Object> getShoheiFavoritePitcherTopOne(
+            Integer season) {
+
+        Map<String, Object> row = ohtaniGameRepository.getShoheiFavoritePitcherTopOne(
+                season);
+
+        if (row == null || row.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        result.put("pitcher",
+                row.get("pitcher"));
+
+        result.put("avg",
+                row.get("avg"));
+
+        result.put("hits",
+                row.get("hits"));
+
+        result.put("atBats",
+                row.get("at_bats"));
+
+        result.put("hr",
+                row.get("hr"));
+
+        result.put("bb",
+                row.get("bb"));
+
+        result.put("so",
+                row.get("so"));
+
+        return result;
+    }
+
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1～5位取得
+     * 現在選択中season / 最低4打数
+     * ============================================
+     */
+    private final Map<String, Integer> mlbPlayerIdCache = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public List<Map<String, Object>> getShoheiFavoritePitcherTopFive(
+            Integer season) {
+
+        List<Map<String, Object>> rows = ohtaniGameRepository.getShoheiFavoritePitcherTopFive(season);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        int rank = 1;
+
+        for (Map<String, Object> row : rows) {
+
+            String pitcher = (String) row.get("pitcher");
+
+            Integer playerId = resolveMlbPlayerIdByName(pitcher);
+
+            Map<String, Object> item = new LinkedHashMap<>();
+
+            item.put("rank", rank);
+            item.put("pitcher", pitcher);
+            item.put("pitcherHand", row.get("pitcher_hand")); // ★追加
+            item.put("avg", row.get("avg"));
+            item.put("hits", row.get("hits"));
+            item.put("atBats", row.get("at_bats"));
+            item.put("hr", row.get("hr"));
+            item.put("bb", row.get("bb"));
+            item.put("so", row.get("so"));
+            item.put("headshotUrl", buildMlbHeadshotUrl(playerId));
+
+            result.add(item);
+
+            rank++;
+        }
+
+        return result;
+    }
+
+    /**
+     * ============================================
+     * ★ Shohei Favorite Ranking 1～5位取得
+     * 現在選択中season / 最低4打数
+     * 顔写真URL
+     * ============================================
+     */
+    private Integer resolveMlbPlayerIdByName(String playerName) {
+
+        if (playerName == null || playerName.isBlank()) {
+            return null;
+        }
+
+        if (mlbPlayerIdCache.containsKey(playerName)) {
+            return mlbPlayerIdCache.get(playerName);
+        }
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            String url = "https://statsapi.mlb.com/api/v1/sports/1/players";
+
+            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+            if (response == null || response.get("people") == null) {
+                return null;
+            }
+
+            List<Map<String, Object>> people = (List<Map<String, Object>>) response.get("people");
+
+            for (Map<String, Object> person : people) {
+
+                String fullName = person.get("fullName") != null
+                        ? person.get("fullName").toString()
+                        : "";
+
+                if (playerName.equalsIgnoreCase(fullName)) {
+
+                    Integer playerId = person.get("id") != null
+                            ? ((Number) person.get("id")).intValue()
+                            : null;
+
+                    System.out.println("playerName=" + playerName);
+                    System.out.println("playerId=" + playerId);
+
+                    if (playerId != null) {
+                        mlbPlayerIdCache.put(playerName, playerId);
+                    }
+
+                    return playerId;
+                }
+            }
+
+            System.out.println("MLB選手一覧に一致なし playerName=" + playerName);
+            return null;
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "MLB playerId取得失敗: "
+                            + playerName
+                            + " / "
+                            + e.getMessage());
+
+            return null;
+        }
+    }
+
+    private String buildMlbHeadshotUrl(Integer playerId) {
+
+        if (playerId == null) {
+            return "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/0/headshot/67/current";
+        }
+
+        return "https://img.mlbstatic.com/mlb-photos/image/upload/"
+                + "d_people:generic:headshot:67:current.png/"
+                + "w_213,q_auto:best/"
+                + "v1/people/"
+                + playerId
+                + "/headshot/67/current";
+    }
+
+    /**
+     * ============================================
+     * ★ Shohei Killer Pitchers TOP5
+     * ============================================
+     */
+    public List<Map<String, Object>> getShoheiKillerPitcherTopFive(
+            Integer season) {
+
+        List<Map<String, Object>> rows = ohtaniGameRepository.getShoheiKillerPitcherTopFive(season);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        int rank = 1;
+
+        for (Map<String, Object> row : rows) {
+
+            String pitcher = (String) row.get("pitcher");
+
+            Integer playerId = resolveMlbPlayerIdByName(pitcher);
+
+            Map<String, Object> item = new LinkedHashMap<>();
+
+            item.put("rank", rank);
+            item.put("pitcher", pitcher);
+            item.put("pitcherHand", row.get("pitcher_hand")); // ★追加
+            item.put("avg", row.get("avg"));
+            item.put("hits", row.get("hits"));
+            item.put("atBats", row.get("at_bats"));
+            item.put("hr", row.get("hr"));
+            item.put("bb", row.get("bb"));
+            item.put("so", row.get("so"));
+            item.put("headshotUrl", buildMlbHeadshotUrl(playerId));
+
+            result.add(item);
+            rank++;
+        }
+
+        return result;
+    }
+
 }
