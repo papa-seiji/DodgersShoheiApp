@@ -76,6 +76,7 @@ public class SecurityConfig {
                                 // 入口コンテンツ
                                 "/ohtani-vs-judge",
                                 "/postseason",
+                                "/postseason_2026",
                                 "/WorldBaseballClassic",
                                 "/archive",
                                 "/links",

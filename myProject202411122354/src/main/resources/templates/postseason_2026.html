@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" th:href="@{/css/postseason_2026.css}" />
+  <!--<link rel="stylesheet" th:href="@{/css/Douga.css}">-->
+
+<title>MLBポストシーズン特集｜ドジャース優勝への道【2026】</title>
+
+</head>
+<body>
+
+
+  <h1 id="title">MLB POSTSEASON 2026</h1>
+  <a href="/home" class="postseason-btn">HOME画面に戻る</a>
+
+<!-- 🎞️ ワールドチャンピオン優勝セレモニー プレイ動画 -->
+<!-- <section class="video-preview-section">
+  <div class="video-preview-wrapper">
+    <video id="postseasonVideo" class="decorative-video" autoplay muted loop playsinline>
+      <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/world_champion_ceremony.mp4" type="video/mp4">
+      お使いのブラウザは video タグをサポートしていません。
+    </video> -->
+    <!-- 🔇／🔊 ミュートボタン -->
+    <!-- <button id="muteToggle" class="mute-btn">🔇</button>
+  </div>
+</section> -->
+
+<section class="video-preview-section">
+  <div class="video-preview-wrapper">
+
+    <div class="video-carousel">
+
+      <div class="video-item">
+        <video class="decorative-video" autoplay muted loop playsinline>
+          <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/2026_POST-SEASON.mp4" type="video/mp4">
+        </video>
+        <button class="mute-btn">🔇</button>
+      </div>
+
+<!--      <div class="video-item">
+        <video class="decorative-video" autoplay muted loop playsinline>
+          <source src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/Exciting+defense%2301.mp4" type="video/mp4">
+        </video>
+        <button class="mute-btn">🔇</button>
+      </div>
+-->
+    </div>
+  </div>
+</section>
+
+<script>
+  const items = document.querySelectorAll(".video-item");
+
+  items.forEach(item => {
+    const video = item.querySelector("video");
+    const button = item.querySelector(".mute-btn");
+
+    video.muted = true;
+    let isMuted = true;
+
+    button.addEventListener("click", () => {
+
+      if (isMuted) {
+        // 🔊 この動画をONにする → 他は全部ミュート
+        items.forEach(other => {
+          const otherVideo = other.querySelector("video");
+          const otherBtn = other.querySelector(".mute-btn");
+
+          otherVideo.muted = true;
+          otherBtn.textContent = "🔇";
+          other.dataset.muted = "true";
+        });
+
+        video.muted = false;
+        button.textContent = "🔊";
+        isMuted = false;
+
+      } else {
+        // 🔇 自分をミュート
+        video.muted = true;
+        button.textContent = "🔇";
+        isMuted = true;
+      }
+    });
+  });
+</script>
+
+
+
+<!-- ✅ Postseason コメント＋集合写真 -->
+<section class="postseason-commentary">
+  <div class="postseason-text">
+    <p>
+      今年もナショナルリーグ西地区優勝でポストシーズン進出しAtlanta Braves戦からはじまります！<br>
+      大谷はケガに泣かされたシーズンでしたが、去年のポストシーズン同様に神がかったプレイを期待しています。<br>
+      前人未到のワールドチャンピオン3連覇を目指したドジャースはどんな戦いをしてくれるのか楽しみです。<br>
+      試合結果等は日々更新していきます。
+    </p>
+  </div>
+
+<div class="postseason-image">
+  <img src="/images/PostSeason-Stats_IMG/2026-POSTSEASON.JPEG" alt="2026-POSTSEASON" class="PostSeason01 fade-image active">
+<!--  <img src="/images/PostSeason-Stats_IMG/翔平由伸朗希.JPEG" alt="翔平由伸朗希" class="PostSeason01 fade-image">
+  <img src="/images/PostSeason-Stats_IMG/2025-Blue-Champion.JPEG" alt="2025-Blue-Champion" class="PostSeason01 fade-image">
+  <img src="/images/PostSeason-Stats_IMG/24-25連覇集合写真(円).JPEG" alt="24-25連覇集合写真" class="PostSeason01 fade-image">-->
+</div>
+</section>
+
+
+  <div class="postseason-container">
+    <!-- トーナメント線の背景 -->
+    <div class="bracket-background"></div>
+
+    <!-- White sox -->
+    <div class="team-logo whitesox1">
+      <img th:src="${logos['WHITESOX']}" alt="White sox 1" />
+    </div>
+    <div class="team-logo whitesox2">
+      <img th:src="${logos['WHITESOX']}" alt="White sox 2" />
+    </div>
+
+    <!-- Astros -->
+    <div class="team-logo astros">
+      <img th:src="${logos['ASTROS']}" alt="Astros" />
+    </div>
+
+    <!-- Guardians -->
+    <div class="team-logo guardians1">
+      <img th:src="${logos['GUARDIANS']}" alt="Guardians1" />
+    </div>
+<!--    <div class="team-logo guardians2">
+      <img th:src="${logos['GUARDIANS']}" alt="Guardians2" />
+    </div>
+-->
+
+    <!-- Red Sox -->
+    <div class="team-logo redsox1">
+      <img th:src="${logos['REDSOX']}" alt="Red Sox 1" />
+    </div>
+
+    <!-- Yankees -->
+    <div class="team-logo yankees1">
+      <img th:src="${logos['YANKEES']}" alt="Yankees 1" />
+    </div>
+    <div class="team-logo yankees2">
+      <img th:src="${logos['YANKEES']}" alt="Yankees 2" />
+    </div>
+
+    <!-- Rays -->
+    <div class="team-logo rays1">
+      <img th:src="${logos['RAYS']}" alt="Rays 1" />
+    </div>
+<!--
+    <div class="team-logo bluejays2">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 2" />
+    </div>
+    <div class="team-logo bluejays3">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 3" />
+    </div>
+    <div class="team-logo bluejays4">
+      <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 4" />
+    </div>
+-->
+
+    <!-- NL 側 -->
+    <!-- Reds -->
+    <div class="team-logo braves1">
+      <img th:src="${logos['BRAVES']}" alt="Braves 1" />
+    </div>
+    <div class="team-logo braves2">
+      <img th:src="${logos['BRAVES']}" alt="Braves 2" />
+    </div>
+
+    <!-- Dodgers -->
+    <div class="team-logo dodgers1">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 1" />
+    </div>
+<!--
+    <div class="team-logo dodgers2">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 2" />
+    </div>
+    <div class="team-logo dodgers3">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 3" />
+    </div>
+    <div class="team-logo dodgers4">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 4" />
+    </div>
+    <div class="team-logo_dodgers5">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 5" />
+    </div>
+-->
+
+    <!-- Phillies -->
+    <div class="team-logo phillies1">
+      <img th:src="${logos['PHILLIES']}" alt="Phillies 1" />
+    </div>
+
+    <!-- Padres -->
+    <div class="team-logo padres1">
+      <img th:src="${logos['PADRES']}" alt="Padres 1" />
+    </div>
+    <div class="team-logo padres2">
+      <img th:src="${logos['PADRES']}" alt="Padres 2" />
+    </div>
+
+    <!-- Cubs -->
+    <div class="team-logo cubs1">
+      <img th:src="${logos['CUBS']}" alt="Cubs 1" />
+    </div>
+
+    <!-- Brewers -->
+    <div class="team-logo brewers1">
+      <img th:src="${logos['BREWERS']}" alt="Brewers 1" />
+    </div>
+<!--
+    <div class="team-logo brewers2">
+      <img th:src="${logos['BREWERS']}" alt="Brewers 2" />
+    </div>
+-->
+
+    <!-- ✅ シリーズ勝敗表示箇所（全て th:utext） -->
+    <!-- NL -->
+    <span class="series-result" id="series1" th:utext="${series1}"></span>
+    <span class="series-result" id="series2" th:utext="${series2}"></span>
+    <span class="series-result" id="series3" th:utext="${series3}"></span>
+    <span class="series-result" id="series4" th:utext="${series4}"></span>
+    <span class="series-result" id="series5" th:utext="${series5}"></span>
+
+    <!-- AL -->
+    <span class="series-result" id="series6" th:utext="${series6}"></span>
+    <span class="series-result" id="series7" th:utext="${series7}"></span>
+    <span class="series-result" id="series8" th:utext="${series8}"></span>
+    <span class="series-result" id="series9" th:utext="${series9}"></span>
+    <span class="series-result" id="series10" th:utext="${series10}"></span>
+
+    <!-- World Series Logo -->
+    <!--<div class="world-series-logo-container">
+      <img src="/images/worldseries2025.png" alt="World Series 2025 Logo" class="world-series-logo" />
+    </div>-->
+
+    <span class="series-result" id="series11" th:utext="${series11}"></span>
+  </div>
+
+  <!-- 🎬 WS Series 動画セクション（タブ式） -->
+  <section id="ws-video-section">
+    <h2 class="shiny-text-1">World Series 2026</h2>
+
+<!-- ✅ タブボタン -->
+<div class="tabs">
+
+  <!-- NLCS -->
+  <button class="tab-button active" data-tab="nlcs1">NLCS第1戦</button>
+  <button class="tab-button" data-tab="nlcs2">NLCS第2戦</button>
+  <button class="tab-button" data-tab="nlcs3">NLCS第3戦</button>
+  <button class="tab-button" data-tab="nlcs4">NLCS第4戦</button>
+  <button class="tab-button" data-tab="nlcs5">NLCS第5戦</button>
+
+  <!-- World Series -->
+  <button class="tab-button" data-tab="game1">WS第1戦</button>
+  <button class="tab-button" data-tab="game2">WS第2戦</button>
+  <button class="tab-button" data-tab="game3">WS第3戦</button>
+  <button class="tab-button" data-tab="game4">WS第4戦</button>
+  <button class="tab-button" data-tab="game5">WS第5戦</button>
+  <button class="tab-button" data-tab="game6">WS第6戦</button>
+  <button class="tab-button" data-tab="game7">WS第7戦</button>
+
+</div>
+
+
+<!-- ✅ NLCS戦 -->
+<div id="nlcs1" class="tab-content active">
+<div id="hoge-hoge_landing1" class="shiny-text-1"></div>
+<h3>'26/10/03　NLCS第1戦 LAD対ATL</h3>
+<!--    <h5>大谷がWS初HRも11得点ブルージェイズが先勝！</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/hcH1AkfoZcU"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/FdNFRAW_Wiw"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷翔平 WS初HR！PS6号2ラン</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/EqxD3gTBfVY"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷翔平 初HRマルチアングル</p>
+  </div>-->
+</div>
+
+
+<div id="nlcs2" class="tab-content">
+<div id="hoge-hoge_landing2" class="shiny-text-1"></div>
+  <h3>'26/10/04　NLCS第2戦 LAD対ATL</h3>
+</div>
+
+
+<div id="nlcs3" class="tab-content">
+<div id="hoge-hoge_landing3" class="shiny-text-1"></div>
+  <h3>'26/10/05　NLCS第3戦 LAD対ATL</h3>
+</div>
+
+
+<div id="nlcs4" class="tab-content">
+<div id="hoge-hoge_landing4" class="shiny-text-1"></div>
+  <h3>'26/10/07　NLCS第4戦 LAD対ATL</h3>
+</div>
+
+
+<div id="nlcs5" class="tab-content">
+<div id="hoge-hoge_landing5" class="shiny-text-1"></div>
+  <h3>'26/10/08　NLCS第5戦 LAD対ATL</h3>
+</div>
+
+
+
+<!-- ✅ 第1戦 -->
+<div id="game1" class="tab-content">
+<div id="hoge-hoge_landing7" class="shiny-text-1"></div>
+<!--  <h3>2026/10/xx　第1戦 LAD対XXX</h3>
+  <h5>大谷がWS初HRも11得点ブルージェイズが先勝！</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/hcH1AkfoZcU"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/FdNFRAW_Wiw"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷翔平 WS初HR！PS6号2ラン</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/EqxD3gTBfVY"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷翔平 初HRマルチアングル</p>
+  </div> -->
+</div>
+
+<!-- ✅ 第2戦 -->
+<div id="game2" class="tab-content">
+<div id="hoge-hoge_landing8" class="shiny-text-1"></div>
+<!--  <h3>2026/10/xx　第2戦 LAD対xxx</h3>
+  <h5>“異次元”山本由伸が2戦連続の完投勝利を飾る！</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/KRc-m8yA7_g"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/weN78PkBGbw"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>日本の至宝がまたも歴史的快挙</p>
+  </div> -->
+</div>
+
+<!-- ✅ 第3戦 -->
+<div id="game3" class="tab-content">
+<div id="hoge-hoge_landing9" class="shiny-text-1"></div>
+<!--  <h3>2026/10/xx　第3戦 LAD対xxx</h3>
+  <h5>球史に残る“延長18回”フリーマンがサヨナラHR!</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/JO1yAHsW-YQ"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>TOR軍 vs LAD軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/y-Y0C0Sn9U8"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷2HR4安打4敬遠1試合9出塁</p>
+  </div> -->
+</div>
+
+<!-- ✅ 第4戦 -->
+<div id="game4" class="tab-content">
+<div id="hoge-hoge_landing10" class="shiny-text-1"></div>
+<!--    <h3>2026/10/xx　第4戦 LAD対xxx</h3>
+<h5>ゲレーロJr.逆転2ランなど6得点で2勝2敗に!</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/BUkp9vtEd2Y"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>TOR軍 vs LAD軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/EiBLcRQ4VA4"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷 投球&全打席ダイジェスト</p>
+  </div>-->
+</div>
+
+<!-- ✅ 第5戦 -->
+<div id="game5" class="tab-content">
+<div id="hoge-hoge_landing11" class="shiny-text-1"></div>
+<!--    <h3>2026/10/xx　第5戦 LAD対xxx</h3>
+<h5>ブルージェイズ先王手！ ドジャース崖っぷち!!!</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/cvSAWXU6uZU"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>TOR軍 vs LAD軍 Highlight</p>
+  </div> -->
+</div>
+
+<!-- ✅ 第6戦 -->
+<div id="game6" class="tab-content">
+<div id="hoge-hoge_landing12" class="shiny-text-1"></div>
+<!--    <h3>2026/11/xx　第6戦 LAD対xxx</h3>
+<h5>運命の第7戦へ！ エース山本“期待に応える”</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/PQR42dyyDYU?si=833o6ZXgcP_U9HBA"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/pfd2ztNnfMI?si=E8GXjukQAyfap1Qg"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>佐々木朗希８回を踏ん張る！</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/2eHdYZAj5MI?si=8eCdWx_65AxtD8_o"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>2BHで追加点のチャンスを演出</p>
+  </div> -->
+</div>
+
+<!-- ✅ 第7戦 -->
+<div id="game7" class="tab-content">
+<div id="hoge-hoge_landing13" class="shiny-text-1"></div>
+<!--  <h3>2026/11/xx　第7戦 LAD対xxx</h3>
+<h5>ドジャースWS連覇！MVP山本が胴上げ投手に</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/bVJXbYih6B8?si=XYauWUW0qWvSmujD"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs TOR軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/i0xuNC5iQcM?si=nEKgX6OsmmFnj0C_"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>ロハスが値千金同点ソロHR！</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/WJk0XGCBXeU?si=97sDIXrogOpoAmFG"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>スミス延長11回 勝越しソロHR</p>
+  </div>
+
+    <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/oLCzlH_OxJo?si=E1XtV7F8MTZHExjv"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>“中0日”胴上げ投手！山本由伸</p>
+  </div>
+
+</div>
+
+<!--  ✅ 2026 League Championship Series_section -->
+<!-- ✅ NLCS タブコンテンツ -->
+<!--<div id="nlcs" class="tab-content">
+<div id="hoge-hoge_landing6" class="shiny-text-1"></div>
+  <h3>NLCS Series 2026/10/18</h3>
+  <h5>リーグ優勝をかけた最終戦 伝説の１日</h5>
+  <h5>投げては7回途中10K、打ってはホームラン3本!</h5>
+  <h5>NLCS大谷伝説の日</h5>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/0e7zKPfouj4"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>MLW軍 vs LAD軍 Highlight</p>
+  </div>
+</div>-->
+<!--End 動画セクション 2026 League Championship Series_section-->
+
+</section>
+
+
+
+    <!-- ✅ Postseason 成績セクション -->
+  <hr>
+  <section id="postseason-stats-section">
+    <h2 class="shiny-text-1">⚾ 2026 POSTSEASON 成績</h2>
+<!--    MLBは例年、World Series終了直後にpostseasonデータを正式に REST (statsapi.mlb.com) に追加します。
+それまではデータは入らない。待ち状態です。-->
+
+    <!-- Batting -->
+    <h3 class="stat-title">Batting</h3>
+    <div id="batting-stats" class="stats-container"></div>
+
+    <!-- Pitching -->
+    <h3 class="stat-title">Pitching</h3>
+    <div id="pitching-stats" class="stats-container"></div>
+  </section>
+
+
+  <!-- ✅ JS -->
+  <script src="/js/postseason_2026.js"></script>
+<!--      <footer th:replace="fragments/footer :: footer"></footer>-->
+
+
+<!-- 🔗 Official X (Twitter) -->
+<div class="home-sns-guide">
+  <p class="sns-guide-text">
+    最新情報は公式Xでも発信しています<br>"DodgersShoheiApp｜大谷翔平・ドジャース情報"
+  </p>
+
+  <div class="sns-icons">
+    <a href="https://x.com/shoheiapp?s=21&t=p3l851wPWCpZE0RfyrbDBw"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="公式Xアカウント">
+      <img src="https://dodgersshoheiapp-assets.s3.us-east-1.amazonaws.com/SNS_icon/icons8-%E3%83%84%E3%82%A4%E3%83%83%E3%82%BF%E3%83%BCx-50.png" alt="公式Xアカウント">
+    </a>
+
+  </div>
+</div>
+
+
+</body>
+</html>

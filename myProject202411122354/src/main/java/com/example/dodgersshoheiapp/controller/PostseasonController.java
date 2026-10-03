@@ -35,6 +35,61 @@ public class PostseasonController {
     }
 
     /**
+     * ✅ 2026 ポストシーズン画面
+     */
+    @GetMapping("/postseason_2026")
+    public String showBracket2026(Model model) {
+
+        Map<String, String> logos = Map.ofEntries(
+
+                // =========================
+                // American League
+                // =========================
+                Map.entry("RAYS",
+                        "https://www.mlbstatic.com/team-logos/139.svg"),
+
+                Map.entry("GUARDIANS",
+                        "https://www.mlbstatic.com/team-logos/114.svg"),
+
+                Map.entry("ASTROS",
+                        "https://www.mlbstatic.com/team-logos/117.svg"),
+
+                Map.entry("YANKEES",
+                        "https://www.mlbstatic.com/team-logos/147.svg"),
+
+                Map.entry("REDSOX",
+                        "https://www.mlbstatic.com/team-logos/111.svg"),
+
+                Map.entry("WHITESOX",
+                        "https://www.mlbstatic.com/team-logos/145.svg"),
+
+                // =========================
+                // National League
+                // =========================
+                Map.entry("BREWERS",
+                        "https://www.mlbstatic.com/team-logos/158.svg"),
+
+                Map.entry("DODGERS",
+                        "https://www.mlbstatic.com/team-logos/119.svg"),
+
+                Map.entry("BRAVES",
+                        "https://www.mlbstatic.com/team-logos/144.svg"),
+
+                Map.entry("PADRES",
+                        "https://www.mlbstatic.com/team-logos/135.svg"),
+
+                Map.entry("CUBS",
+                        "https://www.mlbstatic.com/team-logos/112.svg"),
+
+                Map.entry("PHILLIES",
+                        "https://www.mlbstatic.com/team-logos/143.svg"));
+
+        model.addAttribute("logos", logos);
+
+        return "postseason_2026";
+    }
+
+    /**
      * ✅ Postseason 成績取得（REST API版）
      * MLB statsapi から打撃・投球成績を直接取得
      */
@@ -117,6 +172,104 @@ public class PostseasonController {
         } catch (Exception e) {
             results.put("error", "APIエラー: " + e.getMessage());
         }
+        return results;
+    }
+
+    /**
+     * ✅ 2026 シリーズ勝敗集計API
+     */
+    @GetMapping("/api/mlb/series-results-2026")
+    @ResponseBody
+    public Map<String, String> getSeriesResults2026() {
+
+        Map<String, String> results = new HashMap<>();
+
+        try {
+
+            String apiUrl = "https://statsapi.mlb.com/api/v1/schedule/postseason?season=2026";
+
+            RestTemplate rest = new RestTemplate();
+
+            ResponseEntity<Map> resp = rest.getForEntity(apiUrl, Map.class);
+
+            Map<String, Object> body = resp.getBody();
+
+            if (body == null || !body.containsKey("dates")) {
+
+                results.put(
+                        "error",
+                        "APIからデータを取得できませんでした");
+
+                return results;
+            }
+
+            List<Map<String, Object>> dates = (List<Map<String, Object>>) body.get("dates");
+
+            List<Map<String, Object>> allGames = new ArrayList<>();
+
+            for (Map<String, Object> date : dates) {
+
+                List<Map<String, Object>> games = (List<Map<String, Object>>) date.get("games");
+
+                if (games != null) {
+                    allGames.addAll(games);
+                }
+            }
+
+            // ================================================
+            // ✅ 2026 各シリーズ結果
+            // ================================================
+
+            // ---------- NL ----------
+
+            // Wild Card
+            results.put("series1", summarizeSeries(allGames, "Philadelphia Phillies", "Atlanta Braves"));
+
+            // NLDS
+            results.put("series2", summarizeSeries(allGames, "Atlanta Braves", "Los Angeles Dodgers"));
+
+            // Wild Card
+            results.put("series3", summarizeSeries(allGames, "San Diego Padres", "Chicago Cubs"));
+
+            // NLDS
+            results.put("series4", summarizeSeries(allGames, "San Diego Padres", "Milwaukee Brewers"));
+
+            // ---------- AL ----------
+
+            // Wild Card
+            results.put("series6", summarizeSeries(allGames, "Chicago White Sox", "Houston Astros"));
+
+            // ALDS
+            results.put("series8", summarizeSeries(allGames, "Chicago White Sox", "Cleveland Guardians"));
+
+            // Wild Card
+            results.put("series7", summarizeSeries(allGames, "Boston Red Sox", "New York Yankees"));
+
+            // ALDS
+            results.put("series9", summarizeSeries(allGames, "New York Yankees", "Tampa Bay Rays"));
+
+            // ---------- 未確定 ----------
+            // series5 = NLCS
+            // series10 = ALCS
+            // series11 = World Series
+
+            // ================================================
+            // ⏳ 未確定
+            // ================================================
+
+            // series5 = NLCS
+            // series10 = ALCS
+            // series11 = World Series
+
+            // 対戦カード確定後に追加する
+
+        } catch (Exception e) {
+
+            results.put(
+                    "error",
+                    "APIエラー: " + e.getMessage());
+        }
+
         return results;
     }
 
