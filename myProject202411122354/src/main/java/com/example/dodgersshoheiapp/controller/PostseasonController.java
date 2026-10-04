@@ -240,13 +240,13 @@ public class PostseasonController {
             results.put("series6", summarizeSeries(allGames, "Chicago White Sox", "Houston Astros"));
 
             // ALDS
-            results.put("series8", summarizeSeries(allGames, "Chicago White Sox", "Cleveland Guardians"));
+            results.put("series8", summarizeSeries(allGames, "Cleveland Guardians", "Chicago White Sox"));
 
             // Wild Card
             results.put("series7", summarizeSeries(allGames, "Boston Red Sox", "New York Yankees"));
 
             // ALDS
-            results.put("series9", summarizeSeries(allGames, "New York Yankees", "Tampa Bay Rays"));
+            results.put("series9", summarizeSeries(allGames, "Tampa Bay Rays", "New York Yankees"));
 
             // ---------- 未確定 ----------
             // series5 = NLCS
