@@ -195,9 +195,10 @@ h1 {
 .team-logo.yankees2 { top: calc(100 / 844 * 100%); right: calc(50 / 390 * 100%); }
 
 .team-logo.rays1 { top: calc(100 / 844 * 100%); right: calc(143 / 390 * 100%); }
-/* .team-logo.bluejays2 { top: calc(184 / 844 * 100%); right: calc(98 / 390 * 100%); }
-.team-logo.bluejays3 { top: calc(294/ 844 * 100%); right: calc(188 / 390 * 100%); }
-.team-logo.bluejays4 { top: calc(393/ 844 * 100%); right: calc( 77 / 390 * 100%); } */
+.team-logo.rays2 { top: calc(200 / 844 * 100%); right: calc(98 / 390 * 100%); }
+/*
+.team-logo.rays3 { top: calc(294/ 844 * 100%); right: calc(188 / 390 * 100%); }
+/*.team-logo.bluejays4 { top: calc(393/ 844 * 100%); right: calc( 77 / 390 * 100%); } */
 
 /* ==========================
    NL側（下部）
@@ -206,11 +207,12 @@ h1 {
 
 .team-logo.braves1 { top: calc(767 / 844 * 100%); right: calc(231 / 390 * 100%); }
 .team-logo.braves2 { top: calc(686 / 844 * 100%); right: calc(279 / 390 * 100%); }
-/* .team-logo.dodgers3 { top: calc(599 / 844 * 100%); right: calc(233 / 390 * 100%); }
-.team-logo.dodgers4 { top: calc(485 / 844 * 100%); right: calc(168 / 390 * 100%); }
-.team-logo_dodgers5 { top: calc(388 / 954 * 100%); right: calc(259 / 388 * 100%); } */
 
 .team-logo.dodgers1 { top: calc(686 / 844 * 100%); right: calc(191 / 390 * 100%); }
+.team-logo.dodgers3 { top: calc(590 / 844 * 100%); right: calc(233 / 390 * 100%); }
+/*
+.team-logo.dodgers4 { top: calc(485 / 844 * 100%); right: calc(168 / 390 * 100%); }
+.team-logo_dodgers5 { top: calc(388 / 954 * 100%); right: calc(259 / 388 * 100%); } */
 
 .team-logo.cubs1 { top: calc(767 / 844 * 100%); right: calc(6 / 390 * 100%); }
 
@@ -218,7 +220,7 @@ h1 {
 .team-logo.padres2 { top: calc(686 / 844 * 100%); right: calc(52 / 390 * 100%); }
 
 .team-logo.brewers1 { top: calc(686 / 844 * 100%); right: calc(145 / 390 * 100%); }
-/* .team-logo.brewers2 { top: calc(599 / 844 * 100%); right: calc(101 / 390 * 100%); } */
+.team-logo.brewers2 { top: calc(590 / 844 * 100%); right: calc(101 / 390 * 100%); }
 
 
 

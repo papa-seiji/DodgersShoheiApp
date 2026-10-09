@@ -93,10 +93,18 @@
 <section class="postseason-commentary">
   <div class="postseason-text">
     <p>
-      今年もナショナルリーグ西地区優勝でポストシーズン進出しAtlanta Braves戦からはじまります！<br>
-      大谷はケガに泣かされたシーズンでしたが、去年のポストシーズン同様に神がかったプレイを期待しています。<br>
-      前人未到のワールドチャンピオン3連覇を目指したドジャースはどんな戦いをしてくれるのか楽しみです。<br>
-      試合結果等は日々更新していきます。
+      今年もナショナルリーグ西地区を制し、ワールドシリーズ3連覇という歴史的偉業に挑むドジャース！<br><br>
+
+      ポストシーズン初戦となったブレーブスとの地区シリーズ（NLDS）は、決して楽な戦いではありませんでした。<br><br>第2戦を落とし1勝1敗となるも、第3戦では山本由伸が7回1失点10奪三振の圧巻の投球でチームを勝利に導きました。<br><br>
+
+      そして第4戦、アンディ・パヘスの勝ち越しタイムリーとマンシーの豪快な一発で勝利！見事3勝1敗で地区シリーズを突破し、3年連続となるリーグ優勝決定シリーズ進出を決めました！<br><br>
+
+      一方、大谷翔平は本来の打撃を発揮できず苦しいスタートとなりましたが、ここからの大爆発に期待したいところです。<br><br>
+
+      次なる相手は、昨年のリーグ優勝決定シリーズでも激突したミルウォーキー・ブルワーズ！再び激闘を制し、夢のワールドシリーズ3連覇へ突き進んでほしいです！<br>
+
+      試合結果や選手たちの活躍は、引き続き日々更新していきます。<br>
+
     </p>
   </div>
 
@@ -152,6 +160,10 @@
     <div class="team-logo rays1">
       <img th:src="${logos['RAYS']}" alt="Rays 1" />
     </div>
+    <div class="team-logo rays2">
+      <img th:src="${logos['RAYS']}" alt="Rays 2" />
+    </div>
+
 <!--
     <div class="team-logo bluejays2">
       <img th:src="${logos['BLUEJAYS']}" alt="Blue Jays 2" />
@@ -177,6 +189,10 @@
     <div class="team-logo dodgers1">
       <img th:src="${logos['DODGERS']}" alt="Dodgers 1" />
     </div>
+    <div class="team-logo dodgers3">
+      <img th:src="${logos['DODGERS']}" alt="Dodgers 3" />
+    </div>
+
 <!--
     <div class="team-logo dodgers2">
       <img th:src="${logos['DODGERS']}" alt="Dodgers 2" />
@@ -214,11 +230,10 @@
     <div class="team-logo brewers1">
       <img th:src="${logos['BREWERS']}" alt="Brewers 1" />
     </div>
-<!--
     <div class="team-logo brewers2">
       <img th:src="${logos['BREWERS']}" alt="Brewers 2" />
     </div>
--->
+
 
     <!-- ✅ シリーズ勝敗表示箇所（全て th:utext） -->
     <!-- NL -->
@@ -250,21 +265,29 @@
 <!-- ✅ タブボタン -->
 <div class="tabs">
 
-  <!-- NLCS -->
-  <button class="tab-button active" data-tab="nlcs1">NLCS第1戦</button>
-  <button class="tab-button" data-tab="nlcs2">NLCS第2戦</button>
-  <button class="tab-button" data-tab="nlcs3">NLCS第3戦</button>
-  <button class="tab-button" data-tab="nlcs4">NLCS第4戦</button>
-  <button class="tab-button" data-tab="nlcs5">NLCS第5戦</button>
+    <!-- NLDS -->
+    <button class="tab-button active" data-tab="nlcs1">NLDS第1戦</button>
+    <button class="tab-button" data-tab="nlcs2">NLDS第2戦</button>
+    <button class="tab-button" data-tab="nlcs3">NLDS第3戦</button>
+    <button class="tab-button" data-tab="nlcs4">NLDS第4戦</button>
 
-  <!-- World Series -->
-  <button class="tab-button" data-tab="game1">WS第1戦</button>
-  <button class="tab-button" data-tab="game2">WS第2戦</button>
-  <button class="tab-button" data-tab="game3">WS第3戦</button>
-  <button class="tab-button" data-tab="game4">WS第4戦</button>
-  <button class="tab-button" data-tab="game5">WS第5戦</button>
-  <button class="tab-button" data-tab="game6">WS第6戦</button>
-  <button class="tab-button" data-tab="game7">WS第7戦</button>
+    <!-- NLCS Championship -->
+    <button class="tab-button" data-tab="nlcsFinal1">NLCS第1戦</button>
+    <button class="tab-button" data-tab="nlcsFinal2">NLCS第2戦</button>
+    <button class="tab-button" data-tab="nlcsFinal3">NLCS第3戦</button>
+    <button class="tab-button" data-tab="nlcsFinal4">NLCS第4戦</button>
+    <button class="tab-button" data-tab="nlcsFinal5">NLCS第5戦</button>
+    <button class="tab-button" data-tab="nlcsFinal6">NLCS第6戦</button>
+    <button class="tab-button" data-tab="nlcsFinal7">NLCS第7戦</button>
+
+    <!-- World Series -->
+    <button class="tab-button" data-tab="game1">WS第1戦</button>
+    <button class="tab-button" data-tab="game2">WS第2戦</button>
+    <button class="tab-button" data-tab="game3">WS第3戦</button>
+    <button class="tab-button" data-tab="game4">WS第4戦</button>
+    <button class="tab-button" data-tab="game5">WS第5戦</button>
+    <button class="tab-button" data-tab="game6">WS第6戦</button>
+    <button class="tab-button" data-tab="game7">WS第7戦</button>
 
 </div>
 
@@ -319,28 +342,207 @@
 </div>
 
 
+
 <div id="nlcs2" class="tab-content">
 <div id="hoge-hoge_landing2" class="shiny-text-1"></div>
-  <h3>'26/10/04　NLCS第2戦 LAD対ATL</h3>
+  <h3>'26/10/04　NLCS第2戦 ATL対LAD</h3>
+    <h5>自滅黒星【試合ハイライト】</h5>
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/UHfqQ2hlctQ?si=iC8k8veZgnIXVliS"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>ATL軍 vs LAD軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/StQOrfUVz7I?si=gBWgliZVi3ql1c6u"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>佐々木朗希 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/nAJqkUOW0lc?si=q260fKgmf1HTgdY4"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>朗希 自己最速164.3キロ</p>
+  </div>
+
 </div>
+
+
+
+
+
 
 
 <div id="nlcs3" class="tab-content">
 <div id="hoge-hoge_landing3" class="shiny-text-1"></div>
-  <h3>'26/10/05　NLCS第3戦 LAD対ATL</h3>
+  <h3>'26/10/06　NLCS第3戦 LAD対ATL</h3>
+    <h5>LAD先王手！【試合ハイライト】</h5>
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/Vkx2eHAl8Uc?si=ix6Sl_gywICvW25K"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs ATL軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/ZwVGwLgbGTI?si=DmU5yjjU7nPd_87c"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>由伸7回1失点10Kで勝利に導く</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/xHfSEjcWrPA?si=AP8xjJH7JrgyTpR3"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>由伸インタビュー</p>
+  </div>
+
 </div>
 
 
 <div id="nlcs4" class="tab-content">
 <div id="hoge-hoge_landing4" class="shiny-text-1"></div>
   <h3>'26/10/07　NLCS第4戦 LAD対ATL</h3>
+    <h5>【試合ハイライト】</h5>
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/uePNrt11hls?si=y-8AfWrYtgJVgbgL"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs ATL軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/UzA2ng0yzCg?si=V7Q4292XfP4jilYX"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>マンシー 4戦3発好調止まらず！</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/zvnhSSR9iOI?si=WMF-e0YGJ0SxR31Z"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>リーグ優勝決定戦進出！</p>
+  </div>
+
 </div>
 
 
-<div id="nlcs5" class="tab-content">
-<div id="hoge-hoge_landing5" class="shiny-text-1"></div>
-  <h3>'26/10/08　NLCS第5戦 LAD対ATL</h3>
+
+
+<!-- ==========================================
+    2026 NLCS Championship
+========================================== -->
+
+<!-- NLCS 第1戦 -->
+<div id="nlcsFinal1" class="tab-content">
+    <div id="hoge-hoge_landing14" class="shiny-text-1"></div>
+    <h3>NLCS第1戦 MIL対LAD</h3>
 </div>
+
+<!-- NLCS 第2戦 -->
+<div id="nlcsFinal2" class="tab-content">
+    <div id="hoge-hoge_landing15" class="shiny-text-1"></div>
+    <h3>NLCS第2戦 MIL対LAD</h3>
+</div>
+
+<!-- NLCS 第3戦 -->
+<div id="nlcsFinal3" class="tab-content">
+    <div id="hoge-hoge_landing16" class="shiny-text-1"></div>
+    <h3>NLCS第3戦 LAD対MIL</h3>
+</div>
+
+<!-- NLCS 第4戦 -->
+<div id="nlcsFinal4" class="tab-content">
+    <div id="hoge-hoge_landing17" class="shiny-text-1"></div>
+    <h3>NLCS第4戦 LAD対MIL</h3>
+</div>
+
+<!-- NLCS 第5戦 -->
+<div id="nlcsFinal5" class="tab-content">
+    <div id="hoge-hoge_landing18" class="shiny-text-1"></div>
+    <h3>NLCS第5戦 LAD対MIL</h3>
+</div>
+
+<!-- NLCS 第6戦 -->
+<div id="nlcsFinal6" class="tab-content">
+    <div id="hoge-hoge_landing19" class="shiny-text-1"></div>
+    <h3>NLCS第6戦 MIL対LAD</h3>
+</div>
+
+<!-- NLCS 第7戦 -->
+<div id="nlcsFinal7" class="tab-content">
+    <div id="hoge-hoge_landing20" class="shiny-text-1"></div>
+    <h3>NLCS第7戦 MIL対LAD</h3>
+</div>
+
 
 
 
@@ -631,6 +833,7 @@
   </div>
 
 </div>
+-->
 
 <!--  ✅ 2026 League Championship Series_section -->
 <!-- ✅ NLCS タブコンテンツ -->

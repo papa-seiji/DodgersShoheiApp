@@ -97,12 +97,21 @@ function handleHashNavigation() {
     const targetId = hash.substring(1); // 例: hoge-hoge_landing12
 
 const mapping = {
-    // NLCS
+
+    // NLDS
     "hoge-hoge_landing1": "nlcs1",
     "hoge-hoge_landing2": "nlcs2",
     "hoge-hoge_landing3": "nlcs3",
     "hoge-hoge_landing4": "nlcs4",
-    "hoge-hoge_landing5": "nlcs5",
+
+    // NLCS Championship
+    "hoge-hoge_landing14": "nlcsFinal1",
+    "hoge-hoge_landing15": "nlcsFinal2",
+    "hoge-hoge_landing16": "nlcsFinal3",
+    "hoge-hoge_landing17": "nlcsFinal4",
+    "hoge-hoge_landing18": "nlcsFinal5",
+    "hoge-hoge_landing19": "nlcsFinal6",
+    "hoge-hoge_landing20": "nlcsFinal7",
 
     // World Series
     "hoge-hoge_landing7": "game1",
@@ -113,6 +122,7 @@ const mapping = {
     "hoge-hoge_landing12": "game6",
     "hoge-hoge_landing13": "game7"
 };
+
 
     const tabId = mapping[targetId];
     if (tabId) {
@@ -162,10 +172,10 @@ async function loadPostseasonStats() {
 
         // ✅ 手動データ（フォールバック）
         const manualStats = {
-            ohtaniHitting: { avg: ".250", homeRuns: 0, rbi: 0, ops: "0.500" },
+            ohtaniHitting: { avg: ".154", homeRuns: 0, rbi: 0, ops: "0.421" },
             ohtaniPitching: { era: "0.00", inningsPitched: "0", strikeOuts: 0, whip: "0.00" },
-            yamamotoPitching: { era: "0.00", inningsPitched: "0", strikeOuts: 0, whip: "0.00" },
-            sasakiPitching: { era: "0.00", inningsPitched: "0", strikeOuts: 0, whip: "0.00" }
+            yamamotoPitching: { era: "1.29", inningsPitched: "7.0", strikeOuts: 10, whip: "0.71" },
+            sasakiPitching: { era: "0.00", inningsPitched: "2.0", strikeOuts: 1, whip: "1.00" },
         };
 
         renderPostseasonStats(manualStats);
@@ -203,9 +213,9 @@ function renderPostseasonStats(statsData) {
 
     // ✅ 投手データ（API形式 or 手動形式 両対応）
     const pitchers = [
-        { data: statsData.ohtaniPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.ohtaniPitching || {}, player: players[0] },
         { data: statsData.yamamotoPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.yamamotoPitching || {}, player: players[1] },
-        { data: statsData.sasakiPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.sasakiPitching || {}, player: players[2] }
+        { data: statsData.sasakiPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.sasakiPitching || {}, player: players[2] },
+        { data: statsData.ohtaniPitching?.stats?.[0]?.splits?.[0]?.stat || statsData.ohtaniPitching || {}, player: players[0] }
     ];
 
     document.getElementById("pitching-stats").innerHTML = pitchers.map(p => `
