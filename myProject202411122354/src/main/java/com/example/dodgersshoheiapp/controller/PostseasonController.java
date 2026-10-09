@@ -232,7 +232,7 @@ public class PostseasonController {
             results.put("series3", summarizeSeries(allGames, "San Diego Padres", "Chicago Cubs"));
 
             // NLDS
-            results.put("series4", summarizeSeries(allGames, "San Diego Padres", "Milwaukee Brewers"));
+            results.put("series4", summarizeSeries(allGames, "Milwaukee Brewers", "San Diego Padres"));
 
             // ---------- AL ----------
 
@@ -250,6 +250,8 @@ public class PostseasonController {
 
             // ---------- 未確定 ----------
             // series5 = NLCS
+            results.put("series5", summarizeSeries(allGames, "Milwaukee Brewers", "Los Angeles Dodgers"));
+
             // series10 = ALCS
             // series11 = World Series
 
