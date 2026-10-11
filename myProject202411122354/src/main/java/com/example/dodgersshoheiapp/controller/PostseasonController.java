@@ -253,6 +253,8 @@ public class PostseasonController {
             results.put("series5", summarizeSeries(allGames, "Milwaukee Brewers", "Los Angeles Dodgers"));
 
             // series10 = ALCS
+            results.put("series10", summarizeSeries(allGames, "Cleveland Guardians", "Tampa Bay Rays"));
+
             // series11 = World Series
 
             // ================================================
