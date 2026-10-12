@@ -250,7 +250,7 @@ public class PostseasonController {
 
             // ---------- 未確定 ----------
             // series5 = NLCS
-            results.put("series5", summarizeSeries(allGames, "Milwaukee Brewers", "Los Angeles Dodgers"));
+            results.put("series5", summarizeSeries(allGames, "Los Angeles Dodgers", "Milwaukee Brewers"));
 
             // series10 = ALCS
             results.put("series10", summarizeSeries(allGames, "Cleveland Guardians", "Tampa Bay Rays"));
