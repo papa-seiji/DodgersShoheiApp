@@ -172,7 +172,7 @@ async function loadPostseasonStats() {
 
         // ✅ 手動データ（フォールバック）
         const manualStats = {
-            ohtaniHitting: { avg: ".154", homeRuns: 0, rbi: 0, ops: "0.421" },
+            ohtaniHitting: { avg: ".188", homeRuns: 0, rbi: 0, ops: "0.504" },
             ohtaniPitching: { era: "0.00", inningsPitched: "0", strikeOuts: 0, whip: "0.00" },
             yamamotoPitching: { era: "1.29", inningsPitched: "7.0", strikeOuts: 10, whip: "0.71" },
             sasakiPitching: { era: "0.00", inningsPitched: "2.0", strikeOuts: 1, whip: "1.00" },
