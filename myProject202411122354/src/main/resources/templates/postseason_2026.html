@@ -93,17 +93,22 @@
 <section class="postseason-commentary">
   <div class="postseason-text">
     <p>
-      今年もナショナルリーグ西地区を制し、ワールドシリーズ3連覇という歴史的偉業に挑むドジャース！<br><br>
 
-      ポストシーズン初戦となったブレーブスとの地区シリーズ（NLDS）は、決して楽な戦いではありませんでした。<br><br>第2戦を落とし1勝1敗となるも、第3戦では山本由伸が7回1失点10奪三振の圧巻の投球でチームを勝利に導きました。<br><br>
+<h4>2026 MLBリーグチャンピオンシップシリーズ、ドジャースの挑戦が幕を閉じた。</h4>
 
-      そして第4戦、アンディ・パヘスの勝ち越しタイムリーとマンシーの豪快な一発で勝利！見事3勝1敗で地区シリーズを突破し、3年連続となるリーグ優勝決定シリーズ進出を決めました！<br><br>
+ワールドシリーズ3連覇という歴史的偉業を目指したドジャースでしたが、宿敵ミルウォーキー・ブリュワーズの前にまさかの4連敗。昨年はドジャースが4連勝でブリュワーズを退けましたが、今年はその雪辱を果たされる形となり、ブリュワーズが44年ぶりのワールドシリーズ進出を決めました。<br>
 
-      一方、大谷翔平は本来の打撃を発揮できず苦しいスタートとなりましたが、ここからの大爆発に期待したいところです。<br><br>
+<h4>運命の第4戦</h4>大谷翔平が待望の特大3ランホームランを放ち、序盤に4点をリード！奇跡の逆転突破へ希望が見えた瞬間でした。<br>しかし、ブリュワーズの粘り強い攻撃と投手陣の前に逆転を許し、最後まで流れを取り戻すことはできませんでした。<br>
 
-      次なる相手は、昨年のリーグ優勝決定シリーズでも激突したミルウォーキー・ブルワーズ！再び激闘を制し、夢のワールドシリーズ3連覇へ突き進んでほしいです！<br>
+今シーズンの大谷はケガに苦しみ、本来の力を十分に発揮できない時期もあった。<br><h4>それでも最後の最後に見せてくれた豪快なホームラン</h4>やはり大谷翔平という選手の凄さを感じさせる一打でした。<br>
 
-      試合結果や選手たちの活躍は、引き続き日々更新していきます。<br>
+これで2026年のドジャースの戦いは終了。<br>毎日の楽しみにしていたドジャースの試合、そして大谷翔平のプレーがしばらく見られなくなると思うと、本当に寂しい気持ちでいっぱいです。<br>
+
+3連覇の夢は叶いませんでしたが、今年もたくさんの興奮と感動を届けてくれたドジャースの選手たちに感謝したいと思います。<br>
+
+<h3>ありがとうドジャース！<br>ありがとう大谷翔平！</h3>
+
+しっかり身体を休めて、2027年こそ再び世界一の頂点へ！来シーズン、さらに強くなったドジャースと、完全復活した大谷翔平の姿を楽しみにしています！
 
     </p>
   </div>
@@ -233,6 +238,10 @@
     <div class="team-logo brewers2">
       <img th:src="${logos['BREWERS']}" alt="Brewers 2" />
     </div>
+    <div class="team-logo brewers3">
+      <img th:src="${logos['BREWERS']}" alt="Brewers 3" />
+    </div>
+
 
 
     <!-- ✅ シリーズ勝敗表示箇所（全て th:utext） -->
@@ -266,7 +275,7 @@
 <div class="tabs">
 
     <!-- NLDS -->
-    <button class="tab-button active" data-tab="nlcs1">NLDS第1戦</button>
+    <button class="tab-button" data-tab="nlcs1">NLDS第1戦</button>
     <button class="tab-button" data-tab="nlcs2">NLDS第2戦</button>
     <button class="tab-button" data-tab="nlcs3">NLDS第3戦</button>
     <button class="tab-button" data-tab="nlcs4">NLDS第4戦</button>
@@ -275,10 +284,12 @@
     <button class="tab-button" data-tab="nlcsFinal1">NLCS第1戦</button>
     <button class="tab-button" data-tab="nlcsFinal2">NLCS第2戦</button>
     <button class="tab-button" data-tab="nlcsFinal3">NLCS第3戦</button>
-    <button class="tab-button" data-tab="nlcsFinal4">NLCS第4戦</button>
+    <button class="tab-button active" data-tab="nlcsFinal4">NLCS第4戦</button>
+<!--
     <button class="tab-button" data-tab="nlcsFinal5">NLCS第5戦</button>
     <button class="tab-button" data-tab="nlcsFinal6">NLCS第6戦</button>
     <button class="tab-button" data-tab="nlcsFinal7">NLCS第7戦</button>
+-->
 
     <!-- World Series -->
     <button class="tab-button" data-tab="game1">WS第1戦</button>
@@ -293,7 +304,7 @@
 
 
 <!-- ✅ NLCS戦 -->
-<div id="nlcs1" class="tab-content active">
+<div id="nlcs1" class="tab-content">
 <div id="hoge-hoge_landing1" class="shiny-text-1"></div>
 <h3>'26/10/3　NLCS第1戦 ATL対LAD</h3>
     <h5>初戦 白星発進【試合ハイライト】</h5>
@@ -607,32 +618,122 @@
 <div id="nlcsFinal3" class="tab-content">
     <div id="hoge-hoge_landing16" class="shiny-text-1"></div>
     <h3>NLCS第3戦 LAD対MIL</h3>
+        <h3>ドジャース敗 - ブリュワーズ勝</h3>
+
+        <h5>【試合ハイライト】</h5>
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/7JP1xmcVcYs?si=UpuJAARhxCtsSThb"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs MIL軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/OUdBQI5HsaY?si=uxUQPEzqHKx7HjFc"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>大谷翔平 全打席ダイジェスト</p>
+  </div>
+
+<!--  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/hYlSVmlDhmM?si=NqPpMR4eQzyL3P3l"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>NLCS初登板で1四球もその後は抑える！</p>
+  </div>-->
+
 </div>
 
 <!-- NLCS 第4戦 -->
-<div id="nlcsFinal4" class="tab-content">
+<div id="nlcsFinal4" class="tab-content active">
     <div id="hoge-hoge_landing17" class="shiny-text-1"></div>
     <h3>NLCS第4戦 LAD対MIL</h3>
+        <h3>ブリュワーズが4連勝でWS進出</h3>
+
+        <h5>【試合ハイライト】</h5>
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/en_wKiNMjqY?si=L_ogHYagdaptTaeq"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>LAD軍 vs MIL軍 Highlight</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/2CYnvd9WVP4?si=5RJyVbXpxYVPmS5z"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>現地音声＆マルチアングル</p>
+  </div>
+
+  <div class="video-item">
+    <iframe
+  loading="lazy"
+  decoding="async"
+  width="560" height="315"
+      src="https://www.youtube.com/embed/xKg7HRWz6_g?si=PkMgHuJ3U1K5ior6"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+    <p>試合後のロッカールームで今季を振り返る</p>
+  </div>
+
 </div>
 
-<!-- NLCS 第5戦 -->
+<!-- NLCS 第5戦
 <div id="nlcsFinal5" class="tab-content">
     <div id="hoge-hoge_landing18" class="shiny-text-1"></div>
     <h3>NLCS第5戦 LAD対MIL</h3>
 </div>
 
-<!-- NLCS 第6戦 -->
+NLCS 第6戦
 <div id="nlcsFinal6" class="tab-content">
     <div id="hoge-hoge_landing19" class="shiny-text-1"></div>
     <h3>NLCS第6戦 MIL対LAD</h3>
 </div>
 
-<!-- NLCS 第7戦 -->
+NLCS 第7戦
 <div id="nlcsFinal7" class="tab-content">
     <div id="hoge-hoge_landing20" class="shiny-text-1"></div>
     <h3>NLCS第7戦 MIL対LAD</h3>
 </div>
-
+-->
 
 
 
